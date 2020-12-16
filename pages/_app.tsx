@@ -4,6 +4,7 @@ import store from "../src/store/_store";
 import {ReactQueryDevtools} from "react-query/devtools";
 import {QueryClient, QueryClientProvider} from "react-query";
 
+
 const stored = store();
 
 const queryClient = new QueryClient({
