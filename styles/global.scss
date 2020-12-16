@@ -1,0 +1,11 @@
+@import '~@brunobarros/react-components/src/scss/block-ui.module.scss';
+@import './bootstrap/bootstrap.scss';
+@import "styles/mixins";
+@import "./toastify/main";
+
+body, html {
+  background-color: #eee;
+}
+.form-error {
+  font-size: .8em;
+}

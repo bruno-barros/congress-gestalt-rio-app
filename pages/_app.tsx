@@ -1,0 +1,26 @@
+import '../styles/global.scss'
+
+import {asset} from "../src/helpers";
+import {Provider} from "react-redux";
+import store from "../src/store/_store";
+import {ReactQueryDevtools} from "react-query/devtools";
+import {QueryClient, QueryClientProvider} from "react-query";
+
+const stored = store();
+
+const queryClient = new QueryClient({
+ defaultOptions: {
+   queries: {
+     refetchOnWindowFocus: false
+   }
+ }
+});
+
+export default function App({Component, pageProps}) {
+  return <Provider store={stored}>
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+      <ReactQueryDevtools initialIsOpen/>
+    </QueryClientProvider>
+  </Provider>
+}

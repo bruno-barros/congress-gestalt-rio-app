@@ -1,0 +1,23 @@
+###############################################################
+# Lines started with "#@" will be uncommented on build:subdir #
+###############################################################
+
+#@<IfModule mod_rewrite.c>
+#@ # force SSL
+#@ RewriteEngine On
+#@ RewriteCond %{HTTPS} off
+#@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+#@ # end/ force SSL
+#@</IfModule>
+
+<IfModule mod_rewrite.c>
+ RewriteEngine On
+ RewriteBase /nextjs-blog/out
+ # remove index.html
+ RewriteRule ^index\.html$ /nextjs-blog/out [R=301,L]
+ # redirect routes to base path without index.html
+ RewriteRule ^index\.html$ - [L]
+ RewriteCond %{REQUEST_FILENAME} !-f
+ RewriteCond %{REQUEST_FILENAME} !-d
+ RewriteRule . /nextjs-blog/out [L]
+</IfModule>
