@@ -16,5 +16,5 @@ module.exports = {
   experimental: {
     basePath: isProd ? process.env.RELATIVE_PATH : ''
   },
-  exportTrailingSlash: !!(isProd && process.env.RELATIVE_PATH),
+  trailingSlash: !!(isProd && process.env.RELATIVE_PATH),
 }

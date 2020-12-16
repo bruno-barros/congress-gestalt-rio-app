@@ -1,11 +1,18 @@
+import {Component} from "react";
 import SocialLogin from 'react-social-login'
 
-const Generic = ({children, triggerLogin, ...props}) => {
-  return (<button
-    type="button"
-    className="btn btn-outline-secondary"
-    onClick={triggerLogin} {...props}>
-    {children}
-  </button>)
+
+class Generic extends Component<any>{
+
+  render() {
+    return (<button
+      type="button"
+      className="btn btn-outline-secondary"
+      onClick={this.props.triggerLogin} {...this.props}>
+      {this.props.children}
+    </button>)
+  }
+
 }
+
 export default SocialLogin(Generic)
