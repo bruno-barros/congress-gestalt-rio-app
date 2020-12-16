@@ -2,10 +2,20 @@
 @import './bootstrap/bootstrap.scss';
 @import "styles/mixins";
 @import "./toastify/main";
+@import "./login";
 
 body, html {
   background-color: #eee;
 }
 .form-error {
   font-size: .8em;
+}
+
+.text-xs {
+  font-size: .8em;
+  line-height: 1.2em;
+}
+.text-sm {
+  font-size: .9em;
+  line-height: 1.3em;
 }

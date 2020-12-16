@@ -1,6 +1,4 @@
 import '../styles/global.scss'
-
-import {asset} from "../src/helpers";
 import {Provider} from "react-redux";
 import store from "../src/store/_store";
 import {ReactQueryDevtools} from "react-query/devtools";
