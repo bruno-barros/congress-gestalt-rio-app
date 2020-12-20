@@ -1,0 +1,26 @@
+{
+  "Bem-vindo": "Welcome to React and react-i18next",
+  "cadastro": {
+    "email-cadastro": "Your registration email",
+    "envio-de-link": "We will send a link to your registration email to generate a new password.",
+    "esqueci-senha": "Forgot my password",
+    "nao-lembro-email": "I don't remember my email",
+    "recuperacao-senha": "Password recover",
+    "solicitar-senha": "Request password"
+  },
+  "entrar": "Login",
+  "fechar": "Close",
+  "login-com": "Login with {{driver}}",
+  "ou": "or",
+  "sair": "Logout",
+  "senha": "Password",
+  "seu-email": "Your email",
+  "seu-nome": "Your name",
+  "sua-senha": "Your password",
+  "validacao": {
+    "curto": "Too short",
+    "email": "Email is not valid",
+    "obrigatorio": "Required"
+  },
+  "versao": "Version"
+}

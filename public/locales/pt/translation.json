@@ -1,0 +1,26 @@
+{
+  "Bem-vindo": "Seja bem-vindo",
+  "cadastro": {
+    "email-cadastro": "Seu e-mail de cadastro",
+    "envio-de-link": "Enviaremos um link para seu e-mail de cadastro para a geração de uma nova senha.",
+    "esqueci-senha": "Esqueci a senha",
+    "nao-lembro-email": "Não lembro meu e-mail",
+    "recuperacao-senha": "Recuperação de senha",
+    "solicitar-senha": "Solicitar senha"
+  },
+  "entrar": "Entrar",
+  "fechar": "Fechar",
+  "login-com": "Login com {{driver}}",
+  "ou": "ou",
+  "sair": "Sair",
+  "senha": "Senha",
+  "seu-email": "Seu e-mail",
+  "seu-nome": "Seu nome",
+  "sua-senha": "Sua senha",
+  "validacao": {
+    "curto": "Muito curto",
+    "email": "Não é um e-mail válido",
+    "obrigatorio": "Obrigatório"
+  },
+  "versao": "Versão"
+}
