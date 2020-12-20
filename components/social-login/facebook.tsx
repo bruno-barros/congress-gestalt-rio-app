@@ -1,25 +1,20 @@
 import Generic from "./generic";
+import useTrans from "../hooks/use-trans";
 
 export default function Facebook() {
 
+  const t = useTrans()
+
   function handleSocialLogin(user) {
-    // _profile:
-    //   email: "brunodanca@gmail.com"
-    // firstName: "Bruno"
-    // gender: undefined
-    // id: "117243100433288172506"
-    // lastName: "Barros"
-    // name: "Bruno Barros"
-    // profilePicURL: "https://lh3.googleusercontent.com/a-/AOh14GjxzCc0WyltBFAzA8JKHAfna9Lz6ngHvgbCmASSng=s96-c"
-    //
-    //
-    // _token:
-    //   accessToken: "ya29.a0AfH6SMBbIxaaQ5E7SUwBR5ELrSA5ZbcIk0u7gmYrkOlWzHwuOD0y1gBBiM6VlQ4fSFOiH6WQ2E7F-g9m98ANk-O7poreBlCuvnbW6zJk5ahOJPyY2cAL5nnGn3EOkf1GDtiwJhec2C5dC5_TY7Q1RRvxeEk1q31DguYCQ7SsAYc"
-    // expiresAt: 1608100952531
-    // expiresIn: 3599
-    // firstIssued_at: 1608097353531
-    // idToken: "ey.......TrA"
-    // scope: "email profile https://www.googleapis.com/auth/userinfo.email openid https://www.googleapis.com/auth/userinfo.profile"
+    /*
+    _profile:
+      email: "conceito@conceito-online.com.br"
+      firstName: "SrLuis"
+      id: "1059301927748489"
+      lastName: "Monteiro"
+      name: "SrLuis Monteiro"
+      profilePicURL: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=1059301927748489&height=50&width=50&ext=1610757994&hash=AeSZP9D5DvKpYiXtFxc"
+    */
     console.log(user);
   }
 
@@ -31,5 +26,5 @@ export default function Facebook() {
     provider="facebook"
     appId="306275963626458"
     onLoginSuccess={handleSocialLogin}
-    onLoginFailure={handleSocialLoginFailure}>Login com o Facebook</Generic>)
+    onLoginFailure={handleSocialLoginFailure}>{t('login-com', {driver: "Facebook"})}</Generic>)
 }

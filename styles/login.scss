@@ -1,4 +1,4 @@
-.login-wrapper {
+.login-page {
   background-color: #fff;
   min-height: 100vh;
   .brand-panel {
@@ -11,4 +11,10 @@
   .footer-panel{
 
   }
+}
+
+.login-form {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
 }

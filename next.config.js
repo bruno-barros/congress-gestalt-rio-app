@@ -13,6 +13,10 @@ module.exports = {
     assetPrefix: isProd ? process.env.RELATIVE_PATH : '',
     apiUrl: process.env.API_BASEURL
   },
+  i18n: {
+    locales: ['pt', 'en'],
+    defaultLocale: 'pt'
+  },
   experimental: {
     basePath: isProd ? process.env.RELATIVE_PATH : ''
   },

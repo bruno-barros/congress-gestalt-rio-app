@@ -3,7 +3,7 @@ import {Provider} from "react-redux";
 import store from "../src/store/_store";
 import {ReactQueryDevtools} from "react-query/devtools";
 import {QueryClient, QueryClientProvider} from "react-query";
-
+import '../src/i18n'
 
 const stored = store();
 
