@@ -1,4 +1,4 @@
-import useTrans from "../../hooks/use-trans";
+import useTrans from "../../hooks/useTrans";
 
 interface FieldErrorProps {
   message: any

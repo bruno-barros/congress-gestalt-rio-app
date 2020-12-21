@@ -36,7 +36,7 @@ export const postLogin = (
 
     if (resp.data.data && resp.data.data.login?.authToken) {
       await AuthToken.storeToken(resp.data.data.login.authToken, null);
-      if(resp.data.data.login.refreshToken){
+      if (resp.data.data.login.refreshToken) {
         AuthToken.storeRefreshToken(resp.data.data.login.refreshToken);
       }
       // setup user
@@ -74,6 +74,20 @@ export const postLogin = (
       dispatch({type: USER_ACTYPE.LOGIN_ERR, payload: error});
       callback(null, error);
     }
+  }
+}
+
+export const setUpUser = (input : {user: any, tokens: { access: string, refresh?: string }}, callback: () => void) => {
+  return async (dispatch, getState) => {
+
+    await AuthToken.storeToken(input.tokens.access, null);
+    if (input.tokens.refresh) {
+      AuthToken.storeRefreshToken(input.tokens.refresh);
+    }
+
+    dispatch({type: USER_ACTYPE.LOGIN, payload: input.user})
+
+    callback();
   }
 }
 

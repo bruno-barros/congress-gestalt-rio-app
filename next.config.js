@@ -11,7 +11,9 @@ module.exports = {
     siteName: 'Evento',
     siteUrl: process.env.BASEURL,
     assetPrefix: isProd ? process.env.RELATIVE_PATH : '',
-    apiUrl: process.env.API_BASEURL
+    apiUrl: process.env.API_BASEURL,
+    GOOGLE_OAUTH_ID: process.env.GOOGLE_OAUTH_ID,
+    FACEBOOK_OAUTH_ID: process.env.FACEBOOK_OAUTH_ID
   },
   i18n: {
     locales: ['pt', 'en'],

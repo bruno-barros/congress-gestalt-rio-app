@@ -3,7 +3,7 @@ import {useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/cjs/Button";
 import {LoadingButton} from "@brunobarros/react-components";
 import {motion} from 'framer-motion';
-import useTrans from "../../hooks/use-trans";
+import useTrans from "../../hooks/useTrans";
 
 interface PasswordRecoverProps {
   show: boolean
@@ -29,15 +29,6 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
   }, [props.show])
 
 
-  // useEffect(() => {
-  //
-  //   inputRef.current?.focus()
-  //   if(props.show && inputRef.current){
-  //     setTimeout(()=>{
-  //       inputRef.current.focus()
-  //     }, 4000)
-  //   }
-  // }, [])
 
   function handleClose() {
     setShow(false)

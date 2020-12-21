@@ -1,0 +1,439 @@
+import {AxiosResponse} from "axios";
+import {httpApi} from "./axios";
+import {LoginInputs} from "../store/store.d";
+import isFinite from 'lodash/isFinite'
+import {Providers} from '../../components/social-login/social-buttons.d'
+export default class WpUser {
+
+  static FILLABLE = [
+    'clientMutationId',
+    'id',
+    'databaseId',
+    'description',
+    'birthdate',
+    'address',
+    'cellphone',
+    'city',
+    'complement',
+    'country',
+    'cpf',
+    'doc_prof',
+    'email',
+    'user_email',
+    'name',
+    'firstName',
+    'lastName',
+    'gender',
+    'neighborhood',
+    'number',
+    'phone',
+    'postcode',
+    'specialities',
+    'state',
+    'partner_id',
+  ];
+
+  static socialLogin(profile: any, provider: Providers){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_social_login', {...profile, provider});
+  }
+
+  static mergeProfiles(profile: any, provider: Providers){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_profiles', {...profile, provider});
+
+  }
+
+  /**
+   * {
+      "data": {
+        "login": {
+          "authToken": "(long string here...)",
+          "user": {
+            "id": "dXNlcjox",
+            "databaseId": 1,
+            "name": "admin",
+            "email": "web@mail.com"
+          }
+        }
+      }
+    }
+   * @param input
+   */
+  static doLogin(input: LoginInputs): Promise<AxiosResponse<any>> {
+    return httpApi.post('/index.php?graphql&login', {
+      query: `mutation LoginUser {
+        login(input: {clientMutationId: "${input.login}", username: "${input.login}", password: "${input.password}"}) {
+          authToken
+          refreshToken
+          user {
+            databaseId
+            email
+            id
+            name
+            firstName
+            timeframes {
+              monday
+              tuesday
+              wednesday
+              thursday
+              friday
+              saturday
+              sunday
+            }
+            avatar {
+              url
+            }
+            roles {
+              nodes {
+                name
+              }
+            }
+            ms_graph {
+              id
+              upn
+            }
+          }
+        }
+      }`
+    });
+  }
+
+  /**
+   * {
+      "data": {
+        "__typename": "RootMutation",
+        "refreshJwtAuthToken": {
+          "clientMutationId": "dXNlcjox",
+          "authToken": "(long string...)"
+        }
+      }
+    }
+   * @param mutationId
+   * @param token
+   */
+  static refreshToken(mutationId: number, token: string): Promise<AxiosResponse<any>> {
+    return httpApi.post('/index.php?graphql&refreshJwtAuthToken', {
+      query: `mutation RefreshToken {
+      refreshJwtAuthToken(input: {clientMutationId: "${mutationId}", jwtRefreshToken: "${token}"}) {
+        clientMutationId
+        authToken
+      }
+    }`
+    });
+  }
+
+  /**
+   * @param id
+   */
+  static fetchUser(id: any): Promise<AxiosResponse<any>> {
+
+    let type = isFinite(Number(id)) ? 'DATABASE_ID' : 'ID'
+
+    return httpApi.post('/index.php?graphql&user', {
+      query: `query FetchUser {
+        __typename
+        user(id: "${id}", idType: ${type}) {
+          id
+          databaseId
+          phone
+          name
+          gender
+          firstName
+          email
+          description
+          cpf
+          postcode
+          lastName
+          address
+          birthdate
+          cellphone
+          city
+          country
+          complement
+          neighborhood
+          number
+          state
+          credits
+          specialities
+          doc_prof
+          registeredDate
+          user_status
+          timeframes {
+            wednesday
+            tuesday
+            thursday
+            sunday
+            saturday
+            friday
+            monday
+          }
+          roles {
+            nodes {
+              name
+            }
+          }
+          avatar {
+            url
+          }
+          partner_zb {
+            id
+            logo
+            name
+          }
+          ms_graph {
+            id
+            upn
+          }
+          subscriptions {
+            id
+            title
+            expires_at
+            status
+          }
+        }
+      }`
+    });
+  }
+
+  /**
+   * @param id
+   */
+  static fetchLogged(id: any): Promise<AxiosResponse<any>> {
+
+    let type = isFinite(Number(id)) ? 'DATABASE_ID' : 'ID'
+
+    return httpApi.post('/index.php?graphql&user', {
+      query: `query FetchUser {
+        __typename
+        user(id: "${id}", idType: ${type}) {
+          id
+          databaseId
+          phone
+          name
+          gender
+          firstName
+          email
+          description
+          cpf
+          postcode
+          lastName
+          address
+          birthdate
+          cellphone
+          city
+          country
+          complement
+          neighborhood
+          number
+          state
+          credits
+          specialities
+          doc_prof
+          registeredDate
+          user_status
+          academia_sso
+          timeframes {
+            wednesday
+            tuesday
+            thursday
+            sunday
+            saturday
+            friday
+            monday
+          }
+          roles {
+            nodes {
+              name
+            }
+          }
+          avatar {
+            url
+          }
+          ms_graph {
+            id
+            upn
+          }
+        }
+      }`
+    });
+  }
+
+  static fetchProfessionals(orderBy = 'name', order = 'asc', page = 1, limit = 12, filters?: any): Promise<AxiosResponse<any>> {
+
+    let filtersQry: string[] = [];
+    if (!!filters?.by_name) filtersQry.push(`by_name: "${filters?.by_name}"`)
+    if (!!filters?.by_weekday) filtersQry.push(`by_weekday: "${filters?.by_weekday}"`)
+
+    return httpApi.post('/index.php?graphql&zbUserSearch', {
+      query: `query fetchProfessionals {
+  __typename
+  zbUserSearch(where: {pagination: {limit: ${limit}, page: ${page}}, orderby: ${orderBy}, order: ${order.toUpperCase()}, roles: professional, ${filtersQry.join(', ')}}) {
+    nodes {
+      id
+      databaseId
+      specialities
+      phone
+      name
+      gender
+      firstName
+      email
+      doc_prof
+      description
+      cpf
+      user_status
+      roles {
+        nodes {
+          name
+        }
+      }
+      avatar {
+        url
+      }
+      timeframes {
+        wednesday
+        tuesday
+        thursday
+        sunday
+        saturday
+        friday
+        monday
+      }
+    }
+    pageInfo {
+      offsetPagination {
+        total
+      }
+    }
+  }
+}`
+    });
+  }
+
+  static searchUser(by_name: string, role: 'professional' | 'subscriber', limit = 12, filters?: any): Promise<AxiosResponse<any>> {
+
+    let byName = by_name ? `, by_name: "${by_name}"` : ''
+
+    return httpApi.post('/index.php?graphql&zbUserSearch', {
+      query: `query searchUser {
+  __typename
+  zbUserSearch(where: {pagination: {limit: ${limit}, page: 1}, orderby: name, order: ASC, roles: ${role} ${byName}}) {
+    nodes {
+      id
+      databaseId
+      name
+      firstName
+      email
+      credits
+      ${role === 'professional' ? `timeframes {
+      monday
+      tuesday
+      wednesday
+      thursday
+      friday
+      saturday
+      sunday
+      }` : ''}
+      avatar {
+        url
+      }
+    }
+  }
+}`
+    });
+  }
+
+  static fetchPatients(prof_id: number | null, orderBy = 'name', order = 'asc', page = 1, limit = 12, filters?: any): Promise<AxiosResponse<any>> {
+
+    let profId = prof_id ? `, prof_id: ${prof_id}` : '';
+    let byName = filters && filters.by_name
+      ? `, by_name: "${filters.by_name}"` : ''
+
+    return httpApi.post('/index.php?graphql&zbUserSearch', {
+      query: `query fetchPatients {
+  __typename
+  zbUserSearch(where: {pagination: {limit: ${limit}, page: ${page}}, orderby: ${orderBy}, order: ${order.toUpperCase()}, roles: subscriber ${byName} ${profId}}) {
+    nodes {
+      id
+      databaseId
+      phone
+      name
+      gender
+      firstName
+      email
+      description
+      cpf
+      username
+      postcode
+      lastName
+      address
+      birthdate
+      cellphone
+      city
+      country
+      complement
+      neighborhood
+      number
+      state
+      credits
+      user_status
+      roles {
+        nodes {
+          name
+        }
+      }
+      avatar {
+        url
+      }
+      partner_zb {
+        id
+        logo
+        name
+      }
+    }
+    pageInfo {
+      offsetPagination {
+        total
+      }
+    }
+  }
+}`
+    });
+  }
+
+  static updateAvatar(userId: number, url: string) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_update_avatar', {userId, url});
+  }
+
+  static addCredits(userId: number, quantity: number, obs: string, isGift: boolean) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_add_credits', {
+      user_id: userId, quantity, obs, is_gift: isGift
+    });
+  }
+
+  static updateUser(data: any) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_update_user', {...data});
+  }
+
+
+
+  static sendInvitation(args: any) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=send_invitation', {...args});
+  }
+
+  static rememberPassword(email: string) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=remember_password', {email});
+  }
+  static updatePassword(id: number, password: string) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=update_password', {id, password});
+  }
+
+  static unblock(userId: number) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=update_user_status', {
+      user_id: userId, status: 0
+    });
+  }
+  static block(userId: number) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=update_user_status', {
+      user_id: userId, status: 1
+    });
+  }
+}
