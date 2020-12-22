@@ -32,18 +32,22 @@ const LoginForm = () => {
   const [loginWithEmail, setLoginWithEmail] = useState('')
   const [blockUi, setBlockUi] = useState(false)
   const [response, setResponse] = useState(null)
-  const [merging, setMerging] = useState(true)
+  const [merging, setMerging] = useState(false)
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
     password: Yup.string().min(8, 'validacao.curto').required('validacao.obrigatorio'),
   });
 
+  useEffect(()=>{
+    console.log(router);
+  })
+
   async function handleSocialSuccess(user, provider) {
     // console.log(user);
     setBlockUi(true)
     // exibe mensagem de aguarde...
-    const resp = await WpUser.socialLogin(user._profile, provider)
+    const resp = await WpUser.socialLogin(user._profile, provider, router.locale)
     const success = resp.data.success
     const data = resp.data.data
     setBlockUi(false)
@@ -53,13 +57,14 @@ const LoginForm = () => {
       toast.error(error.message)
     } else if (data?.next_action === 'login' || data?.next_action === 'profile_fase_1') {
       disp(setUpUser({
+        locale: router.locale,
         user: data?.current_user,
         tokens: {
           access: data?.login?.authToken,
           refresh: data?.login?.refreshToken
         }
       }, () => {
-        data.next_action === 'profile_fase_1' ? router.push('/cadastro1') : router.push('/dashboard')
+        data.next_action === 'profile_fase_1' ? router.push('/register1') : router.push('/dashboard')
       }))
     } else if (data?.next_action === 'account_merging') {
       setResponse(data)

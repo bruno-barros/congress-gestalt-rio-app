@@ -2,6 +2,7 @@ import AuthToken from "../http/auth-token";
 import {ErrorMessage, LoginInputs} from "./store.d";
 import {Dispatch} from "redux";
 import {AxiosResponse} from "axios";
+import pickBy from 'lodash/pickBy'
 import Wordpress from "../http/api/wordpress";
 import {UI_ACTYPE} from "./ui.actions";
 
@@ -77,7 +78,7 @@ export const postLogin = (
   }
 }
 
-export const setUpUser = (input : {user: any, tokens: { access: string, refresh?: string }}, callback: () => void) => {
+export const setUpUser = (input : {user: any, tokens: { access: string, refresh?: string }, locale: string}, callback: () => void) => {
   return async (dispatch, getState) => {
 
     await AuthToken.storeToken(input.tokens.access, null);
@@ -85,7 +86,9 @@ export const setUpUser = (input : {user: any, tokens: { access: string, refresh?
       AuthToken.storeRefreshToken(input.tokens.refresh);
     }
 
-    dispatch({type: USER_ACTYPE.LOGIN, payload: input.user})
+    dispatch({type: USER_ACTYPE.LOGIN, payload: pickBy(input.user, (value, key)=> {
+      return ['ID', 'id', 'user_login', 'user_email', 'display_name', 'first_name', 'last_name', 'locale', 'avatar', '_profile_completed', '_revalidate_password', 'google_social_id', 'facebook_social_id'].indexOf(key) !== -1
+      })})
 
     callback();
   }

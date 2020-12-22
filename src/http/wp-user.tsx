@@ -33,12 +33,13 @@ export default class WpUser {
     'partner_id',
   ];
 
-  static socialLogin(profile: any, provider: Providers){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_social_login', {...profile, provider});
+  static socialLogin(profile: any, provider: Providers, locale: string){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_social_login', {...profile, provider, locale});
   }
 
-  static mergeProfiles(profile: any, provider: Providers){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_profiles', {...profile, provider});
+  static mergeProfiles(profile: any, provider: Providers, locale: string){
+    let merging_url = `${window.location.protocol}//${window.location.host}/merging`
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_profiles', {...profile, provider, merging_url, locale});
 
   }
 

@@ -2,7 +2,7 @@ import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 
 
-const Cadastro1 = () => {
+const Register1 = () => {
 
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
@@ -12,4 +12,4 @@ const Cadastro1 = () => {
   </div>)
 }
 
-export default Cadastro1
+export default Register1

@@ -34,7 +34,7 @@ export default function MergingUsers(props: MergingUsersProps) {
   async function handleMerging(e) {
     e.preventDefault()
     setState('loading')
-    const resp = await WpUser.mergeProfiles(res?.current_user, res?.provider)
+    const resp = await WpUser.mergeProfiles(res?.current_user, res?.provider, router.locale)
     if (resp.data.success) {
       setState('done')
     } else {
