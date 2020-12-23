@@ -8,6 +8,8 @@ import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
 import {BlockUi} from "@brunobarros/react-components/dist";
+import useConfig from "../hooks/useConfig";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 // import BlockUi from "../ui/block-ui";
 
@@ -18,6 +20,8 @@ interface MainLayoutProps {
 
 function MainLayout({children, home}: MainLayoutProps) {
 
+  const {data: config} = useConfig()
+  const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
   const today = new Date;
 

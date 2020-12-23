@@ -11,5 +11,9 @@ export default function useTrans() {
     i18n.changeLanguage(router.locale)
   }, [router.locale])
 
+  useEffect(() => {
+    router.query?.lang && i18n.changeLanguage(String(router.query.lang))
+  }, [router.query?.lang])
+
   return t
 }

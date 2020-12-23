@@ -20,15 +20,21 @@ import WpUser from "../../../src/http/wp-user";
 import {setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
 import {useRouter} from "next/router";
-
+import useConfig from "../../hooks/useConfig";
+import Link from "next/link";
+import {inputFloatClass} from "../../../src/helpers";
+import SignUp from "./sign-up-form";
+import Sweet, {Toast} from '../sweet-alert'
 
 const LoginForm = () => {
 
   const t = useTrans()
   const router = useRouter()
   const disp = useDispatch()
+  const {data: config} = useConfig()
   const queryClient = useQueryClient()
   const [showPassRecover, setShowPassRecover] = useState(false)
+  const [showSignUp, setShowSignUp] = useState(false)
   const [loginWithEmail, setLoginWithEmail] = useState('')
   const [blockUi, setBlockUi] = useState(false)
   const [response, setResponse] = useState(null)
@@ -39,9 +45,6 @@ const LoginForm = () => {
     password: Yup.string().min(8, 'validacao.curto').required('validacao.obrigatorio'),
   });
 
-  useEffect(()=>{
-    console.log(router);
-  })
 
   async function handleSocialSuccess(user, provider) {
     // console.log(user);
@@ -51,7 +54,7 @@ const LoginForm = () => {
     const success = resp.data.success
     const data = resp.data.data
     setBlockUi(false)
-    console.log(data);
+
     if (!success) {
       const error = Error.make(data)
       toast.error(error.message)
@@ -69,7 +72,9 @@ const LoginForm = () => {
     } else if (data?.next_action === 'account_merging') {
       setResponse(data)
       setMerging(true)
-      // data.prev_user
+      setTimeout(() => {
+        router.reload()
+      }, 15000)
     } else {
       toast.error('Something happens!')
     }
@@ -87,7 +92,12 @@ const LoginForm = () => {
   }
 
   return (<div className="login-form">
+
     <BlockUi blocking={blockUi}/>
+
+    <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
+    <Google onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
+    <Hr label={t('cadastro.ou-entre-com-email')} bgColor="#eee"/>
     <Formik
       initialValues={{
         username: '',
@@ -96,32 +106,41 @@ const LoginForm = () => {
       validationSchema={LoginSchema}
       onSubmit={handleEmailLogin}
     >
-      {({errors, touched, isValid}) => (
+      {({errors, touched, isValid, values}) => (
         <Form>
-          <div className="form-group">
+          <div className="form-group float-label">
+            <Field id="username" name="username" className={inputFloatClass(values.username)} placeholder=""/>
             <label htmlFor="username">{t('seu-email')}</label>
-            <Field id="username" name="username" className="form-control" placeholder={t('seu-email')}/>
             <FieldError message={touched?.username && errors?.username} fieldId="username"/>
           </div>
-          <div className="form-group">
+          <div className="form-group float-label">
+            <Field id="password" name="password" className={inputFloatClass(values.password)} placeholder=""
+                   type="password"/>
             <label htmlFor="password">{t('senha')}</label>
-            <Field id="password" name="password" className="form-control" placeholder="" type="password"/>
             <FieldError message={touched?.password && errors?.password} fieldId="password"/>
           </div>
 
           <LoadingButton disable={!isValid} loading={false} block>{t('entrar')}</LoadingButton>
 
-          <a href="#" className="d-inline-block mt-2" onClick={(e) => {
-            e.preventDefault()
-            setShowPassRecover(true)
-          }}>{t('cadastro.esqueci-senha')}</a>
+          <div className="d-flex justify-content-between my-4">
+            <a href="#" onClick={(e) => {
+              e.preventDefault()
+              setShowSignUp(true)
+            }}>{t('cadastro.cadastrar')}</a>
+            <a href="#" className="d-inline-block" onClick={(e) => {
+              e.preventDefault()
+              setShowPassRecover(true)
+            }}>{t('cadastro.esqueci-senha')}</a>
+          </div>
+
 
         </Form>
       )}
     </Formik>
-    <Hr label={t('ou')} bgColor="#eee"/>
-    <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
-    <Google onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
+
+    <SignUp show={showSignUp} onDismiss={() => {
+      setShowSignUp(false)
+    }}/>
     <PasswordRecover show={showPassRecover} onDismiss={() => {
       setShowPassRecover(false)
     }}/>
@@ -130,8 +149,8 @@ const LoginForm = () => {
     }}/>
     <MergingUsers show={merging} response={response} onDismiss={(nextAction) => {
       setMerging(false)
-      if(nextAction === 'password') setShowPassRecover(true)
-      if(nextAction === 'cadastro') return
+      if (nextAction === 'password') setShowPassRecover(true)
+      if (nextAction === 'cadastro') return
     }}/>
   </div>)
 }

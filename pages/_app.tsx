@@ -5,6 +5,7 @@ import {ReactQueryDevtools} from "react-query/devtools";
 import {QueryClient, QueryClientProvider} from "react-query";
 import '../src/i18n'
 import {ToastContainer} from "react-toastify";
+import Head from "next/head";
 
 const stored = store();
 
@@ -18,6 +19,7 @@ const queryClient = new QueryClient({
 
 export default function App({Component, pageProps}) {
   return <Provider store={stored}>
+
     <QueryClientProvider client={queryClient}>
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen/>

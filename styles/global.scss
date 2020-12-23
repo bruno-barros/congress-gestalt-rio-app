@@ -4,9 +4,11 @@
 @import "./toastify/main";
 @import "./login";
 @import "./lang-selector";
+@import "./floating-label";
+@import "./sweet-alert";
 
 body, html {
-  background-color: #eee;
+  background-color: $gray-100;
 }
 
 .form-error {

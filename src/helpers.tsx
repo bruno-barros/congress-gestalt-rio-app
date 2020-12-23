@@ -1,7 +1,8 @@
 import {ServerResponse} from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
-
+import {useQueryClient} from 'react-query'
+import Config from "./resources/config";
 
 /**
  * Used to load files from '/public' folder
@@ -15,7 +16,9 @@ export function asset(src: string) {
 }
 
 export function siteTitle(name: string = '') {
-  return name ? name + ` - ${process.env.siteName}` : process.env.siteName;
+  const c = useQueryClient()
+  const config: Config = c.getQueryData('configurations')
+  return name ? name + ` - ${config?.eventName}` : (config ? config.eventName : '');
 }
 
 
@@ -92,7 +95,7 @@ export const dateAdd = (date: Date, interval: string, units: number) => {
 export function fakePromise(timeout: number = 1000): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-       resolve(`Promise timeout reached (limit: ${timeout} ms)`)
+      resolve(`Promise timeout reached (limit: ${timeout} ms)`)
     }, timeout);
   })
 }
@@ -133,10 +136,18 @@ export function truncateMiddle(fullStr: string, strLen: number = 24, separator: 
 export function plural(count: number, singular: string, plural: string, zero?: string) {
 
   if (count === 0 && zero) {
-    return  zero
+    return zero
   }
   if (count > 1) {
     return plural.replace('%c', String(count))
   }
   return singular.replace('%c', String(count))
+}
+
+
+export function inputFloatClass(inputValue:any, appendClasses:string = '') {
+  let classes = ['form-control']
+  if(inputValue && inputValue.length > 0) classes.push('filled')
+  if(appendClasses) classes.push(appendClasses)
+  return classes.join(' ')
 }

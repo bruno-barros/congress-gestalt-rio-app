@@ -33,6 +33,10 @@ export default class WpUser {
     'partner_id',
   ];
 
+  static signUpWithEmail(values: any, locale: string){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_signup_with_email', {...values, locale});
+  }
+
   static socialLogin(profile: any, provider: Providers, locale: string){
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_social_login', {...profile, provider, locale});
   }
@@ -40,7 +44,10 @@ export default class WpUser {
   static mergeProfiles(profile: any, provider: Providers, locale: string){
     let merging_url = `${window.location.protocol}//${window.location.host}/merging`
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_profiles', {...profile, provider, merging_url, locale});
+  }
 
+  static mergeApproved(uuid: any){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_approved', {uuid});
   }
 
   /**
