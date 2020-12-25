@@ -33,7 +33,8 @@ export default function useCurrentUser():{authLoading: boolean; user: User | nul
 
   // let authState = useSelector((state: RootReducers) => state.user);
   const queryAuth = useQuery('auth', fetchCurrentUser(dispatch), {
-   cacheTime: 1000 * 60 * 10
+   cacheTime: 1000 * 60 * 10,
+    retry: 1
     // enabled: !!authState.databaseId === false
   })
 

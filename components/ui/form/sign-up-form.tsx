@@ -11,6 +11,9 @@ import {useRouter} from "next/router";
 import Sweet from '../sweet-alert'
 import {motion} from "framer-motion";
 import Error from "../../../src/resources/error";
+import {setUpUser} from "../../../src/store/user.actions";
+import {useDispatch} from "react-redux";
+import {toast} from "react-toastify";
 
 interface SignUpProps {
   show: boolean
@@ -20,12 +23,18 @@ interface SignUpProps {
 
 export default function SignUp(props: SignUpProps) {
 
-  const {onDismiss} = props
+  const disp = useDispatch();
+  const {onDismiss} = props;
   const [show, setShow] = useState(props.show)
   const [loading, setLoading] = useState(false)
   const [response, setResponse] = useState({success: false, msg: ''})
   const t = useTrans()
   const router = useRouter()
+
+  const motionVars = {
+    closed: {opacity: 0, height: 0},
+    opened: {opacity: 1, height: 'auto'}
+  }
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
@@ -40,51 +49,55 @@ export default function SignUp(props: SignUpProps) {
   async function submit(values) {
     setLoading(true)
     let success = false
-    let data = {}
+    let data: any = {}
     try {
       const resp = await WpUser.signUpWithEmail(values, router.locale)
       success = resp.data.success
       data = resp.data?.data
+      setLoading(false)
+      if (!success) {
+        let err = Error.make(data)
+        setResponse({success: false, msg: err.message})
+        setTimeout(() => {
+          setResponse({success: null, msg: ''})
+        }, 5000)
+      } else {
+        disp(setUpUser({
+          locale: router.locale,
+          user: data?.current_user,
+          tokens: {
+            access: data?.login?.authToken,
+            refresh: data?.login?.refreshToken
+          }
+        }, () => {
+
+          Sweet.fire({
+            icon: 'success',
+            title: t('bem-vindo') + '!',
+            confirmButtonText: t('entrar'),
+            didOpen: () => {
+              handleClose()
+            },
+            willClose: () => {
+              data.next_action === 'profile_fase_1' ? router.push('/register1') : router.push('/dashboard')
+            }
+          })
+
+
+        }))
+      }
+
     } catch (err) {
       let error = Error.make(err)
       setResponse({success: false, msg: error.message})
     }
-
-    setLoading(false)
-    if (!success) {
-
-    } else {
-      Sweet.fire({
-        icon: 'success',
-        title: t('bem-vindo') + '!',
-        confirmButtonText: t('entrar'),
-        didOpen: () => {
-          handleClose()
-        },
-        willClose: () => {
-          router.push('/login')
-        }
-      })
-    }
-
-    setResponse({
-      success: success,
-      msg: data?.msg
-    })
-
-    setTimeout(() => {
-      setResponse({success: null, msg: ''})
-    }, 5000)
   }
 
 
-  const motionVars = {
-    closed: {opacity: 0, height: 0},
-    opened: {opacity: 1, height: 'auto'}
-  }
 
   function handleClose() {
     setShow(false)
+    setLoading(false)
     setResponse({success: false, msg: ''})
     onDismiss && onDismiss()
   }

@@ -105,6 +105,10 @@ export default class WpUser {
     });
   }
 
+  static logout() {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_logout');
+  }
+
   /**
    * {
       "data": {

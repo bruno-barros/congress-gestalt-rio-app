@@ -8,11 +8,13 @@ import Link from "next/link";
 import Head from "next/head";
 import {siteTitle} from "../src/helpers";
 import useConfig from "../components/hooks/useConfig";
+import {useQueryClient} from "react-query";
 
 
 const Login = () => {
 
   const today = new Date;
+  const queryClient = useQueryClient()
   const {data: config} = useConfig()
   const router = useRouter()
   const t = useTrans()
@@ -21,7 +23,7 @@ const Login = () => {
 
   return (<div className="login-page d-flex flex-column">
     <Head>
-      <title>{siteTitle('Login')}</title>
+      <title>{siteTitle('Login', queryClient)}</title>
     </Head>
     <div className="brand-panel">
       <div className="p-4">
@@ -33,6 +35,11 @@ const Login = () => {
       <div className="d-flex align-items-center justify-content-center mb-3">
         <LangSelector/>
       </div>
+
+      {(user && user.getId() > -1) && <div className="text-center"><div className="alert alert-warning d-inline-block w-auto">
+        Olá {user?.getFirstName()}. Você já está logado. <Link href={`/logout`} passHref><a>Sair</a></Link>
+      </div></div>}
+
       <LoginForm/>
 
     </div>

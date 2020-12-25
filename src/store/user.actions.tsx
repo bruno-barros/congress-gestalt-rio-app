@@ -123,6 +123,13 @@ export const fetchUserData = () => {
   }
 }
 
+export const logout = () => {
+  return (dispatch: Dispatch, getState: any) => {
+    AuthToken.deleteToken();
+    dispatch({type: USER_ACTYPE.LOGOUT})
+  }
+}
+
 
 async function _fetchUserData(): Promise<AxiosResponse<any>> {
   console.log('FETCHING USER DATA');

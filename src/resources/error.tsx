@@ -22,10 +22,10 @@ export default class Error {
     this.slug = slugfy(this.message)
 
     if (this.errorData.hasOwnProperty('code')) this.code = this.errorData.code
-    else if(defaults.hasOwnProperty('code')) this.code = defaults.code
+    else if(defaults && defaults.hasOwnProperty('code')) this.code = defaults.code
 
     if (this.errorData.hasOwnProperty('data')) this.data = this.errorData.data
-    else if (defaults.hasOwnProperty('data')) this.data = defaults.data
+    else if (defaults && defaults.hasOwnProperty('data')) this.data = defaults.data
   }
 
   static make(errorData: any, defaults?: any) {

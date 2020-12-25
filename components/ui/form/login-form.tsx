@@ -69,6 +69,9 @@ const LoginForm = () => {
       }, () => {
         data.next_action === 'profile_fase_1' ? router.push('/register1') : router.push('/dashboard')
       }))
+      setTimeout(() => {
+        queryClient.refetchQueries('auth')
+      }, 1000)
     } else if (data?.next_action === 'account_merging') {
       setResponse(data)
       setMerging(true)
