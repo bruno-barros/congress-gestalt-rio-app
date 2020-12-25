@@ -6,17 +6,16 @@ import { USER_ACTYPE} from "../../src/store/user.actions";
 import WpUser from "../../src/http/wp-user";
 import AuthToken from "../../src/http/auth-token";
 
-function fetchCurrentUser(userState: any) {
-  const disp = useDispatch()
-  return  (): Promise<any> => {
+function fetchCurrentUser(dispatch) {
+  return  ():Promise<any> => {
     return new Promise((resolve, reject) => {
 
       const id = AuthToken.factory().decodedToken.id
 
       WpUser.fetchLogged(id).then((resp)=>{
-        console.log('fetching AUTH again...');
+        console.log({id}, 'fetching AUTH again...');
         if(resp.data?.data?.user){
-          disp({type: USER_ACTYPE.UPDATED, payload: resp.data.data.user})
+          dispatch({type: USER_ACTYPE.UPDATED, payload: resp.data.data.user})
           resolve(resp.data.data.user)
         } else {
           reject(null)
@@ -25,13 +24,16 @@ function fetchCurrentUser(userState: any) {
 
     })
   }
+
 }
 
 export default function useCurrentUser():{authLoading: boolean; user: User | null} {
 
+  const dispatch = useDispatch()
+
   // let authState = useSelector((state: RootReducers) => state.user);
-  const queryAuth = useQuery('auth', fetchCurrentUser, {
-   cacheTime: Infinity
+  const queryAuth = useQuery('auth', fetchCurrentUser(dispatch), {
+   cacheTime: 1000 * 60 * 10
     // enabled: !!authState.databaseId === false
   })
 

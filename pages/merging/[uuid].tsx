@@ -6,9 +6,9 @@ import Link from "next/link";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import WpUser from "../../src/http/wp-user";
 import useTrans from "../../components/hooks/useTrans";
-import MainLayout from "../../components/layout";
 import Head from "next/head";
 import {siteTitle} from "../../src/helpers";
+import ClearLayout from "../../components/layout/clear";
 
 
 const Merging = () => {
@@ -43,38 +43,41 @@ const Merging = () => {
 
   }, [router.query])
 
-  return (<MainLayout>
+  return (<ClearLayout>
     <Head>
       <title>{siteTitle('Merging')}</title>
     </Head>
-    <div className="">
-      <h1>Merging</h1>
-      {status === '' && <Card>
-        <Card.Body>
-          <Loading vspace={40} message={t('aguarde') + '...'}/>
-        </Card.Body>
-      </Card>}
-      {status === 'error' && <Card>
-        <Card.Body>
-          {t('cadastro.link-expirou')} {t('por-favor')}, <Link href="/login" locale={lang}
-                                                               passHref><a>{t('cadastro.faca-seu-login')}</a></Link>.
-        </Card.Body>
-      </Card>}
-      {status.hasOwnProperty('ID') && <Card>
-        <Card.Body>
-          <div className="d-flex">
-            <Icon style={{fontSize: 80}} name={`checkmark-circle-outline`}/>
-            <div className="ml-4">
-              <p>Contas unificadas com sucesso!</p>
-              <p><Link href="/login" locale={lang} passHref><a
-                className="btn btn-primary">{t('cadastro.faca-seu-login')}</a></Link></p>
+    <div className="row">
+      <div className="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+        {status === ''
+        && <Card>
+          <Card.Body>
+            <Loading vspace={40} message={t('aguarde') + '...'}/>
+          </Card.Body>
+        </Card>}
+        {status === 'error'
+        && <Card>
+          <Card.Body className="text-center">
+            {t('cadastro.link-expirou')} {t('por-favor')}, <Link href="/login" locale={lang}
+                                                                 passHref><a>{t('cadastro.faca-seu-login')}</a></Link>.
+          </Card.Body>
+        </Card>}
+        {(status.hasOwnProperty('ID'))
+        && <Card>
+          <Card.Body>
+            <div className="d-flex">
+              <Icon style={{fontSize: 80}} name={`checkmark-circle-outline`}/>
+              <div className="ml-4">
+                <p>Contas unificadas com sucesso!</p>
+                <p><Link href="/login" locale={lang} passHref><a
+                  className="btn btn-primary">{t('cadastro.faca-seu-login')}</a></Link></p>
+              </div>
             </div>
-          </div>
-        </Card.Body>
-      </Card>}
-
+          </Card.Body>
+        </Card>}
+      </div>
     </div>
-  </MainLayout>)
+  </ClearLayout>)
 }
 
 export default Merging

@@ -209,8 +209,8 @@ export default class WpUser {
 
     let type = isFinite(Number(id)) ? 'DATABASE_ID' : 'ID'
 
-    return httpApi.post('/index.php?graphql&user', {
-      query: `query FetchUser {
+    return httpApi.post('/index.php?graphql&fetchLogged', {
+      query: `query fetchLogged {
         __typename
         user(id: "${id}", idType: ${type}) {
           id
@@ -233,21 +233,8 @@ export default class WpUser {
           neighborhood
           number
           state
-          credits
-          specialities
-          doc_prof
           registeredDate
           user_status
-          academia_sso
-          timeframes {
-            wednesday
-            tuesday
-            thursday
-            sunday
-            saturday
-            friday
-            monday
-          }
           roles {
             nodes {
               name
@@ -255,10 +242,6 @@ export default class WpUser {
           }
           avatar {
             url
-          }
-          ms_graph {
-            id
-            upn
           }
         }
       }`

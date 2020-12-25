@@ -1,53 +1,54 @@
 import Head from "next/head";
+import Image from 'next/image'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import styles from "./main.module.scss";
 import {asset, siteTitle} from "../../src/helpers";
-
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
 import {BlockUi, Loading} from "@brunobarros/react-components";
 import useConfig from "../hooks/useConfig";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
+import {useQueryClient} from "react-query";
 
-
-interface MainLayoutProps {
+interface ClearLayoutProps {
   children: any;
-  home?: boolean;
 }
 
-function MainLayout({children, home}: MainLayoutProps) {
+function ClearLayout({children}: ClearLayoutProps) {
 
+  const queryClient = useQueryClient()
   const {data: config, isLoading} = useConfig()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
 
-
-  if(isLoading || authLoading){
+  if(isLoading){
     return <Loading vspace={100}/>
   }
 
   return (
-    <div className={`layout-main ${styles.container}`}>
+    <div className={`layout-clear`}>
       <BlockUi blocking={blockUI}/>
         <Head>
-          <title>{siteTitle()}</title>
+          <title>{siteTitle('', queryClient)}</title>
           <link rel="icon" href={asset('/favicon.ico')}/>
         </Head>
 
-        <header className={styles.header}>
+        <header className="mainHeader">
           <Container>
             <Row>
               <Col>
-                main header
+                {config.logoPrimary
+                  ? <img src={config.logoPrimary} className="brand img-fluid" alt={config.eventName} />
+                : <div className="brand">{config.eventName}</div>}
               </Col>
             </Row>
           </Container>
         </header>
 
-        <main className={styles.main}>
+        <main className="main">
           <Container>
             {children}
           </Container>
@@ -58,4 +59,4 @@ function MainLayout({children, home}: MainLayoutProps) {
   )
 }
 
-export default MainLayout;
+export default ClearLayout;

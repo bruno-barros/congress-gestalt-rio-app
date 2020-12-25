@@ -1,0 +1,24 @@
+@import "mixins";
+
+.layout-clear {
+
+  .mainHeader {
+    padding: 1rem 0;
+    margin: 0 0 1rem 0;
+
+    img.brand {
+      max-width: 300px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    div.brand {
+      font-size: 1em;
+      text-align: center;
+    }
+  }
+
+  .main {
+    min-height: 70vh;
+  }
+}

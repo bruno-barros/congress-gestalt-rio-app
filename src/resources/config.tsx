@@ -1,5 +1,7 @@
+
 export default class Config {
   name: string
+  logo: {primary: string; secondary: string}
 
   constructor(data: any) {
     Object.assign(this, data)
@@ -11,5 +13,12 @@ export default class Config {
 
   get eventName() {
     return this.name
+  }
+
+  get logoPrimary(){
+    return this.logo?.primary
+  }
+  get logoSecondary(){
+    return this.logo?.secondary
   }
 }

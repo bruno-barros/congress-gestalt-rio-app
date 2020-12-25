@@ -10,6 +10,7 @@ export const httpApi = axios.create({
 httpApi.interceptors.request.use(function (config) {
   const auth = AuthToken.factory();
   const token = AuthToken.getToken();
+
    config.headers.Authorization =  auth.isValid ? `Bearer ${token}` : '';
   return config;
 });

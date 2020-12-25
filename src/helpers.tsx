@@ -1,7 +1,7 @@
 import {ServerResponse} from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
-import {useQueryClient} from 'react-query'
+import {QueryClient, useQueryClient} from 'react-query'
 import Config from "./resources/config";
 
 /**
@@ -15,10 +15,9 @@ export function asset(src: string) {
     ? process.env.RELATIVE_PATH : ''}/${s}`;
 }
 
-export function siteTitle(name: string = '') {
-  const c = useQueryClient()
-  const config: Config = c.getQueryData('configurations')
-  return name ? name + ` - ${config?.eventName}` : (config ? config.eventName : '');
+export function siteTitle(name: string = '', queryClient?: QueryClient) {
+  const config: Config|any = queryClient ? queryClient.getQueryData('configurations'): {}
+  return name ? name + ` - ${config?.eventName}` : (config ? config.eventName : '')
 }
 
 

@@ -2,13 +2,14 @@
 @import './bootstrap/bootstrap.scss';
 @import "styles/mixins";
 @import "./toastify/main";
+@import "./layout-clear";
 @import "./login";
 @import "./lang-selector";
 @import "./floating-label";
 @import "./sweet-alert";
 
 body, html {
-  background-color: $gray-100;
+  //background-color: $gray-100;
 }
 
 .form-error {
@@ -52,4 +53,9 @@ body, html {
     padding: 0 10px;
     transform: translateY(-1px);
   }
+}
+
+
+.page-title {
+
 }

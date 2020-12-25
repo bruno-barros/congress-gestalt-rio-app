@@ -9,6 +9,8 @@ import FieldError from "./field-error";
 import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Sweet from '../sweet-alert'
+import {motion} from "framer-motion";
+import Error from "../../../src/resources/error";
 
 interface SignUpProps {
   show: boolean
@@ -37,24 +39,48 @@ export default function SignUp(props: SignUpProps) {
 
   async function submit(values) {
     setLoading(true)
-    const resp = await WpUser.signUpWithEmail(values, router.locale)
-    setResponse({
-      success: resp.data.success,
-      msg: resp.data.data.msg
-    })
-    setLoading(false)
+    let success = false
+    let data = {}
+    try {
+      const resp = await WpUser.signUpWithEmail(values, router.locale)
+      success = resp.data.success
+      data = resp.data?.data
+    } catch (err) {
+      let error = Error.make(err)
+      setResponse({success: false, msg: error.message})
+    }
 
-    Sweet.fire({
-      icon: 'success',
-      title: t('bem-vindo')+'!',
-      confirmButtonText: t('entrar'),
-      didOpen: () => {
-        handleClose()
-      },
-      willClose: () => {
-        router.push('/login')
-      }
+    setLoading(false)
+    if (!success) {
+
+    } else {
+      Sweet.fire({
+        icon: 'success',
+        title: t('bem-vindo') + '!',
+        confirmButtonText: t('entrar'),
+        didOpen: () => {
+          handleClose()
+        },
+        willClose: () => {
+          router.push('/login')
+        }
+      })
+    }
+
+    setResponse({
+      success: success,
+      msg: data?.msg
     })
+
+    setTimeout(() => {
+      setResponse({success: null, msg: ''})
+    }, 5000)
+  }
+
+
+  const motionVars = {
+    closed: {opacity: 0, height: 0},
+    opened: {opacity: 1, height: 'auto'}
   }
 
   function handleClose() {
@@ -92,9 +118,19 @@ export default function SignUp(props: SignUpProps) {
           </Form>
         )}
       </Formik>
-      {response?.msg && <div className={`alert ${response?.success ? 'alert-success' : 'alert-danger'} mb-0 mt-3`}>
-        {response?.msg}
-      </div>}
+      <motion.div
+        style={{overflow: 'hidden'}}
+        variants={motionVars}
+        initial="closed"
+        animate={response.success === false ? 'opened' : 'closed'}
+        transition={{duration: 1}}
+      >
+        {(response?.msg && !response.success) &&
+        <div className={`alert ${response?.success ? 'alert-success' : 'alert-danger'} mb-0 mt-3`}>
+          {response?.msg}
+        </div>}
+
+      </motion.div>
 
     </Modal.Body>
   </Modal>)
