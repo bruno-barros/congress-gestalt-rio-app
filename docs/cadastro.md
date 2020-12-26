@@ -27,7 +27,7 @@ TODO Implementar link de cadastro com perfil e categoria pré-definidos
 ## Cadastro fase 1
     Perunta: Mora no Brasil?
     Seletor de país de residência
-    Obtem: Nome, sobrenome, e-mail (confirma), telefone, CPF/passaporte
+    Obtem: Nome, sobrenome, e-mail (confirma), telefone, CPF/passaport
     Após salvar, informa que o e-mail será usado como login, 
         ou via rede social desde que tenham o mesmo e-mail de cadastro
     OK, vai para cadastro completo
