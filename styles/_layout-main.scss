@@ -1,0 +1,153 @@
+@import "mixins";
+
+.layout-main {
+  width: 100%;
+  .mainHeader {
+    padding: 1rem 0;
+    border-bottom: solid 1px $gray-400;
+    position: sticky;
+    top: 0;
+    z-index: 6;
+
+    background-color: #fff;
+
+    img.brand {
+      max-width: 300px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    div.brand {
+      font-size: 1em;
+      text-align: center;
+    }
+  }
+
+  .main {
+    min-height: calc(100vh - 130px);
+
+    & > .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 57px;
+    z-index: 5;
+    background-color: var(--light);
+  }
+
+  .content {
+    z-index: 4;
+    background-color: #868686;
+
+    & > .row {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  footer {
+    padding: 1rem 0;
+    border-top: solid 1px $gray-400;
+  }
+}
+
+#sidebar {
+  display: flex;
+  flex-direction: column;
+ position: relative;
+  height: 100%;
+
+  .sb-header {
+    display: flex;
+    position: relative;
+    align-items: center;
+    z-index: 3;
+    //background-color: rgba(255, 0, 0, 0.36);
+  }
+  .sb-title {
+    flex: 1;
+  }
+  .sb-body {
+    position: absolute;
+    top: 38px;
+    min-height: calc(100vh - 95px);
+    bottom: 0;
+    width: $sidebarWidth;
+    z-index: 1;
+    transition: all .5s ease;
+    transform: translateX(-100%);
+    overflow-y: auto;
+
+    &.opened {
+      transform: translateX(0);
+    }
+  }
+}
+
+@include media-breakpoint-up(md) {
+  .layout-main {
+    .main {
+      display: flex;
+    }
+
+    .sidebar {
+      width: $sidebarCompact;
+    }
+
+    .content {
+      flex: 1;
+    }
+  }
+
+  #sidebar {
+    position: sticky;
+    top:57px;
+    height: auto;
+    .sb-header {
+      display: flex;
+      flex-direction: column;
+    }
+    .sb-title {
+      transform-origin: 50% 50%;
+      transform: rotate(90deg) translateX(50%);
+    }
+    .sb-body {
+      z-index: 5;
+    }
+  }
+}
+
+
+@include media-breakpoint-up(xl) {
+  .layout-main {
+    .main {
+    }
+
+    .sidebar {
+      width: $sidebarWidth;
+
+      &.compact {
+        width: $sidebarCompact;
+      }
+    }
+
+    .content {
+    }
+  }
+
+  #sidebar {
+    &:not(.compact) .sb-header {
+      display: none;
+    }
+    &:not(.compact) .sb-body {
+      //position: relative;
+      transform: translateX(0);
+      top: 0;
+      z-index: 5;
+    }
+  }
+}

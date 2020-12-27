@@ -7,7 +7,7 @@ import useCurrentUser from "../components/hooks/useCurrentUser";
 import Link from "next/link";
 import Head from "next/head";
 import {siteTitle} from "../src/helpers";
-import useConfig from "../components/hooks/useConfig";
+import useEvent from "../components/hooks/useEvent";
 import {useQueryClient} from "react-query";
 
 
@@ -15,7 +15,7 @@ const Login = () => {
 
   const today = new Date;
   const queryClient = useQueryClient()
-  const {data: config} = useConfig()
+  const {data: event} = useEvent()
   const router = useRouter()
   const t = useTrans()
   const {authLoading, user} = useCurrentUser()

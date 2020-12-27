@@ -3,6 +3,7 @@
 @import "styles/mixins";
 @import "./toastify/main";
 @import "./layout-clear";
+@import "./layout-main";
 @import "./login";
 @import "./lang-selector";
 @import "./floating-label";
@@ -30,7 +31,7 @@ body, html {
   position: relative;
   padding: 1rem 0;
   text-align: center;
-//box-shadow: 0 0 1px;
+  //box-shadow: 0 0 1px;
   &::after {
     content: "";
     display: block;
@@ -57,5 +58,23 @@ body, html {
 
 
 .page-title {
+  font-size: 1.4em;
+  line-height: 1.3em;
+  margin-bottom: 1rem;
+}
 
+
+.card-footer {
+  .btn-group.end > .btn:last-child {
+    border-top-right-radius: 0;
+  }
+
+  .btn-group.start > .btn:first-child {
+    border-top-left-radius: 0;
+  }
+
+  .btn-group.start > .btn:not(:first-child),
+  .btn-group.end > .btn:not(:last-child) {
+    border-radius: 0;
+  }
 }

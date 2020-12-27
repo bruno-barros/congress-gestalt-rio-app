@@ -395,39 +395,39 @@ export default class WpUser {
   }
 
   static updateAvatar(userId: number, url: string) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_update_avatar', {userId, url});
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_avatar', {userId, url});
   }
 
   static addCredits(userId: number, quantity: number, obs: string, isGift: boolean) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_add_credits', {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_add_credits', {
       user_id: userId, quantity, obs, is_gift: isGift
     });
   }
 
-  static updateUser(data: any) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=zb_update_user', {...data});
+  static update(data: any) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user', {...data});
   }
 
 
 
   static sendInvitation(args: any) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=send_invitation', {...args});
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_send_invitation', {...args});
   }
 
-  static rememberPassword(email: string) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=remember_password', {email});
+  static rememberPassword(email: string, locale: string) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_remember_password', {email, locale});
   }
   static updatePassword(id: number, password: string) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=update_password', {id, password});
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_password', {id, password});
   }
 
   static unblock(userId: number) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=update_user_status', {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
       user_id: userId, status: 0
     });
   }
   static block(userId: number) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=update_user_status', {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
       user_id: userId, status: 1
     });
   }

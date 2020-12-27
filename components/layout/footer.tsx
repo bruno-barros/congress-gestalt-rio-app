@@ -8,7 +8,7 @@ import {useQueryClient} from "react-query";
 export default function Footer() {
   const today = new Date;
   const queryClient = useQueryClient()
-  return (<footer className={styles.footer}>
+  return (<footer>
     <Container>
       <Row>
         <Col>

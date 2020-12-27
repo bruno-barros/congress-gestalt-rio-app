@@ -20,7 +20,7 @@ import WpUser from "../../../src/http/wp-user";
 import {setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
 import {useRouter} from "next/router";
-import useConfig from "../../hooks/useConfig";
+import useEvent from "../../hooks/useEvent";
 import Link from "next/link";
 import {inputFloatClass} from "../../../src/helpers";
 import SignUp from "./sign-up-form";
@@ -31,7 +31,7 @@ const LoginForm = () => {
   const t = useTrans()
   const router = useRouter()
   const disp = useDispatch()
-  const {data: config} = useConfig()
+  const {data: event} = useEvent()
   const queryClient = useQueryClient()
   const [showPassRecover, setShowPassRecover] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)

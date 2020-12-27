@@ -1,8 +1,8 @@
 import {ServerResponse} from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
-import {QueryClient, useQueryClient} from 'react-query'
-import Config from "./resources/config";
+import {QueryClient} from 'react-query'
+import Event from "./resources/event";
 
 /**
  * Used to load files from '/public' folder
@@ -16,8 +16,8 @@ export function asset(src: string) {
 }
 
 export function siteTitle(name: string = '', queryClient?: QueryClient) {
-  const config: Config|any = queryClient ? queryClient.getQueryData('configurations'): {}
-  return name ? name + ` - ${config?.eventName}` : (config ? config.eventName : '')
+  const event: Event|any = queryClient ? queryClient.getQueryData('event'): {}
+  return name ? name + ` - ${event?.eventName}` : (event ? event.eventName : '')
 }
 
 
@@ -149,4 +149,12 @@ export function inputFloatClass(inputValue:any, appendClasses:string = '') {
   if(inputValue && inputValue.length > 0) classes.push('filled')
   if(appendClasses) classes.push(appendClasses)
   return classes.join(' ')
+}
+
+export function getGenres() {
+return [
+  {value: 'M', name: 'masculino'},
+  {value: 'F', name: 'feminino'},
+  {value: 'I', name: 'outro'},
+]
 }

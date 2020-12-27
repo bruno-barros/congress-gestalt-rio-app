@@ -8,7 +8,7 @@ import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
 import {BlockUi, Loading} from "@brunobarros/react-components";
-import useConfig from "../hooks/useConfig";
+import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";
@@ -20,7 +20,7 @@ interface ClearLayoutProps {
 function ClearLayout({children}: ClearLayoutProps) {
 
   const queryClient = useQueryClient()
-  const {data: config, isLoading} = useConfig()
+  const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
 
@@ -40,9 +40,9 @@ function ClearLayout({children}: ClearLayoutProps) {
           <Container>
             <Row>
               <Col>
-                {config.logoPrimary
-                  ? <img src={config.logoPrimary} className="brand img-fluid" alt={config.eventName} />
-                : <div className="brand">{config.eventName}</div>}
+                {event.logoPrimary
+                  ? <img src={event.logoPrimary} className="brand img-fluid" alt={event.eventName} />
+                : <div className="brand">{event.eventName}</div>}
               </Col>
             </Row>
           </Container>

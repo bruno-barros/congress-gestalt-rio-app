@@ -1,5 +1,5 @@
 
-export default class Config {
+export default class Event {
   name: string
   logo: {primary: string; secondary: string}
 
@@ -8,7 +8,7 @@ export default class Config {
   }
 
   static make(data: any) {
-    return new Config(data)
+    return new Event(data)
   }
 
   get eventName() {

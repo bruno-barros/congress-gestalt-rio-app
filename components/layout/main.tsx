@@ -8,19 +8,24 @@ import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
 import {BlockUi, Loading} from "@brunobarros/react-components";
-import useConfig from "../hooks/useConfig";
+import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
+import {useQueryClient} from "react-query";
+import Sidebar from "./sidebar";
+import {ReactNode} from "react";
 
 
 interface MainLayoutProps {
-  children: any;
-  home?: boolean;
+  children: any
+  sidebar?: {title?: string; component: ReactNode, sidebarCompact?: boolean}
+
 }
 
-function MainLayout({children, home}: MainLayoutProps) {
+function MainLayout({children, sidebar}: MainLayoutProps) {
 
-  const {data: config, isLoading} = useConfig()
+  const queryClient = useQueryClient()
+  const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
 
@@ -30,15 +35,15 @@ function MainLayout({children, home}: MainLayoutProps) {
   }
 
   return (
-    <div className={`layout-main ${styles.container}`}>
+    <div className={`layout-main`}>
       <BlockUi blocking={blockUI}/>
         <Head>
-          <title>{siteTitle()}</title>
+          <title>{siteTitle('', queryClient)}</title>
           <link rel="icon" href={asset('/favicon.ico')}/>
         </Head>
 
-        <header className={styles.header}>
-          <Container>
+        <header className="mainHeader">
+          <Container fluid>
             <Row>
               <Col>
                 main header
@@ -47,10 +52,13 @@ function MainLayout({children, home}: MainLayoutProps) {
           </Container>
         </header>
 
-        <main className={styles.main}>
-          <Container>
+        <main className="main">
+          <div className={`sidebar ${!!sidebar.sidebarCompact && 'compact'}`}>
+            <Sidebar sidebar={sidebar} compact={!!sidebar.sidebarCompact}/>
+          </div>
+          <div className="content">
             {children}
-          </Container>
+          </div>
         </main>
 
         <Footer/>

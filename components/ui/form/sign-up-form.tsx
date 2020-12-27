@@ -9,11 +9,10 @@ import FieldError from "./field-error";
 import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Sweet from '../sweet-alert'
-import {motion} from "framer-motion";
 import Error from "../../../src/resources/error";
 import {setUpUser} from "../../../src/store/user.actions";
 import {useDispatch} from "react-redux";
-import {toast} from "react-toastify";
+import Curtain from "../curtain";
 
 interface SignUpProps {
   show: boolean
@@ -31,10 +30,6 @@ export default function SignUp(props: SignUpProps) {
   const t = useTrans()
   const router = useRouter()
 
-  const motionVars = {
-    closed: {opacity: 0, height: 0},
-    opened: {opacity: 1, height: 'auto'}
-  }
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
@@ -131,19 +126,13 @@ export default function SignUp(props: SignUpProps) {
           </Form>
         )}
       </Formik>
-      <motion.div
-        style={{overflow: 'hidden'}}
-        variants={motionVars}
-        initial="closed"
-        animate={response.success === false ? 'opened' : 'closed'}
-        transition={{duration: 1}}
-      >
+
+      <Curtain isOpened={response?.msg && !response.success}>
         {(response?.msg && !response.success) &&
         <div className={`alert ${response?.success ? 'alert-success' : 'alert-danger'} mb-0 mt-3`}>
           {response?.msg}
         </div>}
-
-      </motion.div>
+      </Curtain>
 
     </Modal.Body>
   </Modal>)
