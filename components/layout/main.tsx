@@ -14,6 +14,7 @@ import Footer from "./footer";
 import {useQueryClient} from "react-query";
 import Sidebar from "./sidebar";
 import {ReactNode} from "react";
+import Header from "./header";
 
 
 interface MainLayoutProps {
@@ -42,19 +43,11 @@ function MainLayout({children, sidebar}: MainLayoutProps) {
           <link rel="icon" href={asset('/favicon.ico')}/>
         </Head>
 
-        <header className="mainHeader">
-          <Container fluid>
-            <Row>
-              <Col>
-                main header
-              </Col>
-            </Row>
-          </Container>
-        </header>
+        <Header event={event} user={user}/>
 
         <main className="main">
-          <div className={`sidebar ${!!sidebar.sidebarCompact && 'compact'}`}>
-            <Sidebar sidebar={sidebar} compact={!!sidebar.sidebarCompact}/>
+          <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
+            <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>
           </div>
           <div className="content">
             {children}

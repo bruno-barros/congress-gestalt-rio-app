@@ -15,8 +15,8 @@ import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
 import {useState} from "react";
 import Error from "../src/resources/error";
-import {toast} from "react-toastify";
 import Curtain from "../components/ui/curtain";
+import {Loading} from "@brunobarros/react-components";
 
 
 const Register1 = () => {
@@ -73,15 +73,17 @@ const Register1 = () => {
 
   }
 
-  function handlePostpone(e) {
-    e.preventDefault()
-    router.push(`/dashboard`)
-  }
 
   function dismissAlert() {
     setTimeout(() => {
       setResponse({success: null, msg: ''})
     }, 5000)
+  }
+
+  if(authLoading){
+    return (<ClearLayout>
+      <Loading vspace={80}/>
+    </ClearLayout>)
   }
 
   return (<ClearLayout>
@@ -92,16 +94,16 @@ const Register1 = () => {
       <div className="col-12">
         <Formik
           initialValues={{
-            country: 'BR',
-            cpf: '',
-            passport: '',
-            first_name: '',
-            last_name: '',
-            badge_name: '',
-            cellphone: '',
-            phone: '',
-            birthdate: '',
-            gender: 'M',
+            country: user.getUserData().country || 'BR',
+            cpf: user.getUserData().cpf || '',
+            passport: user.getUserData().passport || '',
+            first_name: user.getUserData().firstName || '',
+            last_name: user.getUserData().lastName || '',
+            badge_name: user.getUserData().badge_name || '',
+            cellphone:   user.getUserData().cellphone || '',
+            phone: user.getUserData().phone || '',
+            birthdate: user.getUserData().birthdate || '',
+            gender: user.getUserData().gender || 'M',
           }}
           onSubmit={handleSubmit}
           validationSchema={FormSchema}
@@ -124,11 +126,11 @@ const Register1 = () => {
                   {values.country === 'BR' && <div className="form-group col-12 col-md">
                     <label htmlFor="cpf">CPF</label>
                     <Field name="cpf">{({field, form, meta}) => (<InputMask
-                      mask="999.999.999-99"
-                      maskChar="" alwaysShowMask={false}
+                      mask="999.999.999-99" maskChar="" alwaysShowMask={false}
                       id="cpf"
                       placeholder="000.000.000-00"
                       className="form-control"
+                      value={values.cpf}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />)}</Field>
@@ -170,6 +172,7 @@ const Register1 = () => {
                       id="cellphone"
                       placeholder=""
                       className="form-control"
+                      value={values.cellphone}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />)}</Field>
@@ -182,6 +185,7 @@ const Register1 = () => {
                       id="phone"
                       placeholder=""
                       className="form-control"
+                      value={values.phone}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />)}</Field>
@@ -198,6 +202,7 @@ const Register1 = () => {
                       id="birthdate"
                       placeholder="00/00/0000"
                       className="form-control"
+                      value={values.birthdate}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />)}</Field>
@@ -227,9 +232,6 @@ const Register1 = () => {
                     <span className="text-muted"></span>
                   </div>
                   <div className="btn-group btn-group-lg end" role="group">
-                    <button onClick={handlePostpone} type="button"
-                            className="btn btn-outline-secondary border-0 px-5">Fazer depois
-                    </button>
                     <LoadingButton variant="primary" loading={loading} disable={!isValid}
                                    className=" px-5">Continuar</LoadingButton>
                   </div>

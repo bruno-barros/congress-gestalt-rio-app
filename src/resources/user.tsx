@@ -7,10 +7,8 @@ export interface UserInterface {
   name?: string;
   firstName?: string;
   email?: string;
-  timeframes?: any[]
   roles?: any;
   avatar: any;
-  specialities?: string[];
   phone?: string;
   gender?: string;
   description?: string;
@@ -26,25 +24,10 @@ export interface UserInterface {
   neighborhood?: string;
   number?: number;
   state?: string;
-  credits?: number;
   registeredDate?: string;
-  academia_sso?: string|null;
-  partner_zb?: {
-    id: number;
-    logo: string;
-    name: string;
-  } | null;
-  user_status?: number;
-  ms_graph?: {
-    id?: string
-    upn?: string
-  }
-  subscriptions?: {
-    id: number
-    title: string
-    expire_at: string
-    status: string
-  }[]
+   user_status?: number;
+   passport?: string
+  badge_name?: string
 }
 
 export class User {
@@ -98,12 +81,14 @@ export class User {
   }
 
 
-
-  getMsGraph(){
-    return this.user?.ms_graph?.id ? this.user.ms_graph : null
-  }
 }
-
+// export function getGenres() {
+//   return [
+//     {value: 'M', name: 'masculino'},
+//     {value: 'F', name: 'feminino'},
+//     {value: 'I', name: 'outro'},
+//   ]
+// }
 export const Genders = () => {
   const genres = {
     M: 'Homem',

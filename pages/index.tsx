@@ -6,57 +6,47 @@ import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {useDispatch, useSelector} from "react-redux";
+import {useQueryClient} from "react-query";
 
 
 export default function Home() {
   const disp = useDispatch()
+  const queryClient = useQueryClient()
+
   return (
-    <Layout>
+    <div className="container vh-100 d-flex align-items-center ">
       <Head>
-        <title>{siteTitle()}</title>
+        <title>{siteTitle('', queryClient)}</title>
       </Head>
-      <Row>
-        <Col>
-          <h1 className="mb-4">{siteTitle()}</h1>
+      <div className="row">
+        <div className="col">
+
           <Row>
-            <Col xs={12} md>
+            <Col md>
+              <h1 className="text-right">Tela de desenvolvimento</h1>
+            </Col>
+            <Col  md>
               <p>
-                <Link href="/example-components" passHref>
-                  <Button variant="outline-primary">Example components</Button>
+                <Link href="/login" passHref>
+                  <a className="btn btn-outline-primary">Login</a>
                 </Link>
               </p>
               <p>
                 <Link href="/example-form" passHref>
-                  <Button variant="outline-primary">Example form</Button>
+                  <Button variant="outline-secondary">Entrar como admin</Button>
                 </Link>
               </p>
               <p>
                 <Link href="/example-api" passHref>
-                  <Button variant="outline-primary">Api debug</Button>
+                  <Button variant="outline-info">Entrar como usuário</Button>
                 </Link>
               </p>
-              <p>
-                <Link href="/example-protected" passHref>
-                  <Button variant="outline-primary">Example protected</Button>
-                </Link>
-              </p>
-              <p>
-                <Link href="/motion" passHref>
-                  <Button variant="outline-primary">Example Motion Frame</Button>
-                </Link>
-              </p>
+
             </Col>
-            <Col md>
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores beatae, consequuntur error
-                explicabo
-                fugit id, ipsa omnis porro quod ratione suscipit unde veniam. Eligendi esse iusto magni quasi, tempora
-                ut!
-              </p>
-            </Col>
+
           </Row>
-        </Col>
-      </Row>
-    </Layout>
+        </div>
+      </div>
+    </div>
   )
 }

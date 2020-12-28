@@ -239,6 +239,8 @@ export default class WpUser {
           state
           registeredDate
           user_status
+          badge_name
+          passport
           roles {
             nodes {
               name

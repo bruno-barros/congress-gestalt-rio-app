@@ -15,10 +15,15 @@ export default function Sidebar(props: SidebarProps) {
     return () => {
       document.body.removeEventListener('click', handleOutClick)
     }
-  }, [])
+  }, [state])
 
   function handleOutClick(e){
-    console.log(e.target, {state});
+    const inside = document.getElementById('sidebar').contains(e.target)
+    // console.log({inside, state});
+    if(state === 'opened' && !inside) {
+      setState('closed')
+    }
+
   }
 
   function toggle(){
@@ -28,7 +33,7 @@ export default function Sidebar(props: SidebarProps) {
   return (<div id="sidebar" className={`bg-light ${compact && 'compact'}`}>
     <header className="sb-header navbar-light ">
       <button className="navbar-toggler border-0" type="button" onClick={toggle}>
-        <span className="navbar-toggler-icon"></span>
+        {state === 'closed' ? <span className="navbar-toggler-icon"/> : <span style={{verticalAlign: 'middle', display: 'inline-block', fontSize: '1.25rem', lineHeight: '1.2em', width: '1.5em', height: '1.5em'}}><span style={{fontSize: 40}}>&times;</span></span>}
       </button>
       <div className="sb-title text-truncate dismiss">
         {sidebar?.title}

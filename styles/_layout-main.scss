@@ -3,7 +3,6 @@
 .layout-main {
   width: 100%;
   .mainHeader {
-    padding: 1rem 0;
     border-bottom: solid 1px $gray-400;
     position: sticky;
     top: 0;
@@ -41,7 +40,6 @@
 
   .content {
     z-index: 4;
-    background-color: #868686;
 
     & > .row {
       margin-left: 0;
@@ -79,8 +77,9 @@
     width: $sidebarWidth;
     z-index: 1;
     transition: all .5s ease;
-    transform: translateX(-100%);
+    transform: translateX(-110%);
     overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.17);
 
     &.opened {
       transform: translateX(0);
@@ -148,6 +147,7 @@
       transform: translateX(0);
       top: 0;
       z-index: 5;
+      box-shadow: none;
     }
   }
 }

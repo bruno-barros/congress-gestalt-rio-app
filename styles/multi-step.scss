@@ -1,0 +1,25 @@
+@import "./mixins";
+
+.multi-steps{
+  padding: $spacer ($spacer * 4) $spacer;
+  .sc-bdfBwQ:nth-child(1) {
+    //background-color: red;
+    &::after {
+      //color: red;
+    }
+  }
+  .sc-bdfBwQ:nth-child(3) {
+    //background-color: green;
+    &::after {
+      //color: green;
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .multi-steps{
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+}
