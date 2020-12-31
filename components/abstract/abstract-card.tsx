@@ -9,7 +9,7 @@ export default function AbstractCard(props: AbstractCardProps) {
   return (<div className="abstract-card">
     <div className="abs-header">
       <div className="abs-text">
-        <div className="abs-title">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
+        <div className="abs-title">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
         <div className="abs-desc">Consequatur doloremque doloribus eligendi error ex facilis</div>
       </div>
       <div className="abs-status"></div>

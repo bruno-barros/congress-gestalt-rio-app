@@ -19,11 +19,11 @@ import Header from "./header";
 
 interface MainLayoutProps {
   children: any
-  sidebar?: {title?: string; component: ReactNode, sidebarCompact?: boolean}
-
+  sidebar?: { title?: string; component: ReactNode, sidebarCompact?: boolean }
+  pageHeader?: { title: string }
 }
 
-function MainLayout({children, sidebar}: MainLayoutProps) {
+function MainLayout({children, sidebar, pageHeader}: MainLayoutProps) {
 
   const queryClient = useQueryClient()
   const {data: event, isLoading} = useEvent()
@@ -31,30 +31,36 @@ function MainLayout({children, sidebar}: MainLayoutProps) {
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
 
 
-  if(isLoading || authLoading){
+  if (isLoading || authLoading) {
     return <Loading vspace={100}/>
   }
 
   return (
     <div className={`layout-main`}>
       <BlockUi blocking={blockUI}/>
-        <Head>
-          <title>{siteTitle('', queryClient)}</title>
-          <link rel="icon" href={asset('/favicon.ico')}/>
-        </Head>
+      <Head>
+        <title>{siteTitle('', queryClient)}</title>
+        <link rel="icon" href={asset('/favicon.ico')}/>
+      </Head>
 
-        <Header event={event} user={user}/>
+      <Header event={event} user={user}/>
 
-        <main className="main">
-          <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
-            <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>
-          </div>
-          <div className="content">
-            {children}
-          </div>
-        </main>
+      {pageHeader && <div className="page-header">
+        <div className="title">{pageHeader.title}</div>
+      </div>}
 
-        <Footer/>
+      <main className="main">
+        {sidebar
+        && <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
+          <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>
+        </div>}
+
+        <div className="content">
+          {children}
+        </div>
+      </main>
+
+      <Footer/>
     </div>
   )
 }

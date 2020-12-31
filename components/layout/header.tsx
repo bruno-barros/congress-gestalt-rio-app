@@ -8,6 +8,8 @@ import Nav from "react-bootstrap/cjs/Nav";
 import NavDropdown from "react-bootstrap/cjs/NavDropdown";
 import UserMenu from "./user-menu";
 import Link from "next/link";
+import useTrans from "../hooks/useTrans";
+import {useRouter} from "next/router";
 
 interface HeaderProps {
   event: Event
@@ -16,6 +18,8 @@ interface HeaderProps {
 
 export default function Header(props: HeaderProps) {
 
+  const t = useTrans()
+  const router = useRouter()
   const {user, event} = props
 
   return (<header className="mainHeader">
@@ -35,15 +39,15 @@ export default function Header(props: HeaderProps) {
       </div>
       <Navbar.Collapse id="basic-navbar-nav" className="">
         <Nav className="mr-auto">
-          <Link href="/dashboard" passHref><Nav.Link>Eventos</Nav.Link></Link>
-          <Link href="/abstracts" passHref><Nav.Link>Trabalhos</Nav.Link></Link>
-          <NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider/>
-            <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
-          </NavDropdown>
+          <Link href="/dashboard" passHref><Nav.Link active={router.pathname ==='/dashboard'}>{t('eventos')}</Nav.Link></Link>
+          <Link href="/abstracts" passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+          {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
+          {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
+          {/*  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}
+          {/*  <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>*/}
+          {/*  <NavDropdown.Divider/>*/}
+          {/*  <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
+          {/*</NavDropdown>*/}
         </Nav>
       </Navbar.Collapse>
       <div className="d-none d-lg-block">

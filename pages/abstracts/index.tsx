@@ -4,11 +4,13 @@ import useEvent from "../../components/hooks/useEvent";
 import EditionSidebar from "../../components/event/edition-sidebar";
 import {Loading} from "@brunobarros/react-components";
 import AbstractCard from "../../components/abstract/abstract-card";
+import Link from "next/link";
 
 
 const Abstracts = () => {
 
   const {data: event} = useEvent()
+
 
   if(!event){
     return (<MainLayout>
@@ -16,7 +18,7 @@ const Abstracts = () => {
     </MainLayout>)
   }
 
-  const currentEdition = event.getEditions()[0]
+  const currentEdition = event.currentEdition()
 
   return (<MainLayout sidebar={{title: currentEdition.name , component: <EditionSidebar edition={currentEdition}/>}}>
     <div className="row">
@@ -26,7 +28,7 @@ const Abstracts = () => {
             <p>Olá, congressista.</p>
             <p>Antes de submeter seu trabalho confira as <a href="#" target="_blank">regras de submissão de trabalhos</a>.
               Você pode enviar até 2 trabalhos.</p>
-            <p><button className="btn btn-primary">Envie seu trabalho agora</button></p>
+            <p><Link href={`/abstracts/new`} passHref><a className="btn btn-primary">Envie seu trabalho agora</a></Link></p>
           </Card.Body>
         </Card>
 

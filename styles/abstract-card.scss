@@ -6,6 +6,7 @@
 
   .abs-header {
     display: flex;
+    justify-content: space-between;
     padding: 1rem 1rem 1rem 2rem;
     align-items: center;
 
@@ -28,6 +29,7 @@
   .abs-status {
     width: 100px;
     height: 100px;
+    flex: 0 0 100px;
     background-color: #EEE;
   }
 

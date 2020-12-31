@@ -13,10 +13,13 @@ import InputMask from "react-input-mask";
 import * as Yup from "yup";
 import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
-import {useState} from "react";
+import React, {useState} from "react";
 import Error from "../src/resources/error";
 import Curtain from "../components/ui/curtain";
 import {Loading} from "@brunobarros/react-components";
+import Text from "../components/ui/form/formik/text";
+import Select from "../components/ui/form/formik/select";
+import Mask from "../components/ui/form/formik/mask";
 
 
 const Register1 = () => {
@@ -44,7 +47,7 @@ const Register1 = () => {
     last_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
     badge_name: Yup.string().min(5, 'validacao.curto').required('validacao.obrigatorio'),
     cellphone: Yup.string().min(15, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
+    // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     gender: Yup.string().required('validacao.obrigatorio'),
 
@@ -80,7 +83,7 @@ const Register1 = () => {
     }, 5000)
   }
 
-  if(authLoading){
+  if (authLoading) {
     return (<ClearLayout>
       <Loading vspace={80}/>
     </ClearLayout>)
@@ -97,10 +100,10 @@ const Register1 = () => {
             country: user.getUserData().country || 'BR',
             cpf: user.getUserData().cpf || '',
             passport: user.getUserData().passport || '',
-            first_name: user.getUserData().firstName || '',
-            last_name: user.getUserData().lastName || '',
+            firstName: user.getUserData().firstName || '',
+            lastName: user.getUserData().lastName || '',
             badge_name: user.getUserData().badge_name || '',
-            cellphone:   user.getUserData().cellphone || '',
+            cellphone: user.getUserData().cellphone || '',
             phone: user.getUserData().phone || '',
             birthdate: user.getUserData().birthdate || '',
             gender: user.getUserData().gender || 'M',
@@ -115,108 +118,32 @@ const Register1 = () => {
 
 
                 <div className="row">
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="country">{t('cadastro.nacionalidade')}</label>
-                    <Field id="country" name="country" className="form-control" placeholder="" component="select">{
-                      countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))
-                    }
-                    </Field>
-                    <FieldError message={touched?.country && errors?.country} fieldId="country"/>
-                  </div>
-                  {values.country === 'BR' && <div className="form-group col-12 col-md">
-                    <label htmlFor="cpf">CPF</label>
-                    <Field name="cpf">{({field, form, meta}) => (<InputMask
-                      mask="999.999.999-99" maskChar="" alwaysShowMask={false}
-                      id="cpf"
-                      placeholder="000.000.000-00"
-                      className="form-control"
-                      value={values.cpf}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />)}</Field>
-                    <FieldError message={touched?.cpf && errors?.cpf} fieldId="cpf"/>
-                  </div>}
-                  {values.country !== 'BR' && <div className="form-group col-12 col-md">
-                    <label htmlFor="passport">{t('cadastro.passaporte')}</label>
-                    <Field id="passport" name="passport" className="form-control" placeholder=""/>
-                    <FieldError message={touched?.passport && errors?.passport} fieldId="passport"/>
-                  </div>}
+                  <Select name="country" label={t('cadastro.nacionalidade')} required containerClass="col-12 col-md">
+                    {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
+                  </Select>
+                  {values.country === 'BR' && <Mask name="cpf" label="CPF" mask="999.999.999-99" containerClass="col-12 col-md"/>}
+                  {values.country !== 'BR' && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
                 </div>
                 {/*row*/}
 
                 <div className="row">
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="first_name">{t('cadastro.nome')}</label>
-                    <Field id="first_name" name="first_name" className="form-control" placeholder=""/>
-                    <FieldError message={touched?.first_name && errors?.first_name} fieldId="first_name"/>
-                  </div>
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="last_name">{t('cadastro.sobrenome')}</label>
-                    <Field id="last_name" name="last_name" className="form-control" placeholder=""/>
-                    <FieldError message={touched?.last_name && errors?.last_name} fieldId="last_name"/>
-                  </div>
+                  <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
+                  <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
                 </div>
-                {/*row*/}
 
-                <div className="form-group">
-                  <label htmlFor="badge_name">{t('cadastro.nome-cracha')}</label>
-                  <Field id="badge_name" name="badge_name" className="form-control" placeholder=""/>
-                  <FieldError message={touched?.badge_name && errors?.badge_name} fieldId="badge_name"/>
+                  <Text name="badge_name" label={t('cadastro.nome-cracha')} required />
+
+                <div className="row">
+                  <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required containerClass="col-12 col-md"/>
+                  <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
                 </div>
 
                 <div className="row">
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="cellphone">{t('cadastro.celular')}</label>
-                    <Field name="cellphone">{({field}) => (<InputMask
-                      mask="(99) 99999-9999" maskChar="" alwaysShowMask={false}
-                      id="cellphone"
-                      placeholder=""
-                      className="form-control"
-                      value={values.cellphone}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />)}</Field>
-                    <FieldError message={touched?.cellphone && errors?.cellphone} fieldId="cellphone"/>
-                  </div>
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="phone">{t('cadastro.telefone')}</label>
-                    <Field name="phone">{({field}) => (<InputMask
-                      mask="(99) 9999-9999" maskChar="" alwaysShowMask={false}
-                      id="phone"
-                      placeholder=""
-                      className="form-control"
-                      value={values.phone}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />)}</Field>
-                    <FieldError message={touched?.phone && errors?.phone} fieldId="phone"/>
-                  </div>
+                  <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required containerClass="col-12 col-md"/>
+                  <Select name="gender" label={t('cadastro.genero')} required containerClass="col-12 col-md">
+                    {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
+                  </Select>
                 </div>
-                {/*row*/}
-
-                <div className="row">
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="birthdate">{t('cadastro.nascimento')}</label>
-                    <Field name="birthdate">{({field}) => (<InputMask
-                      mask="99/99/9999" maskChar="" alwaysShowMask={false}
-                      id="birthdate"
-                      placeholder="00/00/0000"
-                      className="form-control"
-                      value={values.birthdate}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                    />)}</Field>
-                    <FieldError message={touched?.birthdate && errors?.birthdate} fieldId="birthdate"/>
-                  </div>
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="gender">{t('cadastro.genero')}</label>
-                    <Field id="gender" name="gender" className="form-control" component="select">
-                      {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
-                    </Field>
-                    <FieldError message={touched?.gender && errors?.gender} fieldId="gender"/>
-                  </div>
-                </div>
-                {/*row*/}
 
                 {response.msg && <Curtain isOpened={response.msg?.length > 0}>
                   <div className={`alert ${response.success ? 'alert-success' : 'alert-danger'}`}>

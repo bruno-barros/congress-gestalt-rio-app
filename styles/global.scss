@@ -1,4 +1,5 @@
 @import '~@brunobarros/react-components/src/scss/block-ui.module.scss';
+@import '~@brunobarros/react-components/src/scss/password-strong.module';
 @import './bootstrap/bootstrap.scss';
 @import "styles/mixins";
 @import "./toastify/main";
@@ -10,11 +11,12 @@
 @import "./sweet-alert";
 @import "./multi-step";
 @import "./abstract-card";
+@import "./uppy";
+@import "./status-bar";
 
 body, html {
   //background-color: $gray-100;
 }
-
 
 
 .form-error {
@@ -61,6 +63,16 @@ body, html {
 }
 
 
+.page-header {
+  padding: 1rem;
+  background-color: $gray-100;
+
+  .title {
+    font-weight: 700;
+    color: $gray-600;
+  }
+}
+
 .page-title {
   font-size: 1.4em;
   line-height: 1.3em;
@@ -85,7 +97,7 @@ body, html {
 
 
 .dropdown-on-hover:hover {
-.dropdown-menu {
-  display: block;
-}
+  .dropdown-menu {
+    display: block;
+  }
 }

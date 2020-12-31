@@ -78,6 +78,27 @@ export const postLogin = (
   }
 }
 
+
+export const logUserByType = (
+  type: 'admin' | 'contributor' | 'editor' | 'subscriber',
+  callback: (user: any, error: ErrorMessage | boolean) => void
+) => {
+  return (dispatch: any, getState: any) => {
+    const users = {
+      admin: {login: 'admin', password: 'admin'},
+      editor: {login: 'outro', password: 'DntekhEPQx$lei@Yk2r3Ap^h'},
+      contributor: {login: 'avaliador', password: 'wS!!LE4r5AeiibF83xBvMrt^'},
+      subscriber: {login: 'user3@user.com', password: 'rLbpBsGLd8HW8!@dARX*q!m2'},
+    }
+
+    dispatch(postLogin(users[type], (user, error) => {
+      callback(user, error)
+    }))
+
+  }
+}
+
+
 export const setUpUser = (input : {user: any, tokens: { access: string, refresh?: string }, locale: string}, callback: () => void) => {
   return async (dispatch, getState) => {
 

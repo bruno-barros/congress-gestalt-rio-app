@@ -7,10 +7,13 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import {useDispatch, useSelector} from "react-redux";
 import {useQueryClient} from "react-query";
+import {logUserByType} from "../src/store/user.actions";
+import {useRouter} from "next/router";
 
 
 export default function Home() {
   const disp = useDispatch()
+  const router = useRouter()
   const queryClient = useQueryClient()
 
   return (
@@ -32,14 +35,28 @@ export default function Home() {
                 </Link>
               </p>
               <p>
-                <Link href="/example-form" passHref>
-                  <Button variant="outline-secondary">Entrar como admin</Button>
-                </Link>
+                  <Button variant="outline-secondary" onClick={()=>{
+                    disp(logUserByType('admin', ()=>{
+                      router.push(`/dashboard`)
+                    }))
+                  }}>Entrar como admin</Button>
               </p>
               <p>
-                <Link href="/example-api" passHref>
-                  <Button variant="outline-info">Entrar como usuário</Button>
-                </Link>
+                  <Button variant="outline-info" onClick={()=>{
+                    disp(logUserByType('editor', ()=>{
+                      router.push(`/dashboard`)
+                    }))
+                  }}>Entrar como supervisor</Button>
+              </p>
+              <p>
+                  <Button variant="outline-info" onClick={()=>{
+                    disp(logUserByType('contributor', ()=>{router.push(`/dashboard`)}))
+                  }}>Entrar como avaliador</Button>
+              </p>
+              <p>
+                  <Button variant="outline-info" onClick={()=>{
+                    disp(logUserByType('subscriber', ()=>{router.push(`/dashboard`)}))
+                  }}>Entrar como usuário</Button>
               </p>
 
             </Col>

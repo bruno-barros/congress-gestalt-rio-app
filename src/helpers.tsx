@@ -109,6 +109,10 @@ export function rand(min, max) {
   return Math.floor(randomNum);
 }
 
+export function generate_tmp_id(user_id: number) {
+return `${user_id}@${rand(1111111111, 9999999999)}`
+}
+
 
 export function truncateMiddle(fullStr: string, strLen: number = 24, separator: string = '...') {
   if (fullStr.length <= strLen) return fullStr;
@@ -157,4 +161,10 @@ return [
   {value: 'F', name: 'feminino'},
   {value: 'I', name: 'outro'},
 ]
+}
+
+export function ev_locale(locale) : string{
+  if(locale.indexOf('en') !== -1) return 'en';
+  if(locale.indexOf('es') !== -1) return 'es';
+  return  'pt'
 }

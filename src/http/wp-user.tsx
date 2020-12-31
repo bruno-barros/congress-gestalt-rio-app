@@ -241,6 +241,7 @@ export default class WpUser {
           user_status
           badge_name
           passport
+          locale
           roles {
             nodes {
               name
@@ -433,4 +434,6 @@ export default class WpUser {
       user_id: userId, status: 1
     });
   }
+
+
 }

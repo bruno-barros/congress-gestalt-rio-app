@@ -1,0 +1,95 @@
+@import "./mixins";
+
+$statusWaiting: $warning;
+$statusApproved: $green;
+$statusReject: $danger;
+
+.abstract-statuses {
+
+  .status-container {
+    position: relative;
+    padding: 0 .5rem;
+    //border-radius: $border-radius;
+    //box-shadow: 0 0 10px rgba(0,0,0,.14);
+  }
+
+  .line {
+    width: 3px;
+    min-height: 10px;
+    margin-left: 7px;
+    background-color: $gray-300;
+  }
+
+  .btn-group {
+    margin:  1rem 0 0 1rem;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    font-size: .9em;
+    transition: all .3s;
+    border-radius: 20px;
+    //line-height: 1.2em;
+    //box-shadow: 0 0 1px;
+    .bullet {
+      display: block;
+      width: 18px;
+      height: 18px;
+      border-radius: 40px;
+      border: solid 4px $white;
+      background-color: $gray-500;
+      margin-right: 2px;
+      margin-left: 2px;
+      pointer-events: none;
+    }
+
+    .lbl {
+      pointer-events: none;
+    }
+  }
+
+
+  .step {
+
+    &.current {
+      .bullet {
+        border-color: $statusWaiting;
+        background-color: $white;
+      }
+      &.rejected,
+      &.synopsis_rejected {
+        .bullet {
+        border-color: $statusReject;
+        }
+      }
+      &.approved,
+      &.pre_approved,
+      &.synopsis_approved {
+        .bullet {
+          border-color: $statusApproved;
+        }
+      }
+    }
+
+    &.past {
+      opacity: .5;
+    }
+
+
+  }
+
+  &.editable {
+    .step {
+      &:not(.current):hover {
+        cursor: pointer;
+        font-weight: 700;
+        //background-color: $warning;
+      }
+      &.selected {
+        opacity: 1;
+        background-color: $gray-300;
+      }
+    }
+  }
+}

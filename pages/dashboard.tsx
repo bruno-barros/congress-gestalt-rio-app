@@ -4,6 +4,7 @@ import {useRouter} from "next/router";
 import useEvent from "../components/hooks/useEvent";
 import CardDeck from "react-bootstrap/cjs/CardDeck";
 import Card from "react-bootstrap/cjs/Card";
+import Link from "next/link";
 
 interface DashboardProps {
 
@@ -35,7 +36,7 @@ const Dashboard = (props: DashboardProps) => {
   }}>
     <div className="row">
       <div className="col-12 p-4">
-        <h1 className="page-title">Meus eventos</h1>
+        <h1 className="page-title">{t('meus-eventos')}</h1>
 
         <CardDeck>
           {event && event.getEditions().map(edition => {
@@ -49,7 +50,7 @@ const Dashboard = (props: DashboardProps) => {
               </Card.Body>
               <Card.Footer className="p-0 border-0">
                 <div className="btn-group w-100 end start">
-                  <button className="btn btn-outline-secondary -btn-block">Enviar trabalho</button>
+                  <Link href={`/abstracts`} passHref><a className="btn btn-outline-secondary">Enviar trabalho</a></Link>
                   <button className="btn btn-primary -btn-block">Fazer inscrição</button>
                 </div>
               </Card.Footer>

@@ -30,6 +30,7 @@ export default class Wordpress {
             databaseId
             name
             email
+            locale
             roles {
               nodes {
                 name

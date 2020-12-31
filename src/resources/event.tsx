@@ -1,9 +1,14 @@
+import {Status} from "../../components/abstract/abstract.d";
+
 export default class Event {
   name: string
   logo: { primary: string; secondary: string }
   url: { pt: string; en: string }
   app: { pt: string; en: string }
-  editions: any
+  editions: any[]
+  abstracts: {
+    statuses: any[]
+  }
 
   constructor(data: any) {
     Object.assign(this, data)
@@ -32,6 +37,10 @@ export default class Event {
       logo: this.logo,
     }))
   }
+
+  currentEdition(): Edition {
+    return this.getEditions()[0]
+  }
 }
 
 
@@ -45,6 +54,16 @@ export class Edition {
   logo: { primary: string; secondary: string }
   url: { pt: string; en: string }
   app: { pt: string; en: string }
+  abstract: {
+    required: boolean
+    flow: Status[]
+    attachments: number
+    topics: string[]
+    start_at: string
+    end_at: string
+    required_fields: any[]
+  }
+
 
   constructor(data: any, def: any) {
     Object.assign(this, data)
@@ -55,11 +74,11 @@ export class Edition {
     return new Edition(data, defaults)
   }
 
-  setLocale(locale){
+  setLocale(locale) {
     this.locale = locale
   }
 
-  get year(){
+  get year() {
     return this.start_at.substr(0, 4)
   }
 
@@ -70,5 +89,6 @@ export class Edition {
   get logoSecondary() {
     return this.logo.secondary || this.defaults.logo.secondary
   }
+
 
 }
