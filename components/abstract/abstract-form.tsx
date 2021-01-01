@@ -18,10 +18,11 @@ import Error from "../../src/resources/error";
 import {toast} from "react-toastify";
 import {useRouter} from "next/router";
 import Sweet from "../ui/sweet-alert";
+import Abstract from "../../src/resources/abstract";
 
 interface AbstractFormProps {
   edition: Edition
-  abstract: null | any
+  abstract: null | Abstract
 }
 
 export default function AbstractForm(props: AbstractFormProps) {
@@ -32,19 +33,20 @@ export default function AbstractForm(props: AbstractFormProps) {
   const {user} = useCurrentUser()
   const {edition, abstract} = props
   const [loading, setLoading] = useState(false)
+  const isEditing = !!abstract
   const initialValues = {
     id: !abstract ? null : abstract.databaseId,
     tmp_id: !abstract ? generate_tmp_id(user.getId()) : null,
-    topic: '',
-    title: '',
-    subtitle: '',
-    tags: '',
-    resume: '',
-    synopsis: '',
-    content: '',
-    bibliography: '',
-    attachments: [],
-    authors: [],
+    topic: abstract?.topic || '',
+    title: abstract?.title || '',
+    subtitle: abstract?.subtitle || '',
+    tags: abstract?.abstract_tags || '',
+    resume: abstract?.excerpt || '',
+    synopsis: abstract?.synopsis || '',
+    content: abstract?.content || '',
+    bibliography: abstract?.bibliography || '',
+    attachments: abstract?.attachments || [],
+    authors: abstract?.authors || [],
   }
   const Validation = Yup.object().shape({
     topic: Yup.string().required('validacao.obrigatorio'),
@@ -59,9 +61,11 @@ export default function AbstractForm(props: AbstractFormProps) {
   })
 
   async function handleSubmit(values) {
-    values.edition_id = edition.id
     values.locale = router.locale
-    values.author_id = user.getId()
+    if (!isEditing) {
+      values.edition_id = edition.id
+      values.author_id = user.getId()
+    }
 
     disp(blockUi(true))
     try {
@@ -69,16 +73,20 @@ export default function AbstractForm(props: AbstractFormProps) {
       const success = resp.data.success
       const data = resp.data.data
       disp(blockUi(false))
-      if(success){
-        Sweet.fire({
-          icon: 'success',
-          title: t('parabens'),
-          text: t('trabalho.criado-com-sucesso'),
-          showCloseButton: true,
-          timer: 5000,
-          timerProgressBar: true,
-        })
-        router.push(`/abstracts/${data.ID}?created=1`)
+      if (success) {
+        if (!isEditing) {
+          Sweet.fire({
+            icon: 'success',
+            title: t('parabens'),
+            text: t('trabalho.criado-com-sucesso'),
+            showCloseButton: true,
+            timer: 5000,
+            timerProgressBar: true,
+          })
+        } else {
+          toast.success(t('atualizado-com-sucesso'))
+        }
+        router.push(`/abstracts/${data.ID}${!isEditing ? '?created=1' : ''}`)
       } else {
         toast.error(data.msg)
       }
@@ -107,9 +115,9 @@ export default function AbstractForm(props: AbstractFormProps) {
       <Textarea name="synopsis" label={t('trabalho.sinopse')}/>
       <Textarea name="content" label={t('trabalho.conteudo')}/>
       <Textarea name="bibliography" label={t('trabalho.bibliografia')}/>
-      <Attachments name="attachments" label={t('anexos')}
+      <Attachments name="attachments" label={t('anexos')} maxFiles={edition.abstract.attachments}
                    metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}/>
-      <Authors name="authors" label={t('autores')}
+      <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
                metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}/>
       <LoadingButton variant="primary" className=" " block loading={loading}
                      disable={!isValid}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>

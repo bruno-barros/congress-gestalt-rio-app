@@ -17,7 +17,7 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
   const t = useTrans()
   const {data: event} = useEvent()
   const {edition, currentStatus, className, editable} = props
-  const statuses = edition.abstract.flow
+  const statuses = edition.abstract.statuses
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
   let isPast = true

@@ -1,29 +1,36 @@
 import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
 import React, {useRef, useState} from "react";
-import useTrans from "../../../hooks/useTrans";
 import {useUppy} from "../../../hooks/useUppy";
 import {uppyDocument} from "../../../../src/http/uppy";
-import useCurrentUser from "../../../hooks/useCurrentUser";
 import {toast} from "react-toastify";
 import {DragDrop, StatusBar} from "@uppy/react";
 import {Icon} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
+import useTrans from "../../../hooks/useTrans";
+import {useDispatch} from "react-redux";
+import {blockUi} from "../../../../src/store/ui.actions";
+import WpDocument from "../../../../src/http/wp-document";
+import Error from "../../../../src/resources/error";
 
 interface AttachmentsProps {
   label: string
   metas: any
   containerClass?: string
+  maxFiles?: number
 }
 
-export default function Attachments({label, metas, containerClass, ...props}: AttachmentsProps & any) {
+export default function Attachments({label, metas, containerClass, maxFiles: mf, ...props}: AttachmentsProps & any) {
 
   // @ts-ignore
   const router = useRouter()
+  const disp = useDispatch()
+  const t = useTrans()
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
   const [metaData, setMetaData] = useState<any>(metas);
   const added = useRef(false)
+  const maxFiles = mf || 20
 
   const uppy = useUppy(uppyDocument({locale: router.locale}))
   metas && uppy.setMeta(metas)
@@ -31,13 +38,32 @@ export default function Attachments({label, metas, containerClass, ...props}: At
     added.current = false
   })
 
+  async function handleDeletion(removeFn, file, index) {
+    disp(blockUi(true))
+    try {
+      const resp = await WpDocument.delete({...file, locale: router.locale})
+      const success = resp.data.success
+      const data = resp.data?.data
+      disp(blockUi(false))
+      if(success) {
+        removeFn(index)
+        toast.success(t('trabalho.documento-deletado'))
+      }
+      else toast.error(data.msg)
+    } catch (err) {
+      disp(blockUi(false))
+      const error = Error.make(err)
+      toast.error(error.message)
+    }
+  }
+
   return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
-    <div className="header">{label}</div>
+    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxFiles})</small></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       uppy.on('upload-success', (file, resp) => {
         if (resp.body.success) {
-          if (!added.current){
+          if (!added.current) {
             push(resp.body.data)
             added.current = true
           }
@@ -50,8 +76,10 @@ export default function Attachments({label, metas, containerClass, ...props}: At
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((file, idx) => (
           <div className="border d-flex align-items-center justify-content-between" key={idx}>
-            <div className="text-truncate">{file.name}</div>
-            <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {remove(idx)}}><Icon name={`trash-outline`}/></button>
+            <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
+            <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {
+              handleDeletion(remove, file, idx)
+            }}><Icon name={`trash-outline`}/></button>
           </div>
         ))}
 
@@ -62,7 +90,7 @@ export default function Attachments({label, metas, containerClass, ...props}: At
             hideAfterFinish={false}
             showProgressDetails
           />
-          <DragDrop
+          {maxFiles > field.value.length && <DragDrop
             uppy={uppy}
             height={130}
             locale={{
@@ -71,7 +99,8 @@ export default function Attachments({label, metas, containerClass, ...props}: At
                 // browse: 'explorar arquivos'
               }
             }}
-          />
+          />}
+
         </div>
       </div>)
     }}</FieldArray>

@@ -5,6 +5,7 @@
 ### participante
     subscriber
     Pessoa que pode submeter trabalhos e pagar inscrição.
+    * Dar permissão: edit_posts list_users
 
 ### avaliador
     contributor

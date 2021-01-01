@@ -56,12 +56,15 @@ export class Edition {
   app: { pt: string; en: string }
   abstract: {
     required: boolean
-    flow: Status[]
+    statuses: Status[]
     attachments: number
     topics: string[]
     start_at: string
     end_at: string
     required_fields: any[]
+    authors: {
+      max: number
+    }
   }
 
 

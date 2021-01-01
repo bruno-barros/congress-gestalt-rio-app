@@ -12,14 +12,18 @@ import {useRouter} from "next/router";
 import Error from "../../../../src/resources/error";
 import Sweet from "../../sweet-alert";
 import Swal from "sweetalert2";
+import WpDocument from "../../../../src/http/wp-document";
+import WpUser from "../../../../src/http/wp-user";
+import AuthorLine from "./author-line";
 
 interface AuthorsProps {
   label: string
   metas: any
   containerClass?: string
+  maxAuthors?: number
 }
 
-export default function Authors({label, metas, containerClass, ...props}: AuthorsProps & any) {
+export default function Authors({label, metas, containerClass, maxAuthors: ma, ...props}: AuthorsProps & any) {
 
   const disp = useDispatch()
   const t = useTrans()
@@ -30,6 +34,7 @@ export default function Authors({label, metas, containerClass, ...props}: Author
   const [metaData, setMetaData] = useState<any>(metas);
   const [newAuthor, setNewAuthor] = useState({id: null, author_name: '', author_email: '', author_bio: '', uuid: null});
   const added = useRef(false)
+  const maxAuthors = ma || 6
 
   async function handleAdd(push) {
 
@@ -57,13 +62,16 @@ export default function Authors({label, metas, containerClass, ...props}: Author
         toast.error(data.msg)
       } else {
         toast.success(t('atualizado-com-sucesso'))
-        let author = {...newAuthor}
+        let author: any = {...newAuthor}
+        author.name = author.author_name
+        author.email = author.author_email
+        author.bio = author.author_bio
         author.uuid = metas.tmp_id || null
         push(author)
         reset()
       }
       disp(blockUi(false))
-    }catch (err) {
+    } catch (err) {
       const error = Error.make(err)
       Sweet.fire({
         icon: 'error',
@@ -72,8 +80,26 @@ export default function Authors({label, metas, containerClass, ...props}: Author
       })
       disp(blockUi(false))
     }
+  }
 
 
+  async function handleDeletion(removeFn, author, index) {
+    disp(blockUi(true))
+    try {
+      const resp = await WpAbstract.deleteAuthor({...author, locale: router.locale})
+      const success = resp.data.success
+      const data = resp.data?.data
+      disp(blockUi(false))
+      if(success) {
+        removeFn(index)
+        toast.success(t('trabalho.autor-deletado'))
+      }
+      else toast.error(data.msg)
+    } catch (err) {
+      disp(blockUi(false))
+      const error = Error.make(err)
+      toast.error(error.message)
+    }
   }
 
   function reset() {
@@ -81,24 +107,22 @@ export default function Authors({label, metas, containerClass, ...props}: Author
   }
 
   return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
-    <div className="header">{label}</div>
+    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxAuthors})</small></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((author, idx) => (
-          <div className="border d-flex align-items-center justify-content-between py-2 px-4" key={idx}
-               style={{margin: '0 -1.5rem'}}>
-            <div className="text-truncate">{author.author_name}</div>
-            <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {
-              remove(idx)
-            }}><Icon name={`trash-outline`}/></button>
-          </div>
+          <AuthorLine key={idx} author={author} index={idx} onDelete={()=>{
+            handleDeletion(remove, author, idx)
+          }}/>
         ))}
 
-        <div className="mt-3">
+        {maxAuthors > field.value.length
+        && <div className="mt-3">
 
           <div className="input-group">
-            <div className="input-group-prepend"><span className="input-group-text" style={{minWidth: 70}}>{t('cadastro.nome')}</span>
+            <div className="input-group-prepend"><span className="input-group-text"
+                                                       style={{minWidth: 70}}>{t('cadastro.nome')}</span>
             </div>
             <input type="text" name="author_name" value={newAuthor.author_name} placeholder={t('trabalho.autor-nome')}
                    className="form-control" onChange={(e) => {
@@ -108,7 +132,8 @@ export default function Authors({label, metas, containerClass, ...props}: Author
           <div className="input-group">
             <div className="input-group-prepend"><span className="input-group-text" style={{minWidth: 70}}>E-mail</span>
             </div>
-            <input type="email" name="author_email" value={newAuthor.author_email} placeholder={t('trabalho.autor-email')}
+            <input type="email" name="author_email" value={newAuthor.author_email}
+                   placeholder={t('trabalho.autor-email')}
                    className="form-control" onChange={(e) => {
               setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
             }}/>
@@ -126,7 +151,11 @@ export default function Authors({label, metas, containerClass, ...props}: Author
           }}
                   className="btn btn-outline-primary btn-sm btn-block mt-1">{t('trabalho.adicionar-autor')}</button>
 
-        </div>
+        </div>}
+
+
+
+
       </div>)
     }}</FieldArray>
     <FieldError message={err} fieldId={`fld_${field.name}`}/>

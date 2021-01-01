@@ -1,4 +1,5 @@
 import moment from "moment";
+
 // import {weekdayTrans} from "./date-time-week";
 
 export interface UserInterface {
@@ -25,11 +26,15 @@ export interface UserInterface {
   number?: number;
   state?: string;
   registeredDate?: string;
-   user_status?: number;
-   passport?: string
+  user_status?: number;
+  passport?: string
   badge_name?: string
 }
 
+/**
+ * --------------------------------------------------
+ * User class
+ */
 export class User {
   user: UserInterface;
 
@@ -63,25 +68,36 @@ export class User {
       && moment(this.user.registeredDate).format('DD/MM/YYYY') || ''
   }
 
+
+
+  canManageAbstracts() {
+    return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin()
+  }
+
+  isSuperAdmin() {
+    const superIds = [3]
+    return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1
+  }
+
   isAdmin() {
-    //   roles: {nodes: [{name: "administrator"}]},
     return !!this.user?.roles?.nodes.find(role => role.name === 'administrator');
   }
 
-  canManageScreenings() {
-    return this.isAdmin() || !!this.user?.roles?.nodes.find(role => role.name === 'contributor');
-  }
-  isProfessional() {
-    //   roles: {nodes: [{name: "administrator"}]},
-    return !!this.user?.roles?.nodes.find(role => role.name === 'professional');
+  isSupervisor() {
+    return !!this.user?.roles?.nodes.find(role => role.name === 'editor');
   }
 
-  isPatient() {
+  isEvaluator() {
+    return !!this.user?.roles?.nodes.find(role => role.name === 'contributor');
+  }
+
+  isSubscriber() {
     return !!this.user?.roles?.nodes.find(role => role.name === 'subscriber');
   }
 
 
 }
+
 // export function getGenres() {
 //   return [
 //     {value: 'M', name: 'masculino'},

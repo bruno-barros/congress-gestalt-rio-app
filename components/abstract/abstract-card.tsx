@@ -1,27 +1,49 @@
 import {Icon} from "@brunobarros/react-components";
+import {AbstractType} from "./abstract.d";
+import useTrans from "../hooks/useTrans";
+import moment from "moment";
+import Abstract from "../../src/resources/abstract";
+import Link from "next/link";
 
 interface AbstractCardProps {
-
+  abstract: AbstractType
 }
 
 export default function AbstractCard(props: AbstractCardProps) {
 
+  const {abstract: data} = props
+  const abstract: Abstract = Abstract.make(data)
+  const t = useTrans()
+
+  function statusColor(){
+    let color = abstract.statusColorName()
+    if(color === 'warning') return 'bg-warning'
+    if(color === 'success') return 'bg-success text-white'
+    if(color === 'danger') return 'bg-danger text-white'
+  }
+
   return (<div className="abstract-card">
     <div className="abs-header">
-      <div className="abs-text">
-        <div className="abs-title">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.</div>
-        <div className="abs-desc">Consequatur doloremque doloribus eligendi error ex facilis</div>
+      <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="abs-text">
+        <div className="abs-title">{abstract.title}</div>
+        <div className="abs-desc">{abstract.subtitle}</div>
+      </a></Link>
+      <div className="abs-status">
+        {abstract.isLockedToEdition() ? <Icon name={`lock-closed-outline`}/> : <Icon name={`pencil-outline`}/>}
       </div>
-      <div className="abs-status"></div>
     </div>
     <div className="abs-footer">
       <div className="btn-group start">
-        <div  className="btn bg-success">Rejeitado</div>
-        <button className="btn border"><Icon name={`chatbox-outline`}/> Comentários (2)</button>
-        <button className="btn border"><Icon name={`folder-outline`}/> Anexos (1)</button>
+        <div className={`btn ${statusColor()}`} style={{cursor: 'default'}}>{t(`status.${abstract.status}`)}</div>
+        <button className="btn border d-none d-md-block">
+          <Icon name={`chatbox-outline`}/> {t('comentarios')} {`(${abstract.evaluations_count})`}
+        </button>
+        <button className="btn border d-none d-md-block">
+          <Icon name={`folder-outline`}/> {t('anexos')} {`(${abstract.attachments_count})`}
+        </button>
       </div>
       <div className="abs-info mr-3">
-        00/00/0000
+        {moment(abstract.date).format('DD/MM/YYYY')}
       </div>
     </div>
   </div>)

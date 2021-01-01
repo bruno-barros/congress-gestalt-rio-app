@@ -10,7 +10,14 @@
     padding: 1rem 1rem 1rem 2rem;
     align-items: center;
 
-    .abs-text {
+    .abs-text,
+    .abs-text:visited {
+      color: inherit;
+    }
+
+    .abs-text:hover {
+      color: $primary;
+      text-decoration: none;
     }
 
     .abs-title {
@@ -27,10 +34,16 @@
   }
 
   .abs-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100px;
     height: 100px;
     flex: 0 0 100px;
-    background-color: #EEE;
+    ion-icon {
+      opacity: .1;
+      font-size: 80px;
+    }
   }
 
   .abs-footer {
@@ -40,6 +53,7 @@
     border-top: solid 1px $gray-200;
     margin-top: -1px;
     .btn-group {
+      width: auto;
       .btn {
         ion-icon {
           vertical-align: text-bottom;
@@ -62,6 +76,7 @@
       flex-direction: column-reverse;
       align-items: flex-start;
       .btn-group {
+        width: 100%;
         .btn {
           ion-icon {
           }
