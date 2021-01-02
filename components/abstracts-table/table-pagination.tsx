@@ -5,7 +5,7 @@ import {TableInstance} from "react-table";
 export default function TablePagination<T extends object>({instance}: PropsWithChildren<{ instance: TableInstance<T> }> & any): ReactElement | null {
 
   const {
-    state: { pageIndex, pageSize, rowCount = instance.rows.length },
+    state: {pageIndex, pageSize, rowCount = instance.rows.length},
     gotoPage,
     nextPage,
     previousPage,
@@ -39,22 +39,25 @@ export default function TablePagination<T extends object>({instance}: PropsWithC
 
   return rowCount ? (
     <div className="">
-      <code>{JSON.stringify({pageIndex, pageSize, pageCount, pageOptions, rowCount,canPreviousPage,
-        canNextPage}, null, 2)}</code>
-
-      <div className="pagination">
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
+      <div className="table-pagination p-3">
+        <div className="btn-group">
+          <button className="btn btn-outline-secondary" onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            {'<<'}
+          </button>
+          {' '}
+          <button className="btn btn-outline-secondary" onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>
+          {' '}
+          <button className="btn btn-outline-secondary" onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>
+          {' '}
+          <button className="btn btn-outline-secondary" onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+            {'>>'}
+          </button>
+        </div>
+        {' '}
         <span>
           Page{' '}
           <strong>
@@ -70,7 +73,7 @@ export default function TablePagination<T extends object>({instance}: PropsWithC
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               gotoPage(page)
             }}
-            style={{ width: '100px' }}
+            style={{width: '100px'}}
           />
         </span>{' '}
         <select
@@ -79,14 +82,17 @@ export default function TablePagination<T extends object>({instance}: PropsWithC
             setPageSize(Number(e.target.value))
           }}
         >
-          {[5,10, 20, 30, 40, 50].map(pageSize => (
+          {[5, 10, 20, 30, 40, 50].map(pageSize => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
           ))}
         </select>
       </div>
-
+      <code>{JSON.stringify({
+        pageIndex, pageSize, pageCount, pageOptions, rowCount, canPreviousPage,
+        canNextPage
+      }, null, 2)}</code>
     </div>
   ) : null
 }

@@ -65,7 +65,7 @@ const hooks = [
   selectionHook,
 ]
 
-const filterTypes: FilterTypes<any> = {
+const filterTypes: Record<string, any> = {
   fuzzyText: fuzzyTextFilter,
   numeric: numericTextFilter,
 }
@@ -121,7 +121,7 @@ export interface Table<T extends object = {}> extends TableOptions<T> {
   onClick?: (row: Row<T>) => void
 }
 
-export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<T>>) {
+export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<T>> & any) {
 
   const {name, columns, onAdd, onDelete, onEdit, onClick} = props
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {
@@ -138,6 +138,7 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
     ...hooks
   )
 
+  // @ts-ignore
   const {getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state} = instance
   const debouncedState = useDebounce(state, 500)
 
