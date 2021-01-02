@@ -5,16 +5,16 @@ import EditionSidebar from "../../components/event/edition-sidebar";
 import {Loading} from "@brunobarros/react-components";
 import AbstractCard from "../../components/abstract/abstract-card";
 import Link from "next/link";
-import {useEffect} from "react";
 import {useQuery} from "react-query";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {WpAbstract} from "../../src/http/wp-abstract";
-import Error from "../../src/resources/error";
-import {toast} from "react-toastify";
+import {errorNotification} from "../../src/resources/responses";
+import useTrans from "../../components/hooks/useTrans";
 
 
 const Abstracts = () => {
 
+  const t = useTrans()
   const {user} = useCurrentUser()
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
@@ -32,13 +32,11 @@ const Abstracts = () => {
           resolve(resp.data.data.abstractFilters.nodes)
         } else {
           reject([])
-          let error = Error.make(resp.data.errors)
-          toast.error(error.message)
+          errorNotification({error: resp.data.errors})
         }
       }, err => {
         reject([])
-        let error = Error.make(err)
-        toast.error(error.message)
+        errorNotification({error: err})
       })
     })
   }
@@ -48,6 +46,7 @@ const Abstracts = () => {
       <Loading vspace={80}/>
     </MainLayout>)
   }
+
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
     <div className="row">
@@ -59,11 +58,12 @@ const Abstracts = () => {
             <p>Antes de submeter seu trabalho confira as <a href="#" target="_blank">regras de submissão de
               trabalhos</a>.
               Você pode enviar até 2 trabalhos.</p>
-            <p><Link href={`/abstracts/new`} passHref><a className="btn btn-primary">Envie seu trabalho agora</a></Link>
+            <p><Link href={`/abstracts/new`} passHref><a className="btn btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
             </p>
           </Card.Body>
         </Card>}
 
+        {(abstracts && abstracts?.length > 0) && <div className=""><Link href={`/abstracts/new`}><a className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link></div>}
         {abstracts && abstracts.map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
 

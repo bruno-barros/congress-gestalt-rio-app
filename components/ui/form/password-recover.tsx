@@ -12,6 +12,7 @@ import {inputFloatClass} from "../../../src/helpers";
 import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Curtain from "../curtain";
+import CurtainDelayed from "../curtain-delayed";
 
 interface PasswordRecoverProps {
   show: boolean
@@ -74,11 +75,7 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
     </Modal.Header>
     <Modal.Body>
       <p>{t('cadastro.envio-de-link')}</p>
-      <motion.div
-        initial={{opacity: 0, height: 0}}
-        animate={{opacity: 1, height: 'auto'}}
-        transition={{opacity: {delay: 2, duration: 1}, height: {delay: 1, duration: 1}}}
-      >
+      <CurtainDelayed>
         <Formik innerRef={formRef}
           initialValues={{email: ''}}
           onSubmit={handleSubmit}
@@ -102,7 +99,7 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
           </div>
         </Curtain>
 
-      </motion.div>
+      </CurtainDelayed>
     </Modal.Body>
     <Modal.Footer>
       <div className="d-flex justify-content-between align-items-center w-100">

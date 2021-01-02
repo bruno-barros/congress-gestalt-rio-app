@@ -11,7 +11,7 @@ import {Loading} from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 
 
-const AbstractEditing = ()=> {
+const AbstractEditing = () => {
 
   const {user} = useCurrentUser()
   const router = useRouter()
@@ -21,9 +21,25 @@ const AbstractEditing = ()=> {
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
 
-  if(isLoading || loadingAbstract) {
+  if (isLoading || loadingAbstract) {
     return <MainLayout><Loading vspace={80}/></MainLayout>;
   }
+
+
+  if (abstract.getResponsible().databaseId !== user.getId() && !user.canManageAbstracts()) {
+    return <MainLayout>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-6 offset-md-3">
+            <div className="alert alert-danger mt-5">
+              {t('sem-permissao')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>;
+  }
+
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
     <div className="row my-5">
@@ -31,7 +47,8 @@ const AbstractEditing = ()=> {
         <AbstractForm edition={edition} abstract={abstract}/>
       </div>
       <div className="col-12 col-md-4">
-        <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} currentStatus={abstract?.status} className="my-4"/>
+        <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} currentStatus={abstract?.status}
+                           className="my-4"/>
         <p><strong>Comentários</strong></p>
       </div>
     </div>

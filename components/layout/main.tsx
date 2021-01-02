@@ -21,9 +21,10 @@ interface MainLayoutProps {
   children: any
   sidebar?: { title?: string; component: ReactNode, sidebarCompact?: boolean }
   pageHeader?: { title: string }
+  fullWidth?: boolean
 }
 
-function MainLayout({children, sidebar, pageHeader}: MainLayoutProps) {
+function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps) {
 
   const queryClient = useQueryClient()
   const {data: event, isLoading} = useEvent()
@@ -49,13 +50,13 @@ function MainLayout({children, sidebar, pageHeader}: MainLayoutProps) {
         <div className="title">{pageHeader.title}</div>
       </div>}
 
-      <main className="main">
+      <main className={`main ${fullWidth && 'full-width'}`}>
         {sidebar
         && <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
           <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>
         </div>}
 
-        <div className="content">
+        <div className={`content`}>
           {children}
         </div>
       </main>

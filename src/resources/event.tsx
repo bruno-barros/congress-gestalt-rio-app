@@ -30,6 +30,10 @@ export default class Event {
     return this.logo?.secondary
   }
 
+  getEdition(editionId: string){
+    return this.getEditions().find(edition => edition.id === editionId)
+  }
+
   getEditions() {
     let keys = Object.keys(this.editions);
     return keys.map(k => Edition.make(this.editions[k], {
@@ -58,11 +62,15 @@ export class Edition {
     required: boolean
     statuses: Status[]
     attachments: number
-    topics: string[]
+    topics: {id: string; pt: string; en: string}[]
     start_at: string
     end_at: string
     required_fields: any[]
     authors: {
+      max: number
+    },
+    tags: {
+      min: number
       max: number
     }
   }

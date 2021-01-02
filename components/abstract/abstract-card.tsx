@@ -4,6 +4,8 @@ import useTrans from "../hooks/useTrans";
 import moment from "moment";
 import Abstract from "../../src/resources/abstract";
 import Link from "next/link";
+import useEvent from "../hooks/useEvent";
+import {useRouter} from "next/router";
 
 interface AbstractCardProps {
   abstract: AbstractType
@@ -11,9 +13,12 @@ interface AbstractCardProps {
 
 export default function AbstractCard(props: AbstractCardProps) {
 
+  const router = useRouter()
   const {abstract: data} = props
   const abstract: Abstract = Abstract.make(data)
   const t = useTrans()
+  const {data: event} = useEvent()
+  const edition = event.getEdition(abstract.edition_id)
 
   function statusColor(){
     let color = abstract.statusColorName()
@@ -26,7 +31,8 @@ export default function AbstractCard(props: AbstractCardProps) {
     <div className="abs-header">
       <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="abs-text">
         <div className="abs-title">{abstract.title}</div>
-        <div className="abs-desc">{abstract.subtitle}</div>
+        <div className="abs-desc mb-1">{abstract.subtitle}</div>
+        <small className="d-block font-italic">{edition.abstract.topics.find(top => top.id === abstract.topic)[router.locale]}</small>
       </a></Link>
       <div className="abs-status">
         {abstract.isLockedToEdition() ? <Icon name={`lock-closed-outline`}/> : <Icon name={`pencil-outline`}/>}

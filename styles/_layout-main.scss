@@ -89,7 +89,7 @@
 
 @include media-breakpoint-up(md) {
   .layout-main {
-    .main {
+    .main:not(.full-width) {
       display: flex;
     }
 

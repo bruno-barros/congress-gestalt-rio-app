@@ -1,10 +1,6 @@
 import {motion} from "framer-motion";
 import React from "react";
 
-// type CurtainProps & React.FC {
-//   isOpened: boolean
-// }
-
 export default function Curtain(props) {
 
   const {isOpened, children} = props

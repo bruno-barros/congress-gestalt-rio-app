@@ -18,9 +18,10 @@ interface AttachmentsProps {
   metas: any
   containerClass?: string
   maxFiles?: number
+  disabled?: boolean
 }
 
-export default function Attachments({label, metas, containerClass, maxFiles: mf, ...props}: AttachmentsProps & any) {
+export default function Attachments({label, metas, containerClass, maxFiles: mf, disabled, ...props}: AttachmentsProps & any) {
 
   // @ts-ignore
   const router = useRouter()
@@ -75,11 +76,14 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
 
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((file, idx) => (
-          <div className="border d-flex align-items-center justify-content-between" key={idx}>
+          <div className="border d-flex align-items-center justify-content-between py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
             <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
-            <button type="button" className="btn btn-sm btn-outline-danger" onClick={() => {
+            {!disabled
+            && <button type="button" className="btn btn-sm py-0" onClick={() => {
               handleDeletion(remove, file, idx)
-            }}><Icon name={`trash-outline`}/></button>
+            }}><Icon name={`trash-outline`} style={{fontSize: 18}}/>
+            </button>}
+
           </div>
         ))}
 
@@ -90,7 +94,7 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
             hideAfterFinish={false}
             showProgressDetails
           />
-          {maxFiles > field.value.length && <DragDrop
+          {(maxFiles > field.value.length && !disabled) && <DragDrop
             uppy={uppy}
             height={130}
             locale={{

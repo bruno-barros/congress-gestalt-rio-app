@@ -1,8 +1,7 @@
-import {FieldArray, Form, Formik, useField} from "formik";
+import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
-import React, {useRef, useState} from "react";
+import React, {useState} from "react";
 import {Icon} from "@brunobarros/react-components";
-import Text from "./text";
 import {useDispatch} from "react-redux";
 import {blockUi} from "../../../../src/store/ui.actions";
 import {toast} from "react-toastify";
@@ -11,19 +10,18 @@ import {WpAbstract} from "../../../../src/http/wp-abstract";
 import {useRouter} from "next/router";
 import Error from "../../../../src/resources/error";
 import Sweet from "../../sweet-alert";
-import Swal from "sweetalert2";
-import WpDocument from "../../../../src/http/wp-document";
-import WpUser from "../../../../src/http/wp-user";
-import AuthorLine from "./author-line";
+import {errorNotification, exceptionNotification, successNotification} from "../../../../src/resources/responses";
 
 interface AuthorsProps {
   label: string
   metas: any
   containerClass?: string
   maxAuthors?: number
+  disabled?: boolean
+  onEdit: (author, metadata) => void
 }
 
-export default function Authors({label, metas, containerClass, maxAuthors: ma, ...props}: AuthorsProps & any) {
+export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, onEdit, ...props}: AuthorsProps & any) {
 
   const disp = useDispatch()
   const t = useTrans()
@@ -31,9 +29,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, .
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  const [metaData, setMetaData] = useState<any>(metas);
   const [newAuthor, setNewAuthor] = useState({id: null, author_name: '', author_email: '', author_bio: '', uuid: null});
-  const added = useRef(false)
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
@@ -54,31 +50,25 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, .
         bio: newAuthor.author_bio,
         locale: router.locale
       })
-
+      disp(blockUi(false))
       const success = resp.data.success
       const data = resp.data.data
 
       if (!success) {
-        toast.error(data.msg)
+        errorNotification({message: data.msg})
       } else {
-        toast.success(t('atualizado-com-sucesso'))
+        successNotification({message: t('atualizado-com-sucesso')})
         let author: any = {...newAuthor}
         author.name = author.author_name
         author.email = author.author_email
         author.bio = author.author_bio
         author.uuid = metas.tmp_id || null
-        push(author)
+        push(data)
         reset()
       }
-      disp(blockUi(false))
+
     } catch (err) {
-      const error = Error.make(err)
-      Sweet.fire({
-        icon: 'error',
-        title: t('erro-generico'),
-        showCloseButton: true
-      })
-      disp(blockUi(false))
+      exceptionNotification(err, disp)
     }
   }
 
@@ -86,20 +76,36 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, .
   async function handleDeletion(removeFn, author, index) {
     disp(blockUi(true))
     try {
-      const resp = await WpAbstract.deleteAuthor({...author, locale: router.locale})
+      const resp = await WpAbstract.deleteAuthor({...author, locale: router.locale, abstract_id: metas.abstract_id})
       const success = resp.data.success
       const data = resp.data?.data
       disp(blockUi(false))
-      if(success) {
+      if (success) {
         removeFn(index)
-        toast.success(t('trabalho.autor-deletado'))
-      }
-      else toast.error(data.msg)
+        successNotification({message: t('trabalho.autor-deletado')})
+      } else toast.error(data.msg)
     } catch (err) {
-      disp(blockUi(false))
-      const error = Error.make(err)
-      toast.error(error.message)
+      exceptionNotification(err, disp)
     }
+  }
+
+  async function handleSpeaker(author) {
+    const newAuthor = {...author}
+    newAuthor.is_speaker = !author.is_speaker
+    try {
+      newAuthor.locale = router.locale
+      newAuthor.abstract_id = metas.abstract_id
+      const resp = await WpAbstract.editAuthor(newAuthor)
+      const success = resp.data.success
+      if (success) successNotification({message: t('atualizado-com-sucesso')})
+    } catch (err) {
+      exceptionNotification(err)
+    }
+    const newValue = field.value.map(a => {
+      if (parseInt(a.id) === parseInt(newAuthor.id)) a = newAuthor
+      return a
+    })
+    helpers.setValue(newValue)
   }
 
   function reset() {
@@ -112,12 +118,31 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, .
 
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((author, idx) => (
-          <AuthorLine key={idx} author={author} index={idx} onDelete={()=>{
-            handleDeletion(remove, author, idx)
-          }}/>
+          <div className="border  py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
+            <div className="d-flex align-items-center justify-content-between">
+              <a href="" className="d-flex flex-grow-1" onClick={(e) => {
+                e.preventDefault()
+                onEdit(author, metas)
+              }}>
+                <div className="mr-2">{`#${idx + 1}`}</div>
+                <div className="text-truncate">{author.name}</div>
+              </a>
+              {!disabled && <>
+                <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
+                  handleSpeaker(author)
+                }}><Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
+                </button>
+                <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
+                  handleDeletion(remove, author, idx)
+                }}><Icon name={`trash-outline`} style={{fontSize: 18}}/>
+                </button>
+              </>}
+
+            </div>
+          </div>
         ))}
 
-        {maxAuthors > field.value.length
+        {(maxAuthors > field.value.length && !disabled)
         && <div className="mt-3">
 
           <div className="input-group">
@@ -152,8 +177,6 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, .
                   className="btn btn-outline-primary btn-sm btn-block mt-1">{t('trabalho.adicionar-autor')}</button>
 
         </div>}
-
-
 
 
       </div>)

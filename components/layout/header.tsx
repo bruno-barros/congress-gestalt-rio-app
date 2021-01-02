@@ -1,15 +1,12 @@
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import {User} from "../../src/resources/user";
-import Event from '../../src/resources/event'
+import Event, {Edition} from '../../src/resources/event'
 import Navbar from 'react-bootstrap/cjs/Navbar'
 import Nav from "react-bootstrap/cjs/Nav";
-import NavDropdown from "react-bootstrap/cjs/NavDropdown";
 import UserMenu from "./user-menu";
 import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
+import useEvent from "../hooks/useEvent";
 
 interface HeaderProps {
   event: Event
@@ -21,6 +18,7 @@ export default function Header(props: HeaderProps) {
   const t = useTrans()
   const router = useRouter()
   const {user, event} = props
+  const edition: Edition = event.currentEdition()
 
   return (<header className="mainHeader">
     <Navbar expand="lg">
@@ -40,7 +38,11 @@ export default function Header(props: HeaderProps) {
       <Navbar.Collapse id="basic-navbar-nav" className="">
         <Nav className="mr-auto">
           <Link href="/dashboard" passHref><Nav.Link active={router.pathname ==='/dashboard'}>{t('eventos')}</Nav.Link></Link>
-          <Link href="/abstracts" passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+          {user.canManageAbstracts() ? (<>
+            <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+          </>) : (<>
+            <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+          </>)}
           {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
           {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
           {/*  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}

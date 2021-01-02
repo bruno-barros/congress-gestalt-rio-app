@@ -1,5 +1,6 @@
 @import '~@brunobarros/react-components/src/scss/block-ui.module.scss';
 @import '~@brunobarros/react-components/src/scss/password-strong.module';
+@import '~react-quill/dist/quill.snow.css';
 @import './bootstrap/bootstrap.scss';
 @import "styles/mixins";
 @import "./toastify/main";
@@ -13,6 +14,7 @@
 @import "./abstract-card";
 @import "./uppy";
 @import "./status-bar";
+@import "./dynamic-table";
 
 body, html {
   //background-color: $gray-100;
@@ -101,3 +103,22 @@ body, html {
     display: block;
   }
 }
+
+
+.quill.disabled {
+  .ql-toolbar {
+    padding: 0;
+    border-bottom: none;
+    > * {display: none;}
+  }
+}
+.ql-editor {
+  p, ul, ol {
+    margin-bottom: $spacer;
+  }
+}
+.editor-height-sm .ql-editor{max-height: 150px;}
+.editor-height-md .ql-editor{
+  max-height: 350px;
+}
+.editor-height-lg .ql-editor{max-height: 550px;}
