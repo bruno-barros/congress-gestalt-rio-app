@@ -13,6 +13,7 @@ import {
   useColumnOrder,
   useExpanded,
   useFilters,
+  useGlobalFilter,
   useFlexLayout,
   useGroupBy,
   usePagination,
@@ -27,6 +28,8 @@ import {camelToWords} from "../../src/resources/objects";
 import {useDebounce} from "../hooks/useDebounce";
 import SortedLabel from "./sorted-label";
 import TablePagination from "./table-pagination";
+import {RenderCell} from "./cells";
+import AbstractFilters, {Text} from "./abstract-filters";
 
 
 const selectionHook = (hooks: Hooks<any>) => {
@@ -41,9 +44,9 @@ const selectionHook = (hooks: Hooks<any>) => {
       maxWidth: 45,
       // The header can use the table's getToggleAllRowsSelectedProps method
       // to render a checkbox
-      Header: ({getToggleAllRowsSelectedProps}: HeaderProps<any> & any) => (
+      Header: ({getToggleAllRowsSelectedProps}: HeaderProps<any> & any) => (<>
         <input type="checkbox" {...getToggleAllRowsSelectedProps()} className=""/>
-      ),
+      </>),
       // The cell can use the individual row's getToggleRowSelectedProps method
       // to the render a checkbox
       Cell: ({row}: CellProps<any> & any) => <input type="checkbox" {...row.getToggleRowSelectedProps()} className=""/>,
@@ -55,7 +58,8 @@ const selectionHook = (hooks: Hooks<any>) => {
 const hooks = [
   useColumnOrder,
   useFilters,
-  useGroupBy,
+  useGlobalFilter,
+  // useGroupBy,
   useSortBy,
   useExpanded,
   // useFlexLayout,
@@ -82,35 +86,32 @@ const defaultColumn = {
   maxWidth: 200, // maxWidth is only used as a limit for resizing
 }
 
-function DefaultColumnFilter<T extends object>(
-  {
-    column: {id, index, filterValue, setFilter, render, parent},
-  }: FilterProps<T> & any) {
-  const [value, setValue] = React.useState(filterValue || '')
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value)
-  }
-  // ensure that reset loads the new value
-  useEffect(() => {
-    setValue(filterValue || '')
-  }, [filterValue])
-
-  const firstIndex = !(parent && parent.index)
-
-  return (<>
-    <label htmlFor="">{render('Header')}</label>
-    <input
-      name={id}
-      // label={render('Header')}
-      value={value}
-      autoFocus={index === 0 && firstIndex}
-
-      onChange={handleChange}
-      onBlur={(e) => {
-        setFilter(e.target.value || undefined)
-      }}
-    />
-  </>)
+function DefaultColumnFilter<T extends object>(props: FilterProps<T> & any) {
+// {column: {id, index, filterValue, setFilter, render, parent}
+  return <Text {...props}/>
+  // const [value, setValue] = React.useState(filterValue || '')
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValue(event.target.value)
+  // }
+  // // ensure that reset loads the new value
+  // useEffect(() => {
+  //   setValue(filterValue || '')
+  // }, [filterValue])
+  //
+  // const firstIndex = !(parent && parent.index)
+  //
+  // return (<>
+  //   <div className="ss-group">
+  //     <label htmlFor="">{render('Header')}</label>
+  //     <input name={id} value={value} type="text" className="form-control"
+  //            autoFocus={index === 0 && firstIndex}
+  //            onChange={handleChange}
+  //            onBlur={(e) => {
+  //              setFilter(e.target.value || undefined)
+  //            }}
+  //     />
+  //   </div>
+  // </>)
 }
 
 export interface Table<T extends object = {}> extends TableOptions<T> {
@@ -125,7 +126,7 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
 
   const {name, columns, onAdd, onDelete, onEdit, onClick} = props
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {
-    pageIndex: 1
+    hiddenColumns: ['status_pt']
   })
   const instance = useTable<T>(
     {
@@ -138,16 +139,31 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
     ...hooks
   )
 
+
   // @ts-ignore
   const {getTableProps, headerGroups, getTableBodyProps, page, prepareRow, state} = instance
-  const debouncedState = useDebounce(state, 500)
 
+  const debouncedState = useDebounce(state, 1000)
+  useEffect(() => {
+    const {sortBy, filters, pageSize, columnResizing, hiddenColumns} = debouncedState
+    const val = {
+      sortBy,
+      filters,
+      pageSize,
+      columnResizing,
+      hiddenColumns,
+    }
+    setInitialState(val)
+  }, [setInitialState, debouncedState])
+
+// console.log(debouncedState);
   return (<div className="">
-    <div className="abstracts-action-bar border-bottom bg-light p-3">
-      ACOES
+    <div className="abstracts-action-bar border-bottom bg-light px-3 py-1">
+      <div>ACOES</div>
+      <AbstractFilters instance={instance}/>
     </div>
     <div className="table-responsive">
-      <table {...getTableProps()} className="table dynamic-table -table-bordered" style={{}}>
+      <table {...getTableProps()} className="table dynamic-table table-hover border-bottom" style={{}}>
         <thead>
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
@@ -160,7 +176,6 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
                     {...column.getSortByToggleProps()}
                   >{column.render('Header')}</SortedLabel>
                   : <div>{column.render('Header')}</div>}
-
               </th>
             ))}
           </tr>
@@ -174,7 +189,7 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
               {row.cells.map(cell => {
                 return (
                   <td {...cell.getCellProps()} style={{}}>
-                    {cell.render('Cell')}
+                    <RenderCell cell={cell.render('Cell')}/>
                   </td>
                 )
               })}

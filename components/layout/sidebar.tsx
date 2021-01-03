@@ -23,7 +23,6 @@ export default function Sidebar(props: SidebarProps) {
     if(state === 'opened' && !inside) {
       setState('closed')
     }
-
   }
 
   function toggle(){

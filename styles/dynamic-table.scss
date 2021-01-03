@@ -16,6 +16,8 @@
   cursor: pointer;
 
   .lbl {
+    white-space: nowrap;
+
     &::selection {
       background-color: transparent;
     }
@@ -52,11 +54,106 @@
     right: 0;
     bottom: 0;
     z-index: 10;
-    &::before{
+
+    &::before {
       left: 0;
     }
-    &::after{
+
+    &::after {
       left: 0;
+    }
+  }
+}
+
+
+.abstracts-action-bar {
+  display: flex;
+  align-items: center;
+}
+
+.super-search {
+  position: relative;
+  flex: 1 1 100%;
+  max-width: 500px;
+  margin: 0 $spacer;
+
+  .ss-global {
+
+    form {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background-color: $gray-100;
+      box-shadow: 0 0 5px rgba(0, 0, 0, .1);
+      transition: background-color .3s, box-shadow .5s;
+
+      button {
+        //box-shadow: 0 0 1px;
+        line-height: 1;
+
+        ion-icon {
+          font-size: 20px;
+        }
+
+        &:disabled {
+          opacity: .1;
+        }
+      }
+
+      .form-control {
+        border: none;
+        flex: 1;
+        background-color: transparent;
+
+        &:focus {
+          box-shadow: none;
+          //background-color: $white;
+        }
+      }
+
+      .btn-go {;
+      }
+
+      .btn-reset {
+      }
+
+      .btn-advanced {
+        top: 0;
+        right: 0;
+      }
+    }
+
+    &.focused {
+      form {
+        background-color: $white;
+        box-shadow: 0 0 10px rgba(0, 0, 0, .3);
+      }
+    }
+  }
+
+
+}
+
+.super-search  {
+
+  .ss-filters {
+    position: absolute;
+    width: 100%;
+    background-color: $white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, .3);
+    transform: translateY(3px);
+    border-radius: 0 0 $border-radius $border-radius;
+    z-index: 9;
+
+    .ss-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      label {
+        margin-right: 10px;
+        margin-bottom: 0;
+        min-width: 80px;
+      }
     }
   }
 }

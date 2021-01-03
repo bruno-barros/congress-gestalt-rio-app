@@ -168,3 +168,9 @@ export function ev_locale(locale) : string{
   if(locale.indexOf('es') !== -1) return 'es';
   return  'pt'
 }
+
+export function statusColorName(status: string): 'warning' | 'success' | 'danger' {
+  if (['pending', 'revision', 'waiting_update', 'synopsis_waiting_update', 'final_revision'].indexOf(status) !== -1) return 'warning'
+  if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
+  if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'
+}

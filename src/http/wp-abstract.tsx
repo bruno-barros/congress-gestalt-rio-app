@@ -21,6 +21,62 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_delete', {...data});
   }
 
+  static authors(id: number): Promise<AxiosResponse> {
+    return httpApi.post('/index.php?graphql&authors', {
+      query: `query find {
+  abstract(id: "${id}", idType: DATABASE_ID) {
+    databaseId
+    author {
+      node {
+        avatar {
+          url
+        }
+        databaseId
+        email
+        firstName
+        locale
+        name
+      }
+    }
+    authors {
+      name
+      email
+      active
+      bio
+      id
+      is_speaker
+      order
+    }
+  }
+}`
+    });
+  }
+
+
+  static attachments(id: number): Promise<AxiosResponse> {
+    return httpApi.post('/index.php?graphql&attachments', {
+      query: `query find {
+  abstract(id: "${id}", idType: DATABASE_ID) {
+    databaseId
+    title
+    attachments {
+      abstract_id
+      context
+      created_at
+      id
+      name
+      mimetype
+      note
+      size
+      url
+      user_id
+    }
+  }
+}`
+    });
+  }
+
+
   static find(id: number): Promise<AxiosResponse> {
     return httpApi.post('/index.php?graphql&abstract', {
       query: `query find {

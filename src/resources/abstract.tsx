@@ -1,4 +1,5 @@
 import {AbstractType, Status} from "../../components/abstract/abstract.d";
+import {statusColorName} from "../helpers";
 
 export default class Abstract {
   databaseId: number
@@ -61,9 +62,7 @@ export default class Abstract {
   }
 
   statusColorName(): 'warning' | 'success' | 'danger' {
-    if (['pending', 'revision', 'waiting_update', 'synopsis_waiting_update', 'final_revision'].indexOf(this.status) !== -1) return 'warning'
-    if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(this.status) !== -1) return 'success'
-    if (['synopsis_rejected', 'rejected'].indexOf(this.status) !== -1) return 'danger'
+    return  statusColorName(this.status)
   }
 
   isLockedToEdition() {

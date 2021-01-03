@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Curtain(props) {
 
-  const {isOpened, children} = props
+  const {isOpened, duration, children} = props
   const motionVars = {
     closed: {opacity: 0, height: 0},
     opened: {opacity: 1, height: 'auto'}
@@ -14,7 +14,7 @@ export default function Curtain(props) {
     variants={motionVars}
     initial="closed"
     animate={isOpened ? 'opened' : 'closed'}
-    transition={{duration: 1}}
+    transition={{duration: duration || 1}}
   >
     {children}
   </motion.div>)
