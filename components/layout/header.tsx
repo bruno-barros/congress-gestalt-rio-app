@@ -37,12 +37,18 @@ export default function Header(props: HeaderProps) {
       </div>
       <Navbar.Collapse id="basic-navbar-nav" className="">
         <Nav className="mr-auto">
-          <Link href="/dashboard" passHref><Nav.Link active={router.pathname ==='/dashboard'}>{t('eventos')}</Nav.Link></Link>
-          {user.canManageAbstracts() ? (<>
-            <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-          </>) : (<>
-            <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link active={router.pathname ==='/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-          </>)}
+          <Link href="/dashboard" passHref><Nav.Link active={router.pathname === '/dashboard'}>{t('eventos')}</Nav.Link></Link>
+          {user.canManageAbstracts()
+            ? (<>
+              <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link
+                active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+              <Link href={`/adm/users`} passHref><Nav.Link
+                active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
+            </>)
+            : (<>
+              <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
+                active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+            </>)}
           {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
           {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
           {/*  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}

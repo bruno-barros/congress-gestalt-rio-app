@@ -1,24 +1,62 @@
-import React, {FormEvent, PropsWithChildren, ReactElement, useCallback, useEffect, useState} from "react";
+import React, {PropsWithChildren, ReactElement, useCallback, useEffect, useState} from "react";
 import {TableInstance} from "react-table";
 import {Icon} from "@brunobarros/react-components";
 import Curtain from "../ui/curtain";
-import {Status} from "../abstract/abstract.d";
 import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
+import {MapRoles} from "../../src/resources/user";
+
+
+export function getAbstractFilterableFields() {
+  const router = useRouter()
+  const t = useTrans()
+  const {data: event} = useEvent()
+  let edition = event && event.currentEdition()
+  const editionId = String(router.query.edition) || edition?.id
+  if (editionId !== edition.id) edition = event.getEdition(editionId)
+  const lang = router.locale
+  if (!event) return null
+
+  const topics = edition?.abstract?.topics.map(top => {
+    return {value: top[lang], label: top[lang]}
+  })
+  const statuses = edition?.abstract?.statuses.map(s => {
+    return {value: String(t(`status.${s}`)), label: t(`status.${s}`)}
+  })
+
+  return [
+    {id: 'title', label: 'Título', options: null},
+    {id: 'topic', label: 'Tópico', options: topics},
+    {id: 'status_pt', label: 'Status', options: statuses},
+  ]
+}
+
+
+export function getUSerFilterableFields() {
+
+  const rolesOpts = MapRoles.map(role => ({value: role.label, label: role.label}))
+
+  return [
+    {id: 'name', label: 'Nome', options: null},
+    {id: 'email', label: 'E-mail', options: null},
+    {id: 'cellphone', label: 'Telefone', options: null},
+    {id: 'roles', label: 'Perfil', options: rolesOpts},
+  ]
+}
 
 type AbstractFilters<T extends object> = {
   instance: TableInstance<T>
+  filterableFields: { id: string; label: string; options: null | { value: string; label: string }[] }[]
   // onAdd?: TableMouseEventHandler
   // onDelete?: TableMouseEventHandler
   // onEdit?: TableMouseEventHandler
 }
-export default function AbstractFilters<T extends object>({instance}: PropsWithChildren<AbstractFilters<T>> & any): ReactElement | null {
+export default function AbstractFilters<T extends object>({filterableFields, instance}: PropsWithChildren<AbstractFilters<T>> & any): ReactElement | null {
 
   const router = useRouter()
   const t = useTrans()
   const {columns, allColumns, setAllFilters, setGlobalFilter, state: {globalFilter, filters}} = instance
-  const [anchorEl, setAnchorEl] = useState<Element | undefined>(undefined)
   const [filterOpen, setFilterOpen] = useState(false)
   const [isFiltering, setIsFiltering] = useState(false)
   const [globalState, setGlobalState] = useState<'' | 'focused'>('')
@@ -27,7 +65,6 @@ export default function AbstractFilters<T extends object>({instance}: PropsWithC
   const editionId = String(router.query.edition) || edition?.id
   if (editionId !== edition.id) edition = event.getEdition(editionId)
   const lang = router.locale
-  // const [filterValue, setFilterValue] = useState(globalFilter)
 
   useEffect(() => {
     if (globalFilter) setIsFiltering(true)
@@ -56,11 +93,13 @@ export default function AbstractFilters<T extends object>({instance}: PropsWithC
 
   function handleSubmitFilters(e) {
     e.preventDefault()
-    setAllFilters([
-      {id: 'title', value: e.target.elements['title'].value || undefined},
-      {id: 'status_pt', value: e.target.elements['status_pt'].value || undefined},
-      {id: 'topic', value: e.target.elements['topic'].value || undefined},
-    ])
+    let filters = filterableFields.map(field => ({id: field.id, value: e.target.elements[field.id].value || undefined}))
+    setAllFilters(filters)
+    // setAllFilters([
+    //   {id: 'title', value: e.target.elements['title'].value || undefined},
+    //   {id: 'status_pt', value: e.target.elements['status_pt'].value || undefined},
+    //   {id: 'topic', value: e.target.elements['topic'].value || undefined},
+    // ])
     setIsFiltering(true)
     setFilterOpen(false)
   }
@@ -107,24 +146,18 @@ export default function AbstractFilters<T extends object>({instance}: PropsWithC
       <Curtain isOpened={filterOpen} duration={.5}>
         <div className="p-3">
           <form id="ss-filters-form" onSubmit={handleSubmitFilters}>
-            <div className="ss-group">
-              <label htmlFor="ss-filter_title">Título</label>
-              <input id="ss-filter_title" name="title" type="text" className="form-control"/>
-            </div>
-            <div className="ss-group">
-              <label htmlFor="ss-filter_topic">Tópico</label>
-              <select id="ss-filter_topic" name="topic" className="form-control">
-                <option value=""></option>
-                {edition?.abstract?.topics.map(top => (<option value={top[lang]}>{top[lang]}</option>))}
-              </select>
-            </div>
-            <div className="ss-group">
-              <label htmlFor="ss-filter_status">Status</label>
-              <select id="ss-filter_status" name="status_pt" className="form-control">
-                <option value=""></option>
-                {edition?.abstract?.statuses.map(s => (<option value={String(t(`status.${s}`))}>{t(`status.${s}`)}</option>))}
-              </select>
-            </div>
+            {filterableFields
+            && filterableFields.map(field => {
+              return <div className="ss-group" key={field.id}>
+                <label htmlFor={`ss-filter_${field.id}`}>{field.label}</label>
+                {field.options
+                  ? <select id={`ss-filter_${field.id}`} name={field.id} className="form-control">
+                    <option value=""></option>
+                    {field.options.map((opt, i) => <option key={i} value={opt.value}>{opt.label}</option>)}
+                  </select>
+                  : <input id={`ss-filter_${field.id}`} name={field.id} type="text" className="form-control"/>}
+              </div>
+            })}
             <div className="ss-group mb-0">
               <button onClick={reset} type="button" className="btn btn-link ml-auto">limpar filtros</button>
               <button type="submit" className="btn btn-primary">Pesquisar</button>

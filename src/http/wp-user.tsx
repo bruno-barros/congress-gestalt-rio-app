@@ -164,20 +164,8 @@ export default class WpUser {
           neighborhood
           number
           state
-          credits
-          specialities
-          doc_prof
           registeredDate
           user_status
-          timeframes {
-            wednesday
-            tuesday
-            thursday
-            sunday
-            saturday
-            friday
-            monday
-          }
           roles {
             nodes {
               name
@@ -185,21 +173,6 @@ export default class WpUser {
           }
           avatar {
             url
-          }
-          partner_zb {
-            id
-            logo
-            name
-          }
-          ms_graph {
-            id
-            upn
-          }
-          subscriptions {
-            id
-            title
-            expires_at
-            status
           }
         }
       }`
@@ -339,52 +312,26 @@ export default class WpUser {
     });
   }
 
-  static fetchPatients(prof_id: number | null, orderBy = 'name', order = 'asc', page = 1, limit = 12, filters?: any): Promise<AxiosResponse<any>> {
-
-    let profId = prof_id ? `, prof_id: ${prof_id}` : '';
-    let byName = filters && filters.by_name
-      ? `, by_name: "${filters.by_name}"` : ''
-
-    return httpApi.post('/index.php?graphql&zbUserSearch', {
-      query: `query fetchPatients {
+  static all(): Promise<AxiosResponse<any>> {
+    return httpApi.post('/index.php?graphql&all', {
+      query: `query all {
   __typename
-  zbUserSearch(where: {pagination: {limit: ${limit}, page: ${page}}, orderby: ${orderBy}, order: ${order.toUpperCase()}, roles: subscriber ${byName} ${profId}}) {
+  users(where: {roleIn: [ADMINISTRATOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}) {
     nodes {
-      id
+      avatar {
+        url
+      }
       databaseId
-      phone
-      name
-      gender
       firstName
+      locale
+      name
       email
-      description
-      cpf
-      username
-      postcode
-      lastName
-      address
-      birthdate
       cellphone
-      city
-      country
-      complement
-      neighborhood
-      number
-      state
-      credits
-      user_status
+      registeredDate
       roles {
         nodes {
           name
         }
-      }
-      avatar {
-        url
-      }
-      partner_zb {
-        id
-        logo
-        name
       }
     }
     pageInfo {

@@ -1,6 +1,6 @@
 import MainLayout from "../../components/layout";
 import {useCallback, useMemo} from "react";
-import {AbstractsTable} from "../../components/abstracts-table";
+import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
@@ -80,7 +80,8 @@ const AdmAbstracts = () => {
   const data = useMemo(() => {
     if(!abstracts || !edition) return []
     return abstracts.map(row => {
-      row.topic = edition.abstract.topics.find(top => top.id === row.topic)[router.locale]
+      let topic = edition?.abstract?.topics?.find(top => top.id === row.topic)
+      row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
       row.status_pt = t(`status.${row.status}`)
       return row
     })
@@ -95,10 +96,11 @@ const AdmAbstracts = () => {
   }
 
   return (<MainLayout fullWidth>
-    <AbstractsTable<any>
+    <DynamicTable<any>
       name={`abstracts`}
       columns={columns}
       data={data}
+      hiddenColumns={['status_pt']}
       onAdd={dummy}
       onEdit={dummy}
       onDelete={dummy}/>

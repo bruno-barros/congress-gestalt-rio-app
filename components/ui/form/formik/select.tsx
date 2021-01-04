@@ -7,9 +7,10 @@ interface SelectProps {
   label: string
   containerClass?: string
   children: any
+  multi?: boolean
 }
 
-export default function Select({label, containerClass, children, ...props}: SelectProps & any) {
+export default function Select({label, containerClass, children, multi, ...props}: SelectProps & any) {
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
@@ -17,7 +18,7 @@ export default function Select({label, containerClass, children, ...props}: Sele
   return (<div className={`form-group ${containerClass || ''}`}>
     {label && <label htmlFor={`fld_${field.name}`}>{label}</label>}
 
-    <select {...field} {...props} id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'}`}>
+    <select {...field} {...props} id={`fld_${field.name}`} multiple={multi} className={`form-control ${err && 'is-invalid'}`}>
       {children}
     </select>
 

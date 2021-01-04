@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import moment from "moment";
 import {Icon} from "@brunobarros/react-components";
-import AuthorEditModal from "../abstract/author-edit-modal";
 import {statusColorName} from "../../src/helpers";
 import useTrans from "../hooks/useTrans";
 import AbstractAuthorsModal from "../abstract/abstract-authors-modal";
 import AbstractAttachmentsModal from "../abstract/abstract-attachments-modal";
+import {MapRoles} from "../../src/resources/user";
+import Link from "next/link";
 
 export function RenderCell({cell}) {
   // console.log(cell.props.cell.value);
@@ -14,14 +15,24 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'evaluations_count') return <Evaluations cell={cell}/>
   if (cell.props.cell.column.id === 'attachments_count') return <Attachments cell={cell}/>
   if (cell.props.cell.column.id === 'date') return <DateTime cell={cell}/>
-  if (cell.props.cell.column.id === 'gender') return <Gender cell={cell}/>
+  if (cell.props.cell.column.id === 'roles') return <Roles cell={cell}/>
+  if (cell.props.cell.column.id === 'title') return <AddLink cell={cell}/>
+  if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
   return cell
 }
 
-export function Gender({cell}) {
-  return <a href="https://google.com" target="_blank" title={cell.props.cell.value}>{cell}</a>
+export function Roles({cell}) {
+  const roles = cell.props.cell.value?.split(',')
+  return roles ? roles.map(role => {
+    const maped = MapRoles.find(r => r.label === role)
+    return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped.color}}>{role}</span>
+  }) : null
 }
 
+export function AddLink({cell}) {
+  const model = cell._owner.memoizedProps.name
+  return <Link href={`/${model}/${cell.props.cell.row.original.databaseId}`}><a>{cell.props.cell.value}</a></Link>
+}
 export function DateTime({cell}) {
   return <div className="text-sm">{moment(cell.props.cell.value).format('DD/MM/YYYY H:mm')}</div>
 }

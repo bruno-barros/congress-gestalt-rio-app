@@ -69,7 +69,6 @@ export class User {
   }
 
 
-
   canManageAbstracts() {
     return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin()
   }
@@ -142,16 +141,9 @@ export const Genders = () => {
 };
 
 
-export interface UserHistory {
-  appointments_fulfilled: number;
-  appointments_total: number;
-  last_appointment_at: string;
-  registered_at: string;
-  last_professional?: {
-    avatar: {
-      url: string
-    }
-    name: string;
-    databaseId: number;
-  }
-}
+export const MapRoles = [
+  {name: 'subscriber', label: 'Participante', color: '#ada900'},
+  {name: 'contributor', label: 'Avaliador', color: '#bc6402'},
+  {name: 'editor', label: 'Supervisor', color: '#868686'},
+  {name: 'administrator', label: 'Admin', color: '#000000'},
+]

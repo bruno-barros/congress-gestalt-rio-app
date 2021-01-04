@@ -9,13 +9,6 @@ interface SortedLabelProps {
 export default function SortedLabel(props: SortedLabelProps) {
 
   const {active, direction} = props
-  // <span>
-  //                   {column.isSorted
-  //                     ? column.isSortedDesc
-  //                       ? ' 🔽'
-  //                       : ' 🔼'
-  //                     : ''}
-  //                 </span>
 
   return (<div className="table-sorted-label">
     <div className="lbl">{props.children}</div>

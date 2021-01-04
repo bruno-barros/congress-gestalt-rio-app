@@ -1,4 +1,4 @@
-import React, {CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useEffect} from 'react'
+import React, {CSSProperties, MouseEventHandler, PropsWithChildren, ReactElement, useCallback, useEffect} from 'react'
 import {
   Cell,
   CellProps,
@@ -29,8 +29,25 @@ import {useDebounce} from "../hooks/useDebounce";
 import SortedLabel from "./sorted-label";
 import TablePagination from "./table-pagination";
 import {RenderCell} from "./cells";
-import AbstractFilters, {Text} from "./abstract-filters";
+import AbstractFilters, {getAbstractFilterableFields, getUSerFilterableFields, Text} from "./abstract-filters";
+import {AbstractsGroupActions, UsersGroupActions} from "./abstracts-group-actions";
 
+// @ts-ignore
+const IndeterminateCheckbox = React.forwardRef(({indeterminate, ...rest}, ref): any => {
+    const defaultRef = React.useRef(null)
+    const resolvedRef: any = ref || defaultRef
+
+    React.useEffect(() => {
+      resolvedRef.current.indeterminate = indeterminate
+    }, [resolvedRef, indeterminate])
+
+    return (
+      <>
+        <input type="checkbox" ref={resolvedRef} {...rest} />
+      </>
+    )
+  }
+)
 
 const selectionHook = (hooks: Hooks<any>) => {
   hooks.allColumns.push((columns) => [
@@ -44,12 +61,14 @@ const selectionHook = (hooks: Hooks<any>) => {
       maxWidth: 45,
       // The header can use the table's getToggleAllRowsSelectedProps method
       // to render a checkbox
-      Header: ({getToggleAllRowsSelectedProps}: HeaderProps<any> & any) => (<>
-        <input type="checkbox" {...getToggleAllRowsSelectedProps()} className=""/>
+      Header: ({getToggleAllRowsSelectedProps, getToggleAllPageRowsSelectedProps}: HeaderProps<any> & any) => (<>
+        <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
       </>),
       // The cell can use the individual row's getToggleRowSelectedProps method
       // to the render a checkbox
-      Cell: ({row}: CellProps<any> & any) => <input type="checkbox" {...row.getToggleRowSelectedProps()} className=""/>,
+      Cell: ({row}: CellProps<any> & any) => <>
+        <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+        </>,
     },
     ...columns,
   ])
@@ -116,17 +135,18 @@ function DefaultColumnFilter<T extends object>(props: FilterProps<T> & any) {
 
 export interface Table<T extends object = {}> extends TableOptions<T> {
   name: string
+  hiddenColumns: string[]
   onAdd?: (instance: TableInstance<T>) => MouseEventHandler
   onDelete?: (instance: TableInstance<T>) => MouseEventHandler
   onEdit?: (instance: TableInstance<T>) => MouseEventHandler
   onClick?: (row: Row<T>) => void
 }
 
-export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<T>> & any) {
+export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>> & any) {
 
-  const {name, columns, onAdd, onDelete, onEdit, onClick} = props
+  const {name, hiddenColumns, columns, onAdd, onDelete, onEdit, onClick} = props
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {
-    hiddenColumns: ['status_pt']
+    hiddenColumns: hiddenColumns
   })
   const instance = useTable<T>(
     {
@@ -156,11 +176,17 @@ export function AbstractsTable<T extends object>(props: PropsWithChildren<Table<
     setInitialState(val)
   }, [setInitialState, debouncedState])
 
+  const filterableFields = useCallback(()=>{
+    if(name === 'users') return getUSerFilterableFields()
+    return getAbstractFilterableFields()
+  }, [])
+
 // console.log(debouncedState);
   return (<div className="">
     <div className="abstracts-action-bar border-bottom bg-light px-3 py-1">
-      <div>ACOES</div>
-      <AbstractFilters instance={instance}/>
+      {name === 'abstracts' && <AbstractsGroupActions instance={instance}/>}
+      {name === 'users' && <UsersGroupActions instance={instance}/>}
+      <AbstractFilters instance={instance} filterableFields={filterableFields()}/>
     </div>
     <div className="table-responsive">
       <table {...getTableProps()} className="table dynamic-table table-hover border-bottom" style={{}}>
