@@ -163,7 +163,13 @@ return [
 ]
 }
 
+export const MapLocales = [
+  {app: 'pt', site: 'pt_BR', label: 'Português'},
+  {app: 'en', site: 'en_US', label: 'Inglês'},
+]
+
 export function ev_locale(locale) : string{
+  if(!locale) return 'pt'
   if(locale.indexOf('en') !== -1) return 'en';
   if(locale.indexOf('es') !== -1) return 'es';
   return  'pt'

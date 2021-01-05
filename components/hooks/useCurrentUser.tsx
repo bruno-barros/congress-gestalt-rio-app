@@ -40,8 +40,8 @@ export default function useCurrentUser(): { authLoading: boolean; user: User | n
     cacheTime: 1000 * 60 * 10,
     retry: 1,
     onSettled: (value) => {
-      const appLocale: string = ev_locale(value.locale)
-      if (appLocale !== router.locale) {
+      const appLocale: string = ev_locale(value?.locale)
+      if (appLocale !== router?.locale) {
           router.push({pathname: router.pathname, query: router.query}, router.asPath, {locale: appLocale})
       }
     }

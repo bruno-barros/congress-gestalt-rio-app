@@ -1,15 +1,13 @@
 import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import Head from "next/head";
-import {getGenres, inputFloatClass, siteTitle} from "../src/helpers";
+import {getGenres, siteTitle} from "../src/helpers";
 import {useQueryClient} from "react-query";
 import Card from "react-bootstrap/cjs/Card";
 import ClearLayout from "../components/layout/clear";
 import {Field, Form, Formik} from "formik";
-import FieldError from "../components/ui/form/field-error";
 import useTrans from "../components/hooks/useTrans";
 import {countries} from "../src/countries";
-import InputMask from "react-input-mask";
 import * as Yup from "yup";
 import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
@@ -43,8 +41,8 @@ const Register1 = () => {
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
-    first_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    last_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+    firstName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+    lastName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
     badge_name: Yup.string().min(5, 'validacao.curto').required('validacao.obrigatorio'),
     cellphone: Yup.string().min(15, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
@@ -160,7 +158,7 @@ const Register1 = () => {
                   </div>
                   <div className="btn-group btn-group-lg end" role="group">
                     <LoadingButton variant="primary" loading={loading} disable={!isValid}
-                                   className=" px-5">Continuar</LoadingButton>
+                                   className=" px-5">{t('cotinuar')}</LoadingButton>
                   </div>
                 </div>
 

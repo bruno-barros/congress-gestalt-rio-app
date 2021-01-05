@@ -18,7 +18,8 @@ export default function Sidebar(props: SidebarProps) {
   }, [state])
 
   function handleOutClick(e){
-    const inside = document.getElementById('sidebar').contains(e.target)
+    const sidebar = document.getElementById('sidebar')
+    const inside = sidebar && document.getElementById('sidebar').contains(e.target)
     // console.log({inside, state});
     if(state === 'opened' && !inside) {
       setState('closed')

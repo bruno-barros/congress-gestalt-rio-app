@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
-import {Field, Form, Formik} from "formik";
+import { useState} from "react";
+import { Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {LoadingButton} from "@brunobarros/react-components";
-import FieldError from "./field-error";
 import PasswordRecover from "./password-recover";
 import {motion} from "framer-motion";
 import useTrans from "../../hooks/useTrans";
@@ -21,10 +20,9 @@ import {setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
 import {useRouter} from "next/router";
 import useEvent from "../../hooks/useEvent";
-import Link from "next/link";
-import {inputFloatClass} from "../../../src/helpers";
 import SignUp from "./sign-up-form";
-import Sweet, {Toast} from '../sweet-alert'
+import Text from "./formik/text";
+import {errorNotification} from "../../../src/resources/responses";
 
 const LoginForm = () => {
 
@@ -56,8 +54,7 @@ const LoginForm = () => {
     setBlockUi(false)
 
     if (!success) {
-      const error = Error.make(data)
-      toast.error(error.message)
+      errorNotification({error: data})
     } else if (data?.next_action === 'login' || data?.next_action === 'profile_fase_1') {
       disp(setUpUser({
         locale: router.locale,
@@ -79,7 +76,7 @@ const LoginForm = () => {
         router.reload()
       }, 15000)
     } else {
-      toast.error('Something happens!')
+      errorNotification({message: 'Something happens!'})
     }
 
   }
@@ -111,18 +108,8 @@ const LoginForm = () => {
     >
       {({errors, touched, isValid, values}) => (
         <Form>
-          <div className="form-group float-label">
-            <Field id="username" name="username" className={inputFloatClass(values.username)} placeholder=""/>
-            <label htmlFor="username">{t('seu-email')}</label>
-            <FieldError message={touched?.username && errors?.username} fieldId="username"/>
-          </div>
-          <div className="form-group float-label">
-            <Field id="password" name="password" className={inputFloatClass(values.password)} placeholder=""
-                   type="password"/>
-            <label htmlFor="password">{t('senha')}</label>
-            <FieldError message={touched?.password && errors?.password} fieldId="password"/>
-          </div>
-
+          <Text name="username" label={t('seu-email')} floatLabel/>
+          <Text name="password" type="password" label={t('senha')} floatLabel/>
           <LoadingButton disable={!isValid} loading={false} block>{t('entrar')}</LoadingButton>
 
           <div className="d-flex justify-content-between my-4">

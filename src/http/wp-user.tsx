@@ -166,6 +166,7 @@ export default class WpUser {
           state
           registeredDate
           user_status
+          locale
           roles {
             nodes {
               name

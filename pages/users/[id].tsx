@@ -9,6 +9,7 @@ import WpUser from "../../src/http/wp-user";
 import {errorNotification} from "../../src/resources/responses";
 import ProfileForm from "../../components/user/profile-form";
 import {User} from "../../src/resources/user";
+import UsersListSidebar from "../../components/user/users-list-sidebar";
 
 
 const UserEditing = () => {
@@ -54,13 +55,19 @@ const UserEditing = () => {
     </MainLayout>;
   }
 
-  return (<MainLayout sidebar={{title: 'Usuários', component: <p>lorem...</p>}}>
+  function Sidebar(){
+    // return null
+
+    return {title: 'Usuários', component: <UsersListSidebar/>}
+  }
+
+  return (<MainLayout sidebar={Sidebar()}>
     <div className="row my-5">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
         <ProfileForm editingMode={editingMode} user={user}/>
       </div>
       <div className="col-12 col-md-4">
-        <p><strong>Comentários</strong></p>
+        <p><strong>Histórico de inscrições</strong></p>
       </div>
     </div>
   </MainLayout>)

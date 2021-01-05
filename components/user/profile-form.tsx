@@ -2,18 +2,16 @@ import React, {useState} from "react";
 import {Field, Form, Formik} from "formik";
 import {MapRoles, User} from "../../src/resources/user";
 import {countries} from "../../src/countries";
-import FieldError from "../ui/form/field-error";
 import useTrans from "../hooks/useTrans";
 import Text from "../ui/form/formik/text";
 import {LoadingButton} from "@brunobarros/react-components";
 import Select from "../ui/form/formik/select";
 import Mask from "../ui/form/formik/mask";
-import {getGenres, states} from "../../src/helpers";
+import {getGenres, MapLocales, states} from "../../src/helpers";
 import * as Yup from "yup";
 import WpUser from "../../src/http/wp-user";
-import Error from "../../src/resources/error";
-import {toast} from "react-toastify";
 import {errorNotification, successNotification} from "../../src/resources/responses";
+import useAllUsers from "../hooks/useAllUsers";
 
 interface ProfileFormProps {
   user: User
@@ -24,6 +22,7 @@ export default function ProfileForm(props: ProfileFormProps) {
 
   const t = useTrans()
   const {user, editingMode} = props
+  const {refetch: refreshUsers} = useAllUsers()
   const [loading, setLoading] = useState(false)
   const FormSchema = Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
@@ -54,7 +53,7 @@ export default function ProfileForm(props: ProfileFormProps) {
     neighborhood: Yup.string().required('validacao.obrigatorio'),
     address: Yup.string().required('validacao.obrigatorio'),
     number: Yup.string().required('validacao.obrigatorio'),
-    complement: Yup.string().notRequired(),
+    // complemento: Yup.string().notRequired(),
   });
 
   async function submit(values) {
@@ -68,6 +67,7 @@ export default function ProfileForm(props: ProfileFormProps) {
 
       success === false && errorNotification({message: data?.msg})
       success === true && successNotification({message: t('atualizado-com-sucesso')})
+      success === true && refreshUsers()
 
     } catch (err) {
       errorNotification({error: err})
@@ -77,8 +77,11 @@ export default function ProfileForm(props: ProfileFormProps) {
   }
 
   return (<Formik
+    enableReinitialize={true}
     initialValues={{
       fn_add_role: user.getUserData().roles?.nodes.map(r => r.name),
+      locale: user.getUserData().locale || '',
+      user_status: user.getUserData().user_status || '',
       firstName: user.getFirstName() || '',
       lastName: user.getUserData().lastName || '',
       email: user.getUserData().email || '',
@@ -96,7 +99,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       neighborhood: user.getUserData().neighborhood || '',
       address: user.getUserData().address || '',
       number: user.getUserData().number || '',
-      complement: user.getUserData().complement || '',
+      complement: user.getUserData().complement,
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
@@ -104,12 +107,24 @@ export default function ProfileForm(props: ProfileFormProps) {
     <Form>
       <fieldset>
         <legend>Dados pessoais</legend>
+
         {editingMode === 'admin'
-        && <div className="">
-          <Select name="fn_add_role" label={`Perfil`} containerClass="" multi required>
+        && <div className="row">
+          <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required>
             {MapRoles.map(r => (<option key={r.name} value={r.name}>{r.label}</option>))}
           </Select>
+          <div className="col-12 col-md">
+            <Select name="locale" label={`Localização`} containerClass="" required>
+              {MapLocales.map(l => (<option key={l.site} value={l.site}>{l.label}</option>))}
+            </Select>
+            <Select name="user_status" label={`Status`} containerClass="-col-12 -col-md" required>
+              <option value="0">Ativo</option>
+              <option value="1">Inativo</option>
+            </Select>
+          </div>
+
         </div>}
+
         <div className="row">
           <Select name="country" label={t('cadastro.nacionalidade')} containerClass="col-12 col-md" required>
             {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
@@ -143,12 +158,11 @@ export default function ProfileForm(props: ProfileFormProps) {
         <div className="form-row">
           <Text name="postcode" label={t('cadastro.cep')} required containerClass="col-12 col-md-4"
                 cepCallback={(data)=>{
-                  if(!data?.error){
-                    setFieldValue('logradouro', data.logradouro)
-                    setFieldValue('city', data.localidade)
-                    setFieldValue('neighborhood', data.bairro)
-                    setFieldValue('state', data.uf)
-                    setFieldValue('complement', data.complemento)
+                  if(data){
+                    setFieldValue('address', data.address)
+                    setFieldValue('city', data.city)
+                    setFieldValue('neighborhood', data.neighborhood)
+                    setFieldValue('state', data.state)
                   }
           }}/>
         </div>
@@ -164,14 +178,14 @@ export default function ProfileForm(props: ProfileFormProps) {
         <Text name="address" label={t('cadastro.logradouro')} required containerClass=""/>
         <div className="row">
           <Text name="number" type="number" label={t('cadastro.numero')} required containerClass="col-12 col-md-6"/>
-          <Text name="complement" label={t('cadastro.complemento')} containerClass="col-12 col-md-6"/>
+          <Text name="complement" type="text" label={t('cadastro.complemento')} containerClass="col-12 col-md-6"/>
         </div>
       </fieldset>
-      <LoadingButton variant="primary" block className={` mt-3`} disable={!isValid}
+      <LoadingButton variant="primary" block size="lg" className={` mt-3`} disable={!isValid}
                      loading={loading}>{t('salvar')}</LoadingButton>
-      <code>{JSON.stringify(values, null, 2)}</code>
-      <hr/>
-      <code>{JSON.stringify(user, null, 2)}</code>
+      {/*<code>{JSON.stringify(values, null, 2)}</code>*/}
+      {/*<hr/>*/}
+      {/*<code>{JSON.stringify(user, null, 2)}</code>*/}
 
     </Form>
   )}</Formik>)

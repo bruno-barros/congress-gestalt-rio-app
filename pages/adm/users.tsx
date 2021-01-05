@@ -1,16 +1,12 @@
 import {useRouter} from "next/router";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
-import useEvent from "../../components/hooks/useEvent";
-import {useQuery} from "react-query";
-import {WpAbstract} from "../../src/http/wp-abstract";
-import {errorNotification} from "../../src/resources/responses";
 import {useCallback, useMemo} from "react";
 import MainLayout from "../../components/layout";
 import {DynamicTable} from "../../components/dynamic-table";
 import {Loading} from "@brunobarros/react-components";
-import WpUser from "../../src/http/wp-user";
 import {MapRoles} from "../../src/resources/user";
+import useAllUsers from "../../components/hooks/useAllUsers";
 
 
 const AdmUsers = () => {
@@ -18,25 +14,7 @@ const AdmUsers = () => {
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
-  const {data: users, error, isLoading} = useQuery<any[], any>(['users', 'admin'], queryUsers, {
-    enabled: user.canManageAbstracts()
-  })
-
-  function queryUsers(): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      WpUser.all().then(resp => {
-        if (resp.data.data?.users?.nodes) {
-          resolve(resp.data.data.users.nodes)
-        } else {
-          reject([])
-          errorNotification({error: resp.data.errors})
-        }
-      }, err => {
-        reject([])
-        errorNotification({error: err})
-      })
-    })
-  }
+  const {data: users, isLoading} = useAllUsers()
 
   const columns = useMemo(() => {
     return [

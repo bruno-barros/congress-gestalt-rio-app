@@ -21,14 +21,15 @@ export interface UserInterface {
   cellphone?: string;
   city?: string;
   country?: string;
-  complement?: string;
-  neighborhood?: string;
   number?: number;
+  complement?: string|number;
+  neighborhood?: string;
   state?: string;
   registeredDate?: string;
   user_status?: number;
   passport?: string
   badge_name?: string
+  locale?: string
 }
 
 /**

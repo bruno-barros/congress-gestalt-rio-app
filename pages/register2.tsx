@@ -1,22 +1,23 @@
 import ClearLayout from "../components/layout/clear";
-import {getGenres, siteTitle} from "../src/helpers";
+import {siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import {useState} from "react";
-import * as Yup from "yup";
-import WpUser from "../src/http/wp-user";
-import Error from "../src/resources/error";
-import {Field, Form, Formik} from "formik";
 import Card from "react-bootstrap/cjs/Card";
-import {countries} from "../src/countries";
-import FieldError from "../components/ui/form/field-error";
-import InputMask from "react-input-mask";
-import Curtain from "../components/ui/curtain";
 import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../components/hooks/useTrans";
-import {MultiStepForm, Step}  from 'react-multi-form'
+import {MultiStepForm, Step} from 'react-multi-form'
+import useEvent from "../components/hooks/useEvent";
+import {Edition} from "../src/resources/event";
+import {Loading} from "@brunobarros/react-components";
+import StepPlan from "../components/registration/step-plan";
+import StepAddress from "../components/registration/step-address";
+import StepInstitution from "../components/registration/step-institution";
+import StepPayment from "../components/registration/step-payment";
+import Carousel from "react-bootstrap/cjs/Carousel";
+import Curtain from "../components/ui/curtain";
 
 
 const Register2 = () => {
@@ -25,67 +26,25 @@ const Register2 = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
+  const {data: event, isLoading} = useEvent()
+  const edition: Edition = event && event.currentEdition()
+  const steps: { pt: string; en: string; id: string }[] = edition?.stepsArr()
+  const lang = router.locale
   const [loading, setLoading] = useState(false)
-  const [response, setResponse] = useState({success: null, msg: ''})
+
   const [step, setStep] = useState(1)
+  const [isStepValid, setIsStepValid] = useState(false)
 
-  const FormSchema = Yup.object().shape({
-    country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
-    cpf: Yup.string().when('country', {
-      is: (val) => val === 'BR',
-      then: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-      otherwise: Yup.string().notRequired()
-    }),
-    passport: Yup.string().when('country', {
-      is: (val) => val !== 'BR',
-      then: Yup.string().required('validacao.obrigatorio'),
-      otherwise: Yup.string().notRequired()
-    }),
-    first_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    last_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    badge_name: Yup.string().min(5, 'validacao.curto').required('validacao.obrigatorio'),
-    cellphone: Yup.string().min(15, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    gender: Yup.string().required('validacao.obrigatorio'),
-
-  });
-
-
-  async function handleSubmit(values) {
-    values.databaseId = user.getId()
-    values.email = user.getUserData().email
-    console.log({values});
-    setLoading(true)
-    try {
-      const resp = await WpUser.update(values)
-      const success = resp.data.success
-      const data = resp.data?.data
-      setLoading(false)
-      setResponse({success, msg: data.msg})
-      success === false && dismissAlert()
-      success === true && router.push(`/register2`)// TODO
-
-    } catch (err) {
-      const error = Error.make(err)
-      setResponse({success: false, msg: error.message})
-      dismissAlert()
-      setLoading(false)
-    }
-
-  }
 
   function handlePostpone(e) {
     e.preventDefault()
     router.push(`/dashboard`)
   }
 
-
-  function dismissAlert() {
-    setTimeout(() => {
-      setResponse({success: null, msg: ''})
-    }, 5000)
+  if (isLoading) {
+    return <ClearLayout><Loading vspace={80}/></ClearLayout>
   }
+
 
   return (<ClearLayout>
     <Head>
@@ -93,78 +52,58 @@ const Register2 = () => {
     </Head>
     <div className="row">
       <div className="col-12">
-        <Formik
-          initialValues={{
-            country: 'BR',
-            cpf: '',
-            passport: '',
-            first_name: '',
-            last_name: '',
-            badge_name: '',
-            cellphone: '',
-            phone: '',
-            birthdate: '',
-            gender: 'M',
-          }}
-          onSubmit={handleSubmit}
-          validationSchema={FormSchema}
-        >{({errors, touched, values, isValid, handleBlur, handleChange}) => (
-          <Form>
-            <div className="multi-steps">
-              <MultiStepForm activeStep={step} accentColor="var(--primary)">
-                <Step label="Plano"/>
-                <Step label="Dados pessoais"/>
-                <Step label="Endereço"/>
-                <Step label="Instituição"/>
-                <Step label="Pagamento"/>
-              </MultiStepForm>
+        <div className="multi-steps">
+          <MultiStepForm activeStep={step} accentColor="var(--primary)">
+            {steps.map(step => <Step key={step.id} label={step[lang]}/>)}
+          </MultiStepForm>
+        </div>
+        <Card>
+          <Card.Body>
+
+              {steps[step - 1].id === 'plan'
+              && <Curtain isOpened={steps[step - 1].id === 'plan'}>
+                <StepPlan user={user} event={event} edition={edition}
+                          onLoading={(bool) => setLoading(bool)}
+                          goNext={() => setStep(step + 1)}/>
+              </Curtain>}
+              {steps[step - 1].id === 'address'
+              && <Curtain isOpened={steps[step - 1].id === 'address'}>
+                <StepAddress user={user} event={event} edition={edition}
+                             onLoading={(bool) => setLoading(bool)}
+                             goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)}/>
+              </Curtain>}
+              {steps[step - 1].id === 'institution'
+              && <Curtain isOpened={steps[step - 1].id === 'institution'}>
+                <StepInstitution user={user} event={event} edition={edition}
+                                 onLoading={(bool) => setLoading(bool)}
+                                 goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)}/>
+              </Curtain>}
+              {steps[step - 1].id === 'payment'
+              && <Curtain isOpened={steps[step - 1].id === 'payment'} style={{height: 400}}>
+                <StepPayment user={user} event={event} edition={edition}
+                             onLoading={(bool) => setLoading(bool)}
+                             goNext={() => {
+                             }} goPrev={() => setStep(step - 1)}/>
+              </Curtain>}
+
+
+          </Card.Body>
+          <Card.Footer className="p-0 border-0">
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="px-4 py-2">
+                <span className="text-muted"></span>
+              </div>
+              <div className="btn-group btn-group-lg end" role="group">
+                <button onClick={handlePostpone} type="button"
+                        className="btn btn-outline-secondary border-0 px-5">{t('cadastro.fazer-depois')}
+                </button>
+                <LoadingButton type="button" variant="primary" loading={loading} disable={!isStepValid}
+                               className=" px-5">{t('continuar')}</LoadingButton>
+              </div>
             </div>
+          </Card.Footer>
+        </Card>
 
-
-            <Card>
-              <Card.Body>
-                <h3 className="page-title">TODO</h3>
-
-                <div className="row">
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="first_name">{t('cadastro.nome')}</label>
-                    <Field id="first_name" name="first_name" className="form-control" placeholder=""/>
-                    <FieldError message={touched?.first_name && errors?.first_name} fieldId="first_name"/>
-                  </div>
-                  <div className="form-group col-12 col-md">
-                    <label htmlFor="last_name">{t('cadastro.sobrenome')}</label>
-                    <Field id="last_name" name="last_name" className="form-control" placeholder=""/>
-                    <FieldError message={touched?.last_name && errors?.last_name} fieldId="last_name"/>
-                  </div>
-                </div>
-                {/*row*/}
-
-                {response.msg && <Curtain isOpened={response.msg?.length > 0}>
-                  <div className={`alert ${response.success ? 'alert-success' : 'alert-danger'}`}>
-                    {response.msg}
-                  </div>
-                </Curtain>}
-
-
-              </Card.Body>
-              <Card.Footer className="p-0 border-0">
-                <div className="d-flex align-items-center justify-content-between">
-                  <div className="px-4 py-2">
-                    <span className="text-muted"></span>
-                  </div>
-                  <div className="btn-group btn-group-lg end" role="group">
-                    <button onClick={handlePostpone} type="button"
-                            className="btn btn-outline-secondary border-0 px-5">Fazer depois
-                    </button>
-                    <LoadingButton variant="primary" loading={loading} disable={!isValid}
-                                   className=" px-5">Continuar</LoadingButton>
-                  </div>
-                </div>
-
-              </Card.Footer>
-            </Card>
-          </Form>
-        )}</Formik>
       </div>
     </div>
   </ClearLayout>)

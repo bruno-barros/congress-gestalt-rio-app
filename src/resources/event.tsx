@@ -30,7 +30,7 @@ export default class Event {
     return this.logo?.secondary
   }
 
-  getEdition(editionId: string){
+  getEdition(editionId: string) {
     return this.getEditions().find(edition => edition.id === editionId)
   }
 
@@ -58,11 +58,24 @@ export class Edition {
   logo: { primary: string; secondary: string }
   url: { pt: string; en: string }
   app: { pt: string; en: string }
+  subscription: {
+    required: boolean
+    start_at: string
+    end_at: string
+    categories: any[]
+    // steps after basic data (register1)
+    steps: {
+      plan: any[]
+      address: any[]
+      institution: any[]
+      payment: any[]
+    }
+  }
   abstract: {
     required: boolean
     statuses: Status[]
     attachments: number
-    topics: {id: string; pt: string; en: string}[]
+    topics: { id: string; pt: string; en: string }[]
     start_at: string
     end_at: string
     required_fields: any[]
@@ -99,6 +112,15 @@ export class Edition {
 
   get logoSecondary() {
     return this.logo.secondary || this.defaults.logo.secondary
+  }
+
+  steps() {
+    return this.subscription.steps
+  }
+  stepsArr() {
+    return Object.keys(this.subscription.steps).map(step => {
+      return {...this.subscription.steps[step], id: step}
+    })
   }
 
 
