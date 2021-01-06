@@ -30,6 +30,10 @@ export interface UserInterface {
   passport?: string
   badge_name?: string
   locale?: string
+  institution_name?: string
+  institution_occupation?: string
+  institution_email?: string
+  institution_phone?: string
 }
 
 /**

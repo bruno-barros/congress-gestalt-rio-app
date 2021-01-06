@@ -1,4 +1,5 @@
 import {Status} from "../../components/abstract/abstract.d";
+import moment from "moment";
 
 export default class Event {
   name: string
@@ -62,13 +63,16 @@ export class Edition {
     required: boolean
     start_at: string
     end_at: string
-    categories: any[]
+    products: {
+      pt: { id: number, name: string, price: number, desc: string }[]
+      en: { id: number, name: string, price: number, desc: string }[]
+    },
     // steps after basic data (register1)
     steps: {
-      plan: any[]
-      address: any[]
-      institution: any[]
-      payment: any[]
+      plan: { pt: string; en: string }
+      address: { pt: string; en: string }
+      institution: { pt: string; en: string }
+      payment: { pt: string; en: string }
     }
   }
   abstract: {
@@ -117,11 +121,20 @@ export class Edition {
   steps() {
     return this.subscription.steps
   }
+
   stepsArr() {
     return Object.keys(this.subscription.steps).map(step => {
       return {...this.subscription.steps[step], id: step}
     })
   }
 
+  isOpenToSubscribe() {
+    const today = moment()
+    const start = this.subscription.start_at ? moment(this.subscription.start_at) : null
+    const end = this.subscription.end_at ? moment(this.subscription.end_at) : null
+    if (!start || !end) return false
+    if (today >= start && today <= end) return true
+    return false
+  }
 
 }

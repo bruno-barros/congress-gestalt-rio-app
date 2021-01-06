@@ -37,7 +37,7 @@ const Login = () => {
       </div>
 
       {(user && user.getId() > -1) && <div className="text-center"><div className="alert alert-warning d-inline-block w-auto">
-        Olá {user?.getFirstName()}. Você já está logado. <Link href={`/logout`} passHref><a>Sair</a></Link>
+        Olá {user?.getFirstName()}. Você já está logado. <Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
       </div></div>}
 
       <LoginForm/>

@@ -1,6 +1,6 @@
 import {useDispatch} from "react-redux";
 import {User} from "../../src/resources/user";
-import {useQuery} from "react-query";
+import {QueryObserverResult, useQuery} from "react-query";
 import {USER_ACTYPE} from "../../src/store/user.actions";
 import WpUser from "../../src/http/wp-user";
 import AuthToken from "../../src/http/auth-token";
@@ -30,7 +30,7 @@ function fetchCurrentUser(dispatch) {
 
 }
 
-export default function useCurrentUser(): { authLoading: boolean; user: User | null } {
+export default function useCurrentUser(): { authLoading: boolean; user: User | null } & QueryObserverResult<any, any> {
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -42,7 +42,7 @@ export default function useCurrentUser(): { authLoading: boolean; user: User | n
     onSettled: (value) => {
       const appLocale: string = ev_locale(value?.locale)
       if (appLocale !== router?.locale) {
-          router.push({pathname: router.pathname, query: router.query}, router.asPath, {locale: appLocale})
+        router.push({pathname: router.pathname, query: router.query}, router.asPath, {locale: appLocale})
       }
     }
     // enabled: !!authState.databaseId === false
@@ -50,6 +50,7 @@ export default function useCurrentUser(): { authLoading: boolean; user: User | n
 
   return {
     authLoading: queryAuth.isLoading,
-    user: User.make({...queryAuth.data})
+    user: User.make({...queryAuth.data}),
+    ...queryAuth
   }
 }

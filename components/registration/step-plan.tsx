@@ -1,20 +1,33 @@
-import {Field, Form, Formik} from "formik";
-import FieldError from "../ui/form/field-error";
+import {ErrorMessage, Field, Form as FormikForm, Formik} from "formik";
 import Curtain from "../ui/curtain";
 import WpUser from "../../src/http/wp-user";
-import Error from "../../src/resources/error";
 import * as Yup from "yup";
 import useTrans from "../hooks/useTrans";
-import {useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {StepProps} from "./registration.d";
+import Select from "../ui/form/formik/select";
+import {blockUi} from "../../src/store/ui.actions";
+import {errorNotification} from "../../src/resources/responses";
+import {useDispatch} from "react-redux";
+import {useRouter} from "next/router";
+import Form from "react-bootstrap/cjs/Form";
+import {useQuery} from "react-query";
 
 
 export default function StepPlan(props: StepProps) {
 
 
-  const {user, event, edition, onLoading, goPrev, goNext} = props
+  const disp = useDispatch()
+  const {step, user, event, edition, onLoading, goPrev, goNext, formInstance} = props
   const t = useTrans()
+  const router = useRouter()
   const [response, setResponse] = useState({success: null, msg: ''})
+  const form = useRef(null)
+  const lang = router.locale
+
+  useEffect(() => {
+    formInstance(form.current)
+  }, [form.current])
 
   function dismissAlert() {
     setTimeout(() => {
@@ -23,95 +36,68 @@ export default function StepPlan(props: StepProps) {
   }
 
   const FormSchema = Yup.object().shape({
-    country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
-    cpf: Yup.string().when('country', {
-      is: (val) => val === 'BR',
-      then: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-      otherwise: Yup.string().notRequired()
-    }),
-    passport: Yup.string().when('country', {
-      is: (val) => val !== 'BR',
-      then: Yup.string().required('validacao.obrigatorio'),
-      otherwise: Yup.string().notRequired()
-    }),
-    first_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    last_name: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    badge_name: Yup.string().min(5, 'validacao.curto').required('validacao.obrigatorio'),
-    cellphone: Yup.string().min(15, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
-    gender: Yup.string().required('validacao.obrigatorio'),
-
+    product: Yup.string().required('validacao.obrigatorio'),
   });
 
   async function handleSubmit(values) {
-    values.databaseId = user.getId()
-    values.email = user.getUserData().email
-    console.log({values});
-    onLoading(true)
-    try {
-      const resp = await WpUser.update(values)
-      const success = resp.data.success
-      const data = resp.data?.data
-      onLoading(false)
-      setResponse({success, msg: data.msg})
-      success === false && dismissAlert()
-      // success === true && router.push(`/register2`)// TODO
 
-    } catch (err) {
-      const error = Error.make(err)
-      setResponse({success: false, msg: error.message})
-      dismissAlert()
-      onLoading(false)
-    }
+    console.log({values});
+
+    // useQuery(['product'], ()=>{
+    //   return values
+    // }, {cacheTime: Infinity, staleTime: Infinity})
+
+    goNext()
+
 
   }
 
-  return (<div className="">
-    <h2>Plano</h2>
+  function Label({prod}) {
+    return <span>{prod.name} <span className="price">R$ {prod.price}</span></span>
+  }
+
+  return (<div className="px-md-5 py-md-3">
+    <h3 className="mb-3 pb-2 border-bottom">{step[router.locale]}</h3>
+    {/*<button onClick={goNext}>avançar</button>*/}
     <Formik
+      innerRef={form}
       initialValues={{
-        country: 'BR',
-        cpf: '',
-        passport: '',
-        first_name: '',
-        last_name: '',
-        badge_name: '',
-        cellphone: '',
-        phone: '',
-        birthdate: '',
-        gender: 'M',
+        product: '',
+        variation: '',
       }}
       onSubmit={handleSubmit}
       validationSchema={FormSchema}
-    >{({errors, touched, values, isValid, handleBlur, handleChange}) => (
-      <Form>
-
-        <button onClick={goNext}>avançar</button>
-        <h3 className="page-title">TODO</h3>
-
+    >{({errors, touched, values, isValid, setFieldValue, isSubmitting}) => (
+      <FormikForm>
         <div className="row">
-          <div className="form-group col-12 col-md">
-            <label htmlFor="first_name">{t('cadastro.nome')}</label>
-            <Field id="first_name" name="first_name" className="form-control" placeholder=""/>
-            <FieldError message={touched?.first_name && errors?.first_name} fieldId="first_name"/>
-          </div>
-          <div className="form-group col-12 col-md">
-            <label htmlFor="last_name">{t('cadastro.sobrenome')}</label>
-            <Field id="last_name" name="last_name" className="form-control" placeholder=""/>
-            <FieldError message={touched?.last_name && errors?.last_name} fieldId="last_name"/>
+          <div className="col-12">
+
+            <p>{t('cadastro.escolha-seu-plano')}</p>
+            {edition.subscription.products[lang].map(prod => (<div key={prod.id} className="mb-4">
+              <Form.Check custom className="radio-lg"
+                          onClick={() => setFieldValue('product', prod.id)}
+                          name="product" type="radio"
+                          label={<Label prod={prod}/>}
+                          id={`produto_${prod.id}`}
+              />
+              <div className="text-sm">{prod.desc}</div>
+            </div>))}
+            {errors?.product && <Curtain isOpened={!!errors?.product}>
+              <div className="alert alert-warning">
+                {t(String(errors?.product))}
+              </div>
+            </Curtain>}
+
+
           </div>
         </div>
-        {/*row*/}
 
         {response.msg && <Curtain isOpened={response.msg?.length > 0}>
           <div className={`alert ${response.success ? 'alert-success' : 'alert-danger'}`}>
             {response.msg}
           </div>
         </Curtain>}
-
-
-      </Form>
+      </FormikForm>
     )}</Formik>
   </div>)
 

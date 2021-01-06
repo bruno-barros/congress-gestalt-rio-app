@@ -122,3 +122,24 @@ body, html {
   max-height: 350px;
 }
 .editor-height-lg .ql-editor{max-height: 550px;}
+
+.radio-lg {
+  .custom-control-label::after,
+  .custom-control-label::before{
+    top: $spacer / 2;
+  }
+  .custom-control-label {
+    font-weight: 700;
+    font-size: 1.3em;
+    vertical-align: middle;
+    cursor: pointer;
+    .price {
+      margin-left: 10px;
+      font-size: .8em;
+      color: $gray-600;
+    }
+    &:hover {
+      color: $primary;
+    }
+  }
+}

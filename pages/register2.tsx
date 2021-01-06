@@ -4,7 +4,7 @@ import Head from "next/head";
 import {useQueryClient} from "react-query";
 import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Card from "react-bootstrap/cjs/Card";
 import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../components/hooks/useTrans";
@@ -16,8 +16,9 @@ import StepPlan from "../components/registration/step-plan";
 import StepAddress from "../components/registration/step-address";
 import StepInstitution from "../components/registration/step-institution";
 import StepPayment from "../components/registration/step-payment";
-import Carousel from "react-bootstrap/cjs/Carousel";
 import Curtain from "../components/ui/curtain";
+import {FormikProps} from "formik";
+import {Icon} from "@brunobarros/react-components";
 
 
 const Register2 = () => {
@@ -33,8 +34,16 @@ const Register2 = () => {
   const [loading, setLoading] = useState(false)
 
   const [step, setStep] = useState(1)
-  const [isStepValid, setIsStepValid] = useState(false)
 
+  let formInstance: FormikProps<any>|null = null
+
+  useEffect(()=>{
+    console.log(formInstance?.initialValues);
+  }, [formInstance])
+
+  function handleSubmit() {
+    formInstance.submitForm()
+  }
 
   function handlePostpone(e) {
     e.preventDefault()
@@ -51,7 +60,7 @@ const Register2 = () => {
       <title>{siteTitle('Inscrição', queryClient)}</title>
     </Head>
     <div className="row">
-      <div className="col-12">
+      <div className="col-12 col-lg-8 offset-lg-2">
         <div className="multi-steps">
           <MultiStepForm activeStep={step} accentColor="var(--primary)">
             {steps.map(step => <Step key={step.id} label={step[lang]}/>)}
@@ -60,45 +69,48 @@ const Register2 = () => {
         <Card>
           <Card.Body>
 
-              {steps[step - 1].id === 'plan'
-              && <Curtain isOpened={steps[step - 1].id === 'plan'}>
-                <StepPlan user={user} event={event} edition={edition}
-                          onLoading={(bool) => setLoading(bool)}
-                          goNext={() => setStep(step + 1)}/>
-              </Curtain>}
-              {steps[step - 1].id === 'address'
-              && <Curtain isOpened={steps[step - 1].id === 'address'}>
-                <StepAddress user={user} event={event} edition={edition}
-                             onLoading={(bool) => setLoading(bool)}
-                             goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)}/>
-              </Curtain>}
-              {steps[step - 1].id === 'institution'
-              && <Curtain isOpened={steps[step - 1].id === 'institution'}>
-                <StepInstitution user={user} event={event} edition={edition}
-                                 onLoading={(bool) => setLoading(bool)}
-                                 goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)}/>
-              </Curtain>}
-              {steps[step - 1].id === 'payment'
-              && <Curtain isOpened={steps[step - 1].id === 'payment'} style={{height: 400}}>
-                <StepPayment user={user} event={event} edition={edition}
-                             onLoading={(bool) => setLoading(bool)}
-                             goNext={() => {
-                             }} goPrev={() => setStep(step - 1)}/>
-              </Curtain>}
+            {steps[step - 1].id === 'plan' &&
+            <Curtain isOpened={steps[step - 1].id === 'plan'}>
+              <StepPlan step={edition.steps()['plan']} user={user} event={event} edition={edition}
+                        onLoading={(bool) => setLoading(bool)}
+                        goNext={() => setStep(step + 1)} formInstance={(form) => {formInstance = form}}/>
+            </Curtain>}
+            {steps[step - 1].id === 'address'
+            && <Curtain isOpened={steps[step - 1].id === 'address'}>
+              <StepAddress step={edition.steps()['address']} user={user} event={event} edition={edition}
+                           onLoading={(bool) => setLoading(bool)}
+                           goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {formInstance = form}}/>
+            </Curtain>}
+            {steps[step - 1].id === 'institution'
+            && <Curtain isOpened={steps[step - 1].id === 'institution'}>
+              <StepInstitution step={edition.steps()['institution']} user={user} event={event} edition={edition}
+                               onLoading={(bool) => setLoading(bool)}
+                               goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {formInstance = form}}/>
+            </Curtain>}
+            {steps[step - 1].id === 'payment'
+            && <Curtain isOpened={steps[step - 1].id === 'payment'} style={{height: 400}}>
+              <StepPayment step={edition.steps()['payment']} user={user} event={event} edition={edition}
+                           onLoading={(bool) => setLoading(bool)} formInstance={(form) => {formInstance = form}}
+                           goNext={() => {
+                           }} goPrev={() => setStep(step - 1)}/>
+            </Curtain>}
 
 
           </Card.Body>
           <Card.Footer className="p-0 border-0">
             <div className="d-flex align-items-center justify-content-between">
-              <div className="px-4 py-2">
-                <span className="text-muted"></span>
+              <div className="btn-group btn-group-lg start" role="group">
+                {step > 1 && <button onClick={()=> setStep(step-1)} type="button"
+                                     className="btn btn-outline-secondary border-0 -px-md-5 d-flex align-items-center"><Icon name={`chevron-back-outline`}/> {t('voltar')}
+                </button>}
+
               </div>
               <div className="btn-group btn-group-lg end" role="group">
                 <button onClick={handlePostpone} type="button"
-                        className="btn btn-outline-secondary border-0 px-5">{t('cadastro.fazer-depois')}
+                        className="btn btn-outline-secondary border-0 px-md-5">{t('cadastro.fazer-depois')}
                 </button>
-                <LoadingButton type="button" variant="primary" loading={loading} disable={!isStepValid}
-                               className=" px-5">{t('continuar')}</LoadingButton>
+                <LoadingButton onClick={handleSubmit} type="button" variant="primary" loading={loading}
+                               className=" px-md-5  d-flex align-items-center">{t('continuar')} <Icon name={`chevron-forward-outline`}/></LoadingButton>
               </div>
             </div>
           </Card.Footer>
