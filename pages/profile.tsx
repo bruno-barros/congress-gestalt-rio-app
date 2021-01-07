@@ -5,6 +5,7 @@ import {useEffect, useState} from "react";
 import Link from "next/link";
 import ProfileForm from "../components/user/profile-form";
 import PasswordUpdateForm from "../components/user/password-update-form";
+import MySubscriptions from "../components/user/my-subscriptions";
 
 
 const Profile = () => {
@@ -18,8 +19,8 @@ const Profile = () => {
   }, [router])
 
   return (<MainLayout pageHeader={{title: 'Meu cadastro'}}>
-    <div className="row">
-      <div className="col-12 col-md-3 border-right py-3">
+    <div className="row no-gutters">
+      <div className="col-12 col-md-3 border-right py-3 pr-md-3">
         <ul className="nav  nav-pills flex-column">
           <li className="nav-item">
             <Link href={`/profile?tab=personal`} passHref>
@@ -27,8 +28,8 @@ const Profile = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link href={`/profile?tab=documentos`} passHref>
-              <a className={`nav-link ${tab === 'documentos' && 'active'}`}>Meus documentos</a>
+            <Link href={`/profile?tab=subscriptions`} passHref>
+              <a className={`nav-link ${tab === 'subscriptions' && 'active'}`}>Inscrições</a>
             </Link>
           </li>
           <li className="nav-item">
@@ -38,9 +39,10 @@ const Profile = () => {
           </li>
         </ul>
       </div>
-      <div className="col-12 col-md-9 py-3 px-md-5">
-        {tab === 'personal' && <ProfileForm user={user}/>}
-        {tab === 'password' && <PasswordUpdateForm user={user}/>}
+      <div className="col-12 col-md-9">
+        {tab === 'personal' && <div className=" py-3 px-md-5"><ProfileForm user={user}/></div>}
+        {tab === 'subscriptions' && <MySubscriptions user={user}/>}
+        {tab === 'password' && <div className=" py-3 px-md-5"><PasswordUpdateForm user={user}/></div>}
       </div>
     </div>
   </MainLayout>)

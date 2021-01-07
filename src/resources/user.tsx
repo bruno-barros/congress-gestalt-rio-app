@@ -77,6 +77,9 @@ export class User {
   canManageAbstracts() {
     return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin()
   }
+  canPublishAbstracts() {
+    return this.isSubscriber()
+  }
 
   isSuperAdmin() {
     const superIds = [3]

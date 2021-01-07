@@ -36,6 +36,13 @@ export default function AbstractForm(props: AbstractFormProps) {
   const {edition, abstract} = props
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
+
+  const initialAuthor = isEditing ? {} : {id: null,
+    author_name: user.getUserData().name,
+    author_email: user.getUserData().email,
+    author_bio: user.getUserData().description || '',
+    uuid: null}
+
   const initialValues = {
     _intent: 'update',// update | review
     id: !abstract ? null : abstract.databaseId,
@@ -108,7 +115,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         {t('trabalho.nao-pode-editar')}
       </div>}
       <fieldset disabled={isFormDisabled(abstract?.status)}>
-        {/*<pre style={{maxWidth: 700}}>{JSON.stringify(values.test, null, 2)}</pre>*/}
+        {/*<code style={{maxWidth: 700}}>{JSON.stringify(values, null, 2)}</code>*/}
         <Select name="topic" label={t('trabalho.topico')}>
           <option value="" disabled></option>
           {edition?.abstract?.topics
@@ -121,19 +128,22 @@ export default function AbstractForm(props: AbstractFormProps) {
         <Wysiwyg name="synopsis" label={t('trabalho.sinopse')} maxHeight="sm" disabled={isFormDisabled(abstract?.status)}/>
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={isFormDisabled(abstract?.status)}/>
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={isFormDisabled(abstract?.status)}/>
+        <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
+                 metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+                 disabled={isFormDisabled(abstract?.status)}
+                 initialAuthor={initialAuthor}
+                 onEdit={(author, metadata) => {
+                   setAuthorModal({show: true, author, metadata})
+                 }}/>
+
+        <Field name="_intent" type="hidden"/>
         {edition.abstract.attachments
         && <Attachments name="attachments" label={t('anexos')}
                         maxFiles={edition.abstract.attachments}
                         metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                         disabled={isFormDisabled(abstract?.status)}/>}
 
-        <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
-                 metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                 disabled={isFormDisabled(abstract?.status)}
-                 onEdit={(author, metadata) => {
-                   setAuthorModal({show: true, author, metadata})
-                 }}/>
-                 <Field name="_intent" type="hidden"/>
+
       </fieldset>
       {!isFormDisabled(abstract?.status) && <div className="row">
         <div className={` ${isEditing ? 'col-auto' : 'col-12'}`}>

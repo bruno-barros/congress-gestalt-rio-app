@@ -12,7 +12,8 @@ export const USER_ACTYPE = {
   LOGOUT: 'LOGOUT_SUCCESS',
   UPDATED: 'USER_UPDATED',
   CREATED: 'USER_CREATED',
-  CREATED_ERR: 'USER_CREATED_ERROR'
+  CREATED_ERR: 'USER_CREATED_ERROR',
+  CART_UPDATED: 'CART_UPDATED',
 }
 
 // export const exampleAction = () => {
@@ -148,6 +149,17 @@ export const logout = () => {
   return (dispatch: Dispatch, getState: any) => {
     AuthToken.deleteToken();
     dispatch({type: USER_ACTYPE.LOGOUT})
+  }
+}
+
+
+export const saveCart = (
+  cart: any,
+  callback: (error: ErrorMessage | null) => void
+) => {
+  return (dispatch: any, getState: any) => {
+    dispatch({type: USER_ACTYPE.CART_UPDATED, payload: cart})
+    callback(null)
   }
 }
 

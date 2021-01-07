@@ -33,6 +33,10 @@ export default class WpUser {
     'partner_id',
   ];
 
+  static saveRemoteSession(userId: number, token: string){
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_save_remote', {user_id: userId, token});
+  }
+
   static signUpWithEmail(values: any, locale: string){
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_signup_with_email', {...values, locale});
   }

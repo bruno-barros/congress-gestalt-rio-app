@@ -8,6 +8,9 @@ import Link from "next/link";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import {Edition} from "../src/resources/event";
 import {Loading} from "@brunobarros/react-components";
+import useUserOrders from "../components/hooks/useUserOrders";
+import {Icon} from "@brunobarros/react-components";
+import BadgeSubscribed from "../components/ui/badge-subscribed";
 
 interface DashboardProps {
 
@@ -20,10 +23,13 @@ const Dashboard = (props: DashboardProps) => {
   const {data: event, isLoading} = useEvent()
   const currentEdition: Edition = event && event.currentEdition()
   const {user} = useCurrentUser()
+  const {data: orders, isLoading: ordersLoading} = useUserOrders(user?.getId())
 
-  if(isLoading){
-    return (<MainLayout><Loading/></MainLayout>)
+  if (isLoading || ordersLoading) {
+    return (<MainLayout><Loading vspace={80}/></MainLayout>)
   }
+
+  const isSubscribed = orders?.hasValidSubscription(currentEdition.id)
 
   return (<MainLayout>
     <div className="row">
@@ -34,8 +40,10 @@ const Dashboard = (props: DashboardProps) => {
           {event && event.getEditions().map(edition => {
             const isCurrent = edition.id === currentEdition?.id
             return (<Card key={edition.id} style={{maxWidth: 400}}>
-              {edition.logoPrimary && <div className="p-4 border-bottom"><Card.Img variant="top" src={edition.logoPrimary}/></div>}
-              <Card.Body>
+              {edition.logoPrimary &&
+              <div className="p-4 border-bottom"><Card.Img variant="top" src={edition.logoPrimary}/></div>}
+              <Card.Body className="" style={{position: 'relative'}}>
+                {isSubscribed && isCurrent && <div style={{position: 'absolute', top: 0, transform: 'translateY(-40%)'}}><BadgeSubscribed /></div>}
                 <Card.Title>{edition.name}</Card.Title>
                 <Card.Text>
                   {edition.year}
@@ -43,16 +51,32 @@ const Dashboard = (props: DashboardProps) => {
               </Card.Body>
               <Card.Footer className="p-0 border-0">
                 <div className="btn-group w-100 end start">
-                  {user.canManageAbstracts()
-                    ? (<>
-                      <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><a className="btn btn-outline-secondary">Administrar trabalhos</a></Link>
-                      <Link href={`/register2`} passHref><a className="btn btn-outline-secondary -btn-block">Ver inscrições</a></Link>
-                    </>)
-                    : (<>
-                      <Link href={`/abstracts?edition=${edition.id}`} passHref><a className="btn btn-outline-secondary">Enviar trabalho</a></Link>
-                      {(isCurrent && currentEdition.isOpenToSubscribe()) && <Link href={`/register2`} passHref><a className="btn btn-primary -btn-block">Fazer inscrição</a></Link>}
+                  {isCurrent && <>
+                    {(user.canPublishAbstracts()) && <>
+                      <Link href={`/abstracts?edition=${edition.id}`} passHref>
+                        <a className="btn btn-outline-primary">{t('trabalho.meus-trabalhos')}</a>
+                      </Link>
+                    </>}
+                    {(!isSubscribed && currentEdition.isOpenToSubscribe()) && <>
+                      <Link href={`/register2`} passHref>
+                        <a className="btn btn-primary">{t('fazer-inscricao')}</a>
+                      </Link>
+                    </>}
+                  </>}
 
-                    </>)}
+                  {!isCurrent && <>
+                    {user.canManageAbstracts() && <>
+                      <Link href={`/adm/abstracts?edition=${edition.id}`} passHref>
+                        <a className="btn btn-outline-secondary">{t('trabalhos')}</a>
+                      </Link>
+                    </>}
+                  </>}
+
+                  {user.canManageAbstracts() && (<>
+                    <Link href={`/`} passHref>
+                      <a className="btn btn-outline-secondary -btn-block">{t('inscricoes')}</a>
+                    </Link>
+                  </>)}
 
                 </div>
               </Card.Footer>

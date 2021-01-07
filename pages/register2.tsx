@@ -34,15 +34,11 @@ const Register2 = () => {
   const [loading, setLoading] = useState(false)
 
   const [step, setStep] = useState(1)
-
-  let formInstance: FormikProps<any>|null = null
-
-  useEffect(()=>{
-    console.log(formInstance?.initialValues);
-  }, [formInstance])
+  const [formInstance, setFormInstance] = useState<FormikProps<any>|any>(null)
 
   function handleSubmit() {
-    formInstance.submitForm()
+    // console.log(formInstance);
+    formInstance && formInstance.submitForm()
   }
 
   function handlePostpone(e) {
@@ -73,26 +69,25 @@ const Register2 = () => {
             <Curtain isOpened={steps[step - 1].id === 'plan'}>
               <StepPlan step={edition.steps()['plan']} user={user} event={event} edition={edition}
                         onLoading={(bool) => setLoading(bool)}
-                        goNext={() => setStep(step + 1)} formInstance={(form) => {formInstance = form}}/>
+                        goNext={() => setStep(step + 1)} formInstance={(form) => {setFormInstance(form)}}/>
             </Curtain>}
             {steps[step - 1].id === 'address'
             && <Curtain isOpened={steps[step - 1].id === 'address'}>
               <StepAddress step={edition.steps()['address']} user={user} event={event} edition={edition}
                            onLoading={(bool) => setLoading(bool)}
-                           goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {formInstance = form}}/>
+                           goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {setFormInstance(form)}}/>
             </Curtain>}
             {steps[step - 1].id === 'institution'
             && <Curtain isOpened={steps[step - 1].id === 'institution'}>
               <StepInstitution step={edition.steps()['institution']} user={user} event={event} edition={edition}
                                onLoading={(bool) => setLoading(bool)}
-                               goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {formInstance = form}}/>
+                               goNext={() => setStep(step + 1)} goPrev={() => setStep(step - 1)} formInstance={(form) => {setFormInstance(form)}}/>
             </Curtain>}
             {steps[step - 1].id === 'payment'
             && <Curtain isOpened={steps[step - 1].id === 'payment'} style={{height: 400}}>
               <StepPayment step={edition.steps()['payment']} user={user} event={event} edition={edition}
-                           onLoading={(bool) => setLoading(bool)} formInstance={(form) => {formInstance = form}}
-                           goNext={() => {
-                           }} goPrev={() => setStep(step - 1)}/>
+                           onLoading={(bool) => setLoading(bool)} formInstance={(form) => {setFormInstance(form)}}
+                           goPrev={(stp) => setStep(stp || step - 1)}/>
             </Curtain>}
 
 

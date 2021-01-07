@@ -26,7 +26,7 @@ export default function UserMenu({user}: { user: User }) {
 
     <Dropdown.Menu alignRight>
       <Link href={`/profile?tab=personal`} passHref><Dropdown.Item>{t('dados-pessoais')}</Dropdown.Item></Link>
-      <Dropdown.Item eventKey="2">Minhas inscrições</Dropdown.Item>
+      <Link href={`/profile?tab=subscriptions`} passHref><Dropdown.Item>{t('minhas-inscricoes')}</Dropdown.Item></Link>
       <Link href={`/logout`} passHref><Dropdown.Item>{t('sair')}</Dropdown.Item></Link>
     </Dropdown.Menu>
   </Dropdown>)

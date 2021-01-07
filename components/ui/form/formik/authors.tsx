@@ -11,6 +11,7 @@ import {useRouter} from "next/router";
 import Error from "../../../../src/resources/error";
 import Sweet from "../../sweet-alert";
 import {errorNotification, exceptionNotification, successNotification} from "../../../../src/resources/responses";
+import ToolTip from "../../tooltip";
 
 interface AuthorsProps {
   label: string
@@ -18,10 +19,11 @@ interface AuthorsProps {
   containerClass?: string
   maxAuthors?: number
   disabled?: boolean
+  initialAuthor?: {id: null; author_name: string; author_email: string; author_bio: string; uuid: null}
   onEdit: (author, metadata) => void
 }
 
-export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, onEdit, ...props}: AuthorsProps & any) {
+export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, initialAuthor, onEdit, ...props}: AuthorsProps & any) {
 
   const disp = useDispatch()
   const t = useTrans()
@@ -29,7 +31,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  const [newAuthor, setNewAuthor] = useState({id: null, author_name: '', author_email: '', author_bio: '', uuid: null});
+  const [newAuthor, setNewAuthor] = useState(initialAuthor || {id: null, author_name: '', author_email: '', author_bio: '', uuid: null});
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
@@ -128,10 +130,12 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
                 <div className="text-truncate">{author.name}</div>
               </a>
               {!disabled && <>
-                <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
-                  handleSpeaker(author)
-                }}><Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
-                </button>
+                <ToolTip text={t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}>
+                  <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
+                    handleSpeaker(author)
+                  }}><Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
+                  </button>
+                </ToolTip>
                 <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
                   handleDeletion(remove, author, idx)
                 }}><Icon name={`trash-outline`} style={{fontSize: 18}}/>

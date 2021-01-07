@@ -8,7 +8,7 @@ export interface StepProps {
   event: Event
   edition: Edition
   onLoading: (isLoading: boolean) => void
-  formInstance?: (instance: FormikProps<any>|null) => void
-  goNext?: () => void
-  goPrev?: () => void
+  formInstance?: (instance: FormikProps<any>|any) => void
+  goNext?: (step?: number) => void
+  goPrev?: (step?: number) => void
 }

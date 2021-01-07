@@ -12,7 +12,7 @@ export function uppyAvatar(args?: UppyInterface) {
     const auth = AuthToken.factory();
     const token = AuthToken.getToken();
     const uppy = Uppy({
-      locale: args?.locale || Portuguese,
+      locale: args?.locale === 'pt' ? Portuguese : null,
       meta: {type: 'avatar'},
       restrictions: {
         maxFileSize: null,
@@ -39,7 +39,7 @@ export function uppyDocument(args?: UppyInterface) {
     const auth = AuthToken.factory();
     const token = AuthToken.getToken();
     const uppy = Uppy({
-      locale: args?.locale || Portuguese,
+      locale: args?.locale === 'pt' ? Portuguese : null,
       meta: {type: 'document'},
       restrictions: {
         maxFileSize: null,

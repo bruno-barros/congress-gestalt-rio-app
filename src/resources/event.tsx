@@ -6,6 +6,12 @@ export default class Event {
   logo: { primary: string; secondary: string }
   url: { pt: string; en: string }
   app: { pt: string; en: string }
+  page: {
+    checkout: {
+      pt: string, // url=[PRODUCT_ID]
+      en: string,
+    },
+  }
   editions: any[]
   abstracts: {
     statuses: any[]
@@ -46,6 +52,13 @@ export default class Event {
   currentEdition(): Edition {
     return this.getEditions()[0]
   }
+
+
+  buildUrlCheckout(cart, token) {
+    let url = this.page.checkout[cart.locale || 'pt']
+    url = url.replace('[PRODUCT_ID]', cart.product)
+    return url + `&lang=${cart.locale}&sso=${token}`
+  }
 }
 
 
@@ -63,6 +76,10 @@ export class Edition {
     required: boolean
     start_at: string
     end_at: string
+    products_category: {
+      id: number
+      slug: string
+    }
     products: {
       pt: { id: number, name: string, price: number, desc: string }[]
       en: { id: number, name: string, price: number, desc: string }[]
@@ -136,5 +153,10 @@ export class Edition {
     if (today >= start && today <= end) return true
     return false
   }
+
+  getProducts(lang) {
+    return this.subscription.products[lang] || []
+  }
+
 
 }

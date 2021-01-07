@@ -31,7 +31,8 @@ export default function StepInstitution(props: StepProps) {
 
   useEffect(() => {
     formInstance(form.current)
-  }, [form.current])
+    return ()=> formInstance(null)
+  }, [])
 
   function dismissMessage() {
     setTimeout(() => {
@@ -62,7 +63,7 @@ export default function StepInstitution(props: StepProps) {
   }
 
   return (<div className="px-md-5 py-md-3">
-    <h3 className="mb-3 pb-2 border-bottom">{step[router.locale]} <small>({t('optional')})</small></h3>
+    <h3 className="mb-3 pb-2 border-bottom">{step[router.locale]} <small>({t('opcional')})</small></h3>
     {/*<button onClick={goPrev}>voltar</button>*/}
     {/*<button onClick={goNext}>avançar</button>*/}
     <Formik

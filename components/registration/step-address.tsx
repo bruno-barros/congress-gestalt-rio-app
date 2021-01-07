@@ -35,7 +35,8 @@ export default function StepAddress(props: StepProps) {
 
   useEffect(() => {
     formInstance(form.current)
-  }, [form.current])
+    return ()=> formInstance(null)
+  }, [])
 
   function dismissMessage() {
     setTimeout(() => {

@@ -12,6 +12,7 @@ import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 import Form from "react-bootstrap/cjs/Form";
 import {useQuery} from "react-query";
+import {saveCart} from "../../src/store/user.actions";
 
 
 export default function StepPlan(props: StepProps) {
@@ -27,7 +28,8 @@ export default function StepPlan(props: StepProps) {
 
   useEffect(() => {
     formInstance(form.current)
-  }, [form.current])
+    return ()=> formInstance(null)
+  }, [])
 
   function dismissAlert() {
     setTimeout(() => {
@@ -40,15 +42,10 @@ export default function StepPlan(props: StepProps) {
   });
 
   async function handleSubmit(values) {
-
-    console.log({values});
-
-    // useQuery(['product'], ()=>{
-    //   return values
-    // }, {cacheTime: Infinity, staleTime: Infinity})
-
-    goNext()
-
+    values.locale = lang
+    disp(saveCart(values, () => {
+      goNext()
+    }))
 
   }
 
@@ -73,7 +70,7 @@ export default function StepPlan(props: StepProps) {
           <div className="col-12">
 
             <p>{t('cadastro.escolha-seu-plano')}</p>
-            {edition.subscription.products[lang].map(prod => (<div key={prod.id} className="mb-4">
+            {edition.getProducts(lang).map(prod => (<div key={prod.id} className="mb-4">
               <Form.Check custom className="radio-lg"
                           onClick={() => setFieldValue('product', prod.id)}
                           name="product" type="radio"

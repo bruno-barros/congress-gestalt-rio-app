@@ -9,6 +9,8 @@ import AbstractStatusBar from "../../components/abstract/abstract-status-bar";
 import useAbstract from "../../components/hooks/useAbstract";
 import {Loading} from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
+import Sweet from "../../components/ui/sweet-alert";
+import {useEffect} from "react";
 
 
 const AbstractEditing = () => {
@@ -20,6 +22,16 @@ const AbstractEditing = () => {
   const edition: Edition = event?.currentEdition()
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
+  useEffect(()=>{
+    if(router.query?.created) NextStep()
+  }, [router.query])
+  function NextStep(){
+    Sweet.fire({
+      html: `<div class="text-left"><p>Caro, autor. <br/>
+        O próximo passo é enviar seu trabalho para revisão.</p>
+        <p>Quando estiver pronto use o botão "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p></div>`
+    })
+  }
 
   if (isLoading || loadingAbstract) {
     return <MainLayout><Loading vspace={80}/></MainLayout>;
@@ -42,7 +54,7 @@ const AbstractEditing = () => {
 
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
-    <div className="row my-5">
+     <div className="row my-5">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
         <AbstractForm edition={edition} abstract={abstract}/>
       </div>
