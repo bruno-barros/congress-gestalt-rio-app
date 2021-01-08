@@ -21,7 +21,7 @@ const Abstracts = () => {
   const {data: event} = useEvent()
   const currentEdition = event && event.currentEdition()
   const edition = router.query?.edition && event.getEdition(String(router.query.edition)) || currentEdition
-  const isCurrent = currentEdition.id === edition.id
+  const isCurrent = currentEdition?.id === edition?.id
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
   })
