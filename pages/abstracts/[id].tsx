@@ -11,6 +11,7 @@ import {Loading} from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import Sweet from "../../components/ui/sweet-alert";
 import {useEffect} from "react";
+import NextStepTip from "../../components/abstract/next-step-tip";
 
 
 const AbstractEditing = () => {
@@ -23,9 +24,9 @@ const AbstractEditing = () => {
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
   useEffect(()=>{
-    if(router.query?.created) NextStep()
+    if(router.query?.created) NextStepPopup()
   }, [router.query])
-  function NextStep(){
+  function NextStepPopup(){
     Sweet.fire({
       html: `<div class="text-left"><p>Caro, autor. <br/>
         O próximo passo é enviar seu trabalho para revisão.</p>
@@ -61,6 +62,7 @@ const AbstractEditing = () => {
       <div className="col-12 col-md-4">
         <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} currentStatus={abstract?.status}
                            className="my-4"/>
+        <NextStepTip status={abstract?.status}/>
         <p><strong>Comentários</strong></p>
       </div>
     </div>

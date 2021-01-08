@@ -6,10 +6,12 @@ import Link from "next/link";
 import ProfileForm from "../components/user/profile-form";
 import PasswordUpdateForm from "../components/user/password-update-form";
 import MySubscriptions from "../components/user/my-subscriptions";
+import useTrans from "../components/hooks/useTrans";
 
 
 const Profile = () => {
 
+  const t = useTrans()
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
   const [tab, setTab] = useState<string>('personal')
@@ -20,21 +22,21 @@ const Profile = () => {
 
   return (<MainLayout pageHeader={{title: 'Meu cadastro'}}>
     <div className="row no-gutters">
-      <div className="col-12 col-md-3 border-right py-3 pr-md-3">
+      <div className="col-12 col-md-3 border-right py-3 px-md-3">
         <ul className="nav  nav-pills flex-column">
           <li className="nav-item">
             <Link href={`/profile?tab=personal`} passHref>
-              <a className={`nav-link ${tab === 'personal' && 'active'}`}>Dados pessoais</a>
+              <a className={`nav-link ${tab === 'personal' && 'active'}`}>{t('dados-pessoais')}</a>
             </Link>
           </li>
           <li className="nav-item">
             <Link href={`/profile?tab=subscriptions`} passHref>
-              <a className={`nav-link ${tab === 'subscriptions' && 'active'}`}>Inscrições</a>
+              <a className={`nav-link ${tab === 'subscriptions' && 'active'}`}>{t('inscricoes')}</a>
             </Link>
           </li>
           <li className="nav-item">
             <Link href={`/profile?tab=password`} passHref>
-              <a className={`nav-link ${tab === 'password' && 'active'}`}>Mudar senha</a>
+              <a className={`nav-link ${tab === 'password' && 'active'}`}>{t('mudar-senha')}</a>
             </Link>
           </li>
         </ul>

@@ -49,14 +49,14 @@ const Dashboard = (props: DashboardProps) => {
                   {edition.year}
                 </Card.Text>
               </Card.Body>
-              <Card.Footer className="p-0 border-0">
+              <Card.Footer className="p-0 border-0 bg-white">
                 <div className="btn-group w-100 end start">
+                  {(user.canPublishAbstracts()) && <>
+                    <Link href={`/abstracts?edition=${edition.id}`} passHref>
+                      <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('trabalho.meus-trabalhos')}</a>
+                    </Link>
+                  </>}
                   {isCurrent && <>
-                    {(user.canPublishAbstracts()) && <>
-                      <Link href={`/abstracts?edition=${edition.id}`} passHref>
-                        <a className="btn btn-outline-primary">{t('trabalho.meus-trabalhos')}</a>
-                      </Link>
-                    </>}
                     {(!isSubscribed && currentEdition.isOpenToSubscribe()) && <>
                       <Link href={`/register2`} passHref>
                         <a className="btn btn-primary">{t('fazer-inscricao')}</a>
@@ -74,7 +74,7 @@ const Dashboard = (props: DashboardProps) => {
 
                   {user.canManageAbstracts() && (<>
                     <Link href={`/`} passHref>
-                      <a className="btn btn-outline-secondary -btn-block">{t('inscricoes')}</a>
+                      <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>
                     </Link>
                   </>)}
 

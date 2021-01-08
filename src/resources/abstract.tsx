@@ -15,7 +15,7 @@ export default class Abstract {
   authorDatabaseId?: number
 
   excerpt?: string
-  abstract_tags?: string
+  abstract_tags?: string[]
   bibliography?: string
   synopsis?: string
   content?: string

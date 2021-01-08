@@ -35,6 +35,26 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
 }
 
 
+export function EvaluationsGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
+
+  const {selectedFlatRows, state: {selectedRowIds}} = instance
+  const selected = selectedFlatRows.map(row => row.original)
+  const selectedCount = selected.length
+
+
+  function exportToExcel(e){
+    e.preventDefault()
+    console.log({selected});
+  }
+  // console.log(selectedCount);
+
+
+  return (<DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`} variant="outline-secondary">
+    <Dropdown.Item  onClick={exportToExcel} disabled={selectedCount === 0}>Mudar status</Dropdown.Item>
+  </DropdownButton>)
+}
+
+
 
 export function UsersGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
 

@@ -1,0 +1,100 @@
+import MainLayout from "../../components/layout";
+import {useCallback, useMemo} from "react";
+import {DynamicTable} from "../../components/dynamic-table";
+import useTrans from "../../components/hooks/useTrans";
+import useCurrentUser from "../../components/hooks/useCurrentUser";
+import useEvent from "../../components/hooks/useEvent";
+import {useQuery} from "react-query";
+import {WpAbstract} from "../../src/http/wp-abstract";
+import {errorNotification} from "../../src/resources/responses";
+import {Loading} from "@brunobarros/react-components";
+import {useRouter} from "next/router";
+import WpEvaluation from "../../src/http/wp-evaluation";
+
+const Evaluations = () => {
+
+  const router = useRouter()
+  const t = useTrans()
+  const {user} = useCurrentUser()
+  const {data: event} = useEvent()
+  const edition = event && event.currentEdition()
+  const editionId = router.query.edition || edition?.id
+  const {data: evaluations, error, isLoading} = useQuery<any[], any>(['evaluations', editionId, user.getId()], queryEvaluations, {
+    enabled: !!editionId && user.canEvaluateAbstracts(),
+    refetchOnMount: true
+  })
+
+  function queryEvaluations(): Promise<any[]> {
+    return new Promise((resolve, reject) => {
+      WpEvaluation.get({
+        edition_id: String(editionId),
+        user_id: user.getId()
+      }).then(resp => {
+        if (resp.data.data?.evEvaluations?.nodes) {
+          resolve(resp.data.data.evEvaluations.nodes)
+        } else {
+          reject([])
+          errorNotification({error: resp.data.errors})
+        }
+      }, err => {
+        reject([])
+        errorNotification({error: err})
+      })
+    })
+  }
+
+
+  const columns = useMemo(() => {
+    return [
+      {
+        Header: '#',
+        accessor: 'id',
+      },{
+        Header: 'Título',
+        accessor: 'title',
+      },{
+        Header: 'Tópico',
+        accessor: 'topic',
+      },{
+        Header: 'Avaliação',
+        accessor: 'status',
+      },{
+        Header: 'Status',
+        accessor: 'status_pt'
+      },{
+        Header: 'Designado em',
+        accessor: 'date',
+      }
+    ]}, [])
+  const data = useMemo(() => {
+    if(!evaluations || !edition) return []
+    return evaluations.map(row => {
+      let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract.topic)
+      row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
+      row.title = row.abstract.title
+      row.status_pt = t(`status.${row.status}`)
+      return row
+    })
+  }, [evaluations, event])
+
+  const dummy = useCallback(() => () => null, [])
+
+  if (!event || isLoading) {
+    return (<MainLayout>
+      <Loading vspace={80}/>
+    </MainLayout>)
+  }
+
+  return (<MainLayout fullWidth>
+    <DynamicTable<any>
+      name={`evaluations`}
+      columns={columns}
+      data={data}
+      hiddenColumns={['status_pt']}
+      onAdd={dummy}
+      onEdit={dummy}
+      onDelete={dummy}/>
+  </MainLayout>)
+}
+
+export default Evaluations

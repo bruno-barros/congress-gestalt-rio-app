@@ -108,6 +108,10 @@ export class Edition {
       max: number
     }
   }
+  review: {
+    questions?: any[]
+  }
+
 
 
   constructor(data: any, def: any) {
@@ -158,5 +162,8 @@ export class Edition {
     return this.subscription.products[lang] || []
   }
 
+  getReviewQuestions(){
+    return this.review.questions || null
+  }
 
 }

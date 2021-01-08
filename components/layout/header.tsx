@@ -49,6 +49,10 @@ export default function Header(props: HeaderProps) {
               <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
                 active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
             </>)}
+          {user.canEvaluateAbstracts() && <>
+            <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link
+              active={router.pathname === '/evaluations'}>{t('trabalho.avaliacoes')}</Nav.Link></Link>
+          </>}
           {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
           {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
           {/*  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}

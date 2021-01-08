@@ -30,7 +30,7 @@ import SortedLabel from "./sorted-label";
 import TablePagination from "./table-pagination";
 import {RenderCell} from "./cells";
 import AbstractFilters, {getAbstractFilterableFields, getUSerFilterableFields, Text} from "./abstract-filters";
-import {AbstractsGroupActions, UsersGroupActions} from "./abstracts-group-actions";
+import {AbstractsGroupActions, EvaluationsGroupActions, UsersGroupActions} from "./abstracts-group-actions";
 
 // @ts-ignore
 const IndeterminateCheckbox = React.forwardRef(({indeterminate, ...rest}, ref): any => {
@@ -184,6 +184,7 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
 // console.log(debouncedState);
   return (<div className="">
     <div className="abstracts-action-bar border-bottom bg-light px-3 py-1">
+      {name === 'evaluations' && <EvaluationsGroupActions instance={instance}/>}
       {name === 'abstracts' && <AbstractsGroupActions instance={instance}/>}
       {name === 'users' && <UsersGroupActions instance={instance}/>}
       <AbstractFilters instance={instance} filterableFields={filterableFields()}/>

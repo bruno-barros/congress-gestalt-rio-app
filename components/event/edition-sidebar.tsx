@@ -24,7 +24,9 @@ export default function EditionSidebar(props: EditionSidebarProps) {
 
   return (<div className="p-4">
     <figure className="figure-img bg-white p-3">
-      <Image src={edition.logoPrimary} objectFit="contain" width={300} height={250} className="img-fluid"/>
+      {edition?.logoPrimary &&
+      <Image src={edition?.logoPrimary} objectFit="contain" width={300} height={250} className="img-fluid"/>}
+
     </figure>
     <div className="">
       {isSubscribed && <BadgeSubscribed/>}

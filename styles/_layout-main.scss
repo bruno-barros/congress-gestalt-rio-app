@@ -2,6 +2,7 @@
 
 .layout-main {
   width: 100%;
+
   .mainHeader {
     border-bottom: solid 1px $gray-400;
     position: sticky;
@@ -19,6 +20,10 @@
     div.brand {
       font-size: 1em;
       text-align: center;
+    }
+
+    .navbar-nav .nav-link.active {
+      background-color: $gray-200;
     }
   }
 
@@ -56,7 +61,7 @@
 #sidebar {
   display: flex;
   flex-direction: column;
- position: relative;
+  position: relative;
   height: 100%;
 
   .sb-header {
@@ -66,9 +71,11 @@
     z-index: 3;
     //background-color: rgba(255, 0, 0, 0.36);
   }
+
   .sb-title {
     flex: 1;
   }
+
   .sb-body {
     position: absolute;
     top: 38px;
@@ -89,6 +96,19 @@
 
 @include media-breakpoint-up(md) {
   .layout-main {
+
+    .mainHeader {
+      .navbar-nav .nav-link {
+          padding-left: $spacer;
+          padding-right: $spacer;
+        &.active {
+          line-height: 2.5em;
+          margin-top: -.5rem;
+          margin-bottom: -.5rem;
+        }
+      }
+    }
+
     .main:not(.full-width) {
       display: flex;
     }
@@ -104,16 +124,19 @@
 
   #sidebar {
     position: sticky;
-    top:57px;
+    top: 57px;
     height: auto;
+
     .sb-header {
       display: flex;
       flex-direction: column;
     }
+
     .sb-title {
       transform-origin: 50% 50%;
       transform: rotate(90deg) translateX(50%);
     }
+
     .sb-body {
       z-index: 5;
     }
@@ -142,6 +165,7 @@
     &:not(.compact) .sb-header {
       display: none;
     }
+
     &:not(.compact) .sb-body {
       //position: relative;
       transform: translateX(0);

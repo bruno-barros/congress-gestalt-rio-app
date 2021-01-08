@@ -8,6 +8,6 @@ export default function useEvent() {
     const resp = await WpConfig.load()
     return Event.make(resp.data)
   }, {
-    cacheTime: Infinity
+    staleTime: Infinity
   })
 }

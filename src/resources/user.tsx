@@ -80,6 +80,9 @@ export class User {
   canPublishAbstracts() {
     return this.isSubscriber()
   }
+  canEvaluateAbstracts() {
+    return this.isEvaluator()
+  }
 
   isSuperAdmin() {
     const superIds = [3]
