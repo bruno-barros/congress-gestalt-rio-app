@@ -284,30 +284,23 @@ export default class WpUser {
     });
   }
 
-  static searchUser(by_name: string, role: 'professional' | 'subscriber', limit = 12, filters?: any): Promise<AxiosResponse<any>> {
+  static searchUser(args: {by_name?: string, role?: 'subscriber'|'contributor'| 'editor'| 'administrator', limit?:number, filters?: any}): Promise<AxiosResponse<any>> {
 
-    let byName = by_name ? `, by_name: "${by_name}"` : ''
+    let byName = args?.by_name ? `, by_name: "${args.by_name}"` : ''
+    let limit = args?.limit || 12
+    let role = args.role || 'any'
 
-    return httpApi.post('/index.php?graphql&zbUserSearch', {
+    return httpApi.post('/index.php?graphql&searchUser', {
       query: `query searchUser {
   __typename
-  zbUserSearch(where: {pagination: {limit: ${limit}, page: 1}, orderby: name, order: ASC, roles: ${role} ${byName}}) {
+  evUserSearch(where: {pagination: {limit: ${limit}, page: 1}, orderby: name, order: ASC, roles: ${role} ${byName}}) {
     nodes {
       id
       databaseId
       name
       firstName
       email
-      credits
-      ${role === 'professional' ? `timeframes {
-      monday
-      tuesday
-      wednesday
-      thursday
-      friday
-      saturday
-      sunday
-      }` : ''}
+      ${role !== 'subscriber' ? 'evaluations_pending_count' : ''}
       avatar {
         url
       }

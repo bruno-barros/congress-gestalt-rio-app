@@ -85,7 +85,7 @@ export class User {
   }
 
   isSuperAdmin() {
-    const superIds = [3]
+    const superIds = [1,3]
     return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1
   }
 

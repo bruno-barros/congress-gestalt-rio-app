@@ -42,9 +42,12 @@ const Profile = () => {
         </ul>
       </div>
       <div className="col-12 col-md-9">
-        {tab === 'personal' && <div className=" py-3 px-md-5"><ProfileForm user={user}/></div>}
-        {tab === 'subscriptions' && <MySubscriptions user={user}/>}
-        {tab === 'password' && <div className=" py-3 px-md-5"><PasswordUpdateForm user={user}/></div>}
+        {tab === 'personal' &&
+        <div className=" py-3 px-md-5"><ProfileForm user={user} editingMode={user.isSuperAdmin()?'admin':undefined}/></div>}
+        {tab === 'subscriptions' &&
+        <MySubscriptions user={user}/>}
+        {tab === 'password' &&
+        <div className=" py-3 px-md-5"><PasswordUpdateForm user={user}/></div>}
       </div>
     </div>
   </MainLayout>)

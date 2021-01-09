@@ -3,6 +3,11 @@ import {httpApi} from "./axios";
 
 export default class WpEvaluation {
 
+  static setEvaluators(args: {user_id: number, abstracts: number[], notify:boolean, edition_id: string}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_set', {user_id: args.user_id, abstracts: args.abstracts, notify: args.notify, edition_id: args.edition_id});
+  }
+
+
   static get(args: { edition_id?: string; user_id?: number; abstract_id?: number }): Promise<AxiosResponse> {
 
     let filters = []
