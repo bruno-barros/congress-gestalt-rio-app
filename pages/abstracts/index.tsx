@@ -20,7 +20,7 @@ const Abstracts = () => {
   const {user} = useCurrentUser()
   const {data: event} = useEvent()
   const currentEdition = event && event.currentEdition()
-  const edition = router.query?.edition && event.getEdition(String(router.query.edition)) || currentEdition
+  const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
   const isCurrent = currentEdition?.id === edition?.id
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
@@ -71,11 +71,12 @@ const Abstracts = () => {
 
         {(abstracts && abstracts?.length > 0) && <div className=""><Link href={`/abstracts/new`}><a
           className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link></div>}
+
         {abstracts && abstracts.map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
         {(!isCurrent && abstracts && abstracts?.length === 0) &&
         <div className="alert alert-light border">
-          Você não tem trabalhos nesta edição.
+          Você não tem trabalhos nesta edição. / Nothin to show.
         </div>}
 
 

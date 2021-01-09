@@ -23,7 +23,7 @@ export default function MySubscriptions({user}: { user: User }) {
     })}
 
     {(collection && collection.length === 0) && <div className="p-5">
-      <p>Você ainda não tem nenhuma inscrição.</p>
+      <p>{t('voce-nao-tem-inscricoes')}</p>
       <p><Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link></p>
     </div>}
 

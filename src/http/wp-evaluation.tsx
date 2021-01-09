@@ -3,7 +3,7 @@ import {httpApi} from "./axios";
 
 export default class WpEvaluation {
 
-  static get(args: {edition_id?:string; user_id?: number; abstract_id?: number}): Promise<AxiosResponse> {
+  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number }): Promise<AxiosResponse> {
 
     let filters = []
     if (args?.edition_id) filters.push(`edition_id: "${args.edition_id}"`)
@@ -39,7 +39,7 @@ export default class WpEvaluation {
   }
 
 
-  static find(id: number|string): Promise<AxiosResponse> {
+  static find(id: number | string): Promise<AxiosResponse> {
 
     return httpApi.post('/index.php?graphql&evEvaluation', {
       query: `query WpEvaluation {
@@ -57,6 +57,7 @@ export default class WpEvaluation {
     user_id
     abstract {
       databaseId
+      authorDatabaseId
       date
       excerpt
       abstract_tags
@@ -87,5 +88,55 @@ export default class WpEvaluation {
 
   static save(data: any) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_save', {...data});
+  }
+
+
+  static countInReview(userId: number | string): Promise<AxiosResponse> {
+    return httpApi.post('/index.php?graphql&countInReview', {
+      query: `query countInReview {
+  __typename
+  evEvaluations(where: {status: [revision, final_revision], user_id: ${userId}}) {
+    pageInfo {
+      offsetPagination {
+        total
+      }
+    }
+  }
+}`
+    })
+  }
+
+  static forAbstract(abstractId: number | string, complete: boolean = false): Promise<AxiosResponse> {
+
+    let append = '';
+    if (complete) {
+      append = `
+    answers
+      evaluator {
+        databaseId
+        email
+        firstName
+        name
+      }
+`
+    }
+
+    return httpApi.post('/index.php?graphql&byAbstract', {
+      query: `query byAbstract {
+  __typename
+  evEvaluations(where: {abstract_id: ${abstractId}}) {
+    nodes {
+      databaseId
+      created_at
+      updated_at
+      comment
+      quality
+      relevance
+      status
+      ${append}
+    }
+  }
+}`
+    })
   }
 }

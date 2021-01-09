@@ -20,7 +20,7 @@ export default function useUserOrders(userId: number | null){
   }
 
   return useQuery<OrderCollection|null, any>(['orders', userId], queryOrders, {
-    enabled: !!userId,
+    enabled: !!userId && userId > 0,
     staleTime: Infinity
   })
 }

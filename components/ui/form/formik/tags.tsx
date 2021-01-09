@@ -4,14 +4,16 @@ import React, {useRef, useState} from "react";
 import {Icon} from "@brunobarros/react-components";
 import useTrans from "../../../hooks/useTrans";
 import {errorNotification} from "../../../../src/resources/responses";
+import {dispatchOnENTER} from "../../../../src/helpers";
 
 interface TagsProps {
   label: string
   containerClass?: string
   maxTags?: number
+  disabled?: boolean
 }
 
-export default function Tags({label, containerClass, maxTags: ma, ...props}: TagsProps & any) {
+export default function Tags({label, containerClass, maxTags: ma, disabled, ...props}: TagsProps & any) {
 
   const t = useTrans()
   // @ts-ignore
@@ -43,36 +45,37 @@ export default function Tags({label, containerClass, maxTags: ma, ...props}: Tag
 
       return (<div className="tags-container">
         {field.value?.length > 0 && field.value.map((tag, idx) => (
-          <div className="border rounded d-inline-block py-1 pl-2 mr-1 mb-1" key={idx} style={{}}>
+          <div className="border rounded d-inline-block py-1 px-2 mr-1 mb-1" key={idx} style={{}}>
             <div className="d-flex align-items-center justify-content-between">
               {tag}
+              {!disabled &&
               <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
                 remove(idx)
-                // handleDeletion(remove, author, idx)
               }}><Icon name={`close-outline`} style={{fontSize: 18}}/>
-              </button>
+              </button>}
+
             </div>
           </div>
         ))}
 
-        {maxTags > field.value.length
+        {!disabled && (maxTags > field.value.length)
         && <div className="mt-3">
-
           <div className="input-group">
             <input ref={tagInput} type="text" name="new_tag" value={newTag}
                    className="form-control" onChange={(e) => {
               setNewTag(e.target.value)
-            }}/>
+            }} onKeyDown={e => dispatchOnENTER(e, ()=>{
+                handleAdd(push)
+            })}/>
             <div className="input-group-append">
-              <button type="button" onClick={() => {                handleAdd(push)              }}
+              <button type="button" onClick={() => {
+                handleAdd(push)
+              }}
                       className="btn btn-outline-primary">{t('adicionar')} tag
               </button>
-
             </div>
           </div>
-
         </div>}
-
 
       </div>)
     }}</FieldArray>

@@ -12,6 +12,7 @@ import useCurrentUser from "../../components/hooks/useCurrentUser";
 import Sweet from "../../components/ui/sweet-alert";
 import {useEffect} from "react";
 import NextStepTip from "../../components/abstract/next-step-tip";
+import AbstractComments from "../../components/abstract/abstract-comments";
 
 
 const AbstractEditing = () => {
@@ -63,7 +64,8 @@ const AbstractEditing = () => {
         <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} currentStatus={abstract?.status}
                            className="my-4"/>
         <NextStepTip status={abstract?.status}/>
-        <p><strong>Comentários</strong></p>
+        <AbstractComments abstract={abstract}/>
+
       </div>
     </div>
   </MainLayout>)

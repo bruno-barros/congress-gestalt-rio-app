@@ -7,6 +7,7 @@ import AbstractAuthorsModal from "../abstract/abstract-authors-modal";
 import AbstractAttachmentsModal from "../abstract/abstract-attachments-modal";
 import {MapRoles} from "../../src/resources/user";
 import Link from "next/link";
+import AbstractEvaluationsModal from "../abstract/abstract-evaluations-modal";
 
 export function RenderCell({cell}) {
   // console.log(cell.props.cell.value);
@@ -42,12 +43,19 @@ export function Authors({cell, count}:{cell?:any, count?:number}) {
 
   return (<>
     <button onClick={()=> setShow(true)} type="button" className="d-flex align-items-center btn btn-sm btn-link py-0"><Icon name={`person-outline`}/><span className="ml-1">{` `} ({cell.props.cell.value})</span></button>
-    <AbstractAuthorsModal show={show} abstract_id={cell.props.cell.row.original.databaseId} onDismiss={()=>setShow(false)}/>
+    <AbstractAuthorsModal show={show} abstract_id={cell.props.cell.row.original.databaseId}
+                          onDismiss={()=>setShow(false)}/>
   </>)
 }
 
 export function Evaluations({cell, count}:{cell?:any, count?:number}) {
-  return <button className="d-flex align-items-center btn btn-sm btn-link py-0"><Icon name={`chatbox-outline`}/><span className="ml-1">{` `} ({cell.props.cell.value})</span></button>
+  const [show, setShow] = useState(false)
+
+  return (<>
+    <button onClick={()=> setShow(true)} type="button" className="d-flex align-items-center btn btn-sm btn-link py-0"><Icon name={`chatbox-outline`}/><span className="ml-1">{` `} ({cell.props.cell.value})</span></button>
+    <AbstractEvaluationsModal show={show} abstract_id={cell.props.cell.row.original.databaseId}
+                              onDismiss={()=>setShow(false)}/>
+  </>)
 }
 export function Attachments({cell, count}:{cell?:any, count?:number}) {
   const [show, setShow] = useState(false)

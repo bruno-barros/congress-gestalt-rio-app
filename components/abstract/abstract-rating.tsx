@@ -3,7 +3,7 @@ import {Icon} from "@brunobarros/react-components";
 import isFinite from 'lodash/isFinite'
 interface AbstractRatingProps {
   value: number|undefined|null
-  onChange: (value: number) => void
+  onChange?: (value: number) => void
   disabled?: boolean
 }
 

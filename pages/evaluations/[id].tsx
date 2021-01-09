@@ -19,16 +19,6 @@ const EvaluationEditing = () => {
   const edition: Edition = event?.currentEdition()
   const {data: evaluation, error, isLoading: loadingEval} = useEvaluation(Number(router.query?.id))
 
-  // useEffect(()=>{
-  //   if(router.query?.created) NextStepPopup()
-  // }, [router.query])
-  // function NextStepPopup(){
-  //   Sweet.fire({
-  //     html: `<div class="text-left"><p>Caro, autor. <br/>
-  //       O próximo passo é enviar seu trabalho para revisão.</p>
-  //       <p>Quando estiver pronto use o botão "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p></div>`
-  //   })
-  // }
 
   if (isLoading || loadingEval) {
     return <MainLayout><Loading vspace={80}/></MainLayout>;
@@ -42,6 +32,20 @@ const EvaluationEditing = () => {
           <div className="col-12 col-md-6 offset-md-3">
             <div className="alert alert-danger mt-5">
               {t('sem-permissao')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>;
+  }
+
+  if (evaluation.abstract.authorDatabaseId === user.getId()) {
+    return <MainLayout>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-6 offset-md-3">
+            <div className="alert alert-danger mt-5">
+              Você não pode avaliar sua próprio trabalho.
             </div>
           </div>
         </div>

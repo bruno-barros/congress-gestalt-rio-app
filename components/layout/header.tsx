@@ -7,6 +7,7 @@ import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import useEvent from "../hooks/useEvent";
+import usePendingReview from "../hooks/usePendingReview";
 
 interface HeaderProps {
   event: Event
@@ -17,6 +18,7 @@ export default function Header(props: HeaderProps) {
 
   const t = useTrans()
   const router = useRouter()
+  const {data: pending} = usePendingReview()
   const {user, event} = props
   const edition: Edition = event.currentEdition()
 
@@ -51,7 +53,15 @@ export default function Header(props: HeaderProps) {
             </>)}
           {user.canEvaluateAbstracts() && <>
             <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link
-              active={router.pathname === '/evaluations'}>{t('trabalho.avaliacoes')}</Nav.Link></Link>
+              title={`${pending} aguardando revisão`}
+              active={router.pathname === '/evaluations'}>{t('trabalho.avaliacoes')}
+              {pending && <div className="badge badge-warning ml-1">{pending}</div>}
+            </Nav.Link></Link>
+          </>}
+          {user.canPublishAbstracts() && <>
+            <Link href={`/profile?tab=subscriptions`} passHref>
+              <Nav.Link>{t('minhas-inscricoes')}
+            </Nav.Link></Link>
           </>}
           {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
           {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}

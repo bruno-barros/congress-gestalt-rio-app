@@ -61,7 +61,7 @@ export default class Abstract {
     return new Abstract(data)
   }
 
-  statusColorName(): 'warning' | 'success' | 'danger' {
+  statusColorName(): 'warning' | 'success' | 'danger' | 'secondary' {
     return  statusColorName(this.status)
   }
 

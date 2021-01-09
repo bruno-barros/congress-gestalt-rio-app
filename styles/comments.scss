@@ -1,0 +1,47 @@
+@import "./mixins";
+
+.comment-box-wraper {
+  .comment-box:nth-child(odd){
+    background-color: $gray-100;
+  }
+}
+
+.bullet {
+  flex: 0 0 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 10px;
+  background-color: $gray-300;
+  margin-right: $spacer/2;
+}
+
+.comment-box {
+  position: relative;
+  border: solid 1px $gray-300;
+  border-radius: 5px;
+  padding: $spacer;
+  margin-bottom: -1px;
+  &:hover {
+    border-color: $gray-600;
+    z-index: 999;
+  }
+  header {
+    color: $gray-500;
+    font-size: .9em;
+    line-height: 1em;
+    margin-bottom: $spacer/2;
+  }
+  .bullet {
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    background-color: $gray-300;
+    margin-right: $spacer/2;
+  }
+  .comment {
+    color: $gray-700;
+    font-size: .9em;
+    line-height: 1.2em;
+  }
+}

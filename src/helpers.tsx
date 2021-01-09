@@ -16,7 +16,7 @@ export function asset(src: string) {
 }
 
 export function siteTitle(name: string = '', queryClient?: QueryClient) {
-  const event: Event|any = queryClient ? queryClient.getQueryData('event'): {}
+  const event: Event | any = queryClient ? queryClient.getQueryData('event') : {}
   return name ? name + ` - ${event?.eventName}` : (event ? event.eventName : '')
 }
 
@@ -110,7 +110,7 @@ export function rand(min, max) {
 }
 
 export function generate_tmp_id(user_id: number) {
-return `${user_id}@${rand(1111111111, 9999999999)}`
+  return `${user_id}@${rand(1111111111, 9999999999)}`
 }
 
 
@@ -148,19 +148,19 @@ export function plural(count: number, singular: string, plural: string, zero?: s
 }
 
 
-export function inputFloatClass(inputValue:any, appendClasses:string = '') {
+export function inputFloatClass(inputValue: any, appendClasses: string = '') {
   let classes = ['form-control']
-  if(inputValue && inputValue.length > 0) classes.push('filled')
-  if(appendClasses) classes.push(appendClasses)
+  if (inputValue && inputValue.length > 0) classes.push('filled')
+  if (appendClasses) classes.push(appendClasses)
   return classes.join(' ')
 }
 
 export function getGenres() {
-return [
-  {value: 'M', name: 'masculino'},
-  {value: 'F', name: 'feminino'},
-  {value: 'I', name: 'outro'},
-]
+  return [
+    {value: 'M', name: 'masculino'},
+    {value: 'F', name: 'feminino'},
+    {value: 'I', name: 'outro'},
+  ]
 }
 
 export const MapLocales = [
@@ -168,19 +168,19 @@ export const MapLocales = [
   {app: 'en', site: 'en_US', label: 'Inglês'},
 ]
 
-export function ev_locale(locale) : string{
-  if(!locale) return 'pt'
-  if(locale.indexOf('en') !== -1) return 'en';
-  if(locale.indexOf('es') !== -1) return 'es';
-  return  'pt'
+export function ev_locale(locale): string {
+  if (!locale) return 'pt'
+  if (locale.indexOf('en') !== -1) return 'en';
+  if (locale.indexOf('es') !== -1) return 'es';
+  return 'pt'
 }
 
-export function statusColorName(status: string): 'warning' | 'success' | 'danger' {
-  if (['pending', 'revision', 'waiting_update', 'synopsis_waiting_update', 'final_revision'].indexOf(status) !== -1) return 'warning'
+export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary' {
+  if (['pending', 'waiting_update', 'synopsis_waiting_update'].indexOf(status) !== -1) return 'secondary'
+  if (['revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
   if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
   if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'
 }
-
 
 
 export function states(empty: boolean = true) {
@@ -293,7 +293,15 @@ export function states(empty: boolean = true) {
       label: "Tocantins"
     }]
 
-  if(empty) states.unshift({label: '', value: ''})
+  if (empty) states.unshift({label: '', value: ''})
 
   return states
+}
+
+
+export function dispatchOnENTER(event, callback) {
+  if (event?.key === 13 || event?.keyIdentifier === 13 || event?.keyCode === 13) {
+    event.preventDefault()
+    callback()
+  }
 }

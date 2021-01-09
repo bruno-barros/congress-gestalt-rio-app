@@ -22,7 +22,8 @@ export default function AbstractCard(props: AbstractCardProps) {
 
   function statusColor(){
     let color = abstract.statusColorName()
-    if(color === 'warning') return 'bg-warning'
+    if(color === 'warning') return 'bg-secondary text-white'
+    if(color === 'secondary') return 'bg-warning'
     if(color === 'success') return 'bg-success text-white'
     if(color === 'danger') return 'bg-danger text-white'
   }
@@ -41,12 +42,12 @@ export default function AbstractCard(props: AbstractCardProps) {
     <div className="abs-footer">
       <div className="btn-group start">
         <div className={`btn ${statusColor()}`} style={{cursor: 'default'}}>{t(`status.${abstract.status}`)}</div>
-        <button className="btn border d-none d-md-block">
+        <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="btn border d-none d-md-block">
           <Icon name={`chatbox-outline`}/> {t('comentarios')} {`(${abstract.evaluations_count})`}
-        </button>
-        <button className="btn border d-none d-md-block">
+        </a></Link>
+        <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="btn border d-none d-md-block">
           <Icon name={`folder-outline`}/> {t('anexos')} {`(${abstract.attachments_count})`}
-        </button>
+        </a></Link>
       </div>
       <div className="abs-info mr-3">
         {moment(abstract.date).format('DD/MM/YYYY')}

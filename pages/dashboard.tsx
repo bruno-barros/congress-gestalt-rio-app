@@ -9,7 +9,6 @@ import useCurrentUser from "../components/hooks/useCurrentUser";
 import {Edition} from "../src/resources/event";
 import {Loading} from "@brunobarros/react-components";
 import useUserOrders from "../components/hooks/useUserOrders";
-import {Icon} from "@brunobarros/react-components";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 
 interface DashboardProps {

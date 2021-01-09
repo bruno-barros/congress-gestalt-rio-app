@@ -19,8 +19,8 @@ export default function AbstractAuthorLine(props: AbstractAuthorLineProps) {
 
   const {author, i} = props
   return (<Card>
-      <Card.Header className="d-flex align-items-center justify-content-between">
-        <Accordion.Toggle as={Button} variant="link" eventKey={`${author.id}`}>
+      <Card.Header className="d-flex align-items-center justify-content-between py-1">
+        <Accordion.Toggle as={Button} variant="link" eventKey={`${author.id}`} className="flex-grow-1 text-left">
          {author.name}
         </Accordion.Toggle>
         <div className="d-flex align-items-center">

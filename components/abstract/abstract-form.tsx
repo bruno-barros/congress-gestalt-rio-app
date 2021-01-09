@@ -123,7 +123,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>
         <Text name="title" label={t('trabalho.titulo')}/>
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>
-        <Tags name="tags" label="Tags" maxTags={edition.abstract.tags.max}/>
+        <Tags name="tags" label="Tags" maxTags={edition.abstract.tags.max} disabled={isFormDisabled(abstract?.status)}/>
         <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={isFormDisabled(abstract?.status)}/>
         <Wysiwyg name="synopsis" label={t('trabalho.sinopse')} maxHeight="sm" disabled={isFormDisabled(abstract?.status)}/>
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={isFormDisabled(abstract?.status)}/>

@@ -14,6 +14,7 @@ export class Evaluation {
   status: Status
   abstract: {
     databaseId: number
+    authorDatabaseId: number
     date: string
     excerpt: string
     abstract_tags: string[]

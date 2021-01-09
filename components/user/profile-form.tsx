@@ -12,6 +12,8 @@ import * as Yup from "yup";
 import WpUser from "../../src/http/wp-user";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useAllUsers from "../hooks/useAllUsers";
+import Textarea from "../ui/form/formik/textarea";
+import useCurrentUser from "../hooks/useCurrentUser";
 
 interface ProfileFormProps {
   user: User
@@ -23,6 +25,7 @@ export default function ProfileForm(props: ProfileFormProps) {
   const t = useTrans()
   const {user, editingMode} = props
   const {refetch: refreshUsers} = useAllUsers()
+  const {refetch: refreshMySelf, user: auth} = useCurrentUser()
   const [loading, setLoading] = useState(false)
   const FormSchema = Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
@@ -47,6 +50,7 @@ export default function ProfileForm(props: ProfileFormProps) {
     // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     gender: Yup.string().required('validacao.obrigatorio'),
+    description: Yup.string().notRequired(),
     postcode: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     state: Yup.string().required('validacao.obrigatorio'),
     city: Yup.string().required('validacao.obrigatorio'),
@@ -66,8 +70,12 @@ export default function ProfileForm(props: ProfileFormProps) {
       setLoading(false)
 
       success === false && errorNotification({message: data?.msg})
-      success === true && successNotification({message: t('atualizado-com-sucesso')})
-      success === true && refreshUsers()
+      if(success){
+        successNotification({message: t('atualizado-com-sucesso')})
+        user.canManageAbstracts() && refreshUsers()
+        user.getId() === auth.getId() && refreshMySelf()
+      }
+
 
     } catch (err) {
       errorNotification({error: err})
@@ -93,6 +101,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       phone: user.getUserData().phone || '',
       birthdate: user.getUserData().birthdate || '',
       gender: user.getUserData().gender || 'M',
+      description: user.getUserData().description || '',
       postcode: user.getUserData().postcode || '',
       state: user.getUserData().state || '',
       city: user.getUserData().city || '',
@@ -152,6 +161,7 @@ export default function ProfileForm(props: ProfileFormProps) {
             {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
           </Select>
         </div>
+        <Textarea name="description" label="Bio"/>
       </fieldset>
       <fieldset>
         <legend>Endereço</legend>

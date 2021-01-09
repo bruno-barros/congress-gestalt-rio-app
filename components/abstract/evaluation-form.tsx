@@ -16,6 +16,7 @@ import Switch from "../ui/form/formik/switch";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useCurrentUser from "../hooks/useCurrentUser";
 import WpEvaluation from "../../src/http/wp-evaluation";
+import usePendingReview from "../hooks/usePendingReview";
 
 
 interface EvaluationFormProps {
@@ -28,6 +29,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
+  const {refetch: refetchReviews} = usePendingReview()
   const [loading, setLoading] = useState(false)
   const {data: event, isLoading} = useEvent()
   const edition = event && event.currentEdition()
@@ -80,6 +82,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
           successNotification({
             heroTitle: 'Avaliação realizada com sucesso!'
           })
+          refetchReviews()
           router.push(`/evaluations?edition=${edition.id}`)
         } else {
           errorNotification({error: resp.data.data})
