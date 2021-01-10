@@ -39,37 +39,37 @@
   }
 }
 
-.table-checkbox {
-  &.custom-checkbox {
-  }
-
-  &.custom-control {
-    border: solid 1px red;
-    padding-left: 0;
-    width: $spacer * 1.5;
-    z-index: 99;
-  }
-
-  .custom-control-input {
-  }
-
-  .custom-control-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 10;
-
-    &::before {
-      left: 0;
-    }
-
-    &::after {
-      left: 0;
-    }
-  }
-}
+//.table-checkbox {
+//  &.custom-checkbox {
+//  }
+//
+//  &.custom-control {
+//    border: solid 1px red;
+//    padding-left: 0;
+//    width: $spacer * 1.5;
+//    z-index: 99;
+//  }
+//
+//  .custom-control-input {
+//  }
+//
+//  .custom-control-label {
+//    position: absolute;
+//    top: 0;
+//    left: 0;
+//    right: 0;
+//    bottom: 0;
+//    z-index: 10;
+//
+//    &::before {
+//      left: 0;
+//    }
+//
+//    &::after {
+//      left: 0;
+//    }
+//  }
+//}
 
 
 .abstracts-action-bar {
@@ -140,7 +140,7 @@
 
 }
 
-.super-search  {
+.super-search {
 
   .ss-filters {
     position: absolute;
@@ -155,11 +155,22 @@
       display: flex;
       align-items: center;
       margin-bottom: 5px;
+
       label {
         margin-right: 10px;
         margin-bottom: 0;
         min-width: 80px;
       }
+    }
+  }
+}
+
+@media all and (min-width: 1500px){
+  .dynamic-table {
+    th,
+    td {
+      font-size: 1em;
+      line-height: 1.3em;
     }
   }
 }

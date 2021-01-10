@@ -77,17 +77,21 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                     <div className={`text-${statusColorName(eva.status)}`}>{t(`status.${eva.status}`)}</div>
                     <div className={`ml-2 bullet bg-${statusColorName(eva.status)}`}/>
                   </div>
-                  <div className="mx-2 text-sm">{moment(eva.updated_at).format('DD/MM/YYYY')}</div>
+                  <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY')}</div>
                   <Icon name={`trash-outline`} style={{fontSize: 20}}/>
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey={`${eva.databaseId}`}>
                 <Card.Body>
-                  <div className="d-flex align-items-center mb-2">
-                    <div className="mb-1 mr-1">Relevância</div>
-                    <AbstractRating value={eva.relevance} disabled={true}/>
-                    <div className="ml-4 mb-1 mr-1">Qualidade</div>
-                    <AbstractRating value={eva.quality} disabled={true}/>
+                  <div className="d-flex align-items-center justify-content-between mb-2">
+                    <div className="d-flex align-items-center">
+                      <div className="mb-1 mr-1">Relevância</div>
+                      <AbstractRating value={eva.relevance} disabled={true}/>
+                      <div className="ml-4 mb-1 mr-1">Qualidade</div>
+                      <AbstractRating value={eva.quality} disabled={true}/>
+                    </div>
+                    {eva.updated_at && <div>Atualizado em {moment(eva.updated_at).format('DD/MM/YYYY H:mm')}</div>}
+
                   </div>
                   {eva.comment}
                 </Card.Body>

@@ -1,9 +1,17 @@
 import {AxiosResponse} from "axios";
 import {httpApi} from "./axios";
 import isFinite from 'lodash/isFinite'
-import {GraphQlStatuses} from "../../components/abstract/abstract.d";
+import {GraphQlStatuses, Status} from "../../components/abstract/abstract.d";
 
 export class WpAbstract {
+
+  static updateStatus(args: {abstracts: number[], status: Status, notify: boolean}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_set_status', {
+      abstracts: args.abstracts,
+      status: args.status,
+      notify: args.notify
+    });
+  }
 
   static update(data: any): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_update', {...data});
