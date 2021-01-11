@@ -12,6 +12,10 @@ import {statusColorName} from "../../src/helpers";
 import useTrans from "../hooks/useTrans";
 import AbstractRating from "./abstract-rating";
 import moment from "moment";
+import {Evaluation} from "../../src/resources/evaluation";
+import AbstractAnswers from "./abstract-answers";
+import hr from "../ui/hr";
+import ButtonDeleteConfirmation from "../ui/button-delete-confirmation";
 
 interface AbstractEvaluationsModalProps {
   show: boolean
@@ -63,14 +67,15 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
     <Modal.Body className="p-0" style={{minHeight: 100}}>
       {(isLoading || isFetching) && <Loading vspace={15}/>}
       {(data && data?.length > 0)
-      && <CurtainDelayed delay={1}>
+      && <CurtainDelayed delay={.5}>
         <Accordion>
-          {data.map((eva, i) => {
+          {data.map((evaluation, i) => {
+            let eva = Evaluation.make(evaluation)
             return (<Card key={i}>
               <Card.Header className="d-flex align-items-center justify-content-between py-1">
                 <Accordion.Toggle as={Button} variant="link" eventKey={`${eva.databaseId}`}
                                   className="flex-grow-1 text-left">
-                  {eva.evaluator.name}
+                  {eva?.evaluator?.name}
                 </Accordion.Toggle>
                 <div className="d-flex align-items-center">
                   <div className="d-flex align-items-center">
@@ -78,7 +83,7 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                     <div className={`ml-2 bullet bg-${statusColorName(eva.status)}`}/>
                   </div>
                   <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY')}</div>
-                  <Icon name={`trash-outline`} style={{fontSize: 20}}/>
+                  <ButtonDeleteConfirmation onDelete={()=>{}}/>
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey={`${eva.databaseId}`}>
@@ -94,6 +99,9 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
 
                   </div>
                   {eva.comment}
+
+                  <AbstractAnswers className="mt-3 text-sm" answers={eva.getAnswers()} edition_id={eva?.edition_id}/>
+
                 </Card.Body>
               </Accordion.Collapse>
             </Card>)

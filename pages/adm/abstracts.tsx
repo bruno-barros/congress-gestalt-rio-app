@@ -75,8 +75,12 @@ const AdmAbstracts = () => {
       },{
         Header: 'Enviado em',
         accessor: 'date',
+      },{
+        Header: 'Atualizado em',
+        accessor: 'ev_last_update',
       }
     ]}, [])
+
   const data = useMemo(() => {
     if(!abstracts || !edition) return []
     return abstracts.map(row => {

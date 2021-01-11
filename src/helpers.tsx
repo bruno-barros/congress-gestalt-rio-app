@@ -176,7 +176,7 @@ export function ev_locale(locale): string {
 }
 
 export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary' {
-  if (['pending', 'waiting_update', 'synopsis_waiting_update'].indexOf(status) !== -1) return 'secondary'
+  if (['pending', 'waiting_update', 'synopsis_waiting_upd'].indexOf(status) !== -1) return 'secondary'
   if (['revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
   if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
   if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'

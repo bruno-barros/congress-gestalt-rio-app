@@ -61,7 +61,7 @@ const AbstractEditing = () => {
         <AbstractForm edition={edition} abstract={abstract}/>
       </div>
       <div className="col-12 col-md-4">
-        <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} currentStatus={abstract?.status}
+        <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} abstract={abstract}
                            className="my-4"/>
         <NextStepTip status={abstract?.status}/>
         <AbstractComments abstract={abstract}/>

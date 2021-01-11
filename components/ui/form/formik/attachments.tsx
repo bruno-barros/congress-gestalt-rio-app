@@ -12,6 +12,7 @@ import {useDispatch} from "react-redux";
 import {blockUi} from "../../../../src/store/ui.actions";
 import WpDocument from "../../../../src/http/wp-document";
 import Error from "../../../../src/resources/error";
+import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 
 interface AttachmentsProps {
   label: string
@@ -79,10 +80,9 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
           <div className="border d-flex align-items-center justify-content-between py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
             <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
             {!disabled
-            && <button type="button" className="btn btn-sm py-0" onClick={() => {
-              handleDeletion(remove, file, idx)
-            }}><Icon name={`trash-outline`} style={{fontSize: 18}}/>
-            </button>}
+            && <ButtonDeleteConfirmation onDelete={()=>{
+                handleDeletion(remove, file, idx)
+            }}/>}
 
           </div>
         ))}

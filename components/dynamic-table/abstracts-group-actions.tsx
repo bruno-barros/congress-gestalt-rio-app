@@ -6,6 +6,9 @@ import SetEvaluatorsModal from "../abstract/set-evaluators-modal";
 import {useQueryClient} from "react-query";
 import useEvent from "../hooks/useEvent";
 import SetStatusModal from "../abstract/set-status-modal";
+import {WpAbstract} from "../../src/http/wp-abstract";
+import {errorNotification} from "../../src/resources/responses";
+import DownloadCsv from "../ui/download-csv";
 
 
 type GroupActions<T extends object> = {
@@ -20,18 +23,34 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
   const selectedCount = selected.length
   const [activeModal, setActiveModal] = useState<'designar' | 'status' | string>('')
   const {data: event} = useEvent()
+  const [exportData, setExportData] = useState([])
+  const [loading, setLoading] = useState(false)
   const edition = event && event.currentEdition()
 
   function openModal(id: string) {
     setActiveModal(id)
   }
 
-  function exportToExcel(e) {
+  function handleExportData(e) {
     e.preventDefault()
-    console.log({selected});
+    setExportData([])
+    setLoading(true)
+    WpAbstract.export({
+      abstracts: selected.map(row => row.databaseId)
+    })
+      .then(resp => {
+        if (resp.data.success) {
+          setExportData(resp.data.data)
+          setLoading(false)
+        }
+      }, err => {
+        errorNotification({error: err})
+        setLoading(false)
+      })
+
   }
 
-  function refreshAbstracts(){
+  function refreshAbstracts() {
     queryClient.refetchQueries(['abstracts', edition?.id])
   }
 
@@ -39,13 +58,15 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
   return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item onClick={exportToExcel} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+      <Dropdown.Item disabled={selectedCount === 0} onClick={handleExportData}>Exportar</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('designar')} disabled={selectedCount === 0}>Designar
         avaliador</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('status')} disabled={selectedCount === 0}>Mudar status</Dropdown.Item>
-      <Dropdown.Item className="text-danger" onClick={exportToExcel}
+      <Dropdown.Item className="text-danger" onClick={() => {
+      }}
                      disabled={selectedCount === 0}>Apagar</Dropdown.Item>
     </DropdownButton>
+    <DownloadCsv data={exportData} fileBaseName={`trabalhos_${edition.id}`} loading={loading}/>
     <SetEvaluatorsModal
       abstract_ids={selected?.map(abs => abs.databaseId)} show={activeModal === 'designar'}
       onDismiss={() => {

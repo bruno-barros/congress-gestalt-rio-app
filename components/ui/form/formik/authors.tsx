@@ -8,10 +8,9 @@ import {toast} from "react-toastify";
 import useTrans from "../../../hooks/useTrans";
 import {WpAbstract} from "../../../../src/http/wp-abstract";
 import {useRouter} from "next/router";
-import Error from "../../../../src/resources/error";
-import Sweet from "../../sweet-alert";
 import {errorNotification, exceptionNotification, successNotification} from "../../../../src/resources/responses";
 import ToolTip from "../../tooltip";
+import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 
 interface AuthorsProps {
   label: string
@@ -136,10 +135,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
                   }}><Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
                   </button>
                 </ToolTip>
-                <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
-                  handleDeletion(remove, author, idx)
-                }}><Icon name={`trash-outline`} style={{fontSize: 18}}/>
-                </button>
+                <ButtonDeleteConfirmation onDelete={()=>{handleDeletion(remove, author, idx)}}/>
               </>}
 
             </div>

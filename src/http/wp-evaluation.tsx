@@ -30,6 +30,7 @@ export default class WpEvaluation {
       created_at
       abstract_id
       user_id
+      edition_id
       abstract {
         databaseId
         title
@@ -138,6 +139,7 @@ export default class WpEvaluation {
       quality
       relevance
       status
+      edition_id
       ${append}
     }
   }

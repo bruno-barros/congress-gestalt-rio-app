@@ -45,7 +45,7 @@ export default function NextStepTip(props: NextStepProps) {
       pending,
       revision,
       synopsis_rejected: rejected,
-      synopsis_waiting_update: waiting,
+      synopsis_waiting_upd: waiting,
       synopsis_approved,
       final_revision: revision,
       rejected,

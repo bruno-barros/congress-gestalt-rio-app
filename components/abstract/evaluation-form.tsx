@@ -98,7 +98,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
       return ['rejected', 'waiting_update', 'pre_approved']
     }
     else if (current === 'revision') {
-      return ['synopsis_rejected', 'synopsis_waiting_update', 'synopsis_approved']
+      return ['synopsis_rejected', 'synopsis_waiting_upd', 'synopsis_approved']
     }
 
     return edition.abstract.statuses

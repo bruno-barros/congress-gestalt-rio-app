@@ -20,8 +20,12 @@ $statusReject: $danger;
     background-color: $gray-300;
   }
 
-  .btn-group {
+  .action-form {
     margin:  1rem 0 0 1rem;
+  }
+  .custom-control {
+    font-size: .9em;
+    margin-bottom: $spacer;
   }
 
   .step {
@@ -34,6 +38,7 @@ $statusReject: $danger;
     //box-shadow: 0 0 1px;
     .bullet {
       display: block;
+      flex: 0 0 18px;
       width: 18px;
       height: 18px;
       border-radius: 40px;
@@ -88,7 +93,8 @@ $statusReject: $danger;
       }
       &.selected {
         opacity: 1;
-        background-color: $gray-300;
+        color: $white;
+        background-color: $gray-600;
       }
     }
   }

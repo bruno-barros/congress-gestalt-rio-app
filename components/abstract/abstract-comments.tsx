@@ -34,8 +34,8 @@ export default function AbstractComments(props: AbstractCommentsProps) {
   }
 
   return (<div className="">
-    <p><strong>Comentários</strong>
-      {evaluations && evaluations?.length === 0 && <span className="text-sm d-block">Nenhum comentário</span>}
+    <p><strong>Avaliações</strong>
+      {evaluations && evaluations?.length === 0 && <span className="text-sm d-block">Nenhuma avaliação</span>}
     </p>
     {isLoading && <Loading/>}
     <div className="comment-box-wraper">

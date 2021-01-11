@@ -8,10 +8,18 @@ export class Evaluation {
   user_id: number
   answers: any
   comment: string
+  edition_id: string
   created_at: string
-  relevance: 'poor' | 'good' | 'excellent'
-  quality: 'poor' | 'good' | 'excellent'
+  updated_at: string
+  relevance: number
+  quality: number
   status: Status
+  evaluator?: {
+    databaseId: number
+    email: string
+    firstName: string
+    name: string
+  }
   abstract: {
     databaseId: number
     authorDatabaseId: number
@@ -56,7 +64,7 @@ export class Evaluation {
   }
 
   isEditable(){
-    // 'pending' | 'revision' | 'synopsis_rejected' | 'synopsis_waiting_update' |
+    // 'pending' | 'revision' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
     // 'synopsis_approved' | 'final_revision' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
     return ['revision', 'final_revision'].indexOf(this.status) !== -1
   }

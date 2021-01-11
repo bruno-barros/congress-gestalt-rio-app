@@ -81,7 +81,7 @@ export default function SetStatusModal(props: SetStatusModalProps) {
       <CurtainDelayed delay={1}>
         <Formik
           initialValues={{
-            status: '',
+            status: 'pending',
             notify: true,
           }}
           onSubmit={handleSubmit}

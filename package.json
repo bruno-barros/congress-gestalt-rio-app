@@ -32,6 +32,7 @@
     "next": "^10.0.3",
     "react": "^17.0.1",
     "react-avatar": "^3.9.7",
+    "react-csv": "^2.0.3",
     "react-dnd": "5.0.0",
     "react-dnd-html5-backend": "3.0.2",
     "react-dom": "^17.0.1",

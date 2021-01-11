@@ -5,7 +5,7 @@ import {GraphQlStatuses, Status} from "../../components/abstract/abstract.d";
 
 export class WpAbstract {
 
-  static updateStatus(args: {abstracts: number[], status: Status, notify: boolean}): Promise<AxiosResponse> {
+  static updateStatus(args: { abstracts: number[], status: Status, notify: boolean }): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_set_status', {
       abstracts: args.abstracts,
       status: args.status,
@@ -27,6 +27,10 @@ export class WpAbstract {
 
   static deleteAuthor(data: any): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_delete', {...data});
+  }
+
+  static export(args: {abstracts: number[]}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_export', {abstracts: args.abstracts});
   }
 
   static authors(id: number): Promise<AxiosResponse> {
@@ -100,6 +104,7 @@ export class WpAbstract {
     title
     topic
     content
+    ev_last_update
     author {
       node {
         avatar {
@@ -161,6 +166,7 @@ export class WpAbstract {
       evaluations_count
       attachments_count
       authorDatabaseId
+      ev_last_update
     }
     pageInfo {
       offsetPagination {
@@ -171,4 +177,6 @@ export class WpAbstract {
 }`
     });
   }
+
+
 }
