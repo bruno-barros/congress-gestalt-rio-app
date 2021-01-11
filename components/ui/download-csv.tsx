@@ -12,7 +12,7 @@ interface DownloadProps {
 export default function DownloadCsv(props: DownloadProps) {
 
   const {data, fileBaseName, loading} = props
-  const [downloaded, setDownloaded] = useState(false)
+  const [downloaded, setDownloaded] = useState(undefined)
   const [name, setName] = useState('')
 
   let id = `export-${fileBaseName}-button`
@@ -24,7 +24,7 @@ export default function DownloadCsv(props: DownloadProps) {
       setDownloaded(false)
       showLoading()
     }
-    if (!loading && !downloaded) {
+    if (!loading && downloaded === false) {
       if (!data || data.length === 0) {
         showError()
       } else {
