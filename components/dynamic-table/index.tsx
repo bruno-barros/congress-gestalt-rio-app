@@ -29,8 +29,18 @@ import {useDebounce} from "../hooks/useDebounce";
 import SortedLabel from "./sorted-label";
 import TablePagination from "./table-pagination";
 import {RenderCell} from "./cells";
-import AbstractFilters, {getAbstractFilterableFields, getUSerFilterableFields, Text} from "./abstract-filters";
-import {AbstractsGroupActions, EvaluationsGroupActions, UsersGroupActions} from "./abstracts-group-actions";
+import AbstractFilters, {
+  getAbstractFilterableFields,
+  getOrderFilterableFields,
+  getUSerFilterableFields,
+  Text
+} from "./abstract-filters";
+import {
+  AbstractsGroupActions,
+  EvaluationsGroupActions,
+  SubscriptionsGroupActions,
+  UsersGroupActions
+} from "./abstracts-group-actions";
 import EvaluationStatus from "./evaluation-status";
 
 // @ts-ignore
@@ -179,6 +189,7 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
 
   const filterableFields = useCallback(()=>{
     if(name === 'users') return getUSerFilterableFields()
+    if(name === 'subscriptions') return getOrderFilterableFields()
     return getAbstractFilterableFields()
   }, [])
 
@@ -188,6 +199,7 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
       {name === 'evaluations' && <EvaluationsGroupActions instance={instance}/>}
       {name === 'abstracts' && <AbstractsGroupActions instance={instance}/>}
       {name === 'users' && <UsersGroupActions instance={instance}/>}
+      {name === 'subscriptions' && <SubscriptionsGroupActions instance={instance}/>}
       <AbstractFilters instance={instance} filterableFields={filterableFields()}/>
       {name === 'evaluations' && <EvaluationStatus instance={instance}/>}
     </div>

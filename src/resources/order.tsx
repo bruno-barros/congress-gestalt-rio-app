@@ -1,3 +1,5 @@
+export const OrderStatuses = ['CANCELLED', 'COMPLETED', 'FAILED', 'ON_HOLD', 'PENDING', 'PROCESSING', 'REFUNDED'];
+
 export interface Product {
   databaseId: number
   name: string
@@ -19,6 +21,11 @@ export class Order {
   paymentMethodTitle: string
   total: string
   status: 'CANCELLED' | 'COMPLETED' | 'FAILED' | 'ON_HOLD' | 'PENDING' | 'PROCESSING' | 'REFUNDED'
+  customer?: {
+    databaseId: number
+    email: string
+    displayName: string
+  }
   lineItems: {
     nodes: { product: Product }[]
   }
@@ -63,7 +70,7 @@ export class OrderCollection {
 
   hasValidSubscription(editionCategorySlug: string) {
     const completed = this.getCompleted()
-    if(completed.length === 0) return false
+    if (completed.length === 0) return false
 
     const category = completed.filter(order => {
       let orders = order.lineItems.nodes.filter(line => line.product.productCategories?.nodes.filter(cat => cat.slug === editionCategorySlug))

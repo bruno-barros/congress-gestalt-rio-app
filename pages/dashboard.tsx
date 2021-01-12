@@ -72,7 +72,7 @@ const Dashboard = (props: DashboardProps) => {
                   </>}
 
                   {user.canManageAbstracts() && (<>
-                    <Link href={`/`} passHref>
+                    <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref>
                       <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>
                     </Link>
                   </>)}

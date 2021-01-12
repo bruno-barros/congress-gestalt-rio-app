@@ -13,8 +13,11 @@ export default class Event {
     },
   }
   editions: any[]
-  abstracts: {
+  abstract: {
     statuses: any[]
+    limit_per_user: number
+    attachments: number
+    attachments_max_size: number
   }
 
   constructor(data: any) {
@@ -113,7 +116,6 @@ export class Edition {
   }
 
 
-
   constructor(data: any, def: any) {
     Object.assign(this, data)
     this.defaults = def
@@ -162,7 +164,7 @@ export class Edition {
     return this.subscription.products[lang] || []
   }
 
-  getReviewQuestions(){
+  getReviewQuestions() {
     return this.review.questions || null
   }
 

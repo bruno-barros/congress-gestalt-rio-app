@@ -17,6 +17,7 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'attachments_count') return <Attachments cell={cell}/>
   if (['date', 'ev_last_update'].indexOf(cell.props.cell.column.id) !== -1) return <DateTime cell={cell}/>
   if (cell.props.cell.column.id === 'roles') return <Roles cell={cell}/>
+  if (cell.props.cell.column.id === 'order_status') return <OrderStatus cell={cell}/>
   if (cell.props.cell.column.id === 'title') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
   return cell
@@ -28,6 +29,12 @@ export function Roles({cell}) {
     const maped = MapRoles.find(r => r.label === role)
     return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped.color}}>{role}</span>
   }) : null
+}
+
+export function OrderStatus({cell}) {
+  const label = cell.props.cell.value
+  const status = cell.props.row.original.status_woo.toLowerCase()
+    return <span className={`badge badge-${status}`} style={{}}>{label}</span>
 }
 
 export function AddLink({cell}) {

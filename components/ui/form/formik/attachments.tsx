@@ -13,6 +13,7 @@ import {blockUi} from "../../../../src/store/ui.actions";
 import WpDocument from "../../../../src/http/wp-document";
 import Error from "../../../../src/resources/error";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
+import useEvent from "../../../hooks/useEvent";
 
 interface AttachmentsProps {
   label: string
@@ -25,6 +26,7 @@ interface AttachmentsProps {
 export default function Attachments({label, metas, containerClass, maxFiles: mf, disabled, ...props}: AttachmentsProps & any) {
 
   // @ts-ignore
+  const {data: event} = useEvent()
   const router = useRouter()
   const disp = useDispatch()
   const t = useTrans()
@@ -34,7 +36,10 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   const added = useRef(false)
   const maxFiles = mf || 20
 
-  const uppy = useUppy(uppyDocument({locale: router.locale}))
+  const uppy = useUppy(uppyDocument({
+    locale: router.locale,
+    max_size: event?.abstract?.attachments_max_size
+  }))
   metas && uppy.setMeta(metas)
   uppy.on('upload', (data) => {
     added.current = false
@@ -60,7 +65,7 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   }
 
   return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
-    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxFiles})</small></div>
+    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxFiles} / {`${event?.abstract?.attachments_max_size}Mb ${t('cada')}`})</small></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       uppy.on('upload-success', (file, resp) => {

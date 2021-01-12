@@ -6,7 +6,6 @@ import UserMenu from "./user-menu";
 import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
-import useEvent from "../hooks/useEvent";
 import usePendingReview from "../hooks/usePendingReview";
 
 interface HeaderProps {
@@ -42,6 +41,8 @@ export default function Header(props: HeaderProps) {
           <Link href="/dashboard" passHref><Nav.Link active={router.pathname === '/dashboard'}>{t('eventos')}</Nav.Link></Link>
           {user.canManageAbstracts()
             ? (<>
+              <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link
+                active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
               <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link
                 active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
               <Link href={`/adm/users`} passHref><Nav.Link

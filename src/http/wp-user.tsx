@@ -314,7 +314,7 @@ export default class WpUser {
     return httpApi.post('/index.php?graphql&all', {
       query: `query all {
   __typename
-  users(where: {roleIn: [ADMINISTRATOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}) {
+  users(where: {roleIn: [ADMINISTRATOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}, first: 1000) {
     nodes {
       avatar {
         url
@@ -356,7 +356,9 @@ export default class WpUser {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user', {...data});
   }
 
-
+  static export(args: {ids: number[]}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_users_export', {abstracts: args.ids});
+  }
 
   static sendInvitation(args: any) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_send_invitation', {...args});

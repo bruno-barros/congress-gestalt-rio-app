@@ -9,6 +9,11 @@ import SetStatusModal from "../abstract/set-status-modal";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import DownloadCsv from "../ui/download-csv";
+import WpUser from "../../src/http/wp-user";
+import omit from 'lodash/omit'
+import useCurrentUser from "../hooks/useCurrentUser";
+import Swal from "sweetalert2";
+import {useRouter} from "next/router";
 
 
 type GroupActions<T extends object> = {
@@ -90,14 +95,48 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
 
 export function EvaluationsGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
 
+  const router = useRouter()
+  const {user} = useCurrentUser()
   const {selectedFlatRows, state: {selectedRowIds}} = instance
   const selected = selectedFlatRows.map(row => row.original)
   const selectedCount = selected.length
 
 
-  function exportToExcel(e) {
+  function handleFinalApprove(e) {
     e.preventDefault()
-    console.log({selected});
+    // console.log(selected.map(s => s.abstract_id));
+    Swal.fire({
+      icon: "warning",
+      title: 'Aguarde...',
+      confirmButtonText: '...'
+    })
+    WpAbstract.updateStatus({
+      abstracts: selected.map(s => s.abstract_id),
+      notify: true,
+      status: 'approved'
+    })
+      .then(resp => {
+        if(resp.data.success){
+          Swal.update({
+            icon: "success",
+            title: resp.data.data.msg,
+            confirmButtonText: 'OK',
+            didClose(): void {
+              router.reload()
+            }
+          })
+        } else {
+          Swal.update({
+            icon: "error",
+            title: '',
+            text: resp.data.data.msg,
+            confirmButtonText: 'OK'
+          })
+        }
+
+      }, err => {
+        errorNotification({error: err})
+      })
   }
 
   // console.log(selectedCount);
@@ -106,7 +145,9 @@ export function EvaluationsGroupActions<T extends object>({instance}: PropsWithC
   return (
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item onClick={exportToExcel} disabled={selectedCount === 0}>Mudar status</Dropdown.Item>
+      {user.canManageAbstracts() &&
+      <Dropdown.Item onClick={handleFinalApprove} disabled={selectedCount === 0} className="text-success font-weight-bold">Aprovar trabalhos</Dropdown.Item>}
+
     </DropdownButton>)
 }
 
@@ -116,20 +157,66 @@ export function UsersGroupActions<T extends object>({instance}: PropsWithChildre
   const {selectedFlatRows, state: {selectedRowIds}} = instance
   const selected = selectedFlatRows.map(row => row.original)
   const selectedCount = selected.length
+  const [exportData, setExportData] = useState([])
+  const [loading, setLoading] = useState(false)
 
-
-  function exportToExcel(e) {
+  function handleExportData(e) {
     e.preventDefault()
-    console.log({selected});
+    setExportData([])
+    setLoading(true)
+    WpUser.export({
+      ids: selected.map(row => row.databaseId)
+    })
+      .then(resp => {
+        if (resp.data.success) {
+          setExportData(resp.data.data)
+          setLoading(false)
+        }
+      }, err => {
+        errorNotification({error: err})
+        setLoading(false)
+      })
+
   }
 
-  // console.log(selectedCount);
-
-
-  return (
+  return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item onClick={exportToExcel} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
-      <Dropdown.Item onClick={exportToExcel} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>
-    </DropdownButton>)
+      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+      <Dropdown.Item onClick={() => {
+      }} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>
+    </DropdownButton>
+    <DownloadCsv data={exportData} fileBaseName={`usuarios_`} loading={loading}/>
+  </>)
+}
+
+
+export function SubscriptionsGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
+
+  const {selectedFlatRows, state: {selectedRowIds}} = instance
+  const selected: any[] = selectedFlatRows.map(row => row.original)
+  const selectedCount = selected.length
+  const [exportData, setExportData] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  function handleExportData(e) {
+    e.preventDefault()
+    setExportData([])
+    setLoading(true)
+
+    setTimeout(() => {
+      setExportData(selected.map(item => omit(item, ['status_woo', 'status', 'customer', 'lineItems'])))
+      setLoading(false)
+    }, 2000)
+
+
+  }
+
+  return (<>
+    <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+                    variant="outline-secondary">
+      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+    </DropdownButton>
+    <DownloadCsv data={exportData} fileBaseName={`inscricoes_`} loading={loading}/>
+  </>)
 }

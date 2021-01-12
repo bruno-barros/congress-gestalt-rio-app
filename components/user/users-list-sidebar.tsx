@@ -14,13 +14,12 @@ export default function UsersListSidebar() {
 
   useEffect(()=>{
     if(!filtered) setFiltered(users)
-    doFilter(filterVar)
   }, [users, filtered])
 
   function handleFilter(e) {
     e.preventDefault()
     setFilterVar(e.target.elements['filterVar'].value)
-    // doFilter(e.target.elements['filterVar'].value)
+    doFilter(e.target.elements['filterVar'].value)
   }
 
   function doFilter(string: string){
@@ -31,7 +30,7 @@ export default function UsersListSidebar() {
   if(isLoading) return <Loading/>
 
   return (<div className="">
-    <form onSubmit={handleFilter}>
+    <form onSubmit={handleFilter} className="sticky-top">
       <div className="form-group m-2">
         {/*<Text name="filter_user" label="Filtrar usuários" floatLabel/>*/}
         <div className="input-group input-group-lg">
@@ -47,11 +46,13 @@ export default function UsersListSidebar() {
 
 
     <div className="list-group m-2">
-      {filtered && filtered.map(u => (<Link href={`/users/${u.databaseId}`} passHref key={u.databaseId}>
-        <a className={`list-group-item list-group-item-action ${parseInt(String(router.query.id)) === u.databaseId && 'active'}`}>
-        {u.name}
-      </a>
-      </Link>))}
+      {filtered && filtered.map(u => (<>
+        <Link href={`/users/${u.databaseId}`} passHref key={u.databaseId}>
+          <a className={`py-1 list-group-item list-group-item-action ${parseInt(String(router.query.id)) === u.databaseId && 'active'}`}>
+            {u.name}
+          </a>
+        </Link>
+      </>))}
 
     </div>
 

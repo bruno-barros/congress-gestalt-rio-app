@@ -1,5 +1,5 @@
 import useTrans from "../hooks/useTrans";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {StepProps} from "./registration.d";
 import {useRouter} from "next/router";
 import {useDispatch, useSelector} from "react-redux";

@@ -8,17 +8,18 @@ export default class WpEvaluation {
   }
 
 
-  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number }): Promise<AxiosResponse> {
+  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number }): Promise<AxiosResponse> {
 
     let filters = []
     if (args?.edition_id) filters.push(`edition_id: "${args.edition_id}"`)
     if (args?.user_id) filters.push(`user_id: ${args.user_id}`)
     if (args?.abstract_id) filters.push(`abstract_id: "${args.abstract_id}"`)
+    let lmt = args?.limit || 500
 
     return httpApi.post('/index.php?graphql&evaluations', {
       query: `query WpEvaluation {
   __typename
-  evEvaluations(where: {${filters.join(', ')}}) {
+  evEvaluations(where: {${filters.join(', ')}}, first: ${lmt}) {
     nodes {
       id
       databaseId

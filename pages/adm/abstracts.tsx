@@ -19,7 +19,7 @@ const AdmAbstracts = () => {
   const edition = event && event.currentEdition()
   const editionId = router.query.edition || edition?.id
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', editionId], queryAbstracts, {
-    enabled: !!editionId && user.canManageAbstracts()
+    enabled: !!editionId && user.canManageAbstracts(),
   })
 
   function queryAbstracts(): Promise<any[]> {

@@ -33,13 +33,15 @@ const AdmUsers = () => {
       },{
         Header: 'Perfil',
         accessor: 'roles',
-      },{
-        Header: 'Trabalhos',
-        accessor: 'abstracts_count'
-      },{
-        Header: 'Inscrições',
-        accessor: 'subscriptions_count',
-      },{
+      },
+      // {
+      //   Header: 'Trabalhos',
+      //   accessor: 'abstracts_count'
+      // },{
+      //   Header: 'Inscrições',
+      //   accessor: 'subscriptions_count',
+      // },
+      {
         Header: 'Cadastro em',
         accessor: 'date',
       }

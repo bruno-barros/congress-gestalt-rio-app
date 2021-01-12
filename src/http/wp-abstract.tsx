@@ -143,17 +143,18 @@ export class WpAbstract {
     });
   }
 
-  static collection(args: { edition: string, authorId?: number, authorName?: string, statuses?: GraphQlStatuses[] }): Promise<AxiosResponse> {
+  static collection(args: { edition: string, authorId?: number, authorName?: string, statuses?: GraphQlStatuses[], limit?:number }): Promise<AxiosResponse> {
 
     let filters = []
     filters.push(`edition: "${args.edition}"`)
     if (args?.authorId) filters.push(`author_id: ${args.authorId}`)
     if (args?.authorName) filters.push(`author_name: "${args.authorName}"`)
     if (args.statuses) filters.push(`status: [${args.statuses.join(',')}]`)
+    let lmt = args?.limit || 500
 
     return httpApi.post('/index.php?graphql&abstractFilters', {
       query: `query collection {
-  abstractFilters(where: {${filters.join(', ')}}) {
+  abstractFilters(where: {${filters.join(', ')}}, first: ${lmt}) {
     nodes {
       databaseId
       title

@@ -38,3 +38,20 @@
     }
   }
 }
+
+.badge-completed {
+  color: $white;
+  background-color: $success;
+}
+.badge-on_hold,
+.badge-pending,
+.badge-processing {
+  //color: $white;
+  background-color: $warning;
+}
+.badge-refunded,
+.badge-failed,
+.badge-cancelled {
+  color: $white;
+  background-color: $danger;
+}

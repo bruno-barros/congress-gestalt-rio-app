@@ -17,7 +17,7 @@ const EvaluationEditing = () => {
   const t = useTrans()
   const {data: event, isLoading} = useEvent()
   const edition: Edition = event?.currentEdition()
-  const {data: evaluation, error, isLoading: loadingEval} = useEvaluation(Number(router.query?.id))
+  const {data: evaluation, error, isLoading: loadingEval, refetch} = useEvaluation(Number(router.query?.id))
 
 
   if (isLoading || loadingEval) {
@@ -60,7 +60,7 @@ const EvaluationEditing = () => {
        <AbstractView abstract={evaluation.getAbstract()}/>
       </div>
       <div className="col-12 col-md-4 bg-light p-3 p-lg-4">
-        <EvaluationForm evaluation={evaluation}/>
+        <EvaluationForm evaluation={evaluation} onUpdate={()=>refetch()}/>
       </div>
     </div>
   </MainLayout>)

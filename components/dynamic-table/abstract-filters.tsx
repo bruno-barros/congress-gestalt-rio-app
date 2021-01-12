@@ -6,6 +6,8 @@ import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import {MapRoles} from "../../src/resources/user";
+import {OrderStatus} from "./cells";
+import {OrderStatuses} from "../../src/resources/order";
 
 
 export function getAbstractFilterableFields() {
@@ -29,6 +31,31 @@ export function getAbstractFilterableFields() {
     {id: 'title', label: 'Título', options: null},
     {id: 'topic', label: 'Tópico', options: topics},
     {id: 'status_pt', label: 'Status', options: statuses},
+  ]
+}
+
+export function getOrderFilterableFields() {
+  // const router = useRouter()
+  const t = useTrans()
+  // const {data: event} = useEvent()
+  // let edition = event && event.currentEdition()
+  // const editionId = String(router.query.edition) || edition?.id
+  // if (editionId !== edition.id) edition = event.getEdition(editionId)
+  // const lang = router.locale
+  // if (!event) return null
+
+  // const topics = edition?.abstract?.topics.map(top => {
+  //   return {value: top[lang], label: top[lang]}
+  // })
+
+  const statuses = OrderStatuses.map(s => {
+    return {value: s, label: t(`status.${s.toLowerCase()}`)}
+  })
+
+  return [
+    // {id: 'customer_name', label: 'Participante', options: null},
+    // {id: 'customer_email', label: 'E-mail', options: null},
+    {id: 'status_woo', label: 'Status', options: statuses},
   ]
 }
 
@@ -94,12 +121,9 @@ export default function AbstractFilters<T extends object>({filterableFields, ins
   function handleSubmitFilters(e) {
     e.preventDefault()
     let filters = filterableFields.map(field => ({id: field.id, value: e.target.elements[field.id].value || undefined}))
+
     setAllFilters(filters)
-    // setAllFilters([
-    //   {id: 'title', value: e.target.elements['title'].value || undefined},
-    //   {id: 'status_pt', value: e.target.elements['status_pt'].value || undefined},
-    //   {id: 'topic', value: e.target.elements['topic'].value || undefined},
-    // ])
+
     setIsFiltering(true)
     setFilterOpen(false)
   }

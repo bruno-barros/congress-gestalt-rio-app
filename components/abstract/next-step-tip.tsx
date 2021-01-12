@@ -12,6 +12,7 @@ export default function NextStepTip(props: NextStepProps) {
   const router = useRouter()
   const t = useTrans()
   const lang = router.locale || 'pt'
+
   function messages() {
     const pending = {
       pt: 'O autor deve submeter o trabalho para avaliação.',
@@ -59,8 +60,10 @@ export default function NextStepTip(props: NextStepProps) {
 
   return (<div className="next-step-tip">
     {nextStep && <p>
-      <strong>{t('trabalho.proximo-passo')}</strong>
-      <span className="d-block text-sm">{nextStep}</span>
+      {status !== 'approved' && <strong>{t('trabalho.proximo-passo')}</strong>}
+      <div className={`${status === 'approved' ? 'alert alert-success' : ''}`}>
+        <span className="d-block text-sm">{nextStep}</span>
+      </div>
     </p>}
   </div>)
 }

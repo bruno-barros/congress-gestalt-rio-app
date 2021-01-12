@@ -5,7 +5,6 @@ import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
 import {useQuery} from "react-query";
-import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
@@ -69,9 +68,9 @@ const Evaluations = () => {
   const data = useMemo(() => {
     if(!evaluations || !edition) return []
     return evaluations.map(row => {
-      let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract.topic)
+      let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract?.topic)
       row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
-      row.title = row.abstract.title
+      row.title = row.abstract?.title
       row.status_pt = t(`status.${row.status}`)
       return row
     })

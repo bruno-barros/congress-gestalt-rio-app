@@ -21,11 +21,12 @@ import usePendingReview from "../hooks/usePendingReview";
 
 interface EvaluationFormProps {
   evaluation: Evaluation
+  onUpdate?: () => void
 }
 
 export default function EvaluationForm(props: EvaluationFormProps) {
 
-  const {evaluation} = props
+  const {evaluation, onUpdate} = props
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
@@ -83,6 +84,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
             heroTitle: 'Avaliação realizada com sucesso!'
           })
           refetchReviews()
+          onUpdate && onUpdate()
           router.push(`/evaluations?edition=${edition.id}`)
         } else {
           errorNotification({error: resp.data.data})
