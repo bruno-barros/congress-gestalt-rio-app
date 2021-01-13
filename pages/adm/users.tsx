@@ -21,18 +21,21 @@ const AdmUsers = () => {
       {
         Header: '#',
         accessor: 'databaseId',
-      },{
+      }, {
         Header: 'Nome',
         accessor: 'name',
-      },{
+      }, {
         Header: 'E-mail',
         accessor: 'email',
-      },{
+      }, {
         Header: 'Telefone',
         accessor: 'cellphone',
-      },{
+      }, {
         Header: 'Perfil',
         accessor: 'roles',
+      }, {
+        Header: 'Idioma',
+        accessor: 'locale',
       },
       // {
       //   Header: 'Trabalhos',
@@ -45,15 +48,20 @@ const AdmUsers = () => {
         Header: 'Cadastro em',
         accessor: 'date',
       }
-    ]}, [])
+    ]
+  }, [])
   const data = useMemo(() => {
-    if(!users || users.length === 0) return []
+    if (!users || users.length === 0) return []
     return users.map(row => {
-      let rolesStr = row?.roles?.nodes?.map(role => role.name).join(',')
+      if (row?.roles?.nodes) {
+        let rolesStr = row?.roles?.nodes?.map(role => role.name).join(',')
+        row.roles = rolesStr?.split(',').map(role => {
+          return MapRoles.find(r => role === r.name)?.label
+        }).join(',')
+      }
       row.date = row.registeredDate
-      row.roles = rolesStr?.split(',').map(role => {
-        return MapRoles.find(r => role === r.name)?.label
-      }).join(',')
+      row.locale = row.locale.substr(-2)
+
       return row
     })
   }, [users])

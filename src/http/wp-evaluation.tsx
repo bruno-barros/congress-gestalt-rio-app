@@ -14,7 +14,7 @@ export default class WpEvaluation {
     if (args?.edition_id) filters.push(`edition_id: "${args.edition_id}"`)
     if (args?.user_id) filters.push(`user_id: ${args.user_id}`)
     if (args?.abstract_id) filters.push(`abstract_id: "${args.abstract_id}"`)
-    let lmt = args?.limit || 500
+    let lmt = args?.limit || 2000
 
     return httpApi.post('/index.php?graphql&evaluations', {
       query: `query WpEvaluation {
@@ -95,6 +95,10 @@ export default class WpEvaluation {
 
   static save(data: any) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_save', {...data});
+  }
+
+  static delete(id: number) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_delete', {id});
   }
 
 

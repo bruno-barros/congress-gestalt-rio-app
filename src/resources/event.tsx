@@ -76,7 +76,7 @@ export class Edition {
   url: { pt: string; en: string }
   app: { pt: string; en: string }
   subscription: {
-    required: boolean
+    allowed: boolean
     start_at: string
     end_at: string
     products_category: {
@@ -96,13 +96,14 @@ export class Edition {
     }
   }
   abstract: {
-    required: boolean
+    allowed: boolean
     statuses: Status[]
     attachments: number
     topics: { id: string; pt: string; en: string }[]
     start_at: string
     end_at: string
     required_fields: any[]
+    limit_per_user: number
     authors: {
       max: number
     },

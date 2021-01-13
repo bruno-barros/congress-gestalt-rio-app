@@ -46,13 +46,13 @@ export default function UsersListSidebar() {
 
 
     <div className="list-group m-2">
-      {filtered && filtered.map(u => (<>
+      {filtered && filtered.map(u => (
         <Link href={`/users/${u.databaseId}`} passHref key={u.databaseId}>
           <a className={`py-1 list-group-item list-group-item-action ${parseInt(String(router.query.id)) === u.databaseId && 'active'}`}>
             {u.name}
           </a>
         </Link>
-      </>))}
+      ))}
 
     </div>
 

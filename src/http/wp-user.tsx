@@ -3,6 +3,7 @@ import {httpApi} from "./axios";
 import {LoginInputs} from "../store/store.d";
 import isFinite from 'lodash/isFinite'
 import {Providers} from '../../components/social-login/social-buttons.d'
+import {NotificationTypes} from "../resources/notification";
 export default class WpUser {
 
   static FILLABLE = [
@@ -379,6 +380,17 @@ export default class WpUser {
   static block(userId: number) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
       user_id: userId, status: 1
+    });
+  }
+
+  static notify(args: {context: NotificationTypes; ids: number[]; coauthors?:boolean; subject: string;
+    message: string}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_notification_send', {
+      context: args.context,
+      ids: args.ids,
+      coauthors: args.coauthors || false,
+      subject: args.subject,
+      message: args.message,
     });
   }
 

@@ -75,6 +75,9 @@
 .abstracts-action-bar {
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 59px;
+  z-index: 1;
 }
 
 .super-search {

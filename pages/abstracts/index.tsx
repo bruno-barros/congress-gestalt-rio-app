@@ -11,6 +11,7 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
+import {AbstractCollection} from "../../components/abstract/abstract.d";
 
 
 const Abstracts = () => {
@@ -22,24 +23,24 @@ const Abstracts = () => {
   const currentEdition = event && event.currentEdition()
   const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
   const isCurrent = currentEdition?.id === edition?.id
-  const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
+  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
   })
 
-  function queryAbstracts(): Promise<any[]> {
+  function queryAbstracts(): Promise<AbstractCollection> {
     return new Promise((resolve, reject) => {
       WpAbstract.collection({
         edition: edition.id,
         authorId: user.getId()
       }).then(resp => {
         if (resp.data.data?.abstractFilters?.nodes) {
-          resolve(resp.data.data.abstractFilters.nodes)
+          resolve(AbstractCollection.make(resp.data.data.abstractFilters.nodes))
         } else {
-          reject([])
+          resolve(AbstractCollection.make([]))
           errorNotification({error: resp.data.errors})
         }
       }, err => {
-        reject([])
+        resolve(AbstractCollection.make([]))
         errorNotification({error: err})
       })
     })
@@ -56,25 +57,36 @@ const Abstracts = () => {
     <div className="row">
       <div className="col-12 p-4">
 
-        {(!abstracts || abstracts?.length === 0) && isCurrent
+        {(abstracts?.count() === 0) && isCurrent
         && <Card style={{maxWidth: 600}}>
           <Card.Body className="p-5">
             <p>Olá, congressista.</p>
             <p>Antes de submeter seu trabalho confira as <a href="#" target="_blank">regras de submissão de
               trabalhos</a>.
-              Você pode enviar até 2 trabalhos.</p>
+              Você pode enviar até {edition.abstract.limit_per_user} trabalhos.</p>
             <p><Link href={`/abstracts/new`} passHref><a
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
             </p>
           </Card.Body>
         </Card>}
 
-        {(abstracts && abstracts?.length > 0) && <div className=""><Link href={`/abstracts/new`}><a
-          className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link></div>}
+        {edition.abstract.limit_per_user <= abstracts?.getNoRejected().length &&
+        <div className="alert alert-warning">
+          {t('trabalho.limite-atingido')}
+        </div>}
 
-        {abstracts && abstracts.map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {(abstracts?.count() > 0 && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
+        <div className="d-md-flex align-items-center">
+          <Link href={`/abstracts/new`}><a
+          className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
+          <div className="my-3 ml-md-4">
+            {`${t('trabalho.existe-um-limite')} ${edition.abstract.limit_per_user} ${t('trabalho.trabalhos-por-autor')}.`}
+          </div>
+        </div>}
 
-        {(!isCurrent && abstracts && abstracts?.length === 0) &&
+        {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+
+        {(!isCurrent && abstracts && abstracts?.count() === 0) &&
         <div className="alert alert-light border">
           Você não tem trabalhos nesta edição. / Nothin to show.
         </div>}

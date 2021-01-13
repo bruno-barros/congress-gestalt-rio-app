@@ -146,12 +146,12 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       </fieldset>
       {!isFormDisabled(abstract?.status) && <div className="row">
-        <div className={` ${isEditing ? 'col-auto' : 'col-12'}`}>
+        <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}
                          disable={!isValid}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>
         </div>
         {isEditing
-        && <div className="col">
+        && <div className="col-12 col-md">
           <LoadingButton type="button" variant="primary" size="lg" block loading={false}
                          disable={!isValid} onClick={()=>{
             setFieldValue('_intent', 'review')

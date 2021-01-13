@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import moment from "moment";
 import {Icon} from "@brunobarros/react-components";
 import {statusColorName} from "../../src/helpers";
@@ -25,6 +25,7 @@ export function RenderCell({cell}) {
 
 export function Roles({cell}) {
   const roles = cell.props.cell.value?.split(',')
+
   return roles ? roles.map(role => {
     const maped = MapRoles.find(r => r.label === role)
     return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped.color}}>{role}</span>

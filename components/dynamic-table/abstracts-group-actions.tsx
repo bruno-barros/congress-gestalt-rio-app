@@ -14,6 +14,7 @@ import omit from 'lodash/omit'
 import useCurrentUser from "../hooks/useCurrentUser";
 import Swal from "sweetalert2";
 import {useRouter} from "next/router";
+import NotificationModal from "../notification-modal";
 
 
 type GroupActions<T extends object> = {
@@ -67,6 +68,7 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
       <Dropdown.Item onClick={() => openModal('designar')} disabled={selectedCount === 0}>Designar
         avaliador</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('status')} disabled={selectedCount === 0}>Mudar status</Dropdown.Item>
+      <Dropdown.Item onClick={() => openModal('message')} disabled={selectedCount === 0}>Enviar mensagem</Dropdown.Item>
       <Dropdown.Item className="text-danger" onClick={() => {
       }}
                      disabled={selectedCount === 0}>Apagar</Dropdown.Item>
@@ -89,6 +91,12 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
         toggleAllPageRowsSelected(false)
         refreshAbstracts()
       }}/>
+    <NotificationModal
+      context="abstracts" ids={selected?.map(abs => abs.databaseId)}
+      show={activeModal === 'message'} onDismiss={() => {
+      setActiveModal('')
+      toggleAllPageRowsSelected(false)
+    }}/>
   </>)
 }
 
@@ -97,9 +105,10 @@ export function EvaluationsGroupActions<T extends object>({instance}: PropsWithC
 
   const router = useRouter()
   const {user} = useCurrentUser()
-  const {selectedFlatRows, state: {selectedRowIds}} = instance
+  const {selectedFlatRows, toggleAllPageRowsSelected, state: {selectedRowIds}} = instance
   const selected = selectedFlatRows.map(row => row.original)
   const selectedCount = selected.length
+  // const [activeModal, setActiveModal] = useState('')
 
 
   function handleFinalApprove(e) {
@@ -116,7 +125,7 @@ export function EvaluationsGroupActions<T extends object>({instance}: PropsWithC
       status: 'approved'
     })
       .then(resp => {
-        if(resp.data.success){
+        if (resp.data.success) {
           Swal.update({
             icon: "success",
             title: resp.data.data.msg,
@@ -139,26 +148,32 @@ export function EvaluationsGroupActions<T extends object>({instance}: PropsWithC
       })
   }
 
-  // console.log(selectedCount);
+
+  // console.log(selected);
 
 
-  return (
+  return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      {user.canManageAbstracts() &&
-      <Dropdown.Item onClick={handleFinalApprove} disabled={selectedCount === 0} className="text-success font-weight-bold">Aprovar trabalhos</Dropdown.Item>}
+      {user.canManageAbstracts() && <>
+      <Dropdown.Item onClick={handleFinalApprove} disabled={selectedCount === 0}
+                     className="text-success font-weight-bold">Aprovar trabalhos</Dropdown.Item>
 
-    </DropdownButton>)
+      </>}
+
+    </DropdownButton>
+    </>)
 }
 
 
 export function UsersGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
 
-  const {selectedFlatRows, state: {selectedRowIds}} = instance
+  const {selectedFlatRows, toggleAllPageRowsSelected, state: {selectedRowIds}} = instance
   const selected = selectedFlatRows.map(row => row.original)
   const selectedCount = selected.length
   const [exportData, setExportData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [activeModal, setActiveModal] = useState('')
 
   function handleExportData(e) {
     e.preventDefault()
@@ -185,19 +200,29 @@ export function UsersGroupActions<T extends object>({instance}: PropsWithChildre
       <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
       <Dropdown.Item onClick={() => {
       }} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>
+      <Dropdown.Item onClick={() => setActiveModal('message')} disabled={selectedCount === 0}>Enviar
+        mensagem</Dropdown.Item>
     </DropdownButton>
     <DownloadCsv data={exportData} fileBaseName={`usuarios_`} loading={loading}/>
+    <NotificationModal
+      context="users" ids={selected?.map(row => row.databaseId)}
+      show={activeModal === 'message'} onDismiss={() => {
+      setActiveModal('')
+      toggleAllPageRowsSelected(false)
+    }}/>
   </>)
 }
 
 
 export function SubscriptionsGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
 
-  const {selectedFlatRows, state: {selectedRowIds}} = instance
+  const {selectedFlatRows, toggleAllPageRowsSelected, state: {selectedRowIds}} = instance
   const selected: any[] = selectedFlatRows.map(row => row.original)
   const selectedCount = selected.length
   const [exportData, setExportData] = useState([])
   const [loading, setLoading] = useState(false)
+  const [activeModal, setActiveModal] = useState('')
+
 
   function handleExportData(e) {
     e.preventDefault()
@@ -209,14 +234,20 @@ export function SubscriptionsGroupActions<T extends object>({instance}: PropsWit
       setLoading(false)
     }, 2000)
 
-
   }
 
   return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+      <Dropdown.Item onClick={()=>setActiveModal('message')} disabled={selectedCount === 0}>Enviar mensagem</Dropdown.Item>
     </DropdownButton>
     <DownloadCsv data={exportData} fileBaseName={`inscricoes_`} loading={loading}/>
+    <NotificationModal
+      context="users" ids={selected?.map(row => row.customer.databaseId)}
+      show={activeModal === 'message'} onDismiss={() => {
+      setActiveModal('')
+      toggleAllPageRowsSelected(false)
+    }}/>
   </>)
 }

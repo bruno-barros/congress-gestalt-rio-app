@@ -1,4 +1,4 @@
-import React, {PropsWithChildren, ReactElement, useCallback, useEffect, useState} from "react";
+import React, {PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState} from "react";
 import {TableInstance} from "react-table";
 import {Icon} from "@brunobarros/react-components";
 import Curtain from "../ui/curtain";
@@ -63,12 +63,16 @@ export function getOrderFilterableFields() {
 export function getUSerFilterableFields() {
 
   const rolesOpts = MapRoles.map(role => ({value: role.label, label: role.label}))
-
+  const locales = [
+    {value: 'BR', label: 'Portugues'},
+    {value: 'US', label: 'Inglês'},
+  ]
   return [
     {id: 'name', label: 'Nome', options: null},
     {id: 'email', label: 'E-mail', options: null},
     {id: 'cellphone', label: 'Telefone', options: null},
     {id: 'roles', label: 'Perfil', options: rolesOpts},
+    {id: 'locale', label: 'Idioma', options: locales},
   ]
 }
 
@@ -92,6 +96,10 @@ export default function AbstractFilters<T extends object>({filterableFields, ins
   const editionId = String(router.query.edition) || edition?.id
   if (editionId !== edition.id) edition = event.getEdition(editionId)
   const lang = router.locale
+
+  useMemo(() => {
+    if (filters && filters.length > 0) setIsFiltering(true)
+  }, [filters]);
 
   useEffect(() => {
     if (globalFilter) setIsFiltering(true)

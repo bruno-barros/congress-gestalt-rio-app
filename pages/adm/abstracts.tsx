@@ -84,8 +84,12 @@ const AdmAbstracts = () => {
   const data = useMemo(() => {
     if(!abstracts || !edition) return []
     return abstracts.map(row => {
-      let topic = edition?.abstract?.topics?.find(top => top.id === row.topic)
-      row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
+      if(edition?.abstract?.topics){
+        let topic = edition?.abstract?.topics?.find(top => top.id === row.topic)
+        if(topic){
+        row.topic = topic.hasOwnProperty('pt') && topic[router.locale]
+        }
+      }
       row.status_pt = t(`status.${row.status}`)
       return row
     })

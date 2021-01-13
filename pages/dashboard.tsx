@@ -63,19 +63,22 @@ const Dashboard = (props: DashboardProps) => {
                     </>}
                   </>}
 
-                  {!isCurrent && <>
+
                     {user.canManageAbstracts() && <>
                       <Link href={`/adm/abstracts?edition=${edition.id}`} passHref>
-                        <a className="btn btn-outline-secondary">{t('trabalhos')}</a>
+                        <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('trabalhos')}</a>
+                      </Link>
+                      <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref>
+                        <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>
                       </Link>
                     </>}
-                  </>}
 
-                  {user.canManageAbstracts() && (<>
-                    <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref>
-                      <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>
-                    </Link>
-                  </>)}
+
+                  {/*{!isCurrent && user.canManageAbstracts() && (<>*/}
+                  {/*  <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref>*/}
+                  {/*    <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>*/}
+                  {/*  </Link>*/}
+                  {/*</>)}*/}
 
                 </div>
               </Card.Footer>

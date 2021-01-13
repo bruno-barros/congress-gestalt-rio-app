@@ -18,3 +18,28 @@ export interface AbstractType {
   attachments_count: number
   authorDatabaseId: number
 }
+
+export class AbstractCollection {
+  collection: AbstractType[]
+
+  constructor(data: any) {
+    this.collection = data;
+  }
+
+  static make(data: any) {
+    return new AbstractCollection(data)
+  }
+
+  all() {
+    return this.collection
+  }
+
+  count(){
+    return this.collection?.length || 0
+  }
+
+  getNoRejected(){
+    if(this.collection.length === 0) return  []
+    return this.collection.filter(abstract => abstract.status.indexOf('rejected') === -1)
+  }
+}

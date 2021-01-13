@@ -3,9 +3,7 @@ import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
 import {Loading} from "@brunobarros/react-components";
 import Accordion from "react-bootstrap/cjs/Accordion";
-import useEvaluation from "../hooks/useEvaluation";
 import {Button, Card} from "react-bootstrap/cjs";
-import {Icon} from "@brunobarros/react-components";
 import {useQuery} from "react-query";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import {statusColorName} from "../../src/helpers";
@@ -14,8 +12,10 @@ import AbstractRating from "./abstract-rating";
 import moment from "moment";
 import {Evaluation} from "../../src/resources/evaluation";
 import AbstractAnswers from "./abstract-answers";
-import hr from "../ui/hr";
 import ButtonDeleteConfirmation from "../ui/button-delete-confirmation";
+import useCurrentUser from "../hooks/useCurrentUser";
+import {errorNotification, successNotification} from "../../src/resources/responses";
+
 
 interface AbstractEvaluationsModalProps {
   show: boolean
@@ -30,7 +30,9 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
 
   const t = useTrans()
   const {onDismiss, abstract_id, onUpdate} = props
+  const {user} = useCurrentUser()
   const [show, setShow] = useState(props.show)
+  const [loading, setLoading] = useState(false)
   const {data, isLoading, isFetching, error} = useQuery<any[]>(['abstract_evaluations', abstract_id], queryEvaluations, {
     enabled: abstract_id && show
   })
@@ -60,6 +62,17 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
     onDismiss && onDismiss()
   }
 
+  function handleDeleteEvaluation(evaluationId: number) {
+    setLoading(true)
+    WpEvaluation.delete(evaluationId)
+      .then(resp => {
+        if(resp.data.success) successNotification({message: resp.data.data.msg})
+        else errorNotification({message: resp.data.data.msg})
+      }, err => {
+        errorNotification({error: err})
+      }).finally(() => setLoading(false))
+  }
+
   return (<Modal show={show} onHide={handleClose} size="lg">
     <Modal.Header closeButton>
       <Modal.Title>Avaliações do trabalho #{abstract_id}</Modal.Title>
@@ -83,7 +96,11 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                     <div className={`ml-2 bullet bg-${statusColorName(eva.status)}`}/>
                   </div>
                   <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY')}</div>
-                  <ButtonDeleteConfirmation onDelete={()=>{}}/>
+                  {user.canManageAbstracts() &&
+                  <ButtonDeleteConfirmation loading={loading} onDelete={() => {
+                    handleDeleteEvaluation(eva.databaseId)
+                  }}/>}
+
                 </div>
               </Card.Header>
               <Accordion.Collapse eventKey={`${eva.databaseId}`}>

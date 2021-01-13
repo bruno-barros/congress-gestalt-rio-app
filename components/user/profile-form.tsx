@@ -118,7 +118,7 @@ export default function ProfileForm(props: ProfileFormProps) {
         <legend>Dados pessoais</legend>
 
         {editingMode === 'admin'
-        && <div className="row">
+        && <div className="row border pt-3 pb-2 mb-3">
           <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required>
             {MapRoles.map(r => (<option key={r.name} value={r.name}>{r.label}</option>))}
           </Select>
@@ -131,9 +131,13 @@ export default function ProfileForm(props: ProfileFormProps) {
               <option value="1">Inativo</option>
             </Select>
           </div>
-
         </div>}
 
+        <div className="row">
+          <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
+          <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
+        </div>
+        <Text name="badge_name" label={t('cadastro.nome-cracha')} required={editingMode === 'user'}/>
         <div className="row">
           <Select name="country" label={t('cadastro.nacionalidade')} containerClass="col-12 col-md" required>
             {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
@@ -143,11 +147,7 @@ export default function ProfileForm(props: ProfileFormProps) {
           {values.country !== 'BR'
           && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
         </div>
-        <div className="row">
-          <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
-          <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
-        </div>
-        <Text name="badge_name" label={t('cadastro.nome-cracha')} required={editingMode === 'user'}/>
+
         <Text name="email" type="email" label="E-mail" required/>
         <div className="row">
           <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required

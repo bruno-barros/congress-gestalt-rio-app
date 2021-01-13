@@ -72,6 +72,7 @@ const Evaluations = () => {
       row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
       row.title = row.abstract?.title
       row.status_pt = t(`status.${row.status}`)
+      row.id = row.abstract?.databaseId
       return row
     })
   }, [evaluations, event])
