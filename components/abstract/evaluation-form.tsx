@@ -92,15 +92,18 @@ export default function EvaluationForm(props: EvaluationFormProps) {
       }, err => {
         errorNotification({error: err})
       })
+      .finally(()=>{
+        setLoading(false)
+      })
   }
 
   function filterAvailableStatuses() {
     const current: Status = evaluation.status
     if (current === 'final_revision') {
-      return ['rejected', 'waiting_update', 'pre_approved']
+      return edition.abstract.statuses.filter(stats => ['rejected', 'waiting_update', 'pre_approved'].indexOf(stats) !== -1)
     }
     else if (current === 'revision') {
-      return ['synopsis_rejected', 'synopsis_waiting_upd', 'synopsis_approved']
+      return edition.abstract.statuses.filter(stats => ['synopsis_rejected', 'synopsis_waiting_upd', 'synopsis_approved'].indexOf(stats) !== -1)
     }
 
     return edition.abstract.statuses
@@ -118,7 +121,8 @@ export default function EvaluationForm(props: EvaluationFormProps) {
         {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
         <fieldset disabled={!evaluation.isEditable()}>
 
-          <h5 className="border-bottom pb-2 mb-3">Sua avaliação</h5>
+          <h5 className="border-bottom pb-2 mb-3">{evaluation.statusPassed('synopsis_approved')
+            ? 'Sua avaliação do trabalho' : 'Sua avaliação do resumo'}</h5>
           {questions && Object.keys(initialValues.answers).map(key => {
             return <div key={key} className="form-group">
               <Switch name={`answers.${key}`} label={questions[key]}/>

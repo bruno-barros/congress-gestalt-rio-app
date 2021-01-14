@@ -55,7 +55,7 @@ export default function Header(props: HeaderProps) {
           {user.canEvaluateAbstracts() && <>
             <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link
               title={`${pending} aguardando revisão`}
-              active={router.pathname === '/evaluations'}>{t('trabalho.avaliacoes')}
+              active={router.pathname === '/evaluations'}>Minhas avaliações
               {pending && <div className="badge badge-warning ml-1">{pending}</div>}
             </Nav.Link></Link>
           </>}

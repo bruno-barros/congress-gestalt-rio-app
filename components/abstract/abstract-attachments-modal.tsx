@@ -7,6 +7,7 @@ import {Loading} from "@brunobarros/react-components";
 import {errorNotification} from "../../src/resources/responses";
 import Card from "react-bootstrap/cjs/Card";
 import {Icon} from "@brunobarros/react-components";
+import moment from "moment";
 
 interface AbstractAttachmentsModalProps {
   show: boolean
@@ -39,6 +40,7 @@ export default function AbstractAttachmentsModal(props: AbstractAttachmentsModal
       size: number;
       url: string;
       user_id: number;
+      version: number;
     }[]
   }> {
     return new Promise((resolve, reject) => {
@@ -73,16 +75,22 @@ export default function AbstractAttachmentsModal(props: AbstractAttachmentsModal
       {(isLoading || isFetching) && <Loading vspace={15}/>}
       {(data?.attachments && data.attachments.length > 0)
       && <CurtainDelayed delay={1}>
-          {data.attachments.map((attach) => {
-            const ext = attach.name.substr(-4).replace('.', '').toUpperCase()
-            return (<Card key={attach.id}>
-              <Card.Header><a href={attach.url} target="_blank" className="d-flex align-items-center">
+        {data.attachments.map((attach) => {
+          const ext = attach.name.substr(-4).replace('.', '').toUpperCase()
+          return (<Card key={attach.id}>
+            <Card.Header className="d-flex">
+              <a href={attach.url} target="_blank" className="d-flex align-items-center flex-grow-1  text-truncate">
                 <Icon name={`download-outline`} style={{fontSize: 20}}/>
                 <div style={{minWidth: 70}} className="px-2">{ext}</div>
-                <div>{attach.name}</div>
-              </a></Card.Header>
-            </Card>)
-          })}
+                <div className=" text-truncate">{attach.name} lkj lk jlç lkj lk jlkj çlkj l jljl kj</div>
+              </a>
+              <div className="text-nowrap d-flex">
+              <div className="mx-3">{moment(attach.created_at).format('DD/MM/YYYY')}</div>
+              <div>VER {attach.version}</div>
+              </div>
+            </Card.Header>
+          </Card>)
+        })}
       </CurtainDelayed>}
       {(!data?.attachments && !isFetching) && <div className="alert alert-info">Não há anexos neste trabalho</div>}
     </Modal.Body>

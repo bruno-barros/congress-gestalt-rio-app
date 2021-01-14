@@ -1,4 +1,4 @@
-import {Status} from "../../components/abstract/abstract.d";
+import {Status, Statuses} from "../../components/abstract/abstract.d";
 import Abstract from "./abstract";
 
 export class Evaluation {
@@ -14,6 +14,7 @@ export class Evaluation {
   relevance: number
   quality: number
   status: Status
+  is_public: boolean
   evaluator?: {
     databaseId: number
     email: string
@@ -67,6 +68,12 @@ export class Evaluation {
     // 'pending' | 'revision' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
     // 'synopsis_approved' | 'final_revision' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
     return ['revision', 'final_revision'].indexOf(this.status) !== -1
+  }
+
+  statusPassed(desiredStatus: string){
+    const desiredPosition: number = Statuses.indexOf(desiredStatus)
+    const currentPosition: number = Statuses.indexOf(this.status)
+    return currentPosition > desiredPosition
   }
 
 }

@@ -61,9 +61,9 @@ export default function NextStepTip(props: NextStepProps) {
   return (<div className="next-step-tip">
     {nextStep && <p>
       {status !== 'approved' && <strong>{t('trabalho.proximo-passo')}</strong>}
-      <div className={`${status === 'approved' ? 'alert alert-success' : ''}`}>
+      <span className={`d-block ${status === 'approved' ? 'alert alert-success' : ''}`}>
         <span className="d-block text-sm">{nextStep}</span>
-      </div>
+      </span>
     </p>}
   </div>)
 }

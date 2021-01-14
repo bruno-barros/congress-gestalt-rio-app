@@ -1,4 +1,4 @@
-import {AbstractType, Status} from "../../components/abstract/abstract.d";
+import {Status, Statuses} from "../../components/abstract/abstract.d";
 import {statusColorName} from "../helpers";
 
 export default class Abstract {
@@ -71,6 +71,12 @@ export default class Abstract {
     }
 
     return false
+  }
+
+  statusPassed(desiredStatus: string){
+    const desiredPosition: number = Statuses.indexOf(desiredStatus)
+    const currentPosition: number = Statuses.indexOf(this.status)
+    return currentPosition > desiredPosition
   }
 
   getResponsible(){

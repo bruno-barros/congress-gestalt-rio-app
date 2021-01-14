@@ -48,8 +48,6 @@ export default function NotificationModal(props: NotificationModalProps) {
   }
 
   function handleSubmit(values: any) {
-    values.ids = ids
-    console.log(values);
     setLoading(true)
     WpUser.notify({
       context: values.context,

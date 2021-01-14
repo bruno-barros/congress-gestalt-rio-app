@@ -240,6 +240,7 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
         </tbody>
       </table>
     </div>
+    {(!page || page.length === 0) && <div className="alert alert-info mx-3 text-center">Nenhum conteúdo disponível</div>}
     <TablePagination<T> instance={instance}/>
   </div>)
 }

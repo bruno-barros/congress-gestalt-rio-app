@@ -58,6 +58,9 @@ const Evaluations = () => {
         Header: 'Avaliação',
         accessor: 'status',
       },{
+        Header: 'Público',
+        accessor: 'is_public',
+      },{
         Header: 'Status',
         accessor: 'status_pt'
       },{
@@ -73,6 +76,7 @@ const Evaluations = () => {
       row.title = row.abstract?.title
       row.status_pt = t(`status.${row.status}`)
       row.id = row.abstract?.databaseId
+      row.is_public = row.is_public ? 'SIM' : 'NÃO'
       return row
     })
   }, [evaluations, event])

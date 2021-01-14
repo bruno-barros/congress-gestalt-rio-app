@@ -86,7 +86,7 @@ const AdmSubscriptions = () => {
       name={`subscriptions`}
       columns={columns}
       data={data}
-      hiddenColumns={['order_status_woo']}
+      hiddenColumns={['status_woo']}
       onAdd={dummy}
       onEdit={dummy}
       onDelete={dummy}/>

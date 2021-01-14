@@ -82,6 +82,7 @@ export class WpAbstract {
       size
       url
       user_id
+      version
     }
   }
 }`
@@ -100,7 +101,6 @@ export class WpAbstract {
     bibliography
     subtitle
     status
-    synopsis
     title
     topic
     content
@@ -128,6 +128,7 @@ export class WpAbstract {
       size
       url
       user_id
+      version
     }
     authors {
       name

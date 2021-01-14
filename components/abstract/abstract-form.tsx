@@ -20,6 +20,7 @@ import {errorNotification, exceptionNotification, successNotification} from "../
 import Tags from "../ui/form/formik/tags";
 import Wysiwyg from "../ui/form/formik/wysiwyg";
 import isFormDisabled from "../ui/form/form-helpers";
+import {useQueryClient} from "react-query";
 
 
 interface AbstractFormProps {
@@ -31,17 +32,22 @@ export default function AbstractForm(props: AbstractFormProps) {
 
   const t = useTrans()
   const disp = useDispatch()
+  const queryClient = useQueryClient()
   const router = useRouter()
   const {user} = useCurrentUser()
   const {edition, abstract} = props
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
+  const isEditable1 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
+  const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_approved'))
 
-  const initialAuthor = isEditing ? {} : {id: null,
+  const initialAuthor = isEditing ? {} : {
+    id: null,
     author_name: user.getUserData().name,
     author_email: user.getUserData().email,
     author_bio: user.getUserData().description || '',
-    uuid: null}
+    uuid: null
+  }
 
   const initialValues = {
     _intent: 'update',// update | review
@@ -52,7 +58,6 @@ export default function AbstractForm(props: AbstractFormProps) {
     subtitle: abstract?.subtitle || '',
     tags: abstract?.abstract_tags || [],
     resume: abstract?.excerpt || '',
-    synopsis: abstract?.synopsis || '',
     content: abstract?.content || '',
     bibliography: abstract?.bibliography || '',
     attachments: abstract?.attachments || [],
@@ -65,10 +70,17 @@ export default function AbstractForm(props: AbstractFormProps) {
     tags: Yup.array().min(edition.abstract.tags.min, 'validacao.obrigatorio')
       .max(edition.abstract.tags.max).required('validacao.obrigatorio'),
     resume: Yup.string().required('validacao.obrigatorio'),
-    synopsis: Yup.string().required('validacao.obrigatorio'),
-    content: Yup.string().required('validacao.obrigatorio'),
+    content: Yup.string().when('topic', {
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && edition.abstract.required_fields?.content,
+      then: Yup.string().required('validacao.obrigatorio'),
+      otherwise: Yup.string().notRequired()
+    }),
     // bibliography: Yup.string().required('validacao.obrigatorio'),
-    attachments: Yup.array().required('validacao.obrigatorio'),
+    attachments: Yup.array().when('topic', {
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && edition.abstract.required_fields?.attachments,
+      then: Yup.array().required('validacao.obrigatorio'),
+      otherwise: Yup.array().notRequired()
+    }),
     authors: Yup.array().required('validacao.obrigatorio'),
   })
 
@@ -86,12 +98,13 @@ export default function AbstractForm(props: AbstractFormProps) {
       const data = resp.data.data
       disp(blockUi(false))
       if (success) {
+        queryClient.invalidateQueries(['abstract', abstract.databaseId])
         successNotification({
           message: isEditing ? t('atualizado-com-sucesso') : t('trabalho.criado-com-sucesso'),
           heroTitle: isEditing ? null : t('parabens')
         })
-        if(!isEditing) router.push(`/abstracts/${data.ID}?created=1`)
-        if(isEditing && data._intent === 'review') router.reload()
+        if (!isEditing) router.push(`/abstracts/${data.ID}?created=1`)
+        if (isEditing && data._intent === 'review') router.reload()
       } else {
         errorNotification({message: data.msg})
       }
@@ -110,11 +123,12 @@ export default function AbstractForm(props: AbstractFormProps) {
     onSubmit={handleSubmit}
   >{({errors, values, isValid, setFieldValue, submitForm}) => (<>
     <Form>
-      {isFormDisabled(abstract?.status)
+
+      {(!isEditable1 && !isEditable2)
       && <div className="alert alert-warning">
         {t('trabalho.nao-pode-editar')}
       </div>}
-      <fieldset disabled={isFormDisabled(abstract?.status)}>
+      <fieldset disabled={!isEditable1}>
         {/*<code style={{maxWidth: 700}}>{JSON.stringify(values, null, 2)}</code>*/}
         <Select name="topic" label={t('trabalho.topico')}>
           <option value="" disabled></option>
@@ -123,29 +137,35 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>
         <Text name="title" label={t('trabalho.titulo')}/>
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>
-        <Tags name="tags" label="Tags" maxTags={edition.abstract.tags.max} disabled={isFormDisabled(abstract?.status)}/>
-        <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={isFormDisabled(abstract?.status)}/>
-        <Wysiwyg name="synopsis" label={t('trabalho.sinopse')} maxHeight="sm" disabled={isFormDisabled(abstract?.status)}/>
-        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={isFormDisabled(abstract?.status)}/>
-        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={isFormDisabled(abstract?.status)}/>
+        <Tags name="tags" label="Tags" maxTags={edition.abstract.tags.max} disabled={!isEditable1}/>
+        <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={!isEditable1}/>
+
+      </fieldset>
+      <fieldset disabled={!isEditable2}>
+        {abstract?.statusPassed('synopsis_waiting_upd') &&
+        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}/>}
+
+        {abstract?.statusPassed('synopsis_waiting_upd') &&
+        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}/>}
+
         <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                 disabled={isFormDisabled(abstract?.status)}
+                 disabled={!isEditable1}
                  initialAuthor={initialAuthor}
                  onEdit={(author, metadata) => {
                    setAuthorModal({show: true, author, metadata})
                  }}/>
 
-        <Field name="_intent" type="hidden"/>
-        {edition.abstract.attachments
-        && <Attachments name="attachments" label={t('anexos')}
-                        maxFiles={edition.abstract.attachments}
-                        metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                        disabled={isFormDisabled(abstract?.status)}/>}
 
+        {(edition.abstract.attachments && abstract?.statusPassed('synopsis_waiting_upd')) &&
+        <Attachments name="attachments" label={t('anexos')}
+                     maxFiles={edition.abstract.attachments}
+                     metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+                     disabled={!isEditable2}/>}
 
       </fieldset>
-      {!isFormDisabled(abstract?.status) && <div className="row">
+      <Field name="_intent" type="hidden"/>
+      {(isEditable1 || isEditable2) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}
                          disable={!isValid}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>
@@ -153,7 +173,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         {isEditing
         && <div className="col-12 col-md">
           <LoadingButton type="button" variant="primary" size="lg" block loading={false}
-                         disable={!isValid} onClick={()=>{
+                         disable={!isValid} onClick={() => {
             setFieldValue('_intent', 'review')
             submitForm()
           }}>{t(abstract ? 'trabalho.atualizar-e-submeter' : 'trabalho.submeter')}</LoadingButton>

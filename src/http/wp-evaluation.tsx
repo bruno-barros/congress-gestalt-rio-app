@@ -7,6 +7,10 @@ export default class WpEvaluation {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_set', {user_id: args.user_id, abstracts: args.abstracts, notify: args.notify, edition_id: args.edition_id});
   }
 
+  static setPublic(args: {evaluation_id: number}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_public', {evaluation_id: args.evaluation_id});
+  }
+
 
   static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number }): Promise<AxiosResponse> {
 
@@ -32,6 +36,7 @@ export default class WpEvaluation {
       abstract_id
       user_id
       edition_id
+      is_public
       abstract {
         databaseId
         title
@@ -62,6 +67,7 @@ export default class WpEvaluation {
     quality
     status
     user_id
+    is_public
     abstract {
       databaseId
       authorDatabaseId
@@ -71,7 +77,6 @@ export default class WpEvaluation {
       bibliography
       subtitle
       status
-      synopsis
       title
       topic
       content
@@ -86,6 +91,7 @@ export default class WpEvaluation {
         size
         url
         user_id
+        version
       }
     }
   }
@@ -145,6 +151,7 @@ export default class WpEvaluation {
       relevance
       status
       edition_id
+      is_public
       ${append}
     }
   }

@@ -4,7 +4,7 @@ import CurtainDelayed from "../ui/curtain-delayed";
 import {Loading} from "@brunobarros/react-components";
 import Accordion from "react-bootstrap/cjs/Accordion";
 import {Button, Card} from "react-bootstrap/cjs";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import {statusColorName} from "../../src/helpers";
 import useTrans from "../hooks/useTrans";
@@ -15,6 +15,8 @@ import AbstractAnswers from "./abstract-answers";
 import ButtonDeleteConfirmation from "../ui/button-delete-confirmation";
 import useCurrentUser from "../hooks/useCurrentUser";
 import {errorNotification, successNotification} from "../../src/resources/responses";
+import {LoadingButton} from "@brunobarros/react-components";
+import ToolTip from "../ui/tooltip";
 
 
 interface AbstractEvaluationsModalProps {
@@ -28,11 +30,13 @@ interface AbstractEvaluationsModalProps {
 
 export default function AbstractEvaluationsModal(props: AbstractEvaluationsModalProps) {
 
+  const queryClient = useQueryClient()
   const t = useTrans()
   const {onDismiss, abstract_id, onUpdate} = props
   const {user} = useCurrentUser()
   const [show, setShow] = useState(props.show)
   const [loading, setLoading] = useState(false)
+  const [loadingPublic, setLoadingPublic] = useState(false)
   const {data, isLoading, isFetching, error} = useQuery<any[]>(['abstract_evaluations', abstract_id], queryEvaluations, {
     enabled: abstract_id && show
   })
@@ -66,11 +70,26 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
     setLoading(true)
     WpEvaluation.delete(evaluationId)
       .then(resp => {
-        if(resp.data.success) successNotification({message: resp.data.data.msg})
+        if (resp.data.success) successNotification({message: resp.data.data.msg})
         else errorNotification({message: resp.data.data.msg})
       }, err => {
         errorNotification({error: err})
       }).finally(() => setLoading(false))
+  }
+
+  function handlePublic(evaluation: Evaluation) {
+    setLoadingPublic(true)
+    WpEvaluation.setPublic({
+      evaluation_id: evaluation.databaseId
+    })
+      .then(resp => {
+        queryClient.invalidateQueries(['abstract_evaluations', abstract_id])
+        successNotification({message: resp.data.data.msg})
+      }, err => {
+        errorNotification({error: err})
+      }).finally(() => {
+      setLoadingPublic(false)
+    })
   }
 
   return (<Modal show={show} onHide={handleClose} size="lg">
@@ -96,6 +115,10 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                     <div className={`ml-2 bullet bg-${statusColorName(eva.status)}`}/>
                   </div>
                   <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY')}</div>
+                  <div className="my-2 text-sm">{eva.is_public
+                    ? (<><ToolTip text="O autor tem acesso ao comentário"><span>(público)</span></ToolTip></>)
+                    : (<><ToolTip text="O autor NÃO tem acesso ao comentário"><span>(privado)</span></ToolTip></>)
+                  }</div>
                   {user.canManageAbstracts() &&
                   <ButtonDeleteConfirmation loading={loading} onDelete={() => {
                     handleDeleteEvaluation(eva.databaseId)
@@ -118,6 +141,13 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                   {eva.comment}
 
                   <AbstractAnswers className="mt-3 text-sm" answers={eva.getAnswers()} edition_id={eva?.edition_id}/>
+
+                  {!eva.is_public &&
+                  <div className="d-flex align-items-center">
+                    <LoadingButton onClick={() => handlePublic(eva)} type="button" loading={loadingPublic} size="sm"
+                                   variant="outline-primary">Tornar público</LoadingButton>
+                    <span className="ml-3 text-muted text-sm">(O autor receberá uma notificação)</span>
+                  </div>}
 
                 </Card.Body>
               </Accordion.Collapse>

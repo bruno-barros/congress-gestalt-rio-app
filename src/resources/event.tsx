@@ -102,7 +102,17 @@ export class Edition {
     topics: { id: string; pt: string; en: string }[]
     start_at: string
     end_at: string
-    required_fields: any[]
+    required_fields: {
+      topic?: boolean
+      title?: boolean
+      subtitle?: boolean
+      tags?: boolean
+      resume?: boolean
+      content?: boolean
+      bibliography?: boolean
+      attachments?: boolean
+      authors?: boolean
+    }
     limit_per_user: number
     authors: {
       max: number

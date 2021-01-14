@@ -32,10 +32,10 @@ export default function AbstractView(props: AbstractViewProps) {
       <strong>RESUMO</strong>
       <div className="border-bottom py-3" dangerouslySetInnerHTML={{__html: abstract.excerpt}}/>
     </div>
-    <div className="form-group">
-      <strong>SINOPSE</strong>
-      <div className="border-bottom py-3" dangerouslySetInnerHTML={{__html: abstract.synopsis}}/>
-    </div>
+    {/*<div className="form-group">*/}
+    {/*  <strong>SINOPSE</strong>*/}
+    {/*  <div className="border-bottom py-3" dangerouslySetInnerHTML={{__html: abstract.synopsis}}/>*/}
+    {/*</div>*/}
     <div className="form-group">
       <strong>CONTEÚDO</strong>
       <div className="border-bottom py-3" dangerouslySetInnerHTML={{__html: abstract.content}}/>

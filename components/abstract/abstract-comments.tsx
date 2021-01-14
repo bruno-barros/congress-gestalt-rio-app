@@ -35,11 +35,11 @@ export default function AbstractComments(props: AbstractCommentsProps) {
 
   return (<div className="">
     <p><strong>Avaliações</strong>
-      {evaluations && evaluations?.length === 0 && <span className="text-sm d-block">Nenhuma avaliação</span>}
+      {evaluations && evaluations?.filter(eva => eva.is_public)?.length === 0 && <span className="text-sm d-block">Nenhuma avaliação</span>}
     </p>
     {isLoading && <Loading/>}
     <div className="comment-box-wraper">
-      {evaluations && evaluations.map(eva => (
+      {evaluations && evaluations.filter(eva => eva.is_public).map(eva => (
         <div key={eva.databaseId} className="comment-box">
           <header className="d-flex align-items-center justify-content-between">
             <div className="d-flex align-items-center">

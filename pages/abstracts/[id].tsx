@@ -29,7 +29,7 @@ const AbstractEditing = () => {
   }, [router.query])
   function NextStepPopup(){
     Sweet.fire({
-      html: `<div class="text-left"><p>Caro, autor. <br/>
+      html: `<div class="text-left"><p>Caro, ${user.getFirstName() || 'autor'}. <br/>
         O próximo passo é enviar seu trabalho para revisão.</p>
         <p>Quando estiver pronto use o botão "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p></div>`
     })
@@ -40,7 +40,7 @@ const AbstractEditing = () => {
   }
 
 
-  if (abstract.getResponsible().databaseId !== user.getId() && !user.canManageAbstracts()) {
+  if (abstract?.getResponsible().databaseId !== user.getId() && !user.canManageAbstracts()) {
     return <MainLayout>
       <div className="container">
         <div className="row">

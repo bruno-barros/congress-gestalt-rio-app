@@ -14,6 +14,8 @@ import WpDocument from "../../../../src/http/wp-document";
 import Error from "../../../../src/resources/error";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 import useEvent from "../../../hooks/useEvent";
+import moment from "moment";
+import useCurrentUser from "../../../hooks/useCurrentUser";
 
 interface AttachmentsProps {
   label: string
@@ -30,6 +32,7 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   const router = useRouter()
   const disp = useDispatch()
   const t = useTrans()
+  const {user}=useCurrentUser()
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
   const [metaData, setMetaData] = useState<any>(metas);
@@ -83,8 +86,12 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((file, idx) => (
           <div className="border d-flex align-items-center justify-content-between py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
-            <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
-            {!disabled
+            <div className="d-flex align-items-center text-sm text-truncate">
+              <div className="mr-2 text-nowrap">VER {file.version}</div>
+              <div className="mr-2 text-nowrap">{moment(file.created_at).format('DD/MM/YYYY')}</div>
+              <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
+            </div>
+            {(!disabled && user.canManageAbstracts())
             && <ButtonDeleteConfirmation onDelete={()=>{
                 handleDeletion(remove, file, idx)
             }}/>}
