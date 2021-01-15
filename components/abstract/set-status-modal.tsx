@@ -76,7 +76,7 @@ export default function SetStatusModal(props: SetStatusModalProps) {
         <Formik
           initialValues={{
             status: 'pending',
-            notify: true,
+            notify: false,
           }}
           onSubmit={handleSubmit}
         >{({values, errors, isValid, handleChange}) => (

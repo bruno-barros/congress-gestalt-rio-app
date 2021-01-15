@@ -11,14 +11,16 @@ interface PasswordProps {
   thresholdLength: number;
   containerClass?: string
   submitted?: any;
+  floatLabel?: boolean
 
   passwordStrength(strength: number, isStrong: boolean, reset?: () => void): void;
 }
 
-export default function Password({label, containerClass, minStrength, thresholdLength, submitted, passwordStrength, ...props}: PasswordProps & any) {
+export default function Password({label, containerClass, minStrength, thresholdLength, submitted, floatLabel: fl, passwordStrength, ...props}: PasswordProps & any) {
 
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
+  const floatLabel = fl ? 'float-label' : ''
 
   minStrength = typeof minStrength === 'number'
     ? Math.max(Math.min(minStrength, 4), 0) : 3;
@@ -51,17 +53,22 @@ export default function Password({label, containerClass, minStrength, thresholdL
       helpers.setError('validacao.senha-fraca')
     }
     setStrength(score)
-    props.passwordStrength && props.passwordStrength(score, score >= minStrength, reset)
+    passwordStrength && passwordStrength(score, score >= minStrength, reset)
   }
 
 
   // console.log({field}, {meta});
-  return (<div className={`form-group ${containerClass || ''} ${err && 'has-error'}`}>
-    {label && <label htmlFor={`fld_${field.name}`} className="d-flex align-items-center">{label}<div className="bb-strengthMeter flex-grow-1 ml-2">
+  return (<div className={`form-group ${floatLabel} ${containerClass || ''} ${err && 'has-error'}`}>
+    {(label && !floatLabel) && <label htmlFor={`fld_${field.name}`} className="d-flex align-items-center">{label}<div className="bb-strengthMeter flex-grow-1 ml-2">
       <div className="bb-strengthMeterFill" data-strength={strength}/>
     </div></label>}
 
-    <input {...field} {...props} id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'}`}/>
+    <input {...field} {...props} type="password" id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
+
+    {(label && floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}</label>}
+    <div className="bb-strengthMeter flex-grow-1">
+      <div className="bb-strengthMeterFill" data-strength={strength}/>
+    </div>
 
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
   </div>)

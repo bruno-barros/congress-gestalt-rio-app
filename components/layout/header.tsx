@@ -7,6 +7,7 @@ import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import usePendingReview from "../hooks/usePendingReview";
+import NotificationPanel from "../notification-panel";
 
 interface HeaderProps {
   event: Event
@@ -73,7 +74,8 @@ export default function Header(props: HeaderProps) {
           {/*</NavDropdown>*/}
         </Nav>
       </Navbar.Collapse>
-      <div className="d-none d-lg-block">
+      <div className="d-none d-lg-flex align-items-center">
+        <NotificationPanel/>
         <UserMenu user={user}/>
       </div>
     </Navbar>

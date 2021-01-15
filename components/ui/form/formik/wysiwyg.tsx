@@ -1,7 +1,6 @@
 import {useField} from "formik";
 import FieldError from "../field-error";
 import React from "react";
-import useTrans from "../../../hooks/useTrans";
 import dynamic from 'next/dynamic'
 const ReactQuill = dynamic(
   () => import('react-quill'),

@@ -1,0 +1,72 @@
+@import "./mixins";
+
+.notification-panel {
+  position: relative;
+  margin-right: 20px;
+
+  .np-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    line-height: 0;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background-color .3s;
+    ion-icon {
+      color: $gray-600;
+      font-size: 25px;
+    }
+    &:hover {
+      background-color: $gray-200;
+    }
+  }
+
+  .np-panel {
+    position: absolute;
+    top: 42px;
+    right: 0;
+    width: 360px;
+    background-color: #ffffff;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+    font-size: .9em;
+    line-height: 1.3em;
+
+    .scrollarea  {
+      max-height: 50vh;
+      padding-right: 5px;
+    }
+
+    .np-header {
+      color: $gray-600;
+      padding: $spacer/2 $spacer;
+      border-bottom: solid 1px $gray-300;
+    }
+    .np-item{
+      &:hover {
+        background-color: $gray-100;
+      }
+      &.read {
+        color: $gray-500;
+      }
+    }
+    .np-status {
+      cursor: pointer;
+      padding: 10px 0 0 $spacer;
+      ion-icon {
+        font-size: 20px;
+        opacity: .5;
+      }
+      &:hover {
+        ion-icon {
+          opacity: 1;
+        }
+      }
+    }
+    .np-content {
+      padding: 10px;
+    }
+  }
+
+}

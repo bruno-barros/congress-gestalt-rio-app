@@ -13,6 +13,8 @@ import Error from "../../../src/resources/error";
 import {setUpUser} from "../../../src/store/user.actions";
 import {useDispatch} from "react-redux";
 import Curtain from "../curtain";
+import Password from "./formik/password";
+import Text from "./formik/text";
 
 interface SignUpProps {
   show: boolean
@@ -26,6 +28,7 @@ export default function SignUp(props: SignUpProps) {
   const {onDismiss} = props;
   const [show, setShow] = useState(props.show)
   const [loading, setLoading] = useState(false)
+  const [isPassStrong, setIsPassStrong] = useState(false)
   const [response, setResponse] = useState({success: false, msg: ''})
   const t = useTrans()
   const router = useRouter()
@@ -97,11 +100,11 @@ export default function SignUp(props: SignUpProps) {
     onDismiss && onDismiss()
   }
 
-  return (<Modal show={show} onHide={handleClose} size="sm" centered>
-    <Modal.Header closeButton>
+  return (<Modal show={show} onHide={handleClose}  centered>
+    <Modal.Header closeButton className="px-4 px-md-5">
       <Modal.Title>{t('cadastro.com-email')}</Modal.Title>
     </Modal.Header>
-    <Modal.Body>
+    <Modal.Body className="p-4 px-md-5">
       <Formik
         initialValues={{
           username: '', password: ''
@@ -111,17 +114,13 @@ export default function SignUp(props: SignUpProps) {
       >
         {({errors, touched, values, isValid}) => (
           <Form>
-            <div className="form-group float-label">
-              <Field id="username" name="username" className={inputFloatClass(values.username)} placeholder=""/>
-              <label htmlFor="username">{t('seu-email')}</label>
-              <FieldError message={touched?.username && errors?.username} fieldId="username"/>
-            </div>
-            <div className="form-group float-label">
-              <Field id="password" name="password" className={inputFloatClass(values.password)} placeholder=""
-                     type="password"/>
-              <label htmlFor="password">{t('senha')}</label>
-              <FieldError message={touched?.password && errors?.password} fieldId="password"/>
-            </div>
+            <Text name="username" label={t('seu-email')} floatLabel/>
+            <Password name="password" label={t('senha')} floatLabel passwordStrength={(strength, isStrong, reset)=>{
+              setIsPassStrong(isStrong)
+            }} validate={(val)=>{
+              console.log({val});
+              return !isPassStrong ? t('validacao.senha-fraca') : undefined
+            }}/>
             <LoadingButton disable={!isValid} loading={loading}>{t('cadastro.cadastrar')}</LoadingButton>
           </Form>
         )}

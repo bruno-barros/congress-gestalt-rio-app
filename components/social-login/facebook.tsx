@@ -2,8 +2,9 @@ import Generic from "./generic";
 import useTrans from "../hooks/useTrans";
 import {useQueryClient} from "react-query";
 import Error from "../../src/resources/error";
-import {toast} from "react-toastify";
 import {SocialLoginButtonProps} from "./social-buttons.d";
+import React from "react";
+import {Icon} from "@brunobarros/react-components";
 
 export default function Facebook(props: SocialLoginButtonProps) {
 
@@ -30,8 +31,8 @@ export default function Facebook(props: SocialLoginButtonProps) {
   }
 
   return (<Generic
-    provider="facebook"
+    provider="facebook" btnStyle="facebook"
     appId={process.env.FACEBOOK_OAUTH_ID}
     onLoginSuccess={handleSocialLogin}
-    onLoginFailure={handleSocialLoginFailure}>{t('login-com', {driver: "Facebook"})}</Generic>)
+    onLoginFailure={handleSocialLoginFailure}><Icon name={`logo-facebook`}/>{t('login-com', {driver: "Facebook"})}</Generic>)
 }

@@ -21,28 +21,31 @@ const Login = () => {
   const {authLoading, user} = useCurrentUser()
 
 
-  return (<div className="login-page d-flex flex-column">
+  return (<div className="login-page">
     <Head>
       <title>{siteTitle('Login', queryClient)}</title>
     </Head>
-    <div className="brand-panel">
-      <div className="p-4">
-        <Image src="/img/logo-h.jpg" width={363} height={91} className="img-fluid"/>
+    <div className="login-main-panel">
+      <div className="brand-panel">
+        <div className="p-4">
+          <Image src="/img/logo-h.jpg" width={363} height={91} className="img-fluid"/>
+        </div>
+      </div>
+      <div className="form-panel p-4">
+
+        <div className="d-flex align-items-center justify-content-center mb-3">
+          <LangSelector/>
+        </div>
+
+        {(user && user.getId() > -1) && <div className="text-center"><div className="alert alert-warning">
+          Olá {user?.getFirstName()}. Você já está logado. <br/><Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
+        </div></div>}
+
+        <LoginForm/>
+
       </div>
     </div>
-    <div className="form-panel p-4">
 
-      <div className="d-flex align-items-center justify-content-center mb-3">
-        <LangSelector/>
-      </div>
-
-      {(user && user.getId() > -1) && <div className="text-center"><div className="alert alert-warning d-inline-block w-auto">
-        Olá {user?.getFirstName()}. Você já está logado. <Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
-      </div></div>}
-
-      <LoginForm/>
-
-    </div>
     <div className="footer-panel px-4 py-3 text-center text-xs text-muted">
       {t('versao')} {process.env.version} &nbsp; @{today.getFullYear()} <a
       href="https://conceito-online.com.br??utm_source=app&utm_medium=link&utm_campaign=Sistema_Evento"

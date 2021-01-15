@@ -1,8 +1,9 @@
 import Generic from "./generic";
 import useTrans from "../hooks/useTrans";
-import {useQuery, useQueryClient} from "react-query";
 import Error from "../../src/resources/error";
 import {SocialLoginButtonProps} from "./social-buttons.d";
+import React from "react";
+import {Icon} from "@brunobarros/react-components";
 
 
 export default function Google(props: SocialLoginButtonProps) {
@@ -32,9 +33,9 @@ export default function Google(props: SocialLoginButtonProps) {
 
   return (<>
     <Generic
-      provider="google"
+      provider="google" btnStyle="google"
       appId={process.env.GOOGLE_OAUTH_ID}
       onLoginSuccess={handleSocialLogin}
-      onLoginFailure={handleSocialLoginFailure}>{t('login-com', {driver: "Google"})}</Generic>
+      onLoginFailure={handleSocialLoginFailure}><Icon name={`logo-google`}/>{t('login-com', {driver: "Google"})}</Generic>
   </>)
 }

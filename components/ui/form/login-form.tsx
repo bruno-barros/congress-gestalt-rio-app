@@ -97,7 +97,7 @@ const LoginForm = () => {
 
     <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
     <Google onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
-    <Hr label={t('cadastro.ou-entre-com-email')} bgColor="#eee"/>
+    <Hr label={t('cadastro.ou-entre-com-email')} bgColor="#ffffff"/>
     <Formik
       initialValues={{
         username: '',
