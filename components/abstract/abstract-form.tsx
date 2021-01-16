@@ -147,7 +147,8 @@ export default function AbstractForm(props: AbstractFormProps) {
 
         {abstract?.statusPassed('synopsis_waiting_upd') &&
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}/>}
-
+      </fieldset>
+      <fieldset disabled={!isEditable1}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                  disabled={!isEditable1}
@@ -155,7 +156,8 @@ export default function AbstractForm(props: AbstractFormProps) {
                  onEdit={(author, metadata) => {
                    setAuthorModal({show: true, author, metadata})
                  }}/>
-
+      </fieldset>
+      <fieldset disabled={!isEditable2}>
 
         {(edition.abstract.attachments && abstract?.statusPassed('synopsis_waiting_upd')) &&
         <Attachments name="attachments" label={t('anexos')}

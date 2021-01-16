@@ -14,7 +14,7 @@ export default function Curtain(props) {
     variants={motionVars}
     initial="closed"
     animate={isOpened ? 'opened' : 'closed'}
-    transition={{duration: duration || 1}}
+    transition={{duration: duration || .7}}
   >
     {children}
   </motion.div>)

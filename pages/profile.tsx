@@ -20,7 +20,7 @@ const Profile = () => {
     setTab(String(router.query?.tab) || 'personal')
   }, [router])
 
-  return (<MainLayout pageHeader={{title: 'Meu cadastro'}}>
+  return (<MainLayout pageHeader={{title: t('cadastro.meu-cadastro')}}>
     <div className="row no-gutters">
       <div className="col-12 col-md-3 border-right py-3 px-md-3">
         <ul className="nav  nav-pills flex-column">

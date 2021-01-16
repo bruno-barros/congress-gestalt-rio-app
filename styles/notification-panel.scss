@@ -21,6 +21,12 @@
     &:hover {
       background-color: $gray-200;
     }
+    .badge {
+      position: absolute;
+      top: 4px;
+      left: 20px;
+      z-index: 3;
+    }
   }
 
   .np-panel {
@@ -39,6 +45,9 @@
     }
 
     .np-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       color: $gray-600;
       padding: $spacer/2 $spacer;
       border-bottom: solid 1px $gray-300;
@@ -50,22 +59,43 @@
       &.read {
         color: $gray-500;
       }
-    }
-    .np-status {
-      cursor: pointer;
-      padding: 10px 0 0 $spacer;
-      ion-icon {
-        font-size: 20px;
-        opacity: .5;
-      }
-      &:hover {
+
+      .np-status {
+        cursor: pointer;
+        padding: 22px 0 0 $spacer;
         ion-icon {
-          opacity: 1;
+          font-size: 20px;
+          opacity: .5;
+        }
+        &:hover {
+          ion-icon {
+            color: $primary;
+            opacity: 1;
+          }
+        }
+      }
+      &.read {
+        .np-status:hover{
+          cursor: default;
+
+        }
+        ion-icon {
+          opacity: .3;
+          color: inherit;
         }
       }
     }
+
+
     .np-content {
-      padding: 10px;
+      padding: 10px 10px 20px;
+
+      .dt {
+        //color: $gray-600;
+        font-size: .7em;
+        line-height: 1em;
+        text-align: right;
+      }
     }
   }
 

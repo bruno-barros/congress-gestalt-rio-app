@@ -31,7 +31,7 @@ export default function AbstractCard(props: AbstractCardProps) {
   return (<div className="abstract-card">
     <div className="abs-header">
       <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="abs-text">
-        <div className="abs-title">{abstract.title}</div>
+        <div className="abs-title">({abstract.databaseId}) {abstract.title}</div>
         <div className="abs-desc mb-1">{abstract.subtitle}</div>
         <small className="d-block font-italic">{edition.abstract.topics.find(top => top.id === abstract.topic)[router.locale]}</small>
       </a></Link>
