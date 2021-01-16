@@ -10,11 +10,11 @@ import {errorNotification, successNotification} from "../src/resources/responses
 import useEvent from "./hooks/useEvent";
 import Wysiwyg from "./ui/form/formik/wysiwyg";
 import Text from "./ui/form/formik/text";
-import {NotificationTypes} from "../src/resources/notification";
+import {MessageTypes} from "../src/resources/notification";
 import WpUser from "../src/http/wp-user";
 
 interface NotificationModalProps {
-  context: NotificationTypes
+  context: MessageTypes
   ids: number[]
   show: boolean
 

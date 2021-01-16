@@ -1,3 +1,4 @@
+export type MessageTypes = 'users' | 'abstracts'
 export type NotificationTypes = 'admin' | 'evaluator' | 'author'
 
 export interface Notification {
