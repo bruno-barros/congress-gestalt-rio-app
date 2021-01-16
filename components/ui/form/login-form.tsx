@@ -23,6 +23,7 @@ import useEvent from "../../hooks/useEvent";
 import SignUp from "./sign-up-form";
 import Text from "./formik/text";
 import {errorNotification} from "../../../src/resources/responses";
+import AccountRecover from "./account-recover";
 
 const LoginForm = () => {
 
@@ -33,6 +34,7 @@ const LoginForm = () => {
   const queryClient = useQueryClient()
   const [showPassRecover, setShowPassRecover] = useState(false)
   const [showSignUp, setShowSignUp] = useState(false)
+  const [showAccountRecover, setShowAccountRecover] = useState(false)
   const [loginWithEmail, setLoginWithEmail] = useState('')
   const [blockUi, setBlockUi] = useState(false)
   const [response, setResponse] = useState(null)
@@ -109,7 +111,7 @@ const LoginForm = () => {
       {({errors, touched, isValid, values}) => (
         <Form>
           <Text name="username" label={t('seu-email')} floatLabel/>
-          <Text name="password" type="password" label={t('senha')} floatLabel/>
+          <Text name="password" type="password" label={t('senha')} autoComplete="current-password" floatLabel/>
           <LoadingButton disable={!isValid} loading={false} block>{t('entrar')}</LoadingButton>
 
           <div className="d-flex justify-content-between my-4">
@@ -131,9 +133,11 @@ const LoginForm = () => {
     <SignUp show={showSignUp} onDismiss={() => {
       setShowSignUp(false)
     }}/>
-    <PasswordRecover show={showPassRecover} onDismiss={() => {
+    <PasswordRecover show={showPassRecover} onDismiss={(accountRecover) => {
       setShowPassRecover(false)
+      if(accountRecover === true) setShowAccountRecover(true)
     }}/>
+    <AccountRecover show={showAccountRecover} onDismiss={()=> setShowAccountRecover(false)}/>
     <MaybeLoginWithEmail show={!!loginWithEmail} originalMessage={loginWithEmail} onDismiss={() => {
       setLoginWithEmail('')
     }}/>

@@ -2,25 +2,25 @@ import Modal from "react-bootstrap/cjs/Modal";
 import {useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/cjs/Button";
 import {LoadingButton} from "@brunobarros/react-components";
-import {motion} from 'framer-motion';
 import useTrans from "../../hooks/useTrans";
 import {toast} from "react-toastify";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from "yup";
 import FieldError from "./field-error";
-import {inputFloatClass} from "../../../src/helpers";
 import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Curtain from "../curtain";
 import CurtainDelayed from "../curtain-delayed";
+import Text from "./formik/text";
+import Textarea from "./formik/textarea";
 
-interface PasswordRecoverProps {
+interface AccountRecoverProps {
   show: boolean
 
-  onDismiss(accountRecover?: boolean): void
+  onDismiss(): void
 }
 
-export default function PasswordRecover(props: PasswordRecoverProps) {
+export default function AccountRecover(props: AccountRecoverProps) {
 
   const router = useRouter()
   const {onDismiss} = props
@@ -31,64 +31,64 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
   let formRef = useRef<FormikProps<any>>()
 
   const FormSchema = Yup.object().shape({
+    name: Yup.string().required('validacao.obrigatorio'),
     email: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
+    phone: Yup.string().required('validacao.obrigatorio'),
+    message: Yup.string().required('validacao.obrigatorio'),
   });
 
   useEffect(() => {
     setShow(props.show)
-    if (props.show) {
-      setTimeout(() => {
-        let emailInput = document.getElementById('email')
-          emailInput && emailInput.focus()
-      }, 3000)
-    }
   }, [props.show])
 
 
   async function handleSubmit(values) {
     setLoading(true)
-      setResponse({success: null, msg: ''})
+    setResponse({success: null, msg: ''})
 
     try {
-      const resp = await WpUser.rememberPassword(values.email, router.locale)
+      const resp = await WpUser.accountRecover({
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        message: values.message,
+        locale: router.locale
+      })
       const success = resp.data.success
       const data = resp.data?.data
       setLoading(false)
       setResponse({success, msg: data?.msg})
       formRef.current.resetForm()
-    }catch (err) {
+    } catch (err) {
       setLoading(false)
       setResponse({success: false, msg: t('erro-generico')})
     }
   }
 
-  function handleClose(accountRecover?: any) {
+  function handleClose() {
     setShow(false)
     setLoading(false)
     setResponse({success: null, msg: ''})
-    onDismiss && onDismiss(accountRecover)
+    onDismiss && onDismiss()
   }
 
   return (<Modal show={show} onHide={handleClose}>
     <Modal.Header closeButton>
-      <Modal.Title>{t('cadastro.recuperacao-senha')}</Modal.Title>
+      <Modal.Title>{t('cadastro.recuperacao-de-conta')}</Modal.Title>
     </Modal.Header>
     <Modal.Body>
-      <p>{t('cadastro.envio-de-link')}</p>
       <CurtainDelayed delay={1}>
         <Formik innerRef={formRef}
-          initialValues={{email: ''}}
-          onSubmit={handleSubmit}
-          validationSchema={FormSchema}
+                initialValues={{name: '', email: '', phone: '', message: ''}}
+                onSubmit={handleSubmit}
+                validationSchema={FormSchema}
         >
           {({errors, touched, values, isValid}) => (<Form>
-            <div className="form-group">
-              <Field autoFocus id="email" name="email" className="form-control"
-                     placeholder={t('cadastro.email-cadastro')}
-                     type="email"/>
-              <FieldError message={touched?.email && errors?.email} fieldId="email"/>
-            </div>
-            <LoadingButton disable={!isValid} loading={loading}>{t('cadastro.solicitar-senha')}</LoadingButton>
+            <Text name="name" label={t('cadastro.nome')}/>
+            <Text name="email" label="E-mail"/>
+            <Text name="phone" label={t('cadastro.telefone')}/>
+            <Textarea name="message" label={t('cadastro.descreva-sua-dificuldade')}/>
+            <LoadingButton disable={!isValid} loading={loading}>{t('enviar-mensagem')}</LoadingButton>
 
           </Form>)}
         </Formik>
@@ -101,17 +101,5 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
 
       </CurtainDelayed>
     </Modal.Body>
-    <Modal.Footer>
-      <div className="d-flex justify-content-between align-items-center w-100">
-        <a href="#" onClick={(e) => {
-          e.preventDefault()
-          handleClose(true)
-        }} className="d-inline-block text-sm">{t('cadastro.nao-lembro-email')}</a>
-        <div className="d-flex">
-          <Button variant="outline-secondary" onClick={handleClose}>{t('fechar')}</Button>
-
-        </div>
-      </div>
-    </Modal.Footer>
   </Modal>)
 }

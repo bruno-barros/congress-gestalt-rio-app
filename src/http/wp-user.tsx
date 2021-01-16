@@ -368,6 +368,9 @@ export default class WpUser {
   static rememberPassword(email: string, locale: string) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_remember_password', {email, locale});
   }
+  static accountRecover(args: {name: string, email: string, phone: string, message: string, locale: string}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_account_recover', {...args});
+  }
   static updatePassword(id: number, password: string) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_password', {id, password});
   }

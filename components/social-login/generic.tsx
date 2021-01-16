@@ -13,7 +13,7 @@ class Generic extends Component<Generic & any> {
   render() {
 
     let triggerLogin = this.props.hasOwnProperty('triggerLogin') ? this.props.triggerLogin : this.noop
-    console.log(this.props);
+
     return (<button
       type="button"
       className={`btn -btn-outline-secondary btn-block ${this.props.btnStyle}`}
