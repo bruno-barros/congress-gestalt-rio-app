@@ -68,7 +68,7 @@ export default function Anais() {
         <div className="flex-grow-1 mr-3">
           <ProgressBar
             variant={`${state === 'fail' ? 'danger' : 'primary'}`} style={{height: 30}} animated
-            now={`${state === 'fail' ? 100 : calcPercent()}`}
+            now={Number(`${state === 'fail' ? 100 : calcPercent()}`)}
             label={`${state === 'fail' ? 'falhou' : calcPercent() + '%'}`}/>
         </div>
         <Button variant="danger" size="sm" onClick={handleCancel}>cancelar</Button>
