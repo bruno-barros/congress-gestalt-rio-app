@@ -27,6 +27,12 @@ export default function UserMenu({user}: { user: User }) {
     <Dropdown.Menu alignRight>
       <Link href={`/profile?tab=personal`} passHref><Dropdown.Item>{t('dados-pessoais')}</Dropdown.Item></Link>
       <Link href={`/profile?tab=subscriptions`} passHref><Dropdown.Item>{t('minhas-inscricoes')}</Dropdown.Item></Link>
+
+      {user.canManageAbstracts() && <>
+        <Dropdown.Divider />
+        <Link href={`/adm/manage?tab=anais`} passHref><Dropdown.Item>Anais</Dropdown.Item></Link>
+        <Dropdown.Divider />
+      </>}
       <Link href={`/logout`} passHref><Dropdown.Item>{t('sair')}</Dropdown.Item></Link>
     </Dropdown.Menu>
   </Dropdown>)

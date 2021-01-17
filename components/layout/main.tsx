@@ -50,7 +50,7 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
         <div className="title">{pageHeader.title}</div>
       </div>}
 
-      <main className={`main ${fullWidth && 'full-width'}`}>
+      <main className={`main ${fullWidth && 'full-width'} ${pageHeader && 'has-page-header'}`}>
         {sidebar
         && <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
           <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>

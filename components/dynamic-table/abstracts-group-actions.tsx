@@ -64,7 +64,7 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
   return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item disabled={selectedCount === 0} onClick={handleExportData}>Exportar</Dropdown.Item>
+      <Dropdown.Item disabled={selectedCount === 0} onClick={handleExportData}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('designar')} disabled={selectedCount === 0}>Designar
         avaliador</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('status')} disabled={selectedCount === 0}>Mudar status</Dropdown.Item>
@@ -197,7 +197,7 @@ export function UsersGroupActions<T extends object>({instance}: PropsWithChildre
   return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={() => {
       }} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>
       <Dropdown.Item onClick={() => setActiveModal('message')} disabled={selectedCount === 0}>Enviar
@@ -239,7 +239,7 @@ export function SubscriptionsGroupActions<T extends object>({instance}: PropsWit
   return (<>
     <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
-      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar</Dropdown.Item>
+      <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={()=>setActiveModal('message')} disabled={selectedCount === 0}>Enviar mensagem</Dropdown.Item>
     </DropdownButton>
     <DownloadCsv data={exportData} fileBaseName={`inscricoes_`} loading={loading}/>

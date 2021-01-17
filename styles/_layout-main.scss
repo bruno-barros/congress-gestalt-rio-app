@@ -28,13 +28,17 @@
   }
 
   .main {
-    min-height: calc(100vh - 130px);
-
+    min-height: calc(100vh - 110px);
+    &.has-page-header {
+      min-height: calc(100vh - 166px);
+    }
     & > .row {
       margin-left: 0;
       margin-right: 0;
     }
   }
+
+
 
   .sidebar {
     position: sticky;
@@ -80,7 +84,7 @@
   .sb-body {
     position: absolute;
     top: 38px;
-    min-height: calc(100vh - 95px);
+    min-height: calc(100vh - 98px);
     bottom: 0;
     width: $sidebarWidth;
     z-index: 1;

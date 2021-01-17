@@ -12,9 +12,9 @@ export default function Footer() {
     <Container>
       <Row>
         <Col>
-          <p className="text-center text-muted">
+          <div className="text-center text-muted text-sm">
             &copy;{siteTitle(`${today.getFullYear()}`, queryClient)} - {process.env.version}
-          </p>
+          </div>
         </Col>
       </Row>
     </Container>
