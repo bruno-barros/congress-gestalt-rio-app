@@ -5,7 +5,7 @@ interface GenericProps {
   btnStyle?: string
 }
 
-class Generic extends Component<Generic & any> {
+class Generic extends Component<GenericProps & any> {
 
   noop() {
   }
@@ -16,7 +16,7 @@ class Generic extends Component<Generic & any> {
 
     return (<button
       type="button"
-      className={`btn -btn-outline-secondary btn-block ${this.props.btnStyle}`}
+      className={`btn -btn-outline-secondary btn-block ${this.props?.btnStyle}`}
       onClick={triggerLogin} {...this.props}>
       {this.props.children}
     </button>)

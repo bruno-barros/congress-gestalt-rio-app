@@ -14,7 +14,6 @@ import {useEffect} from "react";
 import NextStepTip from "../../components/abstract/next-step-tip";
 import AbstractComments from "../../components/abstract/abstract-comments";
 
-
 const AbstractEditing = () => {
 
   const {user} = useCurrentUser()
@@ -24,14 +23,17 @@ const AbstractEditing = () => {
   const edition: Edition = event?.currentEdition()
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
-  useEffect(()=>{
-    if(router.query?.created) NextStepPopup()
+  useEffect(() => {
+    if (router.query?.created) NextStepPopup()
   }, [router.query])
-  function NextStepPopup(){
+
+  function NextStepPopup() {
     Sweet.fire({
-      html: `<div class="text-left"><p>Caro, ${user.getFirstName() || 'autor'}. <br/>
-        O próximo passo é enviar seu trabalho para revisão.</p>
-        <p>Quando estiver pronto use o botão "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p></div>`
+      html: `<div class="text-left">
+        <p>${t('caro')}, ${user.getFirstName() || 'autor'}.<br/>
+        ${t('trabalho.proximo-passo-enviar-avaliacao')}.</p>
+        <p>${t('trabalho.quando-pronto-use-botao')} "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p>
+        </div>`
     })
   }
 
@@ -56,7 +58,7 @@ const AbstractEditing = () => {
 
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
-     <div className="row my-5">
+    <div className="row my-5">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
         <AbstractForm edition={edition} abstract={abstract}/>
       </div>

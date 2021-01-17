@@ -34,8 +34,9 @@ export default function AbstractComments(props: AbstractCommentsProps) {
   }
 
   return (<div className="">
-    <p><strong>Avaliações</strong>
-      {evaluations && evaluations?.filter(eva => eva.is_public)?.length === 0 && <span className="text-sm d-block">Nenhuma avaliação</span>}
+    <p><strong>{t('trabalho.comentarios')}</strong>
+      {evaluations && evaluations?.filter(eva => eva.is_public)?.length === 0 &&
+      <span className="text-sm d-block">{t('trabalho.nenhum-comentario')}</span>}
     </p>
     {isLoading && <Loading/>}
     <div className="comment-box-wraper">

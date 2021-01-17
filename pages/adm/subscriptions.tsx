@@ -18,7 +18,7 @@ const AdmSubscriptions = () => {
   const {user} = useCurrentUser()
   const {data: event} = useEvent()
   const edition = event && event.getEdition(String(router.query?.edition))
-  const {data: subscriptions, isLoading, methods} = useSubscriptions(edition?.id)
+  const {data: subscriptions, isLoading, methods} = useSubscriptions(edition)
 
   const columns = useMemo(() => {
     return [

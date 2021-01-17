@@ -311,11 +311,12 @@ export default class WpUser {
     });
   }
 
-  static all(): Promise<AxiosResponse<any>> {
+  static all(args?: {limit?: number}): Promise<AxiosResponse<any>> {
+    let lmt = args?.limit || 3000
     return httpApi.post('/index.php?graphql&all', {
       query: `query all {
   __typename
-  users(where: {roleIn: [ADMINISTRATOR, AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}, first: 1000) {
+  users(where: {roleIn: [AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}, first: ${lmt}) {
     nodes {
       avatar {
         url

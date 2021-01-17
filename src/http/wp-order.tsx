@@ -37,11 +37,22 @@ export default class WpOrder {
   }
 
 
-  static subscriptions(args: { date?: { start: string, end: string } }): Promise<AxiosResponse> {
+  static subscriptions(args: {
+    dateStart: { day: number; month: number; year: number },
+    dateEnd: { day: number; month: number; year: number }
+  }): Promise<AxiosResponse> {
+
+    const afd = args.dateStart.day
+    const afm = args.dateStart.month
+    const afy = args.dateStart.year
+    const bed = args.dateEnd.day
+    const bem = args.dateEnd.month
+    const bey = args.dateEnd.year
+
     return httpApi.post('/index.php?graphql&subscriptions', {
       query: `query subscriptions {
-    orders(where: {dateQuery: {after: {day: 1, month: 10, year: 2020},
-        before: {day: 7, month: 1, year: 2021}, inclusive: true}}) {
+    orders(where: {dateQuery: {after: {day: ${afd}, month: ${afm}, year: ${afy}},
+        before: {day: ${bed}, month: ${bem}, year: ${bey}}, inclusive: true}}, first: 2000) {
     nodes {
       databaseId
       currency

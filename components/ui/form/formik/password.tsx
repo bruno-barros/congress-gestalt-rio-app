@@ -65,10 +65,13 @@ export default function Password({label, containerClass, minStrength, thresholdL
 
     <input {...field} {...props} type="password" id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
 
-    {(label && floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}</label>}
-    <div className="bb-strengthMeter flex-grow-1">
-      <div className="bb-strengthMeterFill" data-strength={strength}/>
-    </div>
+    {(label && floatLabel) && <>
+      <label htmlFor={`fld_${field.name}`}>{label}</label>
+      <div className="bb-strengthMeter flex-grow-1">
+        <div className="bb-strengthMeterFill" data-strength={strength}/>
+      </div>
+    </>}
+
 
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
   </div>)

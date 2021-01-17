@@ -12,6 +12,7 @@ import {errorNotification} from "../../src/resources/responses";
 import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
 import {AbstractCollection} from "../../components/abstract/abstract.d";
+import {Trans} from "react-i18next";
 
 
 const Abstracts = () => {
@@ -60,15 +61,23 @@ const Abstracts = () => {
         {(abstracts?.count() === 0) && isCurrent
         && <Card style={{maxWidth: 600}}>
           <Card.Body className="p-5">
-            <p>Olá, congressista.</p>
-            <p>Antes de submeter seu trabalho confira as <a href="#" target="_blank">regras de submissão de
-              trabalhos</a>.
-              Você pode enviar até {edition.abstract.limit_per_user} trabalhos.</p>
-            <p><Link href={`/abstracts/new`} passHref><a
+            <Trans as="div"
+                   i18nKey="trabalho.boas-vindas"
+                   values={{limit: edition.abstract.limit_per_user}}
+                   defaults={`<0>Olá, congressista.</0>
+              Antes de submeter seu trabalho confira as
+                <1>regras de submissão de trabalhos</1>.
+          Você pode enviar até {{limit}} trabalhos.`}
+                   components={[<p>Olá, congressista.</p>,
+                     <a href="#" target="_blank">regras de submissão de trabalhos</a>]}
+            />
+            <p className="mt-3"><Link href={`/abstracts/new`} passHref><a
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
             </p>
           </Card.Body>
         </Card>}
+
+
 
         {edition.abstract.limit_per_user <= abstracts?.getNoRejected().length &&
         <div className="alert alert-warning">
@@ -78,7 +87,7 @@ const Abstracts = () => {
         {(abstracts?.count() > 0 && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
         <div className="d-md-flex align-items-center">
           <Link href={`/abstracts/new`}><a
-          className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
+            className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
           <div className="my-3 ml-md-4">
             {`${t('trabalho.existe-um-limite')} ${edition.abstract.limit_per_user} ${t('trabalho.trabalhos-por-autor')}.`}
           </div>
@@ -88,7 +97,7 @@ const Abstracts = () => {
 
         {(!isCurrent && abstracts && abstracts?.count() === 0) &&
         <div className="alert alert-light border">
-          Você não tem trabalhos nesta edição. / Nothin to show.
+          Você não tem trabalhos. / Nothin to show.
         </div>}
 
 

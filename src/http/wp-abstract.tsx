@@ -151,7 +151,7 @@ export class WpAbstract {
     if (args?.authorId) filters.push(`author_id: ${args.authorId}`)
     if (args?.authorName) filters.push(`author_name: "${args.authorName}"`)
     if (args.statuses) filters.push(`status: [${args.statuses.join(',')}]`)
-    let lmt = args?.limit || 500
+    let lmt = args?.limit || 1000
 
     return httpApi.post('/index.php?graphql&abstractFilters', {
       query: `query collection {

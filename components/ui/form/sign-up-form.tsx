@@ -92,7 +92,6 @@ export default function SignUp(props: SignUpProps) {
   }
 
 
-
   function handleClose() {
     setShow(false)
     setLoading(false)
@@ -100,7 +99,7 @@ export default function SignUp(props: SignUpProps) {
     onDismiss && onDismiss()
   }
 
-  return (<Modal show={show} onHide={handleClose}  centered>
+  return (<Modal show={show} onHide={handleClose} centered>
     <Modal.Header closeButton className="px-4 px-md-5">
       <Modal.Title>{t('cadastro.com-email')}</Modal.Title>
     </Modal.Header>
@@ -115,12 +114,14 @@ export default function SignUp(props: SignUpProps) {
         {({errors, touched, values, isValid}) => (
           <Form>
             <Text name="username" label={t('seu-email')} floatLabel/>
-            <Password name="password" label={t('senha')} floatLabel passwordStrength={(strength, isStrong, reset)=>{
-              setIsPassStrong(isStrong)
-            }} validate={(val)=>{
-              console.log({val});
-              return !isPassStrong ? t('validacao.senha-fraca') : undefined
-            }}/>
+            <Password
+              name="password" label={t('senha')} floatLabel autoComplete="new-password"
+              passwordStrength={(strength, isStrong, reset) => {
+                setIsPassStrong(isStrong)
+              }}
+              validate={(val) => {
+                return !isPassStrong ? t('validacao.senha-fraca') : ''
+              }}/>
             <LoadingButton disable={!isValid} loading={loading}>{t('cadastro.cadastrar')}</LoadingButton>
           </Form>
         )}

@@ -8,18 +8,18 @@ export default class WpNotification {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_notification_read', {notifications});
   }
 
-  static get(args: { context: NotificationTypes, recipient_id?: number, read?:boolean }): Promise<AxiosResponse> {
+  static get(args: { context: NotificationTypes, recipient_id?: number, read?:boolean; limit?: number }): Promise<AxiosResponse> {
 
     let filters = []
     if(args?.recipient_id) filters.push(`recipient_id: ${args.recipient_id}`)
     if(args?.read) filters.push(`read: ${args.read}`)
     let where = filters.join(', ')
-
+    let lmt = args?.limit || 50
 
     return httpApi.post('/index.php?graphql&notifications', {
       query: `query WpNotification {
   __typename
-  evNotifications(where: {context: "${args.context}", ${where}}) {
+  evNotifications(where: {context: "${args.context}", ${where}}, first: ${lmt}) {
     nodes {
       id
       context

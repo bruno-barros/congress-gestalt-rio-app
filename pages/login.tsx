@@ -9,6 +9,8 @@ import Head from "next/head";
 import {siteTitle} from "../src/helpers";
 import useEvent from "../components/hooks/useEvent";
 import {useQueryClient} from "react-query";
+import {useEffect} from "react";
+import {toast} from "react-toastify";
 
 
 const Login = () => {
@@ -20,6 +22,11 @@ const Login = () => {
   const t = useTrans()
   const {authLoading, user} = useCurrentUser()
 
+  useEffect(()=>{
+    if(router.query.passreseted){
+      toast.success( t('cadastro.senha-atualizada-sucesso'), {position: 'top-center'})
+    }
+  },[router.query])
 
   return (<div className="login-page">
     <Head>

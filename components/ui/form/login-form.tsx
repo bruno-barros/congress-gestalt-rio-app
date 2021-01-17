@@ -1,5 +1,5 @@
-import { useState} from "react";
-import { Form, Formik} from "formik";
+import {useState} from "react";
+import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {LoadingButton} from "@brunobarros/react-components";
 import PasswordRecover from "./password-recover";
@@ -16,7 +16,7 @@ import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
 import {BlockUi} from "@brunobarros/react-components/dist";
 import WpUser from "../../../src/http/wp-user";
-import {setUpUser} from "../../../src/store/user.actions";
+import {postLogin, setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
 import {useRouter} from "next/router";
 import useEvent from "../../hooks/useEvent";
@@ -24,6 +24,7 @@ import SignUp from "./sign-up-form";
 import Text from "./formik/text";
 import {errorNotification} from "../../../src/resources/responses";
 import AccountRecover from "./account-recover";
+import {ErrorMessage} from "../../../src/store/store.d";
 
 const LoginForm = () => {
 
@@ -39,6 +40,7 @@ const LoginForm = () => {
   const [blockUi, setBlockUi] = useState(false)
   const [response, setResponse] = useState(null)
   const [merging, setMerging] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
@@ -83,10 +85,20 @@ const LoginForm = () => {
 
   }
 
-  async function handleEmailLogin(values) {
-    // set loading
-    await new Promise((r) => setTimeout(r, 500));
-    console.log({values});
+  function handleEmailLogin(values) {
+    setLoading(true)
+    disp(postLogin({
+        login: values.username,
+        password: values.password
+      },
+      (user: any, error: ErrorMessage|boolean) => {
+        if(user) {
+          router.push(`/dashboard`)
+        } else {
+          errorNotification({message: t(`validacao.${error?.msg}`)})
+        }
+        setLoading(false)
+      }))
   }
 
   function handleFailure(error: Error, provider: Providers) {
@@ -112,7 +124,7 @@ const LoginForm = () => {
         <Form>
           <Text name="username" label={t('seu-email')} floatLabel/>
           <Text name="password" type="password" label={t('senha')} autoComplete="current-password" floatLabel/>
-          <LoadingButton disable={!isValid} loading={false} block>{t('entrar')}</LoadingButton>
+          <LoadingButton disable={!isValid} loading={loading} block>{t('entrar')}</LoadingButton>
 
           <div className="d-flex justify-content-between my-4">
             <a href="#" onClick={(e) => {
@@ -135,9 +147,9 @@ const LoginForm = () => {
     }}/>
     <PasswordRecover show={showPassRecover} onDismiss={(accountRecover) => {
       setShowPassRecover(false)
-      if(accountRecover === true) setShowAccountRecover(true)
+      if (accountRecover === true) setShowAccountRecover(true)
     }}/>
-    <AccountRecover show={showAccountRecover} onDismiss={()=> setShowAccountRecover(false)}/>
+    <AccountRecover show={showAccountRecover} onDismiss={() => setShowAccountRecover(false)}/>
     <MaybeLoginWithEmail show={!!loginWithEmail} originalMessage={loginWithEmail} onDismiss={() => {
       setLoginWithEmail('')
     }}/>

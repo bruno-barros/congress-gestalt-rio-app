@@ -75,7 +75,7 @@ export class User {
 
 
   canManageAbstracts() {
-    return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin()
+    return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin() || this.isShopManager()
   }
   canPublishAbstracts() {
     return this.isSubscriber()
@@ -103,6 +103,10 @@ export class User {
 
   isSubscriber() {
     return !!this.user?.roles?.nodes.find(role => role.name === 'subscriber');
+  }
+
+  isShopManager() {
+    return !!this.user?.roles?.nodes.find(role => role.name === 'shop_manager');
   }
 
 

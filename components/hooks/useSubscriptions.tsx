@@ -3,18 +3,30 @@ import {errorNotification} from "../../src/resources/responses";
 import useCurrentUser from "./useCurrentUser";
 import WpOrder from "../../src/http/wp-order";
 import {OrderCollection} from "../../src/resources/order";
+import useEvent from "./useEvent";
+import {Edition} from "../../src/resources/event";
+import moment from "moment";
 
-export default function useSubscriptions(editionId: string) {
+export default function useSubscriptions(edition?: Edition) {
 
   const {user} = useCurrentUser()
   const queryClient = useQueryClient()
 
+  const s = moment(edition?.subscription.start_at)
+  const e = moment(edition?.subscription.end_at)
+
   function queryData(): Promise<OrderCollection|null> {
     return new Promise((resolve, reject) => {
       WpOrder.subscriptions({
-        date: {
-          start: '',
-          end: ''
+        dateStart: {
+          day: Number(s.format('DD')),
+          month: Number(s.format('MM')),
+          year: Number(s.format('YYYY')),
+        },
+        dateEnd: {
+          day: Number(e.format('DD')),
+          month: Number(e.format('MM')),
+          year: Number(e.format('YYYY')),
         }
       }).then(resp => {
         if (resp.data.data?.orders?.nodes) {
@@ -40,8 +52,8 @@ export default function useSubscriptions(editionId: string) {
 
   const methods = useQuery('payment_methods', queryMethods, {staleTime: Infinity})
 
-  const subscriptions = useQuery<OrderCollection|null, any>(['subscriptions', editionId], queryData, {
-    enabled: user.canManageAbstracts() && !! editionId,
+  const subscriptions = useQuery<OrderCollection|null, any>(['subscriptions', edition?.id], queryData, {
+    enabled: user.canManageAbstracts() && !! edition?.id,
     staleTime: Infinity
   })
 
