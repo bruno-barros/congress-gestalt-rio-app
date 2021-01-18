@@ -2,7 +2,7 @@ import Card from "react-bootstrap/cjs/Card";
 import useEvent from "../hooks/useEvent";
 import Button from "react-bootstrap/cjs/Button";
 import ProgressBar from "react-bootstrap/cjs/ProgressBar";
-import {useCallback, useState} from "react";
+import {useCallback, useRef, useState} from "react";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import isNaN from 'lodash/isNaN'
@@ -15,22 +15,33 @@ export default function Anais() {
 
   function AnaisGenerator({edition}) {
 
-    const [state, setState] = useState<'' | 'fail' | 'generating' | 'success'>('')
+    const [state, setState] = useState<'' | 'fail' | 'generating' | 'success'|'canceled'>('')
     const [total, setTotal] = useState(0)
     const [remaining, setRemaining] = useState(0)
     const [download, setDownload] = useState(null)
+    const canceled = useRef(false)
 
     const calcPercent = useCallback(():number => {
       if (state === 'fail') return 100
       const ttl = ((total - remaining) * 100) / total
       if (isNaN(ttl) || ttl < 5) return 5;
-      return ttl
+      return Math.round(ttl)
     }, [remaining])
 
     async function handleGeneration() {
-      setState('generating')
+
       const resp = await process()
-      console.log(resp);
+
+      if(canceled.current){
+        errorNotification({message: 'Interrompido pelo usuário'})
+        setState('fail')
+        await processCancellation()
+        setTimeout(()=>{
+          setState('')
+          canceled.current = false
+        }, 4000)
+        return ;
+      }
 
       if (resp.data.total === resp.data.remaining) setTotal(resp.data.total)
       setRemaining(resp.data.remaining)
@@ -45,7 +56,6 @@ export default function Anais() {
           setDownload(resp.data.download)
           setState('success')
         }, 1000)
-        console.log('finised');
       }
     }
 
@@ -53,17 +63,24 @@ export default function Anais() {
       const resp: any = await WpAbstract.anais({exportEdition: edition.id})
       return resp.data
     }
+    async function processCancellation(): Promise<any> {
+      const resp: any = await WpAbstract.anais({exportEdition: edition.id, cancel: true})
+      return resp.data
+    }
 
     function handleCancel() {
-      setState('')
+      canceled.current = true;
     }
 
     return (<div className="">
       {state === '' &&
       <div className="">
-        <Button variant="outline-primary" size="sm" onClick={handleGeneration}>Gerar anais</Button>
+        <Button variant="outline-primary" size="sm" onClick={()=>{
+          setState('generating')
+          handleGeneration()
+        }}>Gerar anais</Button>
       </div>}
-      {(state === 'generating' || state === 'fail') &&
+      {(state === 'generating' || state === 'fail' || state === 'canceled') &&
       <div className="d-flex align-items-center">
         <div className="flex-grow-1 mr-3">
           <ProgressBar

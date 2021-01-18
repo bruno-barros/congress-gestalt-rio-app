@@ -33,7 +33,7 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_export', {abstracts: args.abstracts});
   }
 
-  static anais(args: {exportEdition?: string}): Promise<AxiosResponse> {
+  static anais(args: {exportEdition: string, cancel?: boolean}): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_anais', {...args});
   }
 
