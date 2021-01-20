@@ -85,7 +85,7 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
 
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((file, idx) => (
-          <div className="border d-flex align-items-center justify-content-between py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
+          <div className="border-top border-bottom  d-flex align-items-center justify-content-between py-2 px-4" key={idx} style={{margin: '0 -1.5rem -1px'}}>
             <div className="d-flex align-items-center text-sm text-truncate">
               <div className="mr-2 text-nowrap">VER {file.version}</div>
               <div className="mr-2 text-nowrap">{moment(file.created_at).format('DD/MM/YYYY')}</div>

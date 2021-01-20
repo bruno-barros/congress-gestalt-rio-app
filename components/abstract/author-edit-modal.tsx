@@ -39,7 +39,6 @@ export default function AuthorEditModal(props: AuthorEditModalProps) {
   const FormSchema = Yup.object().shape({
     name: Yup.string().required('validacao.obrigatorio'),
     email: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
-    bio: Yup.string().required('validacao.obrigatorio'),
   });
 
   useEffect(() => {
@@ -91,7 +90,8 @@ export default function AuthorEditModal(props: AuthorEditModalProps) {
           {({errors, touched, values, isValid}) => (<Form>
             <Text name="name" label={t('cadastro.nome')} required/>
             <Text type="email" name="email" label="E-mail" required/>
-            <Textarea name="bio" label="Bio" required/>
+            <Text name="company" label={t('cadastro.instituicao.instituicao')}/>
+            <Textarea name="bio" label="Bio"/>
             <LoadingButton disable={!isValid} loading={loading}>{t('atualizar')}</LoadingButton>
           </Form>)}
         </Formik>

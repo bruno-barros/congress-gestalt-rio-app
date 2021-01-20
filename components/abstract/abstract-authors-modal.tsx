@@ -45,11 +45,6 @@ export default function AbstractAuthorsModal(props: AbstractAuthorsModalProps) {
     })
   }
 
-  // const FormSchema = Yup.object().shape({
-  //   name: Yup.string().required('validacao.obrigatorio'),
-  //   email: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
-  //   bio: Yup.string().required('validacao.obrigatorio'),
-  // });
 
   useEffect(() => {
     setShow(props.show)

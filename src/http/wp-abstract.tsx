@@ -59,6 +59,7 @@ export class WpAbstract {
       email
       active
       bio
+      company
       id
       is_speaker
       order

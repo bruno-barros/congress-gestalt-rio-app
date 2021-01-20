@@ -39,13 +39,14 @@ export default function AbstractForm(props: AbstractFormProps) {
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
   const isEditable1 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
-  const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_approved'))
+  const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
 
   const initialAuthor = isEditing ? {} : {
     id: null,
-    author_name: user.getUserData().name,
-    author_email: user.getUserData().email,
-    author_bio: user.getUserData().description || '',
+    name: user.getUserData().name,
+    email: user.getUserData().email,
+    bio: user.getUserData().description || '',
+    company: user.getUserData().institution_name || '',
     uuid: null
   }
 
@@ -61,7 +62,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     content: abstract?.content || '',
     bibliography: abstract?.bibliography || '',
     attachments: abstract?.attachments || [],
-    authors: abstract?.authors || [],
+    authors: abstract?.authors || [initialAuthor],
   }
   const Validation = Yup.object().shape({
     topic: Yup.string().required('validacao.obrigatorio'),
@@ -98,12 +99,12 @@ export default function AbstractForm(props: AbstractFormProps) {
       const data = resp.data.data
       disp(blockUi(false))
       if (success) {
-        queryClient.invalidateQueries(['abstract', abstract.databaseId])
         successNotification({
           message: isEditing ? t('atualizado-com-sucesso') : t('trabalho.criado-com-sucesso'),
           heroTitle: isEditing ? null : t('parabens')
         })
-        if (!isEditing) router.push(`/abstracts/${data.ID}?created=1`)
+        if (!isEditing) setTimeout(()=> router.push(`/abstracts/${data.ID}?created=1`), 2000)
+        if(isEditing) queryClient.invalidateQueries(['abstract', abstract?.databaseId])
         if (isEditing && data._intent === 'review') router.reload()
       } else {
         errorNotification({message: data.msg})
@@ -152,7 +153,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                  disabled={!isEditable1}
-                 initialAuthor={initialAuthor}
+                 creating={!isEditing}
                  onEdit={(author, metadata) => {
                    setAuthorModal({show: true, author, metadata})
                  }}/>

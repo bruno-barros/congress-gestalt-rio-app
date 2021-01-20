@@ -16,13 +16,13 @@ interface AuthorsProps {
   label: string
   metas: any
   containerClass?: string
+  creating: boolean
   maxAuthors?: number
   disabled?: boolean
-  initialAuthor?: {id: null; author_name: string; author_email: string; author_bio: string; uuid: null}
   onEdit: (author, metadata) => void
 }
 
-export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, initialAuthor, onEdit, ...props}: AuthorsProps & any) {
+export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, creating, onEdit, ...props}: AuthorsProps & any) {
 
   const disp = useDispatch()
   const t = useTrans()
@@ -30,13 +30,13 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  const [newAuthor, setNewAuthor] = useState(initialAuthor || {id: null, author_name: '', author_email: '', author_bio: '', uuid: null});
+  const [newAuthor, setNewAuthor] = useState({id: null, author_name: '', author_email: '', author_bio: '', author_company: '', uuid: null});
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
 
     // fast validation
-    if (newAuthor.author_name.length < 2 || newAuthor.author_email.length < 5 || newAuthor.author_bio.length < 2) {
+    if (newAuthor.author_name.length < 2 || newAuthor.author_email.length < 5) {
       toast.error(t('validacao.todos-sao-obrigatorios'), {toastId: 'author-validation'})
       return;
     }
@@ -49,6 +49,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
         name: newAuthor.author_name,
         email: newAuthor.author_email,
         bio: newAuthor.author_bio,
+        company: newAuthor.author_company,
         locale: router.locale
       })
       disp(blockUi(false))
@@ -59,11 +60,6 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
         errorNotification({message: data.msg})
       } else {
         successNotification({message: t('atualizado-com-sucesso')})
-        let author: any = {...newAuthor}
-        author.name = author.author_name
-        author.email = author.author_email
-        author.bio = author.author_bio
-        author.uuid = metas.tmp_id || null
         push(data)
         reset()
       }
@@ -110,33 +106,39 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   }
 
   function reset() {
-    setNewAuthor({id: null, author_name: '', author_email: '', author_bio: '', uuid: null})
+    setNewAuthor({id: null, author_name: '', author_email: '', author_bio: '', author_company: '', uuid: null})
   }
 
   return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
     <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxAuthors})</small></div>
+
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       return (<div className="attachments-container">
         {field.value?.length > 0 && field.value.map((author, idx) => (
-          <div className="border  py-2 px-4" key={idx} style={{margin: '0 -1.5rem'}}>
+          <div className="border-top border-bottom  py-2 px-4" key={idx} style={{margin: '0 -1.5rem -1px'}}>
             <div className="d-flex align-items-center justify-content-between">
-              <a href="" className="d-flex flex-grow-1" onClick={(e) => {
+              <a href="" className="d-flex align-items-center flex-grow-1" onClick={(e) => {
                 e.preventDefault()
                 onEdit(author, metas)
               }}>
                 <div className="mr-2">{`#${idx + 1}`}</div>
-                <div className="text-truncate">{author.name}</div>
+                <div className="text-truncate mr-3">{author.name}</div>
+                {idx === 0 && <span className="badge badge-dark">autor de contato</span>}
               </a>
-              {!disabled && <>
+              {(!creating && !disabled)
+                ? <>
                 <ToolTip text={t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}>
-                  <button type="button" className="btn btn-sm py-0" style={{lineHeight: 1}} onClick={() => {
+                  <button type="button" className="btn btn-sm py-0 d-flex align-items-center" style={{lineHeight: 1}} onClick={() => {
                     handleSpeaker(author)
-                  }}><Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
+                  }}>
+                    <div className={`badge ${author.is_speaker ? 'badge-warning':'badge-light'}`}>{t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}</div>
+                    <Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
                   </button>
                 </ToolTip>
                 <ButtonDeleteConfirmation onDelete={()=>{handleDeletion(remove, author, idx)}}/>
-              </>}
+              </>
+                : author.is_speaker ? <div className="badge badge-warning">{t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}</div> : ''}
 
             </div>
           </div>
@@ -146,8 +148,8 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
         && <div className="mt-3">
 
           <div className="input-group">
-            <div className="input-group-prepend"><span className="input-group-text"
-                                                       style={{minWidth: 70}}>{t('cadastro.nome')}</span>
+            <div className="input-group-prepend">
+              <span className="input-group-text text-sm" style={{minWidth: 100}}>{t('cadastro.nome')}</span>
             </div>
             <input type="text" name="author_name" value={newAuthor.author_name} placeholder={t('trabalho.autor-nome')}
                    className="form-control" onChange={(e) => {
@@ -155,7 +157,8 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
             }}/>
           </div>
           <div className="input-group">
-            <div className="input-group-prepend"><span className="input-group-text" style={{minWidth: 70}}>E-mail</span>
+            <div className="input-group-prepend">
+              <span className="input-group-text text-sm" style={{minWidth: 100}}>E-mail</span>
             </div>
             <input type="email" name="author_email" value={newAuthor.author_email}
                    placeholder={t('trabalho.autor-email')}
@@ -164,7 +167,18 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
             }}/>
           </div>
           <div className="input-group">
-            <div className="input-group-prepend"><span className="input-group-text" style={{minWidth: 70}}>Bio</span>
+            <div className="input-group-prepend">
+              <span className="input-group-text text-sm" style={{minWidth: 100}}>{t('cadastro.instituicao.instituicao')}</span>
+            </div>
+            <input type="text" name="author_company" value={newAuthor.author_company}
+                   placeholder={t('trabalho.autor-instituicao')}
+                   className="form-control" onChange={(e) => {
+              setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
+            }}/>
+          </div>
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text text-sm" style={{minWidth: 100}}>Bio</span>
             </div>
             <textarea rows={3} name="author_bio" value={newAuthor.author_bio} placeholder={t('trabalho.autor-bio')}
                       className="form-control" onChange={(e) => {
