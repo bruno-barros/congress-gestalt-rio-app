@@ -30,7 +30,7 @@ export default function AbstractAuthorsModal(props: AbstractAuthorsModalProps) {
       node: {
         avatar: { url: string }; databaseId: number; email: string; firstName: string; locale: string; name: string;
       }
-    }; authors: { name: string; email: string; active: number; bio: string; id: number; is_speaker: number; order: number }[]
+    }; authors: { name: string; email: string; active: number; company: string; bio: string; id: number; is_speaker: number; order: number }[]
   }> {
     return new Promise((resolve, reject) => {
       WpAbstract.authors(abstract_id)
