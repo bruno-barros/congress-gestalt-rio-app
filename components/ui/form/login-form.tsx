@@ -91,11 +91,11 @@ const LoginForm = () => {
         login: values.username,
         password: values.password
       },
-      (user: any, error: ErrorMessage|boolean) => {
+      (user: any, error: ErrorMessage) => {
         if(user) {
           router.push(`/dashboard`)
-        } else {
-          errorNotification({message: t(`validacao.${error?.msg}`)})
+        } else if(error){
+          errorNotification({message: t(`validacao.${error.msg}`)})
         }
         setLoading(false)
       }))
