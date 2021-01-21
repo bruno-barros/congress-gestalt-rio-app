@@ -95,10 +95,7 @@ export default function TablePagination<T extends object>({instance}: PropsWithC
         </div>
 
       </div>
-      {/*<code>{JSON.stringify({*/}
-      {/*  pageIndex, pageSize, pageCount, pageOptions, rowCount, canPreviousPage,*/}
-      {/*  canNextPage*/}
-      {/*}, null, 2)}</code>*/}
+
     </div>
   ) : null
 }
