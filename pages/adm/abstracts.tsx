@@ -9,6 +9,7 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
+import privateRoute from "../../components/hoc/private-route";
 
 const AdmAbstracts = () => {
 
@@ -115,4 +116,4 @@ const AdmAbstracts = () => {
   </MainLayout>)
 }
 
-export default AdmAbstracts
+export default privateRoute(AdmAbstracts)

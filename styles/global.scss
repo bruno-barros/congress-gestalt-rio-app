@@ -200,3 +200,13 @@ body, html {
     margin-bottom: 1em;
   }
 }
+
+.wysiwyg-restrictions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .8em;
+  line-height: 1.2em;
+  background-color: $gray-200;
+  padding: 3px $spacer/2;
+}

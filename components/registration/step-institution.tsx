@@ -3,8 +3,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {StepProps} from "./registration.d";
 import {Form, Formik} from "formik";
 import Text from "../ui/form/formik/text";
-import Select from "../ui/form/formik/select";
-import {states} from "../../src/helpers";
 import Curtain from "../ui/curtain";
 import {useDispatch} from "react-redux";
 import * as Yup from "yup";

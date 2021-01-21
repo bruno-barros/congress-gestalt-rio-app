@@ -97,6 +97,7 @@ export class Edition {
   }
   abstract: {
     allowed: boolean
+    rules: { pt: string; en: string }
     statuses: Status[]
     attachments: number
     topics: { id: string; pt: string; en: string }[]
@@ -106,13 +107,13 @@ export class Edition {
       topic?: boolean
       title?: boolean
       subtitle?: boolean
-      tags?: boolean
-      resume?: boolean
-      content?: boolean
-      bibliography?: boolean
-      attachments?: boolean
-      authors?: boolean
-    }
+      tags?: boolean|{min: number; max: number}
+      resume?: boolean|{min: number; max: number}
+      content?: boolean|{min: number; max: number}
+      bibliography?: boolean|{min: number; max: number}
+      attachments?: boolean|{min: number; max: number}
+      authors?: boolean|{min: number; max: number}
+    }|any
     limit_per_user: number
     authors: {
       max: number
@@ -179,4 +180,10 @@ export class Edition {
     return this.review.questions || null
   }
 
+  getFieldMin(field: 'tags'|'resume'|'content'|'bibliography'|'authors'|'attachments'){
+    return this.abstract.required_fields[field].hasOwnProperty('min') ? this.abstract.required_fields[field].min : undefined
+  }
+  getFieldMax(field: 'tags'|'resume'|'content'|'bibliography'|'authors'|'attachments'){
+    return this.abstract.required_fields[field].hasOwnProperty('max') ? this.abstract.required_fields[field]?.max : undefined
+  }
 }

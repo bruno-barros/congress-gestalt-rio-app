@@ -8,6 +8,7 @@ import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvaluation from "../../components/hooks/useEvaluation";
 import AbstractView from "../../components/abstract/abstract-view";
 import EvaluationForm from "../../components/abstract/evaluation-form";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const EvaluationEditing = () => {
@@ -67,4 +68,4 @@ const EvaluationEditing = () => {
 }
 
 
-export default EvaluationEditing
+export default privateRoute(EvaluationEditing)

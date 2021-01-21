@@ -13,6 +13,7 @@ import Sweet from "../../components/ui/sweet-alert";
 import {useEffect} from "react";
 import NextStepTip from "../../components/abstract/next-step-tip";
 import AbstractComments from "../../components/abstract/abstract-comments";
+import privateRoute from "../../components/hoc/private-route";
 
 const AbstractEditing = () => {
 
@@ -74,4 +75,4 @@ const AbstractEditing = () => {
 }
 
 
-export default AbstractEditing
+export default privateRoute(AbstractEditing)

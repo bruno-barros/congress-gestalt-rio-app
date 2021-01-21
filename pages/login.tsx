@@ -35,11 +35,12 @@ const Login = () => {
     <div className="login-main-panel">
       <div className="brand-panel">
         <div className="p-4">
-          <Image src="/img/logo-h.jpg" width={363} height={91} className="img-fluid"/>
+          {/*<img src={event.logoPrimary} className="logo img-fluid"/>*/}
         </div>
       </div>
       <div className="form-panel p-4">
 
+          <img src={event?.logoPrimary} className="logo img-fluid "/>
         <div className="d-flex align-items-center justify-content-center mb-3">
           <LangSelector/>
         </div>

@@ -9,7 +9,6 @@ import Event from "./resources/event";
  * @param src
  */
 export function asset(src: string) {
-  // return `${process.env.assetPrefix}${src}`;
   let s = trimStart(src, '/');
   return `${process.env.RELATIVE_PATH?.length > 1
     ? process.env.RELATIVE_PATH : ''}/${s}`;

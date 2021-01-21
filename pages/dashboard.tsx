@@ -10,6 +10,7 @@ import {Edition} from "../src/resources/event";
 import {Loading} from "@brunobarros/react-components";
 import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
+import privateRoute from "../components/hoc/private-route";
 
 interface DashboardProps {
 
@@ -40,9 +41,10 @@ const Dashboard = (props: DashboardProps) => {
             const isCurrent = edition.id === currentEdition?.id
             return (<Card key={edition.id} style={{maxWidth: 400}}>
               {edition.logoPrimary &&
-              <div className="p-4 border-bottom"><Card.Img variant="top" src={edition.logoPrimary}/></div>}
+              <div className="p-5 border-bottom"><Card.Img variant="top" src={edition.logoPrimary}/></div>}
               <Card.Body className="" style={{position: 'relative'}}>
-                {isSubscribed && isCurrent && <div style={{position: 'absolute', top: 0, transform: 'translateY(-40%)'}}><BadgeSubscribed /></div>}
+                {(isSubscribed && isCurrent) &&
+                <div style={{position: 'absolute', top: 0, transform: 'translateY(-40%)'}}><BadgeSubscribed /></div>}
                 <Card.Title>{edition.name}</Card.Title>
                 <Card.Text>
                   {edition.year}
@@ -92,4 +94,4 @@ const Dashboard = (props: DashboardProps) => {
 }
 
 
-export default Dashboard
+export default privateRoute(Dashboard)

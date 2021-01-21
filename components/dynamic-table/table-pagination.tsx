@@ -86,7 +86,7 @@ export default function TablePagination<T extends object>({instance}: PropsWithC
               setPageSize(Number(e.target.value))
             }}
           >
-            {[5, 10, 20, 30, 40, 50].map(pageSize => (
+            {[5, 10, 20, 30, 40, 50, 100, 200].map(pageSize => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}
               </option>

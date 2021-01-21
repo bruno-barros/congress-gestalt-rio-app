@@ -19,6 +19,7 @@ import StepPayment from "../components/registration/step-payment";
 import Curtain from "../components/ui/curtain";
 import {FormikProps} from "formik";
 import {Icon} from "@brunobarros/react-components";
+import privateRoute from "../components/hoc/private-route";
 
 
 const Register2 = () => {
@@ -116,4 +117,4 @@ const Register2 = () => {
   </ClearLayout>)
 }
 
-export default Register2
+export default privateRoute(Register2)

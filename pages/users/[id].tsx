@@ -10,6 +10,7 @@ import {errorNotification} from "../../src/resources/responses";
 import ProfileForm from "../../components/user/profile-form";
 import {User} from "../../src/resources/user";
 import UsersListSidebar from "../../components/user/users-list-sidebar";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const UserEditing = () => {
@@ -74,4 +75,4 @@ const UserEditing = () => {
 }
 
 
-export default UserEditing
+export default privateRoute(UserEditing)

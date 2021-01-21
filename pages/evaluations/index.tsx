@@ -9,6 +9,7 @@ import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import WpEvaluation from "../../src/http/wp-evaluation";
+import privateRoute from "../../components/hoc/private-route";
 
 const Evaluations = () => {
 
@@ -101,4 +102,4 @@ const Evaluations = () => {
   </MainLayout>)
 }
 
-export default Evaluations
+export default privateRoute(Evaluations)

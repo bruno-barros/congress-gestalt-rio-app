@@ -109,13 +109,17 @@ export default function ProfileForm(props: ProfileFormProps) {
       address: user.getUserData().address || '',
       number: user.getUserData().number || '',
       complement: user.getUserData().complement,
+      institution_name: user.getUserData().institution_name,
+      institution_occupation: user.getUserData().institution_occupation,
+      institution_email: user.getUserData().institution_email,
+      institution_phone: user.getUserData().institution_phone,
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
   >{({errors, values, touched, isValid, setFieldValue}) => (
     <Form>
       <fieldset>
-        <legend>Dados pessoais</legend>
+        <legend>{t('dados-pessoais')}</legend>
 
         {editingMode === 'admin'
         && <div className="row border pt-3 pb-2 mb-3">
@@ -164,7 +168,7 @@ export default function ProfileForm(props: ProfileFormProps) {
         <Textarea name="description" label="Bio"/>
       </fieldset>
       <fieldset>
-        <legend>Endereço</legend>
+        <legend>{t('cadastro.endereco')}</legend>
         <div className="form-row">
           <Text name="postcode" label={t('cadastro.cep')} required containerClass="col-12 col-md-4"
                 cepCallback={(data)=>{
@@ -189,6 +193,17 @@ export default function ProfileForm(props: ProfileFormProps) {
         <div className="row">
           <Text name="number" type="number" label={t('cadastro.numero')} required containerClass="col-12 col-md-6"/>
           <Text name="complement" type="text" label={t('cadastro.complemento')} containerClass="col-12 col-md-6"/>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>{t('cadastro.instituicao.instituicao')} <small style={{fontSize: 14}}>({t('opcional')})</small></legend>
+        <div className="row">
+          <Text name="institution_name" label={t('cadastro.instituicao.nome')} containerClass="col-12 col-md-6"/>
+          <Text name="institution_occupation" label={t('cadastro.ocupacao')} containerClass="col-12 col-md-6"/>
+        </div>
+        <div className="row">
+          <Text name="institution_phone" label={t('cadastro.telefone')} containerClass="col-12 col-md-6"/>
+          <Text name="institution_email" label={`E-mail`} containerClass="col-12 col-md-6"/>
         </div>
       </fieldset>
       <LoadingButton variant="primary" block size="lg" className={` mt-3`} disable={!isValid}

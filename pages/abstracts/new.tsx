@@ -5,6 +5,9 @@ import {Edition} from "../../src/resources/event";
 import EditionSidebar from "../../components/event/edition-sidebar";
 import AbstractForm from "../../components/abstract/abstract-form";
 import AbstractsRules from "../../components/abstract/abstracts-rules";
+import privateRoute from "../../components/hoc/private-route";
+import {useRouter} from "next/router";
+import {Trans} from "react-i18next";
 
 
 interface NewAbstractProps {
@@ -13,9 +16,11 @@ interface NewAbstractProps {
 
 const NewAbstract = (props: NewAbstractProps) => {
 
+  const router = useRouter()
   const t = useTrans()
   const {data: event, isLoading} = useEvent()
   const edition: Edition = event?.currentEdition()
+  const lang = router.locale
 
   if (isLoading) {
     return null;
@@ -31,7 +36,13 @@ const NewAbstract = (props: NewAbstractProps) => {
       <div className="col-12 col-md-4">
 
         <div className="border-info pl-4 my-5" style={{borderLeft: 'solid 3px'}}>
-          Confira as <a href="#" target="_blank">regras de submissão de trabalhos</a>.
+          <Trans as="div"
+                 i18nKey="trabalho.confira-as-regras"
+                 defaults={`Confira as <1>regras de submissão de trabalhos</1>.`}
+                 components={['Confira as ',
+                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
+                   '.']}
+          />
         </div>
         <AbstractsRules/>
 
@@ -43,4 +54,4 @@ const NewAbstract = (props: NewAbstractProps) => {
   </MainLayout>)
 }
 
-export default NewAbstract
+export default privateRoute(NewAbstract)

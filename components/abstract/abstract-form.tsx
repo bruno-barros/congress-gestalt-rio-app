@@ -68,21 +68,29 @@ export default function AbstractForm(props: AbstractFormProps) {
     topic: Yup.string().required('validacao.obrigatorio'),
     title: Yup.string().required('validacao.obrigatorio'),
     // subtitle: Yup.string().required('validacao.obrigatorio'),
-    tags: Yup.array().min(edition.abstract.tags.min, 'validacao.obrigatorio')
-      .max(edition.abstract.tags.max).required('validacao.obrigatorio'),
-    resume: Yup.string().required('validacao.obrigatorio'),
+    tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
+      .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
+    resume:  Yup.string().when('topic', {
+      is: (val) => !!edition.abstract.required_fields?.resume,
+      then: Yup.string().required('validacao.obrigatorio'),
+      otherwise: Yup.string().notRequired()
+    }),
     content: Yup.string().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && edition.abstract.required_fields?.content,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
     // bibliography: Yup.string().required('validacao.obrigatorio'),
     attachments: Yup.array().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && edition.abstract.required_fields?.attachments,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.attachments?.min,
       then: Yup.array().required('validacao.obrigatorio'),
       otherwise: Yup.array().notRequired()
     }),
-    authors: Yup.array().required('validacao.obrigatorio'),
+    authors:  Yup.array().when('topic', {
+      is: (val) => !!edition.abstract.required_fields?.authors?.min,
+      then: Yup.array().required('validacao.obrigatorio'),
+      otherwise: Yup.array().notRequired()
+    }),
   })
 
   async function handleSubmit(values) {
@@ -124,7 +132,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     onSubmit={handleSubmit}
   >{({errors, values, isValid, setFieldValue, submitForm}) => (<>
     <Form>
-
+      {abstract && <h2>#{abstract.databaseId}</h2>}
       {(!isEditable1 && !isEditable2)
       && <div className="alert alert-warning">
         {t('trabalho.nao-pode-editar')}
@@ -138,34 +146,34 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>
         <Text name="title" label={t('trabalho.titulo')}/>
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>
-        <Tags name="tags" label="Tags" maxTags={edition.abstract.tags.max} disabled={!isEditable1}/>
-        <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={!isEditable1}/>
+        <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>
+        <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={!isEditable1}
+                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}/>
 
       </fieldset>
       <fieldset disabled={!isEditable2}>
         {abstract?.statusPassed('synopsis_waiting_upd') &&
-        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}/>}
+        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
+                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}/>}
 
         {abstract?.statusPassed('synopsis_waiting_upd') &&
-        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}/>}
+        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}
+                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}/>}
+
+        {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) &&
+        <Attachments name="attachments" label={t('anexos')}
+                     maxFiles={edition.getFieldMax('attachments')}
+                     metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+                     disabled={!isEditable2}/>}
       </fieldset>
       <fieldset disabled={!isEditable1}>
-        <Authors name="authors" label={t('autores')} maxAuthors={edition.abstract.authors.max}
+        <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                  disabled={!isEditable1}
                  creating={!isEditing}
                  onEdit={(author, metadata) => {
                    setAuthorModal({show: true, author, metadata})
                  }}/>
-      </fieldset>
-      <fieldset disabled={!isEditable2}>
-
-        {(edition.abstract.attachments && abstract?.statusPassed('synopsis_waiting_upd')) &&
-        <Attachments name="attachments" label={t('anexos')}
-                     maxFiles={edition.abstract.attachments}
-                     metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                     disabled={!isEditable2}/>}
-
       </fieldset>
       <Field name="_intent" type="hidden"/>
       {(isEditable1 || isEditable2) && <div className="row">

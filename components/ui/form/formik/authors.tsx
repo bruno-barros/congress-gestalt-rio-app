@@ -11,6 +11,7 @@ import {useRouter} from "next/router";
 import {errorNotification, exceptionNotification, successNotification} from "../../../../src/resources/responses";
 import ToolTip from "../../tooltip";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
+import useCurrentUser from "../../../hooks/useCurrentUser";
 
 interface AuthorsProps {
   label: string
@@ -27,6 +28,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   const disp = useDispatch()
   const t = useTrans()
   const router = useRouter()
+  const {user} = useCurrentUser()
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
@@ -120,15 +122,15 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
             <div className="d-flex align-items-center justify-content-between">
               <a href="" className="d-flex align-items-center flex-grow-1" onClick={(e) => {
                 e.preventDefault()
-                onEdit(author, metas)
+                !creating && !disabled && onEdit(author, metas)
               }}>
                 <div className="mr-2">{`#${idx + 1}`}</div>
                 <div className="text-truncate mr-3">{author.name}</div>
-                {idx === 0 && <span className="badge badge-dark">autor de contato</span>}
+                {(parseInt(author.wp_user_id) === user.getId() || creating && idx === 0) && <span className="badge badge-dark">autor de contato</span>}
               </a>
               {(!creating && !disabled)
                 ? <>
-                <ToolTip text={t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}>
+                <ToolTip text={`${t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')} (clique para mudar)`}>
                   <button type="button" className="btn btn-sm py-0 d-flex align-items-center" style={{lineHeight: 1}} onClick={() => {
                     handleSpeaker(author)
                   }}>

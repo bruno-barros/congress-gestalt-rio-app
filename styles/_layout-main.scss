@@ -84,7 +84,7 @@
   .sb-body {
     position: absolute;
     top: 38px;
-    min-height: calc(100vh - 98px);
+    min-height: calc(100vh - 107px);
     bottom: 0;
     width: $sidebarWidth;
     z-index: 1;
@@ -135,6 +135,7 @@
     .sb-header {
       display: flex;
       flex-direction: column;
+      margin-top: 7px;
     }
 
     .sb-title {
@@ -143,6 +144,7 @@
     }
 
     .sb-body {
+      top: 48px;
       z-index: 5;
     }
   }

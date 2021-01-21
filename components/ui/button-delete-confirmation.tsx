@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Icon} from "@brunobarros/react-components";
 import ToolTip from "./tooltip";
 import {Loading} from "@brunobarros/react-components";
+import useTrans from "../hooks/useTrans";
 
 interface ButtonDeleteConfirmationProps {
   buttonClass?: string
@@ -13,6 +14,7 @@ interface ButtonDeleteConfirmationProps {
 
 export default function ButtonDeleteConfirmation(props: ButtonDeleteConfirmationProps) {
 
+  const t = useTrans()
   const {buttonClass: bc, buttonConfirmClass: cc, buttonCancelClass: bcc, onDelete, loading: setload} = props
   const buttonClass = bc || 'btn btn-sm py-0'
   const buttonConfirmClass = cc || 'btn btn-sm btn-outline-success py-0'
@@ -31,7 +33,7 @@ export default function ButtonDeleteConfirmation(props: ButtonDeleteConfirmation
 
   return (<div className="">
     {state === '' && !loading &&
-    <ToolTip text="Apagar">
+    <ToolTip text={t('apagar')}>
       <button type="button" className={`${buttonClass} py-0`} style={{lineHeight: 0}}
               onClick={() => setState('confirm')}>
         <Icon name={`trash-outline`} style={{fontSize: 20}}/>
@@ -40,12 +42,12 @@ export default function ButtonDeleteConfirmation(props: ButtonDeleteConfirmation
     }
     {state === 'confirm' && !loading &&
     <div className="btn-group">
-      <ToolTip text="Sim, confirmar deleção">
+      <ToolTip text={t('sim-confirmar')}>
         <button type="button" className={`${buttonConfirmClass} py-0`} style={{lineHeight: 0}} onClick={doDelete}>
           <Icon name={`checkmark-done-outline`} style={{fontSize: 20}}/>
         </button>
       </ToolTip>
-      <ToolTip text="Não, cancelar">
+      <ToolTip text={t('nao-cancelar')}>
         <button type="button" className={`${buttonCancelClass} py-0`} style={{lineHeight: 0}}
                 onClick={() => setState('')}>
           <Icon name={`close-outline`} style={{fontSize: 20}}/>

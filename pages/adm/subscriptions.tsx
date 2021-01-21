@@ -9,6 +9,7 @@ import useSubscriptions from "../../components/hooks/useSubscriptions";
 import useEvent from "../../components/hooks/useEvent";
 import {Order} from "../../src/resources/order";
 import EditionSidebar from "../../components/event/edition-sidebar";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const AdmSubscriptions = () => {
@@ -93,4 +94,4 @@ const AdmSubscriptions = () => {
   </MainLayout>)
 }
 
-export default AdmSubscriptions
+export default privateRoute(AdmSubscriptions)

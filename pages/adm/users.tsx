@@ -7,6 +7,7 @@ import {DynamicTable} from "../../components/dynamic-table";
 import {Loading} from "@brunobarros/react-components";
 import {MapRoles} from "../../src/resources/user";
 import useAllUsers from "../../components/hooks/useAllUsers";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const AdmUsers = () => {
@@ -86,4 +87,4 @@ const AdmUsers = () => {
   </MainLayout>)
 }
 
-export default AdmUsers
+export default privateRoute(AdmUsers)

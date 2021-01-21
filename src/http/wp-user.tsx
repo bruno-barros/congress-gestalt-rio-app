@@ -359,7 +359,7 @@ export default class WpUser {
   }
 
   static export(args: {ids: number[]}): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_users_export', {abstracts: args.ids});
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_users_export', {ids: args.ids});
   }
 
   static sendInvitation(args: any) {

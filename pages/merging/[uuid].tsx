@@ -69,8 +69,11 @@ const Merging = () => {
               <Icon style={{fontSize: 80}} name={`checkmark-circle-outline`}/>
               <div className="ml-4">
                 <p>Contas unificadas com sucesso!</p>
-                <p><Link href="/login" locale={lang} passHref><a
-                  className="btn btn-primary">{t('cadastro.faca-seu-login')}</a></Link></p>
+                <p>
+                  <Link href="/login" locale={lang} passHref>
+                    <a className="btn btn-primary">{t('cadastro.faca-seu-login')}</a>
+                  </Link>
+                </p>
               </div>
             </div>
           </Card.Body>

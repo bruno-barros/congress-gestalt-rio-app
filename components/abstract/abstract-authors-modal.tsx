@@ -7,6 +7,7 @@ import {Loading} from "@brunobarros/react-components";
 import {errorNotification} from "../../src/resources/responses";
 import AbstractAuthorLine from "./abstract-author-line";
 import Accordion from "react-bootstrap/cjs/Accordion";
+import {Author} from "../../src/resources/user";
 
 interface AbstractAuthorsModalProps {
   show: boolean
@@ -30,7 +31,7 @@ export default function AbstractAuthorsModal(props: AbstractAuthorsModalProps) {
       node: {
         avatar: { url: string }; databaseId: number; email: string; firstName: string; locale: string; name: string;
       }
-    }; authors: { name: string; email: string; active: number; company: string; bio: string; id: number; is_speaker: number; order: number }[]
+    }; authors: Author[]
   }> {
     return new Promise((resolve, reject) => {
       WpAbstract.authors(abstract_id)
@@ -66,7 +67,7 @@ export default function AbstractAuthorsModal(props: AbstractAuthorsModalProps) {
       && <CurtainDelayed delay={1}>
         <Accordion>
           {data.authors.map((author, i) => {
-            return (<AbstractAuthorLine key={author.id} i={i} author={author}/>)
+            return (<AbstractAuthorLine key={author.id} i={i} author={author} mainAuthorId={data.author.node.databaseId}/>)
           })}
         </Accordion>
       </CurtainDelayed>}

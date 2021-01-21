@@ -109,8 +109,30 @@ export class User {
     return !!this.user?.roles?.nodes.find(role => role.name === 'shop_manager');
   }
 
-
 }
+
+
+
+export class Author {
+  id: number
+  wp_user_id?: number
+  name: string
+  email: string
+  active: number
+  company: string
+  bio: string
+  is_speaker: number
+  order: number
+
+  constructor(data: any) {
+    Object.assign(this, data)
+  }
+
+  static make(data: any){
+    return new Author(data)
+  }
+}
+
 
 // export function getGenres() {
 //   return [

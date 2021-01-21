@@ -1,5 +1,6 @@
 import {Status, Statuses} from "../../components/abstract/abstract.d";
 import {statusColorName} from "../helpers";
+import {Author} from "./user";
 
 export default class Abstract {
   databaseId: number
@@ -43,15 +44,7 @@ export default class Abstract {
     url: string
     user_id: number
   }[]
-  authors?: {
-    id: number
-    name: string
-    email: string
-    active: number
-    bio: string
-    is_speaker: number
-    order: number
-  }[]
+  authors?: Author[]
 
   constructor(data: any) {
     Object.assign(this, data)

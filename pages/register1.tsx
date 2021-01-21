@@ -18,6 +18,7 @@ import {Loading} from "@brunobarros/react-components";
 import Text from "../components/ui/form/formik/text";
 import Select from "../components/ui/form/formik/select";
 import Mask from "../components/ui/form/formik/mask";
+import privateRoute from "../components/hoc/private-route";
 
 
 const Register1 = () => {
@@ -171,4 +172,4 @@ const Register1 = () => {
   </ClearLayout>)
 }
 
-export default Register1
+export default privateRoute(Register1)

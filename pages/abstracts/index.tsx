@@ -13,6 +13,7 @@ import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
 import {AbstractCollection} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const Abstracts = () => {
@@ -27,6 +28,7 @@ const Abstracts = () => {
   const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
   })
+  const lang = router.locale || 'pt'
 
   function queryAbstracts(): Promise<AbstractCollection> {
     return new Promise((resolve, reject) => {
@@ -69,7 +71,8 @@ const Abstracts = () => {
                 <1>regras de submissão de trabalhos</1>.
           Você pode enviar até {{limit}} trabalhos.`}
                    components={[<p>Olá, congressista.</p>,
-                     <a href="#" target="_blank">regras de submissão de trabalhos</a>]}
+                     <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
+                   '']}
             />
             <p className="mt-3"><Link href={`/abstracts/new`} passHref><a
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
@@ -106,4 +109,4 @@ const Abstracts = () => {
   </MainLayout>)
 }
 
-export default Abstracts
+export default privateRoute(Abstracts)

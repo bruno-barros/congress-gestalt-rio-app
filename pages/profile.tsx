@@ -7,6 +7,7 @@ import ProfileForm from "../components/user/profile-form";
 import PasswordUpdateForm from "../components/user/password-update-form";
 import MySubscriptions from "../components/user/my-subscriptions";
 import useTrans from "../components/hooks/useTrans";
+import privateRoute from "../components/hoc/private-route";
 
 
 const Profile = () => {
@@ -53,4 +54,4 @@ const Profile = () => {
   </MainLayout>)
 }
 
-export default Profile
+export default privateRoute(Profile)

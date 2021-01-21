@@ -9,13 +9,30 @@
 
   .brand-panel {
     text-align: center;
+
+    background-size: cover;
+    background-position: left center;
+
+    .logo {
+      max-width: 200px;
+
+    }
   }
 
   .form-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex: 1;
     background-color: #ffffff;
 
-    > * {
+    .logo{
+      max-width: 200px;
+      margin: 0 auto 1rem;
+    }
+
+    > *:not(.logo) {
+      min-width: 260px;
       max-width: 300px;
       margin-left: auto;
       margin-right: auto;
@@ -51,8 +68,11 @@
 
 
 .login-main-panel {
-  background-color: #635e59;
+  //background-color: #635e59;
   //min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 @include media-breakpoint-up(lg) {
@@ -62,6 +82,7 @@
     min-height: 100vh;
 
     .brand-panel {
+      background-image: url(https://congressoabrisco.com.br/src/themes/congresso/assets/img/login-bg.jpg);
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -74,7 +95,7 @@
       justify-content: center;
       align-items: center;
 
-      > * {
+      > *:not(.logo) {
         min-width: 300px;
       }
     }

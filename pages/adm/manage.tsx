@@ -8,6 +8,7 @@ import PasswordUpdateForm from "../../components/user/password-update-form";
 import MySubscriptions from "../../components/user/my-subscriptions";
 import useTrans from "../../components/hooks/useTrans";
 import Anais from "../../components/manage/anais";
+import privateRoute from "../../components/hoc/private-route";
 
 
 const Manage = () => {
@@ -40,4 +41,4 @@ const Manage = () => {
   </MainLayout>)
 }
 
-export default Manage
+export default privateRoute(Manage)

@@ -61,6 +61,7 @@ export class WpAbstract {
       bio
       company
       id
+      wp_user_id
       is_speaker
       order
     }
@@ -141,6 +142,7 @@ export class WpAbstract {
       active
       bio
       id
+      wp_user_id
       is_speaker
       order
     }
