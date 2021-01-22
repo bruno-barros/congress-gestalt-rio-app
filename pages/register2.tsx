@@ -20,6 +20,7 @@ import Curtain from "../components/ui/curtain";
 import {FormikProps} from "formik";
 import {Icon} from "@brunobarros/react-components";
 import privateRoute from "../components/hoc/private-route";
+import Link from "next/link";
 
 
 const Register2 = () => {
@@ -57,6 +58,16 @@ const Register2 = () => {
       <title>{siteTitle('Inscrição', queryClient)}</title>
     </Head>
     <div className="row">
+
+      {edition.subscription.allowed === false &&
+      <div className="col-12 d-flex flex-column align-items-center justify-content-center">
+        <h4 className="text-center font-weight-light my-4">
+          {t('inscrioes-nao-estao-abertas')}
+        </h4>
+        <Link href={`/dashboard`} passHref><a className="btn btn-outline-primary">{t('voltar-para-dashboard')}</a></Link>
+      </div>}
+
+      {edition.subscription.allowed &&
       <div className="col-12 col-lg-8 offset-lg-2">
         <div className="multi-steps">
           <MultiStepForm activeStep={step} accentColor="var(--primary)">
@@ -112,7 +123,8 @@ const Register2 = () => {
           </Card.Footer>
         </Card>
 
-      </div>
+      </div>}
+
     </div>
   </ClearLayout>)
 }

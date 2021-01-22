@@ -1,17 +1,12 @@
-import {ErrorMessage, Field, Form as FormikForm, Formik} from "formik";
+import {Form as FormikForm, Formik} from "formik";
 import Curtain from "../ui/curtain";
-import WpUser from "../../src/http/wp-user";
 import * as Yup from "yup";
 import useTrans from "../hooks/useTrans";
 import {useEffect, useRef, useState} from "react";
 import {StepProps} from "./registration.d";
-import Select from "../ui/form/formik/select";
-import {blockUi} from "../../src/store/ui.actions";
-import {errorNotification} from "../../src/resources/responses";
 import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 import Form from "react-bootstrap/cjs/Form";
-import {useQuery} from "react-query";
 import {saveCart} from "../../src/store/user.actions";
 
 

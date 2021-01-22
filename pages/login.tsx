@@ -55,7 +55,7 @@ const Login = () => {
       </div>
     </div>
 
-    <div className="footer-panel px-4 py-3 text-center text-xs text-muted">
+    <div className="footer-panel px-4 py-3 text-center text-muted" style={{fontSize:10}}>
       {t('versao')} {process.env.version} &nbsp; @{today.getFullYear()} <a
       href="https://conceito-online.com.br??utm_source=app&utm_medium=link&utm_campaign=Sistema_Evento"
       target="_blank">Conceito</a>
