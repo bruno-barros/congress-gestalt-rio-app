@@ -73,6 +73,6 @@ export default class Abstract {
   }
 
   getResponsible(){
-    return this.author.node
+    return this.author?.node
   }
 }

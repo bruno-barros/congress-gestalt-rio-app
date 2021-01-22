@@ -12,7 +12,16 @@ Passo a passo para personalização.
 ## Back-end
     ### WP
         * Configurar os perfis
-            * Para todos: list_users, edit_posts
+            * Para todos: 
+                list_users
+                edit_posts
+                edit_others_posts
+                create_posts
+                delete_posts
+                edit_others_posts
+                edit_posts
+                edit_published_posts
+                publish_posts
             * Para Editor: edit_others_shop_orders, edit_shop_orders
     ### \Evento
     * Evento/config/*
