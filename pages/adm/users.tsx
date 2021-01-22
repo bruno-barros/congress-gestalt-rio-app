@@ -56,9 +56,10 @@ const AdmUsers = () => {
     return users.map(row => {
       if (row?.roles?.nodes) {
         let rolesStr = row?.roles?.nodes?.map(role => role.name).join(',')
-        row.roles = rolesStr?.split(',').map(role => {
-          return MapRoles.find(r => role === r.name)?.label
-        }).join(',')
+        row.roles = rolesStr
+        // row.roles = rolesStr?.split(',').map(role => {
+        //   return MapRoles.find(r => role === r.name)?.label
+        // }).join(',')
       }
       row.date = row.registeredDate
       row.locale = row.locale.substr(-2)
