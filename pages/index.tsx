@@ -9,7 +9,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useQueryClient} from "react-query";
 import {logUserByType} from "../src/store/user.actions";
 import {useRouter} from "next/router";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
+import {Loading} from "@brunobarros/react-components";
 
 
 export default function Home() {
@@ -22,6 +23,10 @@ export default function Home() {
       router.push('/login')
     }
   }, [])
+
+  if(process.env.production){
+    return <Loading vspace={100}/>
+  }
 
   return (
     <div className="container vh-100 d-flex align-items-center ">
