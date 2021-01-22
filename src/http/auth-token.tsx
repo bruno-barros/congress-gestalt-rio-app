@@ -98,7 +98,7 @@ export default class AuthToken {
      var diffMs = (expiresAt - today); // milliseconds between now & Christmas
     // get diff from now
      var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-     console.log('almost expires at', diffMins);
+     // console.log('almost expires at', diffMins);
     // if less then 1 minute
     return diffMins < 1;
   }

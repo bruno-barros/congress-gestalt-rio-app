@@ -4,8 +4,6 @@ import {QueryObserverResult, useQuery} from "react-query";
 import {USER_ACTYPE} from "../../src/store/user.actions";
 import WpUser from "../../src/http/wp-user";
 import AuthToken from "../../src/http/auth-token";
-import {useTranslation} from "react-i18next";
-import {useEffect} from "react";
 import {ev_locale} from "../../src/helpers";
 import {useRouter} from "next/router";
 
@@ -16,7 +14,7 @@ function fetchCurrentUser(dispatch) {
       const id = AuthToken.factory().decodedToken.id
 
       WpUser.fetchLogged(id).then((resp) => {
-        console.log({id}, 'fetching AUTH again...');
+        // console.log({id}, 'fetching AUTH again...');
         if (resp.data?.data?.user) {
           dispatch({type: USER_ACTYPE.UPDATED, payload: resp.data.data.user})
           resolve(resp.data.data.user)

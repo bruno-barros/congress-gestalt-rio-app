@@ -39,7 +39,7 @@ export function OrderStatus({cell}) {
 }
 
 export function AddLink({cell}) {
-  const model = cell._owner.memoizedProps.name
+  const model = cell.props.name
   return <Link href={`/${model}/${cell.props.cell.row.original.databaseId}`}><a>{cell.props.cell.value}</a></Link>
 }
 export function DateTime({cell}) {
