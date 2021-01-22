@@ -9,12 +9,19 @@ import {useDispatch, useSelector} from "react-redux";
 import {useQueryClient} from "react-query";
 import {logUserByType} from "../src/store/user.actions";
 import {useRouter} from "next/router";
+import {useEffect} from "react";
 
 
 export default function Home() {
   const disp = useDispatch()
   const router = useRouter()
   const queryClient = useQueryClient()
+
+  useEffect(()=>{
+    if(process.env.production){
+      router.push('/login')
+    }
+  }, [])
 
   return (
     <div className="container vh-100 d-flex align-items-center ">

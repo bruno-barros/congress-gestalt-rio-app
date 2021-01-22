@@ -179,7 +179,7 @@ export const Genders = () => {
 
 
 export const MapRoles = [
-  {name: 'customer', label: 'Cliente', color: '#ada900'},
+  // {name: 'customer', label: 'Cliente', color: '#ada900'},
   {name: 'subscriber', label: 'Participante', color: '#ada900'},
   {name: 'contributor', label: 'Avaliador', color: '#bc6402'},
   {name: 'editor', label: 'Supervisor', color: '#868686'},

@@ -6,7 +6,6 @@ import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import {MapRoles} from "../../src/resources/user";
-import {OrderStatus} from "./cells";
 import {OrderStatuses} from "../../src/resources/order";
 
 
@@ -62,7 +61,7 @@ export function getOrderFilterableFields() {
 
 export function getUSerFilterableFields() {
 
-  const rolesOpts = MapRoles.map(role => ({value: role.label, label: role.label}))
+  const rolesOpts = MapRoles.filter(role => role.name !== 'administrator').map(role => ({value: role.label, label: role.label}))
   const locales = [
     {value: 'BR', label: 'Portugues'},
     {value: 'US', label: 'Inglês'},
