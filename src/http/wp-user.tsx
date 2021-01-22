@@ -234,57 +234,6 @@ export default class WpUser {
     });
   }
 
-  static fetchProfessionals(orderBy = 'name', order = 'asc', page = 1, limit = 12, filters?: any): Promise<AxiosResponse<any>> {
-
-    let filtersQry: string[] = [];
-    if (!!filters?.by_name) filtersQry.push(`by_name: "${filters?.by_name}"`)
-    if (!!filters?.by_weekday) filtersQry.push(`by_weekday: "${filters?.by_weekday}"`)
-
-    return httpApi.post('/index.php?graphql&zbUserSearch', {
-      query: `query fetchProfessionals {
-  __typename
-  zbUserSearch(where: {pagination: {limit: ${limit}, page: ${page}}, orderby: ${orderBy}, order: ${order.toUpperCase()}, roles: professional, ${filtersQry.join(', ')}}) {
-    nodes {
-      id
-      databaseId
-      specialities
-      phone
-      name
-      gender
-      firstName
-      email
-      doc_prof
-      description
-      cpf
-      user_status
-      roles {
-        nodes {
-          name
-        }
-      }
-      avatar {
-        url
-      }
-      timeframes {
-        wednesday
-        tuesday
-        thursday
-        sunday
-        saturday
-        friday
-        monday
-      }
-    }
-    pageInfo {
-      offsetPagination {
-        total
-      }
-    }
-  }
-}`
-    });
-  }
-
   static searchUser(args: {by_name?: string, role?: 'subscriber'|'contributor'| 'editor'| 'administrator', limit?:number, filters?: any}): Promise<AxiosResponse<any>> {
 
     let byName = args?.by_name ? `, by_name: "${args.by_name}"` : ''
@@ -294,7 +243,7 @@ export default class WpUser {
     return httpApi.post('/index.php?graphql&searchUser', {
       query: `query searchUser {
   __typename
-  evUserSearch(where: {pagination: {limit: ${limit}, page: 1}, orderby: name, order: ASC, roles: ${role} ${byName}}) {
+  evUserSearch(where: {pagination: {limit: ${limit}, page: 1}, orderby: name, order: ASC, roles: ${role} ${byName}}, first: ${limit}) {
     nodes {
       id
       databaseId

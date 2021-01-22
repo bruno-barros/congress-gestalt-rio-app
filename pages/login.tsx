@@ -1,4 +1,3 @@
-import Image from "next/image";
 import LoginForm from "../components/ui/form/login-form";
 import {useRouter} from "next/router";
 import useTrans from "../components/hooks/useTrans";
@@ -11,7 +10,7 @@ import useEvent from "../components/hooks/useEvent";
 import {useQueryClient} from "react-query";
 import {useEffect} from "react";
 import {toast} from "react-toastify";
-
+import authToken from '../src/http/auth-token'
 
 const Login = () => {
 
@@ -27,6 +26,8 @@ const Login = () => {
       toast.success( t('cadastro.senha-atualizada-sucesso'), {position: 'top-center'})
     }
   },[router.query])
+
+
 
   return (<div className="login-page">
     <Head>
@@ -45,7 +46,7 @@ const Login = () => {
           <LangSelector/>
         </div>
 
-        {(user && user.getId() > -1) && <div className="text-center"><div className="alert alert-warning">
+        {(user && user.getId() > -1 && authToken.factory().isValid) && <div className="text-center"><div className="alert alert-warning">
           Olá {user?.getFirstName()}. Você já está logado. <br/><Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
         </div></div>}
 
