@@ -32,6 +32,7 @@ const Dashboard = (props: DashboardProps) => {
    * -----------------------------
    */
   useEffect(()=>{
+    if(!user) return
     if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
     else router.push(`/abstracts`)
   }, [user])
