@@ -19,6 +19,7 @@ import Text from "../components/ui/form/formik/text";
 import Select from "../components/ui/form/formik/select";
 import Mask from "../components/ui/form/formik/mask";
 import privateRoute from "../components/hoc/private-route";
+import useEvent from "../components/hooks/useEvent";
 
 
 const Register1 = () => {
@@ -29,6 +30,8 @@ const Register1 = () => {
   const {authLoading, user} = useCurrentUser()
   const [loading, setLoading] = useState(false)
   const [response, setResponse] = useState({success: null, msg: ''})
+  const {data: event} = useEvent()
+  const edition = event && event.currentEdition()
 
   const FormSchema = Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
@@ -64,7 +67,10 @@ const Register1 = () => {
       setLoading(false)
       setResponse({success, msg: data.msg})
       success === false && dismissAlert()
-      success === true && router.push(`/register2`)// TODO
+      if (success) {
+        if(edition.subscription.allowed) router.push(`/register2`)
+        else router.push('/dashboard')
+      }
 
     } catch (err) {
       const error = Error.make(err)
@@ -120,8 +126,10 @@ const Register1 = () => {
                   <Select name="country" label={t('cadastro.nacionalidade')} required containerClass="col-12 col-md">
                     {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
                   </Select>
-                  {values.country === 'BR' && <Mask name="cpf" label="CPF" mask="999.999.999-99" containerClass="col-12 col-md"/>}
-                  {values.country !== 'BR' && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
+                  {values.country === 'BR' &&
+                  <Mask name="cpf" label="CPF" mask="999.999.999-99" containerClass="col-12 col-md"/>}
+                  {values.country !== 'BR' &&
+                  <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
                 </div>
                 {/*row*/}
 
@@ -130,15 +138,18 @@ const Register1 = () => {
                   <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
                 </div>
 
-                  <Text name="badge_name" label={t('cadastro.nome-cracha')} required />
+                <Text name="badge_name" label={t('cadastro.nome-cracha')} required/>
 
                 <div className="row">
-                  <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required containerClass="col-12 col-md"/>
-                  <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
+                  <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required
+                        containerClass="col-12 col-md"/>
+                  <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')}
+                        containerClass="col-12 col-md"/>
                 </div>
 
                 <div className="row">
-                  <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required containerClass="col-12 col-md"/>
+                  <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required
+                        containerClass="col-12 col-md"/>
                   <Select name="gender" label={t('cadastro.genero')} required containerClass="col-12 col-md">
                     {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
                   </Select>
