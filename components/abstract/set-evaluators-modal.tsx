@@ -41,7 +41,8 @@ export default function SetEvaluatorsModal(props: SetEvaluatorsModalProps) {
   function queryEvaluations(): Promise<any[] | null> {
     return new Promise((resolve) => {
       WpUser.searchUser({
-        role: 'contributor'
+        role: 'contributor',
+        limit: 500
       })
         .then(resp => {
           if (resp.data.data?.evUserSearch?.nodes) {
