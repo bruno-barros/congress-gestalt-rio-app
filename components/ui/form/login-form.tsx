@@ -44,7 +44,7 @@ const LoginForm = () => {
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
-    password: Yup.string().min(8, 'validacao.curto').required('validacao.obrigatorio'),
+    password: Yup.string().min(6, 'validacao.curto').required('validacao.obrigatorio'),
   });
 
 
