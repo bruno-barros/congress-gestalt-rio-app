@@ -62,7 +62,7 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
 
 
   return (<>
-    <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+    <DropdownButton id="dynamic-table-dropdown-actions-abstracts" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       <Dropdown.Item disabled={selectedCount === 0} onClick={handleExportData}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={() => openModal('designar')} disabled={selectedCount === 0}>Designar
@@ -153,7 +153,7 @@ export function EvaluationsGroupActions<T extends object>({instance}: PropsWithC
 
 
   return (<>
-    <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+    <DropdownButton id="dynamic-table-dropdown-actions-evals" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       {user.canManageAbstracts() && <>
       <Dropdown.Item onClick={handleFinalApprove} disabled={selectedCount === 0}
@@ -195,7 +195,7 @@ export function UsersGroupActions<T extends object>({instance}: PropsWithChildre
   }
 
   return (<>
-    <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+    <DropdownButton id="dynamic-table-dropdown-actions-users" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={() => {
@@ -237,7 +237,7 @@ export function SubscriptionsGroupActions<T extends object>({instance}: PropsWit
   }
 
   return (<>
-    <DropdownButton id="dynamic-table-dropdown-actions" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+    <DropdownButton id="dynamic-table-dropdown-actions-subscription" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar CSV</Dropdown.Item>
       <Dropdown.Item onClick={()=>setActiveModal('message')} disabled={selectedCount === 0}>Enviar mensagem</Dropdown.Item>
