@@ -145,10 +145,11 @@ export default function AbstractForm(props: AbstractFormProps) {
           && edition.abstract.topics.map(top => <option key={top.id} value={top.id}>{top[router.locale]}</option>)}
         </Select>
         <Text name="title" label={t('trabalho.titulo')}/>
-        <Text name="subtitle" label={t('trabalho.subtitulo')}/>
+        {edition.getFieldMax('subtitle') > 0 &&
+        <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
         {edition.getFieldMax('tags') > 0 &&
         <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
-        <Wysiwyg name="resume" label={t('trabalho.resumo')} maxHeight="sm" disabled={!isEditable1}
+        <Wysiwyg name="resume" label={t('trabalho.sinopse')} maxHeight="sm" disabled={!isEditable1}
                  charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}/>
 
       </fieldset>

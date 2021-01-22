@@ -39,19 +39,26 @@ export default function Header(props: HeaderProps) {
       </div>
       <Navbar.Collapse id="basic-navbar-nav" className="">
         <Nav className="mr-auto">
-          <Link href="/dashboard" passHref><Nav.Link active={router.pathname === '/dashboard'}>{t('eventos')}</Nav.Link></Link>
+
+          {/*<Link href="/dashboard" passHref>*/}
+          {/*  <Nav.Link active={router.pathname === '/dashboard'}>{t('eventos')}</Nav.Link>*/}
+          {/*</Link>*/}
           {user.canManageAbstracts()
             ? (<>
-              <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link
+              <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
-              <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link
+              <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-              <Link href={`/adm/users`} passHref><Nav.Link
+              <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)
             : (<>
-              <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
-                active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+              <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
+                active={router.pathname === '/abstracts' && router.query?.status!=='abstract'}>{t('trabalho.sinopses')}</Nav.Link>
+              </Link>
+              <Link href={`/abstracts?edition=${edition.id}&status=abstract`} passHref><Nav.Link
+                active={router.pathname === '/abstracts' && router.query?.status==='abstract'}>{t('trabalhos')}</Nav.Link>
+              </Link>
             </>)}
           {user.canEvaluateAbstracts() && <>
             <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link

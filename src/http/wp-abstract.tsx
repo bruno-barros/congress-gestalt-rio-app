@@ -25,6 +25,12 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_edit', {...data});
   }
 
+  static setSpeaker(args: {id: number; locale?: string}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_set_speaker', {
+      id: args.id, locale: args.locale || 'pt'
+    });
+  }
+
   static deleteAuthor(data: any): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_delete', {...data});
   }

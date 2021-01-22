@@ -90,18 +90,16 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
 
   async function handleSpeaker(author) {
     const newAuthor = {...author}
-    newAuthor.is_speaker = !author.is_speaker
     try {
       newAuthor.locale = router.locale
-      newAuthor.abstract_id = metas.abstract_id
-      const resp = await WpAbstract.editAuthor(newAuthor)
+      const resp = await WpAbstract.setSpeaker(newAuthor)
       const success = resp.data.success
       if (success) successNotification({message: t('atualizado-com-sucesso')})
     } catch (err) {
       exceptionNotification(err)
     }
     const newValue = field.value.map(a => {
-      if (parseInt(a.id) === parseInt(newAuthor.id)) a = newAuthor
+        a.is_speaker = parseInt(a.id) === parseInt(newAuthor.id)
       return a
     })
     helpers.setValue(newValue)
@@ -126,15 +124,21 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
               }}>
                 <div className="mr-2">{`#${idx + 1}`}</div>
                 <div className="text-truncate mr-3">{author.name}</div>
-                {(parseInt(author.wp_user_id) === user.getId() || creating && idx === 0) && <span className="badge badge-dark">autor de contato</span>}
               </a>
+              {(parseInt(author.wp_user_id) === user.getId() || creating && idx === 0) &&
+              <span className="badge badge-dark">autor de contato</span>}
               {(!creating && !disabled)
                 ? <>
                 <ToolTip text={`${t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')} (clique para mudar)`}>
                   <button type="button" className="btn btn-sm py-0 d-flex align-items-center" style={{lineHeight: 1}} onClick={() => {
                     handleSpeaker(author)
                   }}>
-                    <div className={`badge ${author.is_speaker ? 'badge-warning':'badge-light'}`}>{t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')}</div>
+
+                    <div className={`badge ${author.is_speaker ? 'badge-warning':'text-muted'}`}
+                    style={{opacity: `${author.is_speaker?1:.3}`}}
+                    >
+                      {t('trabalho.autor-de-apresentacao')}
+                    </div>
                     <Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
                   </button>
                 </ToolTip>
@@ -148,7 +152,9 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
 
         {(maxAuthors > field.value.length && !disabled)
         && <div className="mt-3">
-
+          <div className="form-group text-sm font-weight-bold text-muted">
+            {t('trabalho.demais-coaltores')}
+          </div>
           <div className="input-group">
             <div className="input-group-prepend">
               <span className="input-group-text text-sm" style={{minWidth: 100}}>{t('cadastro.nome')}</span>
@@ -178,15 +184,15 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
               setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
             }}/>
           </div>
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text text-sm" style={{minWidth: 100}}>Bio</span>
-            </div>
-            <textarea rows={3} name="author_bio" value={newAuthor.author_bio} placeholder={t('trabalho.autor-bio')}
-                      className="form-control" onChange={(e) => {
-              setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
-            }}/>
-          </div>
+          {/*<div className="input-group">*/}
+          {/*  <div className="input-group-prepend">*/}
+          {/*    <span className="input-group-text text-sm" style={{minWidth: 100}}>Bio</span>*/}
+          {/*  </div>*/}
+          {/*  <textarea rows={3} name="author_bio" value={newAuthor.author_bio} placeholder={t('trabalho.autor-bio')}*/}
+          {/*            className="form-control" onChange={(e) => {*/}
+          {/*    setNewAuthor({...newAuthor, [e.target.name]: e.target.value})*/}
+          {/*  }}/>*/}
+          {/*</div>*/}
           <button type="button" onClick={() => {
             handleAdd(push)
           }}

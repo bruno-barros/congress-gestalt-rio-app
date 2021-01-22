@@ -9,6 +9,12 @@ export const Statuses = [
 export type GraphQlStatuses = 'PENDING' | 'REVISION' | 'SYNOPSIS_REJECTED' | 'SYNOPSIS_WAITING_UPD' |
   'SYNOPSIS_APPROVED' | 'FINAL_REVISION' | 'REJECTED' | 'WAITING_UPDATE' | 'PRE_APPROVED' | 'APPROVED';
 
+export function StatusesPhaseSynopsis():GraphQlStatuses[]{
+  return ['PENDING', 'REVISION', 'SYNOPSIS_REJECTED', 'SYNOPSIS_WAITING_UPD']
+}
+export function StatusesPhaseAbstract():GraphQlStatuses[]{
+  return ['SYNOPSIS_APPROVED', 'FINAL_REVISION', 'REJECTED', 'WAITING_UPDATE', 'PRE_APPROVED', 'APPROVED']
+}
 
 export interface AbstractType {
   databaseId: number

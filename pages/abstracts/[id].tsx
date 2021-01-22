@@ -14,6 +14,7 @@ import {useEffect} from "react";
 import NextStepTip from "../../components/abstract/next-step-tip";
 import AbstractComments from "../../components/abstract/abstract-comments";
 import privateRoute from "../../components/hoc/private-route";
+import {Trans} from "react-i18next";
 
 const AbstractEditing = () => {
 
@@ -22,6 +23,7 @@ const AbstractEditing = () => {
   const t = useTrans()
   const {data: event, isLoading} = useEvent()
   const edition: Edition = event?.currentEdition()
+  const lang = router.locale
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
   useEffect(() => {
@@ -68,6 +70,15 @@ const AbstractEditing = () => {
                            className="my-4"/>
         <NextStepTip status={abstract?.status}/>
         <AbstractComments abstract={abstract}/>
+        <div className="border-info pl-4 my-5" style={{borderLeft: 'solid 3px'}}>
+          <Trans as="div"
+                 i18nKey="trabalho.confira-as-regras"
+                 defaults={`Confira as <1>regras de submissão de trabalhos</1>.`}
+                 components={['Confira as ',
+                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
+                   '.']}
+          />
+        </div>
 
       </div>
     </div>

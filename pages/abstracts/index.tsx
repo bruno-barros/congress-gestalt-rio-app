@@ -11,7 +11,7 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
-import {AbstractCollection} from "../../components/abstract/abstract.d";
+import {AbstractCollection, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
 
@@ -24,8 +24,9 @@ const Abstracts = () => {
   const {data: event} = useEvent()
   const currentEdition = event && event.currentEdition()
   const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
+  const phase = router.query?.status || 'synopsis'
   const isCurrent = currentEdition?.id === edition?.id
-  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id], queryAbstracts, {
+  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id, phase], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
   })
   const lang = router.locale || 'pt'
@@ -34,7 +35,8 @@ const Abstracts = () => {
     return new Promise((resolve, reject) => {
       WpAbstract.collection({
         edition: edition.id,
-        authorId: user.getId()
+        authorId: user.getId(),
+        statuses: phase === 'abstract' ? StatusesPhaseAbstract() : StatusesPhaseSynopsis()
       }).then(resp => {
         if (resp.data.data?.abstractFilters?.nodes) {
           resolve(AbstractCollection.make(resp.data.data.abstractFilters.nodes))
@@ -55,50 +57,65 @@ const Abstracts = () => {
     </MainLayout>)
   }
 
+  function SynopsisIntro(){
+    return (<>
+      {(abstracts?.count() === 0) && isCurrent
+      && <Card style={{maxWidth: 600}}>
+        <Card.Body className="p-5">
+          <Trans as="div"
+                 i18nKey="trabalho.boas-vindas"
+                 values={{limit: edition.abstract.limit_per_user}}
+                 defaults={`<0>Olá, congressista.</0>
+              Antes de submeter seu trabalho confira as
+                <1>regras de submissão de trabalhos</1>.`}
+                 components={[<p>Olá, congressista.</p>,
+                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>]}
+          />
+          <div className="my-3 d-flex align-items-center">
+            <Link href={`/abstracts/new`} passHref><a
+              className="btn btn-primary">{t('trabalho.novo-trabalho')}</a>
+            </Link>
+
+            <div className="ml-3">
+              <Trans i18nKey="trabalho.voce-pode-enviar-ate"
+                     values={{limit: edition.abstract.limit_per_user}}
+                     defaults={`Você pode enviar até {{limit}} trabalhos.`}
+              />
+            </div>
+
+          </div>
+        </Card.Body>
+      </Card>}
+
+
+
+      {(edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
+      <div className="alert alert-warning">
+        {t('trabalho.limite-atingido')}
+      </div>}
+
+      {(edition.abstract.limit_per_user === 0 || abstracts?.count() > 0 && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
+      <div className="d-md-flex align-items-center">
+        <Link href={`/abstracts/new`}><a
+          className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
+        {edition.abstract.limit_per_user > 0 &&
+        <div className="my-3 ml-md-4">
+          {`${t('trabalho.existe-um-limite')} ${edition.abstract.limit_per_user} ${t('trabalho.trabalhos-por-autor')}.`}
+        </div>}
+      </div>}
+    </>)
+  }
+
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
     <div className="row">
       <div className="col-12 p-4">
 
-        {(abstracts?.count() === 0) && isCurrent
-        && <Card style={{maxWidth: 600}}>
-          <Card.Body className="p-5">
-            <Trans as="div"
-                   i18nKey="trabalho.boas-vindas"
-                   values={{limit: edition.abstract.limit_per_user}}
-                   defaults={`<0>Olá, congressista.</0>
-              Antes de submeter seu trabalho confira as
-                <1>regras de submissão de trabalhos</1>.
-          Você pode enviar até {{limit}} trabalhos.`}
-                   components={[<p>Olá, congressista.</p>,
-                     <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
-                   '']}
-            />
-            <p className="mt-3"><Link href={`/abstracts/new`} passHref><a
-              className="btn btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
-            </p>
-          </Card.Body>
-        </Card>}
-
-
-
-        {edition.abstract.limit_per_user <= abstracts?.getNoRejected().length &&
-        <div className="alert alert-warning">
-          {t('trabalho.limite-atingido')}
-        </div>}
-
-        {(abstracts?.count() > 0 && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
-        <div className="d-md-flex align-items-center">
-          <Link href={`/abstracts/new`}><a
-            className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
-          <div className="my-3 ml-md-4">
-            {`${t('trabalho.existe-um-limite')} ${edition.abstract.limit_per_user} ${t('trabalho.trabalhos-por-autor')}.`}
-          </div>
-        </div>}
+        {phase === 'synopsis' && <SynopsisIntro/>}
 
         {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
-        {(!isCurrent && abstracts && abstracts?.count() === 0) &&
+        {(abstracts && abstracts?.count() === 0) &&
         <div className="alert alert-light border">
           Você não tem trabalhos. / Nothin to show.
         </div>}

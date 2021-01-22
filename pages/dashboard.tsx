@@ -11,6 +11,7 @@ import {Loading} from "@brunobarros/react-components";
 import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 import privateRoute from "../components/hoc/private-route";
+import {useEffect} from "react";
 
 interface DashboardProps {
 
@@ -24,6 +25,16 @@ const Dashboard = (props: DashboardProps) => {
   const currentEdition: Edition = event && event.currentEdition()
   const {user} = useCurrentUser()
   const {data: orders, isLoading: ordersLoading} = useUserOrders(user?.getId())
+
+  /**
+   * -----------------------------
+   * Redirect to client: ABRISCO
+   * -----------------------------
+   */
+  useEffect(()=>{
+    if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
+    else router.push(`/abstracts`)
+  }, [user])
 
   if (isLoading || ordersLoading) {
     return (<MainLayout><Loading vspace={80}/></MainLayout>)

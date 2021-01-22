@@ -29,7 +29,7 @@ const NewAbstract = (props: NewAbstractProps) => {
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
     <div className="row py-4">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
-        <h1 className="page-title mt-3">{t('trabalho.novo')}</h1>
+        <h1 className="page-title mt-3">{t('trabalho.novo-trabalho')}</h1>
         <AbstractForm edition={edition} abstract={null}/>
 
       </div>
@@ -44,7 +44,7 @@ const NewAbstract = (props: NewAbstractProps) => {
                    '.']}
           />
         </div>
-        <AbstractsRules/>
+        {/*<AbstractsRules/>*/}
 
 
       </div>

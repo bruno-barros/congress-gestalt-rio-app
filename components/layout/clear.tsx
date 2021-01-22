@@ -12,6 +12,7 @@ import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";
+import useSessionCountdown from "../hooks/useSessionCountdown";
 
 interface ClearLayoutProps {
   children: any;
@@ -23,38 +24,39 @@ function ClearLayout({children}: ClearLayoutProps) {
   const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
+  useSessionCountdown();
 
-  if(isLoading){
+  if (isLoading) {
     return <Loading vspace={100}/>
   }
 
   return (
     <div className={`layout-clear`}>
       <BlockUi blocking={blockUI}/>
-        <Head>
-          <title>{siteTitle('', queryClient)}</title>
-          <link rel="icon" href={asset('/favicon.ico')}/>
-        </Head>
+      <Head>
+        <title>{siteTitle('', queryClient)}</title>
+        <link rel="icon" href={asset('/favicon.ico')}/>
+      </Head>
 
-        <header className="mainHeader">
-          <Container>
-            <Row>
-              <Col>
-                {event.logoPrimary
-                  ? <img src={event.logoPrimary} className="brand img-fluid" alt={event.eventName} />
+      <header className="mainHeader">
+        <Container>
+          <Row>
+            <Col>
+              {event.logoPrimary
+                ? <img src={event.logoPrimary} className="brand img-fluid" alt={event.eventName}/>
                 : <div className="brand">{event.eventName}</div>}
-              </Col>
-            </Row>
-          </Container>
-        </header>
+            </Col>
+          </Row>
+        </Container>
+      </header>
 
-        <main className="main">
-          <Container>
-            {children}
-          </Container>
-        </main>
+      <main className="main">
+        <Container>
+          {children}
+        </Container>
+      </main>
 
-        <Footer/>
+      <Footer/>
     </div>
   )
 }

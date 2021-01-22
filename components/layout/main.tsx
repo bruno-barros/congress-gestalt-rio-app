@@ -15,6 +15,7 @@ import {useQueryClient} from "react-query";
 import Sidebar from "./sidebar";
 import {ReactNode} from "react";
 import Header from "./header";
+import useSessionCountdown from "../hooks/useSessionCountdown";
 
 
 interface MainLayoutProps {
@@ -30,7 +31,7 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
   const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
-
+  useSessionCountdown()
 
   if (isLoading || authLoading) {
     return <Loading vspace={100}/>
