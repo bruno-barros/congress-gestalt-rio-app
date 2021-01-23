@@ -54,12 +54,13 @@ export default class Abstract {
     return new Abstract(data)
   }
 
-  statusColorName(): 'warning' | 'success' | 'danger' | 'secondary' {
+  statusColorName(): 'warning' | 'success' | 'danger' | 'secondary'|'info' {
     return  statusColorName(this.status)
   }
 
   isLockedToEdition() {
-    if (['revision', 'final_revision', 'pre_approved', 'approved', 'synopsis_rejected', 'rejected'].indexOf(this.status) !== -1) {
+    if (['synopsis_revision', 'synopsis_evaluating', 'synopsis_rejected',
+       'final_revision', 'evaluating', 'rejected', 'pre_approved', 'approved'].indexOf(this.status) !== -1) {
       return true
     }
 

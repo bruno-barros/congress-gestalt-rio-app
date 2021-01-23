@@ -198,8 +198,8 @@ export function UsersGroupActions<T extends object>({instance}: PropsWithChildre
     <DropdownButton id="dynamic-table-dropdown-actions-users" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
                     variant="outline-secondary">
       <Dropdown.Item onClick={handleExportData} disabled={selectedCount === 0}>Exportar CSV</Dropdown.Item>
-      <Dropdown.Item onClick={() => {
-      }} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>
+      {/*<Dropdown.Item onClick={() => {*/}
+      {/*}} disabled={selectedCount === 0}>Atribuir perfil</Dropdown.Item>*/}
       <Dropdown.Item onClick={() => setActiveModal('message')} disabled={selectedCount === 0}>Enviar
         mensagem</Dropdown.Item>
     </DropdownButton>

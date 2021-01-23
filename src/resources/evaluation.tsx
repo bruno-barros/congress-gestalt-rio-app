@@ -65,9 +65,7 @@ export class Evaluation {
   }
 
   isEditable(){
-    // 'pending' | 'revision' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
-    // 'synopsis_approved' | 'final_revision' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
-    return ['revision', 'final_revision'].indexOf(this.status) !== -1
+    return ['synopsis_evaluating', 'evaluating'].indexOf(this.status) !== -1
   }
 
   statusPassed(desiredStatus: string){

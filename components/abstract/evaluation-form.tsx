@@ -99,10 +99,10 @@ export default function EvaluationForm(props: EvaluationFormProps) {
 
   function filterAvailableStatuses() {
     const current: Status = evaluation.status
-    if (current === 'final_revision') {
+    if (current === 'evaluating') {
       return edition.abstract.statuses.filter(stats => ['rejected', 'waiting_update', 'pre_approved'].indexOf(stats) !== -1)
     }
-    else if (current === 'revision') {
+    else if (current === 'synopsis_evaluating') {
       return edition.abstract.statuses.filter(stats => ['synopsis_rejected', 'synopsis_waiting_upd', 'synopsis_approved'].indexOf(stats) !== -1)
     }
 

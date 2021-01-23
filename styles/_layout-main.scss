@@ -21,7 +21,6 @@
       font-size: 1em;
       text-align: center;
     }
-
     .navbar-nav .nav-link.active {
       background-color: $gray-200;
     }
@@ -106,10 +105,23 @@
       .navbar-nav .nav-link {
           padding-left: $spacer;
           padding-right: $spacer;
+        line-height: 2.5em;
+        margin-top: -.5rem;
+        margin-bottom: -.5rem;
+        &.admin {
+          position: relative;
+          &::before {
+            content: "";
+            display: block;
+            border-top: solid 3px $gray-400;
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+          }
+        }
         &.active {
-          line-height: 2.5em;
-          margin-top: -.5rem;
-          margin-bottom: -.5rem;
+
         }
       }
     }

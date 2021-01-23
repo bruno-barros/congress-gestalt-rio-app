@@ -82,7 +82,7 @@ export default function SetStatusModal(props: SetStatusModalProps) {
         >{({values, errors, isValid, handleChange}) => (
           <Form>
             <Select name="status" label="Novo status">
-              {edition && edition.abstract.statuses.map(status => (<option key={status} value={status}>
+              {edition && edition.abstract.statuses.filter(s => s !== 'pre_approved').map(status => (<option key={status} value={status}>
                 {t(`status.${status}`)}
               </option>))}
             </Select>

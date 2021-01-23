@@ -174,11 +174,12 @@ export function ev_locale(locale): string {
   return 'pt'
 }
 
-export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary' {
+export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary'|'info' {
   if (['pending', 'waiting_update', 'synopsis_waiting_upd'].indexOf(status) !== -1) return 'secondary'
-  if (['revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
+  if (['synopsis_revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
   if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
   if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'
+  if (['synopsis_evaluating', 'evaluating'].indexOf(status) !== -1) return 'info'
 }
 
 

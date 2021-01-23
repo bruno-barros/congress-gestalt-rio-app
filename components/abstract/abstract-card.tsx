@@ -26,6 +26,7 @@ export default function AbstractCard(props: AbstractCardProps) {
     if(color === 'secondary') return 'bg-warning'
     if(color === 'success') return 'bg-success text-white'
     if(color === 'danger') return 'bg-danger text-white'
+    if(color === 'info') return 'bg-info text-white'
   }
 
   return (<div className="abstract-card">

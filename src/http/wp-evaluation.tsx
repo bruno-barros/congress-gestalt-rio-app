@@ -112,7 +112,7 @@ export default class WpEvaluation {
     return httpApi.post('/index.php?graphql&countInReview', {
       query: `query countInReview {
   __typename
-  evEvaluations(where: {status: [revision, final_revision], user_id: ${userId}}) {
+  evEvaluations(where: {status: [synopsis_evaluating, evaluating], user_id: ${userId}}) {
     pageInfo {
       offsetPagination {
         total

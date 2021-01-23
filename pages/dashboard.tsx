@@ -36,6 +36,8 @@ const Dashboard = (props: DashboardProps) => {
     if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
     else router.push(`/abstracts`)
   }, [user])
+  return (<MainLayout><Loading vspace={80}/></MainLayout>)
+
 
   if (isLoading || ordersLoading) {
     return (<MainLayout><Loading vspace={80}/></MainLayout>)

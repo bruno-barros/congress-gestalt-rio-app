@@ -16,10 +16,11 @@ export default function AbstractAuthorLine(props: AbstractAuthorLineProps) {
   return (<Card>
       <Card.Header className="d-flex align-items-center justify-content-between py-1">
         <Accordion.Toggle as={Button} variant="link" eventKey={`${author.id}`} className="flex-grow-1 text-left">
-         {author.name} {author.wp_user_id === mainAuthorId && <div className="badge badge-dark mx-3">autor de contato</div>}
+          {author.name}
         </Accordion.Toggle>
         <div className="d-flex align-items-center">
-          {author.is_speaker ? <div className="badge badge-warning">apresentador</div> : ''}<Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
+           {author.wp_user_id === mainAuthorId && <div className="badge badge-dark">autor de contato</div>}
+          {author.is_speaker === 1 && <div className="badge badge-warning ml-3">apresentador</div>}
         </div>
       </Card.Header>
       <Accordion.Collapse eventKey={`${author.id}`}>
@@ -30,14 +31,16 @@ export default function AbstractAuthorLine(props: AbstractAuthorLineProps) {
               <th>Email</th>
               <td width="100%">{author.email}</td>
             </tr>
+            {author.company &&
             <tr>
               <th>Instituição</th>
               <td>{author.company}</td>
-            </tr>
+            </tr>}
+            {author.bio &&
             <tr>
               <th>Bio</th>
               <td>{author.bio}</td>
-            </tr>
+            </tr>}
             </tbody>
           </table>
         </Card.Body>

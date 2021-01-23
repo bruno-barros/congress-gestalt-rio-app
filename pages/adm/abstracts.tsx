@@ -55,7 +55,8 @@ const AdmAbstracts = () => {
       },{
         Header: 'Subtítulo',
         accessor: 'subtitle',
-      },{
+      },
+      {
         Header: 'Tópico',
         accessor: 'topic',
       },{
@@ -109,7 +110,7 @@ const AdmAbstracts = () => {
       name={`abstracts`}
       columns={columns}
       data={data}
-      hiddenColumns={['status_pt']}
+      hiddenColumns={['status_pt', 'subtitle']}
       onAdd={dummy}
       onEdit={dummy}
       onDelete={dummy}/>

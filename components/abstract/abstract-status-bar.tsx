@@ -24,7 +24,7 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
   const {refetch} = useAbstract(Number(router.query?.id))
   const {data: event} = useEvent()
   const {edition, abstract, className, editable} = props
-  const statuses = edition.abstract.statuses
+  const statuses = edition.abstract.statuses?.filter(s => s !== 'pre_approved')
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
   const [notify, setNotify] = useState(true)

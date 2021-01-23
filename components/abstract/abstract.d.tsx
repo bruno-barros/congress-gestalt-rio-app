@@ -1,19 +1,18 @@
-export type Status = 'pending' | 'revision' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
-  'synopsis_approved' | 'final_revision' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
+export type Status = 'pending' | 'synopsis_revision' | 'synopsis_evaluating' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
+  'synopsis_approved' | 'final_revision' | 'evaluating' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
 
 export const Statuses = [
-  'pending', 'revision', 'synopsis_rejected', 'synopsis_waiting_upd',
-  'synopsis_approved', 'final_revision', 'rejected', 'waiting_update', 'pre_approved', 'approved'
+  'pending', 'synopsis_revision', 'synopsis_evaluating', 'synopsis_rejected', 'synopsis_waiting_upd',
+  'synopsis_approved', 'final_revision', 'evaluating', 'rejected', 'waiting_update', 'pre_approved', 'approved'
 ]
 
-export type GraphQlStatuses = 'PENDING' | 'REVISION' | 'SYNOPSIS_REJECTED' | 'SYNOPSIS_WAITING_UPD' |
-  'SYNOPSIS_APPROVED' | 'FINAL_REVISION' | 'REJECTED' | 'WAITING_UPDATE' | 'PRE_APPROVED' | 'APPROVED';
+export type GraphQlStatuses = 'PENDING' | 'SYNOPSIS_REVISION' | 'SYNOPSIS_EVALUATING' | 'SYNOPSIS_REJECTED' | 'SYNOPSIS_WAITING_UPD' |  'SYNOPSIS_APPROVED' | 'FINAL_REVISION' | 'EVALUATING' | 'REJECTED' | 'WAITING_UPDATE' | 'PRE_APPROVED' | 'APPROVED';
 
 export function StatusesPhaseSynopsis():GraphQlStatuses[]{
-  return ['PENDING', 'REVISION', 'SYNOPSIS_REJECTED', 'SYNOPSIS_WAITING_UPD']
+  return ['PENDING', 'SYNOPSIS_REVISION', 'SYNOPSIS_EVALUATING', 'SYNOPSIS_REJECTED', 'SYNOPSIS_WAITING_UPD']
 }
 export function StatusesPhaseAbstract():GraphQlStatuses[]{
-  return ['SYNOPSIS_APPROVED', 'FINAL_REVISION', 'REJECTED', 'WAITING_UPDATE', 'PRE_APPROVED', 'APPROVED']
+  return ['SYNOPSIS_APPROVED', 'FINAL_REVISION', 'EVALUATING', 'REJECTED', 'WAITING_UPDATE', 'PRE_APPROVED', 'APPROVED']
 }
 
 export interface AbstractType {
