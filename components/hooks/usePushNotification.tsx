@@ -51,7 +51,7 @@ export default function usePushNotification() {
           slidedown: {
             enabled: true,
             autoPrompt: true,
-            timeDelay: 0,
+            timeDelay: 5,
             pageViews: 1
           }
         },
