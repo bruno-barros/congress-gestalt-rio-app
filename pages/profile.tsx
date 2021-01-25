@@ -8,6 +8,7 @@ import PasswordUpdateForm from "../components/user/password-update-form";
 import MySubscriptions from "../components/user/my-subscriptions";
 import useTrans from "../components/hooks/useTrans";
 import privateRoute from "../components/hoc/private-route";
+import DebugPanel from "../components/user/debug";
 
 
 const Profile = () => {
@@ -49,6 +50,8 @@ const Profile = () => {
         <MySubscriptions user={user}/>}
         {tab === 'password' &&
         <div className=" py-3 px-md-5"><PasswordUpdateForm user={user}/></div>}
+        {tab === 'debug' &&
+        <div className=" py-3 px-md-5"><DebugPanel/></div>}
       </div>
     </div>
   </MainLayout>)

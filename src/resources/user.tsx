@@ -34,6 +34,7 @@ export interface UserInterface {
   institution_occupation?: string
   institution_email?: string
   institution_phone?: string
+  onesignal_hash?: string
 }
 
 /**
@@ -78,7 +79,7 @@ export class User {
     return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin() || this.isShopManager()
   }
   canPublishAbstracts() {
-    return this.isSubscriber()
+    return this.isParticipant()
   }
   canEvaluateAbstracts() {
     return this.isEvaluator()
@@ -101,7 +102,8 @@ export class User {
     return !!this.user?.roles?.nodes.find(role => role.name === 'contributor');
   }
 
-  isSubscriber() {
+
+  isParticipant() {
     return !!this.user?.roles?.nodes.find(role => role.name === 'subscriber');
   }
 

@@ -16,6 +16,7 @@ import Sidebar from "./sidebar";
 import {ReactNode} from "react";
 import Header from "./header";
 import useSessionCountdown from "../hooks/useSessionCountdown";
+import usePushNotification from "../hooks/usePushNotification";
 
 
 interface MainLayoutProps {
@@ -31,11 +32,14 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
   const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
+  const {InitPushNotification, isInitialized} = usePushNotification()
   useSessionCountdown()
 
   if (isLoading || authLoading) {
     return <Loading vspace={100}/>
   }
+
+  InitPushNotification()
 
   return (
     <div className={`layout-main`}>
