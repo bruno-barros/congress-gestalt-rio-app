@@ -221,7 +221,6 @@ export default class WpUser {
           badge_name
           passport
           locale
-          onesignal_hash
           roles {
             nodes {
               name

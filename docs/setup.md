@@ -3,10 +3,11 @@
 Passo a passo para personalização.
 
 ## App
+    * _document allow OneSignal
+        * setup tags on usePushNotification()
     * /public/favicon.ico
     * /public/img/logo-*.png
     * Ocultar campos indesejados
-    * Aplicar regras de validação de campos
     * Padrão de cores Bootstrap
     
 ## Back-end
@@ -31,6 +32,7 @@ Passo a passo para personalização.
         * Página com regras de submissão
         * /components/abstracts/abstracts-rules.tsx
         * Página com termos de uso
+        * Configurar OneSignal
     ### Theme
     * /theme/views/emails/*
         * welcome e-mail

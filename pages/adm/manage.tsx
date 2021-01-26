@@ -3,19 +3,16 @@ import {useRouter} from "next/router";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {useEffect, useState} from "react";
 import Link from "next/link";
-import ProfileForm from "../../components/user/profile-form";
-import PasswordUpdateForm from "../../components/user/password-update-form";
-import MySubscriptions from "../../components/user/my-subscriptions";
 import useTrans from "../../components/hooks/useTrans";
 import Anais from "../../components/manage/anais";
 import privateRoute from "../../components/hoc/private-route";
+import PushNotifications from "../../components/manage/push-notifications";
 
 
 const Manage = () => {
 
   const t = useTrans()
   const router = useRouter()
-  const {authLoading, user} = useCurrentUser()
   const [tab, setTab] = useState<string>('anais')
 
   useEffect(() => {
@@ -31,11 +28,18 @@ const Manage = () => {
               <a className={`nav-link ${tab === 'anais' && 'active'}`}>Anais</a>
             </Link>
           </li>
+          <li className="nav-item">
+            <Link href={`/adm/manage?tab=push`} passHref>
+              <a className={`nav-link ${tab === 'push' && 'active'}`}>Push Notifications</a>
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="col-12 col-md-9">
         {tab === 'anais' &&
         <div className="py-3 px-3 px-md-5"><Anais/></div>}
+        {tab === 'push' &&
+        <div className="py-3 px-3 px-md-5"><PushNotifications/></div>}
       </div>
     </div>
   </MainLayout>)

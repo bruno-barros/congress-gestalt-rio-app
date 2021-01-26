@@ -88,7 +88,6 @@ export default function usePushNotification() {
         },
       });
       OneSignal.showSlidedownPrompt();
-      console.log(OneSignal?.initialized, user.getId());
       // OneSignal.showNativePrompt();
     });
 
@@ -97,26 +96,25 @@ export default function usePushNotification() {
   }, [OneSignal])
 
   useMemo(async () => {
-    if (user && user.getId() > 0 && user.getUserData().onesignal_hash && !userIdSetted.current && OneSignal?.initialized) {
+    if (user && !userIdSetted.current && OneSignal?.initialized) {
       OneSignal.push(function () {
-        OneSignal.getExternalUserId().then(externalId => {
-          console.log({externalId});
-          if (!externalId) {
-            setUserId(user.getId(), user.getUserData().onesignal_hash)
-            OneSignal.sendTags({
-              evaluator: user.isEvaluator() ? 'yes' : 'no',
-              supervisor: user.isSupervisor() ? 'yes' : 'no',
-              participant: user.isParticipant() ? 'yes' : 'no',
-            }, function(tagsSent) {
-              console.log('tags:!!! ', tagsSent);
-            });
-          }
-        })
+        console.log('SETTING TAGS');
+        OneSignal.sendTags({
+          evaluator: user.isEvaluator() ? 'yes' : 'no',
+          supervisor: user.isSupervisor() ? 'yes' : 'no',
+          participant: user.isParticipant() ? 'yes' : 'no',
+        }, function(tagsSent) {
+          userIdSetted.current = true
+        });
       });
-      //
     }
-  }, [user, OneSignal])
+  }, [user.user?.databaseId])
 
+  /**
+   * DO NOT USE
+   * @param id
+   * @param hash
+   */
   function setUserId(id: number, hash: string) {
     console.log('setExternalUserId');
     userIdSetted.current = true
@@ -126,7 +124,6 @@ export default function usePushNotification() {
   }
 
   function setTag(tagName: string, value: string) {
-    console.log('setTag', tagName, value);
     OneSignal.push(function () {
       OneSignal.sendTag(tagName, value);
     });
@@ -168,7 +165,6 @@ export default function usePushNotification() {
   return {
     isInitialized: OneSignal?.initialized || false,
     InitPushNotification: OneSignalSetup,
-    setUserId,
     debugNotification,
     setTag
   }

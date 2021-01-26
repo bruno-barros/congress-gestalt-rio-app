@@ -11,6 +11,7 @@ class MyDocument extends Document {
       <Html>
         <Head />
         <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+        {/* (un)comment to allow OneSignal */}
         <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
         <body>
         <Main />

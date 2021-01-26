@@ -31,6 +31,7 @@ export default function UserMenu({user}: { user: User }) {
       {user.canManageAbstracts() && <>
         <Dropdown.Divider />
         <Link href={`/adm/manage?tab=anais`} passHref><Dropdown.Item>Anais</Dropdown.Item></Link>
+        <Link href={`/adm/manage?tab=push`} passHref><Dropdown.Item>Push Notifications</Dropdown.Item></Link>
         <Dropdown.Divider />
       </>}
       <Link href={`/logout`} passHref><Dropdown.Item>{t('sair')}</Dropdown.Item></Link>
