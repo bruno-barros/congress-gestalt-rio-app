@@ -9,7 +9,6 @@ class MyDocument extends Document {
   render() {
     return (
       <Html>
-        <Head/>
         {process.env.GA_ID && <>
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`}></script>
           <script
@@ -25,7 +24,7 @@ class MyDocument extends Document {
             }}
           />
         </>}
-
+        <Head/>
         <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
         {/* (un)comment to allow OneSignal */}
         <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
