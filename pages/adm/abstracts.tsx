@@ -4,15 +4,18 @@ import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 const AdmAbstracts = () => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
@@ -106,6 +109,9 @@ const AdmAbstracts = () => {
   }
 
   return (<MainLayout fullWidth>
+    <Head>
+      <title>{siteTitle('Admin - Trabalhos', queryClient)}</title>
+    </Head>
     <DynamicTable<any>
       name={`abstracts`}
       columns={columns}

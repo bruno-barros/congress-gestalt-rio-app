@@ -8,6 +8,9 @@ import AbstractsRules from "../../components/abstract/abstracts-rules";
 import privateRoute from "../../components/hoc/private-route";
 import {useRouter} from "next/router";
 import {Trans} from "react-i18next";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 
 interface NewAbstractProps {
@@ -16,6 +19,7 @@ interface NewAbstractProps {
 
 const NewAbstract = (props: NewAbstractProps) => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
   const {data: event, isLoading} = useEvent()
@@ -27,6 +31,9 @@ const NewAbstract = (props: NewAbstractProps) => {
   }
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+    <Head>
+      <title>{siteTitle('Nova sinopse', queryClient)}</title>
+    </Head>
     <div className="row py-4">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
         <h1 className="page-title mt-3">{t('trabalho.novo-trabalho')}</h1>

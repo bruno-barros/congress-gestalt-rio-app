@@ -8,10 +8,14 @@ import {Loading} from "@brunobarros/react-components";
 import {MapRoles} from "../../src/resources/user";
 import useAllUsers from "../../components/hooks/useAllUsers";
 import privateRoute from "../../components/hoc/private-route";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+import {useQueryClient} from "react-query";
 
 
 const AdmUsers = () => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
@@ -76,6 +80,9 @@ const AdmUsers = () => {
   }
 
   return (<MainLayout fullWidth>
+    <Head>
+      <title>{siteTitle('Admin - Usuários', queryClient)}</title>
+    </Head>
     <DynamicTable<any>
       name={`users`}
       columns={columns}

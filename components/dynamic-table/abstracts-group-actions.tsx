@@ -7,7 +7,7 @@ import {useQueryClient} from "react-query";
 import useEvent from "../hooks/useEvent";
 import SetStatusModal from "../abstract/set-status-modal";
 import {WpAbstract} from "../../src/http/wp-abstract";
-import {errorNotification} from "../../src/resources/responses";
+import {errorNotification, successNotification} from "../../src/resources/responses";
 import DownloadCsv from "../ui/download-csv";
 import WpUser from "../../src/http/wp-user";
 import omit from 'lodash/omit'
@@ -15,6 +15,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Swal from "sweetalert2";
 import {useRouter} from "next/router";
 import NotificationModal from "../notification-modal";
+import WpEvaluation from "../../src/http/wp-evaluation";
 
 
 type GroupActions<T extends object> = {
@@ -93,6 +94,59 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
       }}/>
     <NotificationModal
       context="abstracts" ids={selected?.map(abs => abs.databaseId)}
+      show={activeModal === 'message'} onDismiss={() => {
+      setActiveModal('')
+      toggleAllPageRowsSelected(false)
+    }}/>
+  </>)
+}
+
+export function AdmEvaluatorsGroupActions<T extends object>({instance}: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
+
+  const queryClient = useQueryClient()
+  const {selectedFlatRows, toggleAllPageRowsSelected, state: {selectedRowIds}} = instance
+  const selected = selectedFlatRows.map(row => row.original)
+  const selectedCount = selected.length
+  const [activeModal, setActiveModal] = useState<'designar' | 'status' | string>('')
+  const {data: event} = useEvent()
+  const [loading, setLoading] = useState(false)
+  const edition = event && event.currentEdition()
+
+  function openModal(id: string) {
+    setActiveModal(id)
+  }
+
+  function handleDeleteEvaluation(evaluationIds: number[]) {
+    setLoading(true)
+    WpEvaluation.delete(evaluationIds)
+      .then(resp => {
+        if (resp.data.success) {
+          successNotification({message: resp.data.data.msg})
+          refreshEvaluations()
+        }
+        else errorNotification({message: resp.data.data.msg})
+      }, err => {
+        errorNotification({error: err})
+      }).finally(() => setLoading(false))
+  }
+
+  function refreshEvaluations() {
+    queryClient.refetchQueries(['evaluations', 'adm', edition?.id])
+  }
+
+
+  return (<>
+    <DropdownButton id="dynamic-table-dropdown-actions-abstracts" title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ''}`}
+                    variant="outline-secondary">
+      <Dropdown.Item onClick={() => openModal('message')} disabled={selectedCount === 0}>Enviar mensagem</Dropdown.Item>
+      <Dropdown.Item className="text-danger" onClick={() => {
+        handleDeleteEvaluation(selected?.map(evals => evals.databaseId))
+      }}
+                     disabled={selectedCount === 0 || loading}>Apagar</Dropdown.Item>
+    </DropdownButton>
+     <NotificationModal
+      context="evaluations" ids={selected?.map(evals => evals.databaseId)}
+      title="Enviar mensagem aos avaliadores"
       show={activeModal === 'message'} onDismiss={() => {
       setActiveModal('')
       toggleAllPageRowsSelected(false)

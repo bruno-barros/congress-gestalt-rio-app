@@ -15,9 +15,13 @@ import NextStepTip from "../../components/abstract/next-step-tip";
 import AbstractComments from "../../components/abstract/abstract-comments";
 import privateRoute from "../../components/hoc/private-route";
 import {Trans} from "react-i18next";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 const AbstractEditing = () => {
 
+  const queryClient = useQueryClient()
   const {user} = useCurrentUser()
   const router = useRouter()
   const t = useTrans()
@@ -64,6 +68,9 @@ const AbstractEditing = () => {
 
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+    <Head>
+      <title>{siteTitle('Trabalho', queryClient)}</title>
+    </Head>
     <div className="row my-5">
       <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
         <AbstractForm edition={edition} abstract={abstract}/>

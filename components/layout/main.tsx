@@ -17,6 +17,10 @@ import {ReactNode} from "react";
 import Header from "./header";
 import useSessionCountdown from "../hooks/useSessionCountdown";
 import usePushNotification from "../hooks/usePushNotification";
+import CurtainDelayed from "../ui/curtain-delayed";
+import useTrans from "../hooks/useTrans";
+import {Trans} from "react-i18next";
+import {useRouter} from "next/router";
 
 
 interface MainLayoutProps {
@@ -28,6 +32,8 @@ interface MainLayoutProps {
 
 function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps) {
 
+  const t = useTrans()
+  const router = useRouter()
   const queryClient = useQueryClient()
   const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
@@ -51,9 +57,21 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
 
       <Header event={event} user={user}/>
 
+      {!user.hasMinimumRegisteredFields() &&
+      <CurtainDelayed>
+        <div className="alert alert-warning text-center mb-0">
+          <Trans as="p" i18nKey="cadastro.esta-incompleto">Seu cadastro está incompleto. Por favor, <a href="" onClick={(e) => {
+            e.preventDefault()
+            router.push(`/profile?tab=personal`)
+          }}>atualize seu perfil</a>.</Trans>
+
+        </div>
+      </CurtainDelayed>}
+
       {pageHeader && <div className="page-header">
         <div className="title">{pageHeader.title}</div>
       </div>}
+
 
       <main className={`main ${fullWidth && 'full-width'} ${pageHeader && 'has-page-header'}`}>
         {sidebar

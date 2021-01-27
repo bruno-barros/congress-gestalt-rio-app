@@ -22,7 +22,7 @@ export interface UserInterface {
   city?: string;
   country?: string;
   number?: number;
-  complement?: string|number;
+  complement?: string | number;
   neighborhood?: string;
   state?: string;
   registeredDate?: string;
@@ -78,15 +78,17 @@ export class User {
   canManageAbstracts() {
     return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin() || this.isShopManager()
   }
+
   canPublishAbstracts() {
     return this.isParticipant()
   }
+
   canEvaluateAbstracts() {
     return this.isEvaluator()
   }
 
   isSuperAdmin() {
-    const superIds = [1,3]
+    const superIds = [1, 3]
     return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1
   }
 
@@ -111,8 +113,23 @@ export class User {
     return !!this.user?.roles?.nodes.find(role => role.name === 'shop_manager');
   }
 
-}
+  hasMinimumRegisteredFields() {
+    let required = ['name', 'firstName', 'email', 'gender', 'lastName', 'birthdate', 'cellphone', 'badge_name']
+    if (this.user.country === 'BR') {
+      required.push('cpf')
+    } else {
+      required.push('passport')
+    }
+  let valid = true
+    required.map(field => {
+      if(!this.user[field]){
+        valid = false
+      }
+    })
 
+    return valid
+  }
+}
 
 
 export class Author {
@@ -130,7 +147,7 @@ export class Author {
     Object.assign(this, data)
   }
 
-  static make(data: any){
+  static make(data: any) {
     return new Author(data)
   }
 }

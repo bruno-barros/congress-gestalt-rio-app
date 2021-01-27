@@ -9,10 +9,14 @@ import useEvaluation from "../../components/hooks/useEvaluation";
 import AbstractView from "../../components/abstract/abstract-view";
 import EvaluationForm from "../../components/abstract/evaluation-form";
 import privateRoute from "../../components/hoc/private-route";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+import {useQueryClient} from "react-query";
 
 
 const EvaluationEditing = () => {
 
+  const queryClient = useQueryClient()
   const {user} = useCurrentUser()
   const router = useRouter()
   const t = useTrans()
@@ -56,6 +60,9 @@ const EvaluationEditing = () => {
 
 
   return (<MainLayout fullWidth>
+    <Head>
+      <title>{siteTitle('Avaliação', queryClient)}</title>
+    </Head>
     <div className="row no-gutters">
       <div className="col-12 col-md-8 p-3 p-lg-5">
        <AbstractView abstract={evaluation.getAbstract()}/>

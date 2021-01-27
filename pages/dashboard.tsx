@@ -12,6 +12,9 @@ import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 import privateRoute from "../components/hoc/private-route";
 import {useEffect} from "react";
+import {siteTitle} from "../src/helpers";
+import Head from "next/head";
+import {useQueryClient} from "react-query";
 
 interface DashboardProps {
 
@@ -19,6 +22,7 @@ interface DashboardProps {
 
 const Dashboard = (props: DashboardProps) => {
 
+  const queryClient = useQueryClient()
   const t = useTrans()
   const router = useRouter()
   const {data: event, isLoading} = useEvent()
@@ -46,6 +50,9 @@ const Dashboard = (props: DashboardProps) => {
   const isSubscribed = orders?.hasValidSubscription(currentEdition.id)
 
   return (<MainLayout>
+    <Head>
+      <title>{siteTitle('Dashboard', queryClient)}</title>
+    </Head>
     <div className="row">
       <div className="col-12 p-4">
         <h1 className="page-title">{t(user.canManageAbstracts() ? 'eventos' : 'meus-eventos')}</h1>

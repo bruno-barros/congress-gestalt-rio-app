@@ -3,7 +3,6 @@ import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {LoadingButton} from "@brunobarros/react-components";
 import PasswordRecover from "./password-recover";
-import {motion} from "framer-motion";
 import useTrans from "../../hooks/useTrans";
 import Facebook from "../../social-login/facebook";
 import Google from "../../social-login/google";
@@ -12,9 +11,8 @@ import Error from "../../../src/resources/error";
 import {Providers} from "../../social-login/social-buttons.d";
 import MaybeLoginWithEmail from "../maybe-login-with-email";
 import {useQueryClient} from "react-query";
-import {toast} from "react-toastify";
 import {useDispatch} from "react-redux";
-import {BlockUi} from "@brunobarros/react-components/dist";
+import {BlockUi, Icon} from "@brunobarros/react-components";
 import WpUser from "../../../src/http/wp-user";
 import {postLogin, setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
@@ -25,6 +23,7 @@ import Text from "./formik/text";
 import {errorNotification} from "../../../src/resources/responses";
 import AccountRecover from "./account-recover";
 import {ErrorMessage} from "../../../src/store/store.d";
+import PopOver from "../popover";
 
 const LoginForm = () => {
 
@@ -108,10 +107,16 @@ const LoginForm = () => {
   return (<div className="login-form">
 
     <BlockUi blocking={blockUi}/>
-
+    <PopOver title={t('cadastro.login-social')} text={t('cadastro.login-social-texto')} trigger="hover" position="bottom">
+      <button type="button" className="btn btn-sm text-muted" style={{lineHeight: 0}}>
+        <Icon name={`help-circle-outline`} style={{verticalAlign: 'middle', marginRight: 4}}/>
+        <span className="text-xs">{t('cadastro.login-social')}</span>
+      </button>
+    </PopOver>
     <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
     <Google onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
-    <Hr label={t('cadastro.ou-entre-com-email')} bgColor="#ffffff"/>
+
+    <Hr label={t('cadastro.ou-entre-com-email')} className="" bgColor="#ffffff"/>
     <Formik
       initialValues={{
         username: '',

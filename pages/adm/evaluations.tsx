@@ -4,44 +4,26 @@ import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import WpEvaluation from "../../src/http/wp-evaluation";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+import useEvaluations from "../../components/hooks/useEvaluations";
 
 const AdmEvaluations = () => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
-  const {user} = useCurrentUser()
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
   const editionId = router.query.edition || edition?.id
-  const {data: evaluations, error, isLoading} = useQuery<any[], any>(['evaluations', 'adm', editionId], queryEvaluations, {
-    enabled: !!editionId && user.canManageAbstracts(),
-  })
-
-  function queryEvaluations(): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-      WpEvaluation.get({
-        edition_id: String(editionId),
-        appendEvaluator: true
-      }).then(resp => {
-        if (resp.data.data?.evEvaluations?.nodes) {
-          resolve(resp.data.data.evEvaluations.nodes)
-        } else {
-          reject([])
-          errorNotification({error: resp.data.errors})
-        }
-      }, err => {
-        reject([])
-        errorNotification({error: err})
-      })
-    })
-  }
+  const {data: evaluations, error, isLoading} = useEvaluations(String(editionId))
 
 
   const columns = useMemo(() => {
@@ -67,6 +49,9 @@ const AdmEvaluations = () => {
       },{
         Header: 'Status',
         accessor: 'status',
+      },{
+        Header: 'Dias passados',
+        accessor: 'days_of_delay',
       },{
         Header: 'Público',
         accessor: 'is_public',
@@ -110,6 +95,9 @@ const AdmEvaluations = () => {
   }
 
   return (<MainLayout fullWidth>
+    <Head>
+      <title>{siteTitle('Admin - Avaliações', queryClient)}</title>
+    </Head>
     <DynamicTable<any>
       name={`evaluations-adm`}
       columns={columns}

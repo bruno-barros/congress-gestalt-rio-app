@@ -5,7 +5,7 @@ import EditionSidebar from "../../components/event/edition-sidebar";
 import {Loading} from "@brunobarros/react-components";
 import AbstractCard from "../../components/abstract/abstract-card";
 import Link from "next/link";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
@@ -14,10 +14,14 @@ import {useRouter} from "next/router";
 import {AbstractCollection, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+import CurtainDelayed from "../../components/ui/curtain-delayed";
 
 
 const Abstracts = () => {
 
+  const queryClient = useQueryClient()
   const t = useTrans()
   const router = useRouter()
   const {user} = useCurrentUser()
@@ -107,7 +111,11 @@ const Abstracts = () => {
   }
 
 
-  return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+  return (<MainLayout
+    sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+    <Head>
+      <title>{siteTitle('Meus trabalhos', queryClient)}</title>
+    </Head>
     <div className="row">
       <div className="col-12 p-4">
 

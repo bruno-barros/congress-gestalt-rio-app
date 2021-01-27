@@ -1,4 +1,4 @@
-export type MessageTypes = 'users' | 'abstracts'
+export type MessageTypes = 'users' | 'abstracts' | 'evaluations'
 export type NotificationTypes = 'admin' | 'evaluator' | 'author'
 
 export interface Notification {

@@ -7,10 +7,14 @@ import useTrans from "../../components/hooks/useTrans";
 import Anais from "../../components/manage/anais";
 import privateRoute from "../../components/hoc/private-route";
 import PushNotifications from "../../components/manage/push-notifications";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 
 const Manage = () => {
 
+  const queryClient = useQueryClient()
   const t = useTrans()
   const router = useRouter()
   const [tab, setTab] = useState<string>('anais')
@@ -20,6 +24,9 @@ const Manage = () => {
   }, [router])
 
   return (<MainLayout pageHeader={{title: 'Gestão do evento'}}>
+    <Head>
+      <title>{siteTitle('Admin - Configurações', queryClient)}</title>
+    </Head>
     <div className="row no-gutters">
       <div className="col-12 col-md-3 border-right py-3 px-md-3">
         <ul className="nav  nav-pills flex-column">

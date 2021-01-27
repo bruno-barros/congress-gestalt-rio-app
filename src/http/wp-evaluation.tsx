@@ -47,6 +47,7 @@ export default class WpEvaluation {
       user_id
       edition_id
       is_public
+      days_of_delay
       abstract {
         databaseId
         title
@@ -114,7 +115,7 @@ export default class WpEvaluation {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_save', {...data});
   }
 
-  static delete(id: number) {
+  static delete(id: number|number[]) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_delete', {id});
   }
 

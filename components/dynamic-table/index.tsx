@@ -36,7 +36,7 @@ import AbstractFilters, {
   Text
 } from "./abstract-filters";
 import {
-  AbstractsGroupActions,
+  AbstractsGroupActions, AdmEvaluatorsGroupActions,
   EvaluationsGroupActions,
   SubscriptionsGroupActions,
   UsersGroupActions
@@ -200,11 +200,12 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
   return (<div className="">
     <div className="abstracts-action-bar border-bottom bg-light px-3 py-1">
       {name === 'evaluations' && <EvaluationsGroupActions instance={instance}/>}
+      {name === 'evaluations' && <EvaluationStatus instance={instance}/>}
+      {name === 'evaluations-adm' && <AdmEvaluatorsGroupActions instance={instance}/>}
       {name === 'abstracts' && <AbstractsGroupActions instance={instance}/>}
       {name === 'users' && <UsersGroupActions instance={instance}/>}
       {name === 'subscriptions' && <SubscriptionsGroupActions instance={instance}/>}
       <AbstractFilters instance={instance} filterableFields={filterableFields()}/>
-      {name === 'evaluations' && <EvaluationStatus instance={instance}/>}
     </div>
     <div className="table-responsive">
       <table {...getTableProps()} className="table dynamic-table table-hover border-bottom" style={{}}>

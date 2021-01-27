@@ -4,15 +4,18 @@ import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
-import {useQuery} from "react-query";
+import {useQuery, useQueryClient} from "react-query";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import privateRoute from "../../components/hoc/private-route";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 const Evaluations = () => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
@@ -92,6 +95,9 @@ const Evaluations = () => {
   }
 
   return (<MainLayout fullWidth>
+    <Head>
+      <title>{siteTitle('Minhas avaliações', queryClient)}</title>
+    </Head>
     <DynamicTable<any>
       name={`evaluations`}
       columns={columns}

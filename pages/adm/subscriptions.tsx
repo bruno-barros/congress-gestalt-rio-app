@@ -10,10 +10,14 @@ import useEvent from "../../components/hooks/useEvent";
 import {Order} from "../../src/resources/order";
 import EditionSidebar from "../../components/event/edition-sidebar";
 import privateRoute from "../../components/hoc/private-route";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
 
 
 const AdmSubscriptions = () => {
 
+  const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
@@ -83,6 +87,9 @@ const AdmSubscriptions = () => {
   return (<MainLayout sidebar={{
     title: edition.name, component: <EditionSidebar edition={edition}/>, sidebarCompact: true
   }}>
+    <Head>
+      <title>{siteTitle('Admin - Inscrições', queryClient)}</title>
+    </Head>
     <DynamicTable<any>
       name={`subscriptions`}
       columns={columns}

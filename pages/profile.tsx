@@ -9,10 +9,14 @@ import MySubscriptions from "../components/user/my-subscriptions";
 import useTrans from "../components/hooks/useTrans";
 import privateRoute from "../components/hoc/private-route";
 import DebugPanel from "../components/user/debug";
+import {siteTitle} from "../src/helpers";
+import Head from "next/head";
+import {useQueryClient} from "react-query";
 
 
 const Profile = () => {
 
+  const queryClient = useQueryClient()
   const t = useTrans()
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
@@ -23,6 +27,9 @@ const Profile = () => {
   }, [router])
 
   return (<MainLayout pageHeader={{title: t('cadastro.meu-cadastro')}}>
+    <Head>
+      <title>{siteTitle(`Perfil - ${tab}`, queryClient)}</title>
+    </Head>
     <div className="row no-gutters">
       <div className="col-12 col-md-3 border-right py-3 px-md-3">
         <ul className="nav  nav-pills flex-column">
