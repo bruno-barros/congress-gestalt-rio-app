@@ -12,13 +12,23 @@ export default class WpEvaluation {
   }
 
 
-  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number }): Promise<AxiosResponse> {
+  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number; appendEvaluator?: boolean }): Promise<AxiosResponse> {
 
     let filters = []
     if (args?.edition_id) filters.push(`edition_id: "${args.edition_id}"`)
     if (args?.user_id) filters.push(`user_id: ${args.user_id}`)
     if (args?.abstract_id) filters.push(`abstract_id: "${args.abstract_id}"`)
     let lmt = args?.limit || 2000
+    let evaluator = '';
+    if(args?.appendEvaluator){
+      evaluator = `evaluator {
+        databaseId
+        name
+        email
+        cellphone
+      }`
+    }
+
 
     return httpApi.post('/index.php?graphql&evaluations', {
       query: `query WpEvaluation {
@@ -44,6 +54,7 @@ export default class WpEvaluation {
         topic
         edition_id
       }
+      ${evaluator}
     }
   }
 }`

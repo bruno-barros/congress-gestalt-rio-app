@@ -27,7 +27,10 @@ const AbstractEditing = () => {
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
   useEffect(() => {
-    if (router.query?.created) NextStepPopup()
+    if (router.query?.created) {
+      NextStepPopup()
+      router.push(`/abstracts/${abstract.databaseId}`, null, {shallow: true})
+    }
   }, [router.query])
 
   function NextStepPopup() {

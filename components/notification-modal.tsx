@@ -17,6 +17,7 @@ interface NotificationModalProps {
   context: MessageTypes
   ids: number[]
   show: boolean
+  title?: string
 
   onDismiss(): void
 
@@ -25,7 +26,7 @@ interface NotificationModalProps {
 
 export default function NotificationModal(props: NotificationModalProps) {
 
-  const {context, onDismiss, ids, onUpdate} = props
+  const {context, title, onDismiss, ids, onUpdate} = props
   const [show, setShow] = useState(props.show)
   const {data: event, isLoading} = useEvent()
   const edition = event && event.currentEdition()
@@ -68,13 +69,13 @@ export default function NotificationModal(props: NotificationModalProps) {
       }, err => {
         errorNotification({error: err})
       })
-      .finally(()=>setLoading(false))
+      .finally(() => setLoading(false))
   }
 
 
   return (<Modal show={show} onHide={handleClose} size="lg">
     <Modal.Header closeButton>
-      <Modal.Title>Enviar mensagem</Modal.Title>
+      <Modal.Title>{title || 'Enviar mensagem'}</Modal.Title>
     </Modal.Header>
     <Modal.Body className="" style={{minHeight: 100}}>
       {isLoading && <Loading/>}

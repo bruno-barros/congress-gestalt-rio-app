@@ -7,6 +7,33 @@ import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import {MapRoles} from "../../src/resources/user";
 import {OrderStatuses} from "../../src/resources/order";
+import useEvaluators from "../hooks/useEvaluators";
+
+
+export function getEvaluationsFilterableFields() {
+  const router = useRouter()
+  const t = useTrans()
+  const {data: event} = useEvent()
+  let edition = event && event.currentEdition()
+  const editionId = String(router.query.edition) || edition?.id
+  if (editionId !== edition.id) edition = event.getEdition(editionId)
+  const {data: evaluators, isLoading, error} = useEvaluators({enabled: !!event})
+
+  const lang = router.locale
+  if (!event || isLoading) return null
+
+  const users = evaluators.map(user => {
+    return {value: user.databaseId, label: user.name}
+  })
+  const statuses = edition?.abstract?.statuses.map(s => {
+    return {value: String(t(`status.${s}`)), label: t(`status.${s}`)}
+  })
+
+  return [
+    {id: 'evaluator_id', label: 'Avaliador', options: users},
+    {id: 'status_pt', label: 'Status', options: statuses},
+  ]
+}
 
 
 export function getAbstractFilterableFields() {

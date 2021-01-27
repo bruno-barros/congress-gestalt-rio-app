@@ -49,6 +49,8 @@ export default function Header(props: HeaderProps) {
                 active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
               <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
+              <Link href={`/adm/evaluations?edition=${edition.id}`} passHref><Nav.Link className="admin"
+                active={router.pathname === '/adm/evaluations'}>Avaliações</Nav.Link></Link>
               <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)

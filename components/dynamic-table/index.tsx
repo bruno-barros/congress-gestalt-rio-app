@@ -30,7 +30,7 @@ import SortedLabel from "./sorted-label";
 import TablePagination from "./table-pagination";
 import {RenderCell} from "./cells";
 import AbstractFilters, {
-  getAbstractFilterableFields,
+  getAbstractFilterableFields, getEvaluationsFilterableFields,
   getOrderFilterableFields,
   getUSerFilterableFields,
   Text
@@ -190,7 +190,10 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
   const filterableFields = useCallback(()=>{
     if(name === 'users') return getUSerFilterableFields()
     if(name === 'subscriptions') return getOrderFilterableFields()
-    return getAbstractFilterableFields()
+    if(name === 'abstracts') return getAbstractFilterableFields()
+    if(name === 'evaluations') return getAbstractFilterableFields()
+    if(name === 'evaluations-adm') return getEvaluationsFilterableFields()
+
   }, [])
 
 // console.log(debouncedState);

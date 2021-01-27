@@ -15,6 +15,7 @@ import select from "../ui/form/formik/select";
 import {plural} from "../../src/helpers";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useEvent from "../hooks/useEvent";
+import useEvaluators from "../hooks/useEvaluators";
 
 interface SetEvaluatorsModalProps {
   abstract_ids: number[]
@@ -34,27 +35,8 @@ export default function SetEvaluatorsModal(props: SetEvaluatorsModalProps) {
   const edition = event && event.currentEdition()
   const [evaluator, setEvaluator] = useState(null)
   const [loading, setLoading] = useState(false)
-  const {data, isLoading, isFetching, error} = useQuery<any[]>(['evaluators'], queryEvaluations, {
-    enabled: !!abstract_ids && show
-  })
+  const {data, isLoading, isFetching, error} = useEvaluators({enabled: !!abstract_ids && show})
 
-  function queryEvaluations(): Promise<any[] | null> {
-    return new Promise((resolve) => {
-      WpUser.searchUser({
-        role: 'contributor',
-        limit: 500
-      })
-        .then(resp => {
-          if (resp.data.data?.evUserSearch?.nodes) {
-            resolve(resp.data.data.evUserSearch.nodes)
-          } else {
-            resolve(null)
-          }
-        }, err => {
-
-        })
-    })
-  }
 
   useEffect(() => {
     setShow(props.show)
@@ -133,7 +115,7 @@ export default function SetEvaluatorsModal(props: SetEvaluatorsModalProps) {
               </>}</div>
             </div>
 
-            <Switch name="notify" label="Enviar e-mail de notificação?"/>
+            <Switch name="notify" label="Enviar e-mail de notificação ao avaliador?"/>
             <div className="row">
               <div className="col-12 col-md">
                 <LoadingButton block loading={loading} disable={!isValid}>Designar avaliador

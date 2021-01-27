@@ -12,6 +12,8 @@ import {errorNotification, exceptionNotification, successNotification} from "../
 import ToolTip from "../../tooltip";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 import useCurrentUser from "../../../hooks/useCurrentUser";
+import {Loading} from "@brunobarros/react-components";
+import {load} from "dotenv";
 
 interface AuthorsProps {
   label: string
@@ -33,6 +35,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
   const [newAuthor, setNewAuthor] = useState({id: null, author_name: '', author_email: '', author_bio: '', author_company: '', uuid: null});
+  const [loading, setLoading] = useState(false)
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
@@ -90,6 +93,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
 
   async function handleSpeaker(author) {
     const newAuthor = {...author}
+    setLoading(true)
     try {
       newAuthor.locale = router.locale
       const resp = await WpAbstract.setSpeaker(newAuthor)
@@ -98,6 +102,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
     } catch (err) {
       exceptionNotification(err)
     }
+    setLoading(false)
     const newValue = field.value.map(a => {
         a.is_speaker = parseInt(a.id) === parseInt(newAuthor.id)
       return a
@@ -130,15 +135,17 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
               {(!creating && !disabled)
                 ? <>
                 <ToolTip text={`${t(author.is_speaker ? 'trabalho.e-apresentador':'trabalho.nao-e-apresentador')} (clique para mudar)`}>
-                  <button type="button" className="btn btn-sm py-0 d-flex align-items-center" style={{lineHeight: 1}} onClick={() => {
+                  <button type="button" className="btn btn-sm py-0 d-flex align-items-center"
+                         disabled={loading} style={{lineHeight: 1}} onClick={() => {
                     handleSpeaker(author)
                   }}>
 
                     <div className={`badge ${author.is_speaker ? 'badge-warning':'text-muted'}`}
-                    style={{opacity: `${author.is_speaker?1:.3}`}}
+                    style={{opacity: `${author.is_speaker?1:.7}`}}
                     >
                       {t('trabalho.autor-de-apresentacao')}
                     </div>
+                    {loading && <Loading size="sm"/>}
                     <Icon name={`${author.is_speaker ? 'mic-outline' : 'mic-off-outline'}`} style={{fontSize: 20}}/>
                   </button>
                 </ToolTip>

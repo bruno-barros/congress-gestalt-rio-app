@@ -15,16 +15,20 @@ export default function NextStepTip(props: NextStepProps) {
 
   function messages() {
     const pending = {
-      pt: 'O autor deve submeter o trabalho para avaliação.',
-      en: 'The author must submit the abstract for evaluation.'
+      pt: 'O autor deve submeter a sinopse para avaliação.',
+      en: 'The author must submit the resume for evaluation.'
     }
     const revision = {
-      pt: 'O trabalho está sendo avaliado.',
-      en: 'The abstract is being evaluated.'
+      pt: 'Sinopse (ou trabalho) enviada para revisão (Quando começar a avaliação o autor não poderá editá-la).',
+      en: 'Resume (or abstract) sent to revision (When the evaluation begins, the author will not be able to edit it).'
+    }
+    const evaluating = {
+      pt: 'Sinopse (ou trabalho) está sendo avaliado.',
+      en: 'The resume (or abstract) is being evaluated.'
     }
     const rejected = {
-      pt: 'O trabalho foi rejeitado, por tanto não é possível editá-lo.',
-      en: 'The abstract was rejected, so it is not possible to edit it.'
+      pt: 'Sinopse (ou trabalho) rejeitado, por tanto não é possível editá-la.',
+      en: 'Resume (or abstract) rejected, so it is not possible to edit it.'
     }
     const waiting = {
       pt: 'O autor deve fazer as correções solicitadas e submetê-lo a avaliação.',
@@ -42,13 +46,17 @@ export default function NextStepTip(props: NextStepProps) {
       pt: 'Parabéns! Trabalho aprovado para apresentação.',
       en: 'Congratulations! Approved abstract for presentation.'
     }
+
     return {
       pending,
-      revision,
+      synopsis_revision: revision,
+      synopsis_evaluating: evaluating,
       synopsis_rejected: rejected,
       synopsis_waiting_upd: waiting,
       synopsis_approved,
+      revision,
       final_revision: revision,
+      evaluating,
       rejected,
       waiting_update: waiting,
       pre_approved,

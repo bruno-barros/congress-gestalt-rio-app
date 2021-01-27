@@ -122,7 +122,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
         <fieldset disabled={!evaluation.isEditable()}>
 
           <h5 className="border-bottom pb-2 mb-3">{evaluation.statusPassed('synopsis_approved')
-            ? 'Sua avaliação do trabalho' : 'Sua avaliação do resumo'}</h5>
+            ? 'Sua avaliação do trabalho' : 'Sua avaliação da sinopse'}</h5>
           {questions && Object.keys(initialValues.answers).map(key => {
             return <div key={key} className="form-group">
               <Switch name={`answers.${key}`} label={questions[key]}/>

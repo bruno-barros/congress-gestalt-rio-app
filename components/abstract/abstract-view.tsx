@@ -19,10 +19,12 @@ export default function AbstractView(props: AbstractViewProps) {
       <strong>TÍTULO</strong>
       <div className="border-bottom py-3">{abstract.title}</div>
     </div>
+    {abstract?.subtitle?.length > 0 &&
     <div className="form-group">
       <strong>SUBTÍTULO</strong>
       <div className="border-bottom py-3">{abstract.subtitle}</div>
-    </div>
+    </div>}
+
     <div className="form-group">
       <strong>TÓPICO</strong>
       <div className="border-bottom py-3">{edition.abstract.topics?.find(t => t.id === abstract.topic)['pt']}</div>

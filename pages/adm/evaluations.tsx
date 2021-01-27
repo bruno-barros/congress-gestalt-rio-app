@@ -5,13 +5,14 @@ import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
 import {useQuery} from "react-query";
+import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
-import WpEvaluation from "../../src/http/wp-evaluation";
 import privateRoute from "../../components/hoc/private-route";
+import WpEvaluation from "../../src/http/wp-evaluation";
 
-const Evaluations = () => {
+const AdmEvaluations = () => {
 
   const router = useRouter()
   const t = useTrans()
@@ -19,16 +20,15 @@ const Evaluations = () => {
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
   const editionId = router.query.edition || edition?.id
-  const {data: evaluations, error, isLoading} = useQuery<any[], any>(['evaluations', editionId, user.getId()], queryEvaluations, {
-    enabled: !!editionId && user.canEvaluateAbstracts(),
-    refetchOnMount: true
+  const {data: evaluations, error, isLoading} = useQuery<any[], any>(['evaluations', 'adm', editionId], queryEvaluations, {
+    enabled: !!editionId && user.canManageAbstracts(),
   })
 
   function queryEvaluations(): Promise<any[]> {
     return new Promise((resolve, reject) => {
       WpEvaluation.get({
         edition_id: String(editionId),
-        user_id: user.getId()
+        appendEvaluator: true
       }).then(resp => {
         if (resp.data.data?.evEvaluations?.nodes) {
           resolve(resp.data.data.evEvaluations.nodes)
@@ -50,13 +50,22 @@ const Evaluations = () => {
         Header: '#',
         accessor: 'id',
       },{
-        Header: 'Título',
-        accessor: 'title',
+        Header: 'Trabalho',
+        accessor: 'abs_title',
       },{
-        Header: 'Tópico',
-        accessor: 'topic',
+        Header: 'Avaliador',
+        accessor: 'evaluator_name',
       },{
-        Header: 'Avaliação',
+        Header: 'Avaliador ID',
+        accessor: 'evaluator_id',
+      },{
+        Header: 'E-mail',
+        accessor: 'email',
+      },{
+        Header: 'Telefone',
+        accessor: 'cellphone',
+      },{
+        Header: 'Status',
         accessor: 'status',
       },{
         Header: 'Público',
@@ -69,15 +78,24 @@ const Evaluations = () => {
         accessor: 'date',
       }
     ]}, [])
+
   const data = useMemo(() => {
     if(!evaluations || !edition) return []
     return evaluations.map(row => {
+
       let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract?.topic)
       row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
-      row.title = row.abstract?.title
+      row.abs_title = `(${row.abstract?.databaseId}) ${row.abstract?.title}`
       row.status_pt = t(`status.${row.status}`)
-      row.id = row.abstract?.databaseId
+      row.id = row.databaseId
       row.is_public = row.is_public ? 'SIM' : 'NÃO'
+
+
+        row.evaluator_id = row.evaluator.databaseId
+        row.evaluator_name = row.evaluator.name
+        row.email = row.evaluator.email
+        row.cellphone = row.evaluator.cellphone
+
       row.date = row.created_at
       return row
     })
@@ -93,14 +111,14 @@ const Evaluations = () => {
 
   return (<MainLayout fullWidth>
     <DynamicTable<any>
-      name={`evaluations`}
+      name={`evaluations-adm`}
       columns={columns}
       data={data}
-      hiddenColumns={['status_pt']}
+      hiddenColumns={['status_pt', 'evaluator_id']}
       onAdd={dummy}
       onEdit={dummy}
       onDelete={dummy}/>
   </MainLayout>)
 }
 
-export default privateRoute(Evaluations)
+export default privateRoute(AdmEvaluations)
