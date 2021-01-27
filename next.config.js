@@ -13,6 +13,7 @@ module.exports = {
     FACEBOOK_OAUTH_ID: process.env.FACEBOOK_OAUTH_ID,
     ONESIGNAL_ID: process.env.ONESIGNAL_ID,
     ONESIGNAL_SUBDOMAINNAME: process.env.ONESIGNAL_SUBDOMAINNAME,
+    GA_ID: process.env.GA_ID,
     production: isProd
   },
   i18n: {

@@ -5,6 +5,7 @@ Passo a passo para personalização.
 ## App
     * _document allow OneSignal
         * setup tags on usePushNotification()
+    * Set GA_ID (Google Analytics)
     * /public/favicon.ico
     * /public/img/logo-*.png
     * Ocultar campos indesejados
