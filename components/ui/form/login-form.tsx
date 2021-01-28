@@ -107,7 +107,7 @@ const LoginForm = () => {
   return (<div className="login-form">
 
     <BlockUi blocking={blockUi}/>
-    <PopOver title={t('cadastro.login-social')} text={t('cadastro.login-social-texto')} trigger="hover" position="bottom">
+    <PopOver title={t('cadastro.login-social')} text={t('cadastro.login-social-texto')} trigger={['hover', 'focus']} position="bottom">
       <button type="button" className="btn btn-sm text-muted" style={{lineHeight: 0}}>
         <Icon name={`help-circle-outline`} style={{verticalAlign: 'middle', marginRight: 4}}/>
         <span className="text-xs">{t('cadastro.login-social')}</span>
