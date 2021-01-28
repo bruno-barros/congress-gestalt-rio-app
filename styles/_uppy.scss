@@ -1,0 +1,22 @@
+@import "~@uppy/core/dist/style.min.css";
+@import "~@uppy/drag-drop/dist/style.min.css";
+@import "~@uppy/status-bar/dist/style.min.css";
+@import "~@uppy/progress-bar/dist/style.min.css";
+@import "~@uppy/file-input/dist/style.min.css";
+.uppy-Root {
+  .uppy-StatusBar-progress{
+    height: 4px;
+  }
+
+}
+.uppy-DragDrop-container{
+  overflow: hidden;
+}
+
+
+
+.modal-body {
+  .uppy-Root.uppy-StatusBar:not(.is-waiting){
+    margin: (-$spacer) (-$spacer) 0;
+  }
+}

@@ -8,8 +8,11 @@ const userReducer = (state = init, action) => {
       ...action.payload
     }
   }
-  else if (action.type === USER_ACTYPE.LOGIN_ERR) {
-    return {}
+  else if (action.type === USER_ACTYPE.CART_UPDATED) {
+    return {
+      ...state,
+      cart: action.payload
+    }
   }
 
   return state;

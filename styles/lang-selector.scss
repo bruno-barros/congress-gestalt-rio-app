@@ -1,0 +1,25 @@
+.lang-selector {
+  display: flex;
+  justify-content: center;
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+
+  .lang-selector-label {
+    line-height: 1.8em;
+  }
+
+  a {
+    display: block;
+    line-height: 1;
+    margin: 0 .5rem;
+
+    &.active {
+      cursor: default;
+      opacity: .5;
+    }
+  }
+
+  img {
+
+  }
+}

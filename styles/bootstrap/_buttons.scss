@@ -3,7 +3,9 @@
 //
 // Base styles
 //
-
+.swal2-confirm,
+.swal2-deny,
+.swal2-cancel,
 .btn {
   display: inline-block;
   font-family: $btn-font-family;
@@ -88,11 +90,13 @@ fieldset:disabled a.btn {
   @include hover() {
     color: $link-hover-color;
     text-decoration: $link-hover-decoration;
+    box-shadow: none;
   }
 
   &:focus,
   &.focus {
     text-decoration: $link-hover-decoration;
+    box-shadow: none;
   }
 
   &:disabled,

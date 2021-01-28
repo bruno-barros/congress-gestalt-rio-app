@@ -1,14 +1,109 @@
-.login-wrapper {
+@import "./mixins";
+
+.login-page {
   background-color: #fff;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   .brand-panel {
+    text-align: center;
+
+    background-size: cover;
+    background-position: left center;
+
+    .logo {
+      max-width: 200px;
+
+    }
   }
 
   .form-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     flex: 1;
-    background-color: #eeeeee;
-  }
-  .footer-panel{
+    background-color: #ffffff;
 
+    .logo{
+      max-width: 200px;
+      margin: 0 auto 1rem;
+    }
+
+    > *:not(.logo) {
+      min-width: 260px;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  .btn.facebook,
+  .btn.google {
+    color: #ffffff;
+    line-height: 2em;
+    ion-icon {
+      vertical-align: text-top;
+      margin-right: 10px;
+      font-size: 23px;
+    }
+  }
+  .btn.google {
+    background-color: #4285f4;
+    &:hover,
+    &:active {
+      background-color: #3e67cf;
+    }
+  }
+  .btn.facebook {
+    background-color: #4267B2;
+    &:hover,
+    &:active {
+      background-color: #3c4d91;
+    }
+  }
+
+}
+
+
+.login-main-panel {
+  //background-color: #635e59;
+  //min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+@include media-breakpoint-up(lg) {
+  .login-main-panel {
+    display: flex;
+    flex-direction: row-reverse;
+    min-height: 100vh;
+
+    .brand-panel {
+      background-image: url(https://congressoabrisco.com.br/src/themes/congresso/assets/img/login-bg.jpg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 0 0 50%;
+    }
+
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      > *:not(.logo) {
+        min-width: 300px;
+      }
+    }
+  }
+  .login-page {
+    .footer-panel {
+      position: absolute;
+      bottom: 0;
+    }
   }
 }

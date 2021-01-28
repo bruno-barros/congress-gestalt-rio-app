@@ -1,0 +1,57 @@
+@import "./mixins";
+
+/**
+  cancelled
+  completed
+  failed
+  on_hold
+  pending
+  processing
+  refunded
+ */
+.order-line {
+  &.completed {
+    background-color: rgba($success, .05);
+  }
+
+  &.processing {
+  }
+
+  .status-ball {
+    display: block;
+    width: 25px;
+    height: 25px;
+    border-radius: 30px;
+    &.completed {
+      background-color: $success;
+    }
+    &.pending,
+    &.on_hold,
+    &.processing {
+      background-color: $warning;
+    }
+
+    &.refunded,
+    &.failed,
+    &.cancelled {
+      background-color: $danger;
+    }
+  }
+}
+
+.badge-completed {
+  color: $white;
+  background-color: $success;
+}
+.badge-on_hold,
+.badge-pending,
+.badge-processing {
+  //color: $white;
+  background-color: $warning;
+}
+.badge-refunded,
+.badge-failed,
+.badge-cancelled {
+  color: $white;
+  background-color: $danger;
+}

@@ -1,21 +1,22 @@
 import {ServerResponse} from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
-
+import {QueryClient} from 'react-query'
+import Event from "./resources/event";
 
 /**
  * Used to load files from '/public' folder
  * @param src
  */
 export function asset(src: string) {
-  // return `${process.env.assetPrefix}${src}`;
   let s = trimStart(src, '/');
   return `${process.env.RELATIVE_PATH?.length > 1
     ? process.env.RELATIVE_PATH : ''}/${s}`;
 }
 
-export function siteTitle(name: string = '') {
-  return name ? name + ` - ${process.env.siteName}` : process.env.siteName;
+export function siteTitle(name: string = '', queryClient?: QueryClient) {
+  const event: Event | any = queryClient ? queryClient.getQueryData('event') : {}
+  return name ? name + ` - ${event?.eventName}` : (event ? event.eventName : '')
 }
 
 
@@ -92,7 +93,7 @@ export const dateAdd = (date: Date, interval: string, units: number) => {
 export function fakePromise(timeout: number = 1000): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-       resolve(`Promise timeout reached (limit: ${timeout} ms)`)
+      resolve(`Promise timeout reached (limit: ${timeout} ms)`)
     }, timeout);
   })
 }
@@ -105,6 +106,10 @@ export function fakePromise(timeout: number = 1000): Promise<any> {
 export function rand(min, max) {
   let randomNum = Math.random() * (max - min) + min;
   return Math.floor(randomNum);
+}
+
+export function generate_tmp_id(user_id: number) {
+  return `${user_id}@${rand(1111111111, 9999999999)}`
 }
 
 
@@ -133,10 +138,170 @@ export function truncateMiddle(fullStr: string, strLen: number = 24, separator: 
 export function plural(count: number, singular: string, plural: string, zero?: string) {
 
   if (count === 0 && zero) {
-    return  zero
+    return zero
   }
   if (count > 1) {
     return plural.replace('%c', String(count))
   }
   return singular.replace('%c', String(count))
+}
+
+
+export function inputFloatClass(inputValue: any, appendClasses: string = '') {
+  let classes = ['form-control']
+  if (inputValue && inputValue.length > 0) classes.push('filled')
+  if (appendClasses) classes.push(appendClasses)
+  return classes.join(' ')
+}
+
+export function getGenres() {
+  return [
+    {value: 'M', name: 'masculino'},
+    {value: 'F', name: 'feminino'},
+    {value: 'I', name: 'outro'},
+  ]
+}
+
+export const MapLocales = [
+  {app: 'pt', site: 'pt_BR', label: 'Português'},
+  {app: 'en', site: 'en_US', label: 'Inglês'},
+]
+
+export function ev_locale(locale): string {
+  if (!locale) return 'pt'
+  if (locale.indexOf('en') !== -1) return 'en';
+  if (locale.indexOf('es') !== -1) return 'es';
+  return 'pt'
+}
+
+export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary'|'info' {
+  if (['pending', 'waiting_update', 'synopsis_waiting_upd'].indexOf(status) !== -1) return 'secondary'
+  if (['synopsis_revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
+  if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
+  if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'
+  if (['synopsis_evaluating', 'evaluating'].indexOf(status) !== -1) return 'info'
+}
+
+
+export function states(empty: boolean = true) {
+  let states = [{
+    value: "AC",
+    label: "Acre"
+  },
+    {
+      value: "AL",
+      label: "Alagoas"
+    },
+    {
+      value: "AM",
+      label: "Amazonas"
+    },
+    {
+      value: "AP",
+      label: "Amapá"
+    },
+    {
+      value: "BA",
+      label: "Bahia"
+    },
+    {
+      value: "CE",
+      label: "Ceará"
+    },
+    {
+      value: "DF",
+      label: "Distrito Federal"
+    },
+    {
+      value: "ES",
+      label: "Espírito Santo"
+    },
+    {
+      value: "GO",
+      label: "Goiás"
+    },
+    {
+      value: "MA",
+      label: "Maranhão"
+    },
+    {
+      value: "MG",
+      label: "Minas Gerais"
+    },
+    {
+      value: "MS",
+      label: "Mato Grosso do Sul"
+    },
+    {
+      value: "MT",
+      label: "Mato Grosso"
+    },
+    {
+      value: "PA",
+      label: "Pará"
+    },
+    {
+      value: "PB",
+      label: "Paraíba"
+    },
+    {
+      value: "PE",
+      label: "Pernambuco"
+    },
+    {
+      value: "PI",
+      label: "Piauí"
+    },
+    {
+      value: "PR",
+      label: "Paraná"
+    },
+    {
+      value: "RJ",
+      label: "Rio de Janeiro"
+    },
+    {
+      value: "RN",
+      label: "Rio Grande do Norte"
+    },
+    {
+      value: "RO",
+      label: "Rondônia"
+    },
+    {
+      value: "RR",
+      label: "Roraima"
+    },
+    {
+      value: "RS",
+      label: "Rio Grande do Sul"
+    },
+    {
+      value: "SC",
+      label: "Santa Catarina"
+    },
+    {
+      value: "SE",
+      label: "Sergipe"
+    },
+    {
+      value: "SP",
+      label: "São Paulo"
+    },
+    {
+      value: "TO",
+      label: "Tocantins"
+    }]
+
+  if (empty) states.unshift({label: '', value: ''})
+
+  return states
+}
+
+
+export function dispatchOnENTER(event, callback) {
+  if (event?.key === 13 || event?.keyIdentifier === 13 || event?.keyCode === 13) {
+    event.preventDefault()
+    callback()
+  }
 }

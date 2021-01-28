@@ -2,6 +2,7 @@ import AuthToken from "../http/auth-token";
 import {ErrorMessage, LoginInputs} from "./store.d";
 import {Dispatch} from "redux";
 import {AxiosResponse} from "axios";
+import pickBy from 'lodash/pickBy'
 import Wordpress from "../http/api/wordpress";
 import {UI_ACTYPE} from "./ui.actions";
 
@@ -11,7 +12,8 @@ export const USER_ACTYPE = {
   LOGOUT: 'LOGOUT_SUCCESS',
   UPDATED: 'USER_UPDATED',
   CREATED: 'USER_CREATED',
-  CREATED_ERR: 'USER_CREATED_ERROR'
+  CREATED_ERR: 'USER_CREATED_ERROR',
+  CART_UPDATED: 'CART_UPDATED',
 }
 
 // export const exampleAction = () => {
@@ -36,7 +38,7 @@ export const postLogin = (
 
     if (resp.data.data && resp.data.data.login?.authToken) {
       await AuthToken.storeToken(resp.data.data.login.authToken, null);
-      if(resp.data.data.login.refreshToken){
+      if (resp.data.data.login.refreshToken) {
         AuthToken.storeRefreshToken(resp.data.data.login.refreshToken);
       }
       // setup user
@@ -77,6 +79,43 @@ export const postLogin = (
   }
 }
 
+
+export const logUserByType = (
+  type: 'admin' | 'contributor' | 'editor' | 'subscriber',
+  callback: (user: any, error: ErrorMessage | boolean) => void
+) => {
+  return (dispatch: any, getState: any) => {
+    const users = {
+      admin: {login: 'admin', password: 'admin'},
+      editor: {login: 'outro', password: 'DntekhEPQx$lei@Yk2r3Ap^h'},
+      contributor: {login: 'avaliador', password: 'wS!!LE4r5AeiibF83xBvMrt^'},
+      subscriber: {login: 'user3@user.com', password: 'rLbpBsGLd8HW8!@dARX*q!m2'},
+    }
+
+    dispatch(postLogin(users[type], (user, error) => {
+      callback(user, error)
+    }))
+
+  }
+}
+
+
+export const setUpUser = (input : {user: any, tokens: { access: string, refresh?: string }, locale: string}, callback: () => void) => {
+  return async (dispatch, getState) => {
+
+    await AuthToken.storeToken(input.tokens.access, null);
+    if (input.tokens.refresh) {
+      AuthToken.storeRefreshToken(input.tokens.refresh);
+    }
+
+    dispatch({type: USER_ACTYPE.LOGIN, payload: pickBy(input.user, (value, key)=> {
+      return ['ID', 'id', 'user_login', 'user_email', 'display_name', 'first_name', 'last_name', 'locale', 'avatar', '_profile_completed', '_revalidate_password', 'google_social_id', 'facebook_social_id'].indexOf(key) !== -1
+      })})
+
+    callback();
+  }
+}
+
 /**
  * Refresh JWT session
  */
@@ -103,6 +142,24 @@ export const fetchUserData = () => {
     if (!resp.data.errors) {
       dispatch({type: USER_ACTYPE.UPDATED, payload: resp.data.data.user})
     }
+  }
+}
+
+export const logout = () => {
+  return (dispatch: Dispatch, getState: any) => {
+    AuthToken.deleteToken();
+    dispatch({type: USER_ACTYPE.LOGOUT})
+  }
+}
+
+
+export const saveCart = (
+  cart: any,
+  callback: (error: ErrorMessage | null) => void
+) => {
+  return (dispatch: any, getState: any) => {
+    dispatch({type: USER_ACTYPE.CART_UPDATED, payload: cart})
+    callback(null)
   }
 }
 

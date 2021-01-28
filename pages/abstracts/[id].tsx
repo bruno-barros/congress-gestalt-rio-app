@@ -1,0 +1,99 @@
+import MainLayout from "../../components/layout";
+import useTrans from "../../components/hooks/useTrans";
+import useEvent from "../../components/hooks/useEvent";
+import {Edition} from "../../src/resources/event";
+import {useRouter} from "next/router";
+import EditionSidebar from "../../components/event/edition-sidebar";
+import AbstractForm from "../../components/abstract/abstract-form";
+import AbstractStatusBar from "../../components/abstract/abstract-status-bar";
+import useAbstract from "../../components/hooks/useAbstract";
+import {Loading} from "@brunobarros/react-components";
+import useCurrentUser from "../../components/hooks/useCurrentUser";
+import Sweet from "../../components/ui/sweet-alert";
+import {useEffect} from "react";
+import NextStepTip from "../../components/abstract/next-step-tip";
+import AbstractComments from "../../components/abstract/abstract-comments";
+import privateRoute from "../../components/hoc/private-route";
+import {Trans} from "react-i18next";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+
+const AbstractEditing = () => {
+
+  const queryClient = useQueryClient()
+  const {user} = useCurrentUser()
+  const router = useRouter()
+  const t = useTrans()
+  const {data: event, isLoading} = useEvent()
+  const edition: Edition = event?.currentEdition()
+  const lang = router.locale
+  const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
+
+  useEffect(() => {
+    if (router.query?.created) {
+      NextStepPopup()
+      router.push(`/abstracts/${abstract.databaseId}`, null, {shallow: true})
+    }
+  }, [router.query])
+
+  function NextStepPopup() {
+    Sweet.fire({
+      html: `<div class="text-left">
+        <p>${t('caro')}, ${user.getFirstName() || 'autor'}.<br/>
+        ${t('trabalho.proximo-passo-enviar-avaliacao')}.</p>
+        <p>${t('trabalho.quando-pronto-use-botao')} "<b>${t('trabalho.atualizar-e-submeter')}</b>".</p>
+        </div>`
+    })
+  }
+
+  if (isLoading || loadingAbstract) {
+    return <MainLayout><Loading vspace={80}/></MainLayout>;
+  }
+
+
+  if (abstract?.getResponsible().databaseId !== user.getId() && !user.canManageAbstracts()) {
+    return <MainLayout>
+      <div className="container">
+        <div className="row">
+          <div className="col-12 col-md-6 offset-md-3">
+            <div className="alert alert-danger mt-5">
+              {t('sem-permissao')}
+            </div>
+          </div>
+        </div>
+      </div>
+    </MainLayout>;
+  }
+
+
+  return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+    <Head>
+      <title>{siteTitle('Trabalho', queryClient)}</title>
+    </Head>
+    <div className="row my-5">
+      <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
+        <AbstractForm edition={edition} abstract={abstract}/>
+      </div>
+      <div className="col-12 col-md-4">
+        <AbstractStatusBar editable={user.canManageAbstracts()} edition={edition} abstract={abstract}
+                           className="my-4"/>
+        <NextStepTip status={abstract?.status}/>
+        <AbstractComments abstract={abstract}/>
+        <div className="border-info pl-4 my-5" style={{borderLeft: 'solid 3px'}}>
+          <Trans as="div"
+                 i18nKey="trabalho.confira-as-regras"
+                 defaults={`Confira as <1>regras de submissão de trabalhos</1>.`}
+                 components={['Confira as ',
+                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
+                   '.']}
+          />
+        </div>
+
+      </div>
+    </div>
+  </MainLayout>)
+}
+
+
+export default privateRoute(AbstractEditing)

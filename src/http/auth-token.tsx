@@ -91,15 +91,18 @@ export default class AuthToken {
     }
   };
 
-   almostExpired() {
-    // get expire date
-     var today:any = new Date();
-     var expiresAt: any = this.expiresAt;
-     var diffMs = (expiresAt - today); // milliseconds between now & Christmas
-    // get diff from now
-     var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-     console.log('almost expires at', diffMins);
+  almostExpired() {
+    var diffMins = this.minutesToExpire()
     // if less then 1 minute
     return diffMins < 1;
+  }
+
+  minutesToExpire(){
+    // get expire date
+    var today:any = new Date();
+    var expiresAt: any = this.expiresAt;
+    var diffMs = (expiresAt - today); // milliseconds between now & Christmas
+    // get diff from now
+    return Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
   }
 }

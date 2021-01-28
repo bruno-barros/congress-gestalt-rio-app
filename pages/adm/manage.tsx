@@ -1,0 +1,55 @@
+import MainLayout from "../../components/layout";
+import {useRouter} from "next/router";
+import useCurrentUser from "../../components/hooks/useCurrentUser";
+import {useEffect, useState} from "react";
+import Link from "next/link";
+import useTrans from "../../components/hooks/useTrans";
+import Anais from "../../components/manage/anais";
+import privateRoute from "../../components/hoc/private-route";
+import PushNotifications from "../../components/manage/push-notifications";
+import {useQueryClient} from "react-query";
+import {siteTitle} from "../../src/helpers";
+import Head from "next/head";
+
+
+const Manage = () => {
+
+  const queryClient = useQueryClient()
+  const t = useTrans()
+  const router = useRouter()
+  const [tab, setTab] = useState<string>('anais')
+
+  useEffect(() => {
+    setTab(String(router.query?.tab) || 'anais')
+  }, [router])
+
+  return (<MainLayout pageHeader={{title: 'Gestão do evento'}}>
+    <Head>
+      <title>{siteTitle('Admin - Configurações', queryClient)}</title>
+    </Head>
+    <div className="row no-gutters">
+      <div className="col-12 col-md-3 border-right py-3 px-md-3">
+        <ul className="nav  nav-pills flex-column">
+          <li className="nav-item">
+            <Link href={`/adm/manage?tab=anais`} passHref>
+              <a className={`nav-link ${tab === 'anais' && 'active'}`}>Anais</a>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link href={`/adm/manage?tab=push`} passHref>
+              <a className={`nav-link ${tab === 'push' && 'active'}`}>Push Notifications</a>
+            </Link>
+          </li>
+        </ul>
+      </div>
+      <div className="col-12 col-md-9">
+        {tab === 'anais' &&
+        <div className="py-3 px-3 px-md-5"><Anais/></div>}
+        {tab === 'push' &&
+        <div className="py-3 px-3 px-md-5"><PushNotifications/></div>}
+      </div>
+    </div>
+  </MainLayout>)
+}
+
+export default privateRoute(Manage)

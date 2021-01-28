@@ -1,0 +1,36 @@
+@import "./mixins";
+
+body {
+
+  .swal2-toast {
+    .swal2-title {
+      text-align: left;
+    }
+  }
+
+  .swal2-title {
+
+  }
+
+  .swal2-content {
+
+  }
+
+
+  .swal2-footer {
+    font-size: .8em;
+  }
+}
+
+.swal2-confirm {
+  min-width: 100px;
+  @include button-variant($primary, $primary);
+}
+
+.swal2-deny {
+  @include button-variant($danger, $danger);
+}
+
+.swal2-cancel {
+  @include button-variant($secondary, $secondary);
+}

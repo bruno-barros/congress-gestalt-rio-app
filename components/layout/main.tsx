@@ -7,55 +7,84 @@ import {asset, siteTitle} from "../../src/helpers";
 
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
-import {BlockUi} from "@brunobarros/react-components/dist";
+import {BlockUi, Loading} from "@brunobarros/react-components";
+import useEvent from "../hooks/useEvent";
+import useCurrentUser from "../hooks/useCurrentUser";
+import Footer from "./footer";
+import {useQueryClient} from "react-query";
+import Sidebar from "./sidebar";
+import {ReactNode} from "react";
+import Header from "./header";
+import useSessionCountdown from "../hooks/useSessionCountdown";
+import usePushNotification from "../hooks/usePushNotification";
+import CurtainDelayed from "../ui/curtain-delayed";
+import useTrans from "../hooks/useTrans";
+import {Trans} from "react-i18next";
+import {useRouter} from "next/router";
 
-// import BlockUi from "../ui/block-ui";
 
 interface MainLayoutProps {
-  children: any;
-  home?: boolean;
+  children: any
+  sidebar?: { title?: string; component: ReactNode, sidebarCompact?: boolean }
+  pageHeader?: { title: string }
+  fullWidth?: boolean
 }
 
-function MainLayout({children, home}: MainLayoutProps) {
+function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps) {
 
+  const t = useTrans()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const {data: event, isLoading} = useEvent()
+  const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
-  const today = new Date;
+  const {InitPushNotification, isInitialized} = usePushNotification()
+  useSessionCountdown()
+
+  if (isLoading || authLoading) {
+    return <Loading vspace={100}/>
+  }
+
+  InitPushNotification()
 
   return (
-    <div className={styles.container}>
+    <div className={`layout-main`}>
       <BlockUi blocking={blockUI}/>
-        <Head>
-          <title>{siteTitle()}</title>
-          <link rel="icon" href={asset('/favicon.ico')}/>
-        </Head>
+      <Head>
+        <title>{siteTitle('', queryClient)}</title>
+        <link rel="icon" href={asset('/favicon.ico')}/>
+      </Head>
 
-        <header className={styles.header}>
-          <Container>
-            <Row>
-              <Col>
-                main header
-              </Col>
-            </Row>
-          </Container>
-        </header>
+      <Header event={event} user={user}/>
 
-        <main className={styles.main}>
-          <Container>
-            {children}
-          </Container>
-        </main>
+      {!user.hasMinimumRegisteredFields() &&
+      <CurtainDelayed>
+        <div className="alert alert-warning text-center mb-0">
+          <Trans as="p" i18nKey="cadastro.esta-incompleto">Seu cadastro está incompleto. Por favor, <a href="" onClick={(e) => {
+            e.preventDefault()
+            router.push(`/profile?tab=personal`)
+          }}>atualize seu perfil</a>.</Trans>
 
-        <footer className={styles.footer}>
-          <Container>
-            <Row>
-              <Col>
-                <p className="text-center text-muted">
-                  &copy;{siteTitle(`${today.getFullYear()}`)} - {process.env.version}
-                </p>
-              </Col>
-            </Row>
-          </Container>
-        </footer>
+        </div>
+      </CurtainDelayed>}
+
+      {pageHeader && <div className="page-header">
+        <div className="title">{pageHeader.title}</div>
+      </div>}
+
+
+      <main className={`main ${fullWidth && 'full-width'} ${pageHeader && 'has-page-header'}`}>
+        {sidebar
+        && <div className={`sidebar ${!!sidebar?.sidebarCompact && 'compact'}`}>
+          <Sidebar sidebar={sidebar} compact={!!sidebar?.sidebarCompact}/>
+        </div>}
+
+        <div className={`content`}>
+          {children}
+        </div>
+      </main>
+
+      <Footer/>
     </div>
   )
 }
