@@ -21,7 +21,7 @@ module.exports = {
     defaultLocale: 'pt'
   },
   images: {
-    domains: ['localhost', 'congressoabrisco.com.br'],
+    domains: ['localhost', 'congressoabrisco.com.br', 'evento.conceito-online.com.br'],
   },
   trailingSlash: false,
 }
