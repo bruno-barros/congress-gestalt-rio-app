@@ -27,7 +27,7 @@ const Register1 = () => {
   const t = useTrans()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const {authLoading, user} = useCurrentUser()
+  const {authLoading, user, refetch} = useCurrentUser()
   const [loading, setLoading] = useState(false)
   const [response, setResponse] = useState({success: null, msg: ''})
   const {data: event} = useEvent()
@@ -58,7 +58,8 @@ const Register1 = () => {
   async function handleSubmit(values) {
     values.databaseId = user.getId()
     values.email = user.getUserData().email
-    console.log({values});
+    values._context = 'register1'
+    // console.log({values});
     setLoading(true)
     try {
       const resp = await WpUser.update(values)
@@ -68,6 +69,7 @@ const Register1 = () => {
       setResponse({success, msg: data.msg})
       success === false && dismissAlert()
       if (success) {
+        refetch()
         if(edition.subscription.allowed) router.push(`/register2`)
         else router.push('/dashboard')
       }
@@ -170,7 +172,7 @@ const Register1 = () => {
                   </div>
                   <div className="btn-group btn-group-lg end" role="group">
                     <LoadingButton variant="primary" loading={loading} disable={!isValid}
-                                   className=" px-5">{t('cotinuar')}</LoadingButton>
+                                   className=" px-5">{t('continuar')}</LoadingButton>
                   </div>
                 </div>
 

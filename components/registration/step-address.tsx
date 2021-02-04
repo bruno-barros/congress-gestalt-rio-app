@@ -48,6 +48,7 @@ export default function StepAddress(props: StepProps) {
     values.databaseId = user.getId()
     values.locale = user.getUserData().locale
     values.email = user.getUserData().email
+    values._context = 'address'
     disp(blockUi(true))
 
     try {
