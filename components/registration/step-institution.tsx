@@ -42,6 +42,7 @@ export default function StepInstitution(props: StepProps) {
     values.databaseId = user.getId()
     values.locale = user.getUserData().locale
     values.email = user.getUserData().email
+    values._context = 'institution'
     disp(blockUi(true))
 
     try {

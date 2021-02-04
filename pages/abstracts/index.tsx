@@ -80,12 +80,14 @@ const Abstracts = () => {
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a>
             </Link>
 
+            {edition.abstract.limit_per_user > 0 &&
             <div className="ml-3">
               <Trans i18nKey="trabalho.voce-pode-enviar-ate"
                      values={{limit: edition.abstract.limit_per_user}}
                      defaults={`Você pode enviar até {{limit}} trabalhos.`}
               />
-            </div>
+            </div>}
+
 
           </div>
         </Card.Body>
@@ -98,7 +100,7 @@ const Abstracts = () => {
         {t('trabalho.limite-atingido')}
       </div>}
 
-      {(edition.abstract.limit_per_user === 0 || abstracts?.count() > 0 && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
+      {((edition.abstract.limit_per_user === 0 || abstracts?.count() > 0) && edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
       <div className="d-md-flex align-items-center">
         <Link href={`/abstracts/new`}><a
           className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
@@ -121,9 +123,9 @@ const Abstracts = () => {
 
         {phase === 'synopsis' && <SynopsisIntro/>}
 
-        {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {phase === 'abstracts' && abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
-        {(abstracts && abstracts?.count() === 0) &&
+        {(abstracts && abstracts?.count() === 0 && phase === 'abstracts') &&
         <div className="alert alert-light border">
           Você não tem trabalhos. / Nothin to show.
         </div>}

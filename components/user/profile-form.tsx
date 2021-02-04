@@ -62,6 +62,7 @@ export default function ProfileForm(props: ProfileFormProps) {
 
   async function submit(values) {
     values.databaseId = user.getId()
+    values._context = 'profile'
     setLoading(true)
     try {
       const resp = await WpUser.update(values)
