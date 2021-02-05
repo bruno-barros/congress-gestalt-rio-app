@@ -6,7 +6,7 @@ import AuthToken from "../../src/http/auth-token";
 import {toast} from "react-toastify";
 import {renewAuthToken} from "../../src/store/user.actions";
 
-export default function useSessionCountdown() {
+export default function useSessionCountdown(props?: {ignore?: boolean}) {
   const {user} = useCurrentUser()
   const disp = useDispatch()
   const router = useRouter()
@@ -21,6 +21,7 @@ export default function useSessionCountdown() {
   }
 
   useEffect(() => {
+    if(props?.ignore) return;
     if (!user.getId()) return;
     timeout = setInterval(() => {
       const expireIn = AuthToken.factory().minutesToExpire();

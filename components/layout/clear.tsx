@@ -16,15 +16,16 @@ import useSessionCountdown from "../hooks/useSessionCountdown";
 
 interface ClearLayoutProps {
   children: any;
+  ignoreSessionCountDown?: boolean
 }
 
-function ClearLayout({children}: ClearLayoutProps) {
+function ClearLayout({children, ignoreSessionCountDown}: ClearLayoutProps) {
 
   const queryClient = useQueryClient()
   const {data: event, isLoading} = useEvent()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
-  useSessionCountdown();
+  useSessionCountdown({ignore: !!ignoreSessionCountDown});
 
   if (isLoading) {
     return <Loading vspace={100}/>
