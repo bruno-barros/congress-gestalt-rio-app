@@ -16,7 +16,7 @@ import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 const Abstracts = () => {
@@ -34,6 +34,10 @@ const Abstracts = () => {
     enabled: !!edition?.id && user.getId() > 0
   })
   const lang = router.locale || 'pt'
+
+  useEffect(() => {
+    if (router.query?.status) setPhase(String(router.query?.status))
+  }, [router.query?.status])
 
   function queryAbstracts(): Promise<AbstractCollection> {
     return new Promise((resolve, reject) => {
@@ -61,7 +65,7 @@ const Abstracts = () => {
     </MainLayout>)
   }
 
-  function SynopsisIntro(){
+  function SynopsisIntro() {
     return (<>
       {(abstracts?.count() === 0) && isCurrent
       && <Card style={{maxWidth: 600}}>
@@ -92,7 +96,6 @@ const Abstracts = () => {
           </div>
         </Card.Body>
       </Card>}
-
 
 
       {(edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
