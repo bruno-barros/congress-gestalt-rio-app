@@ -16,7 +16,7 @@ import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
-import CurtainDelayed from "../../components/ui/curtain-delayed";
+import {useState} from "react";
 
 
 const Abstracts = () => {
@@ -28,7 +28,7 @@ const Abstracts = () => {
   const {data: event} = useEvent()
   const currentEdition = event && event.currentEdition()
   const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
-  const phase: 'synopsis'|'abstract'|string = String(router.query?.status) || 'synopsis'
+  const [phase, setPhase] = useState(router.query?.status ? String(router.query?.status) : 'synopsis')
   const isCurrent = currentEdition?.id === edition?.id
   const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id, phase], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
