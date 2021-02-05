@@ -20,8 +20,6 @@ Passo a passo para personalização.
                 edit_others_posts
                 create_posts
                 delete_posts
-                edit_others_posts
-                edit_posts
                 edit_published_posts
                 publish_posts
             * Para Editor: edit_others_shop_orders, edit_shop_orders

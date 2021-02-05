@@ -31,11 +31,11 @@ const AbstractEditing = () => {
   const {data: abstract, error, isLoading: loadingAbstract} = useAbstract(Number(router.query?.id))
 
   useEffect(() => {
-    if (router.query?.created) {
+    if (router.query?.created && abstract) {
       NextStepPopup()
       router.push(`/abstracts/${abstract.databaseId}`, null, {shallow: true})
     }
-  }, [router.query])
+  }, [router.query, abstract])
 
   function NextStepPopup() {
     Sweet.fire({

@@ -11,6 +11,10 @@ export default class Event {
       pt: string, // url=[PRODUCT_ID]
       en: string,
     },
+    lgpd: {
+      pt: string,
+      en: string,
+    },
   }
   editions: any[]
   abstract: {

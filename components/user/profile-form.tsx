@@ -14,6 +14,8 @@ import {errorNotification, successNotification} from "../../src/resources/respon
 import useAllUsers from "../hooks/useAllUsers";
 import Textarea from "../ui/form/formik/textarea";
 import useCurrentUser from "../hooks/useCurrentUser";
+import Switch from "../ui/form/formik/switch";
+import Card from "react-bootstrap/cjs/Card";
 
 interface ProfileFormProps {
   user: User
@@ -57,6 +59,7 @@ export default function ProfileForm(props: ProfileFormProps) {
     neighborhood: Yup.string().required('validacao.obrigatorio'),
     address: Yup.string().required('validacao.obrigatorio'),
     number: Yup.string().required('validacao.obrigatorio'),
+    allow_newsletter: Yup.bool()
     // complemento: Yup.string().notRequired(),
   });
 
@@ -114,6 +117,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       institution_occupation: user.getUserData().institution_occupation,
       institution_email: user.getUserData().institution_email,
       institution_phone: user.getUserData().institution_phone,
+      allow_newsletter: user.getUserData().allow_newsletter,
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
@@ -206,6 +210,9 @@ export default function ProfileForm(props: ProfileFormProps) {
           <Text name="institution_phone" label={t('cadastro.telefone')} containerClass="col-12 col-md-6"/>
           <Text name="institution_email" label={`E-mail`} containerClass="col-12 col-md-6"/>
         </div>
+      </fieldset>
+      <fieldset>
+        <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/>
       </fieldset>
       <LoadingButton variant="primary" block size="lg" className={` mt-3`} disable={!isValid}
                      loading={loading}>{t('salvar')}</LoadingButton>

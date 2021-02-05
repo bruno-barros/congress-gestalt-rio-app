@@ -35,6 +35,7 @@ export interface UserInterface {
   institution_email?: string
   institution_phone?: string
   onesignal_hash?: string
+  allow_newsletter: boolean
 }
 
 /**

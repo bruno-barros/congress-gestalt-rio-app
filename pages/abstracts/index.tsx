@@ -123,7 +123,7 @@ const Abstracts = () => {
 
         {phase === 'synopsis' && <SynopsisIntro/>}
 
-        {phase === 'abstract' && abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
         {(abstracts && abstracts?.count() === 0 && phase === 'abstract') &&
         <div className="alert alert-light border">
