@@ -172,6 +172,7 @@ export default class WpUser {
           registeredDate
           user_status
           locale
+          allow_newsletter
           roles {
             nodes {
               name

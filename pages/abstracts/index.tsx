@@ -28,7 +28,7 @@ const Abstracts = () => {
   const {data: event} = useEvent()
   const currentEdition = event && event.currentEdition()
   const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
-  const phase = router.query?.status || 'synopsis'
+  const phase: 'synopsis'|'abstract'|string = String(router.query?.status) || 'synopsis'
   const isCurrent = currentEdition?.id === edition?.id
   const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id, phase], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
@@ -123,9 +123,9 @@ const Abstracts = () => {
 
         {phase === 'synopsis' && <SynopsisIntro/>}
 
-        {phase === 'abstracts' && abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
-        {(abstracts && abstracts?.count() === 0 && phase === 'abstracts') &&
+        {(abstracts && abstracts?.count() === 0 && phase === 'abstract') &&
         <div className="alert alert-light border">
           Você não tem trabalhos. / Nothin to show.
         </div>}

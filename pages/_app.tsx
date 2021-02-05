@@ -8,16 +8,27 @@ import {ToastContainer} from "react-toastify";
 import {useRouter} from "next/router";
 import {useEffect} from "react";
 import * as gtag from '../src/gtag'
+import * as Sentry from "@sentry/react";
+import {Integrations} from "@sentry/tracing";
+
+Sentry.init({
+  dsn: "https://bd05263f28054e61bd1d0292d9dda332@o517410.ingest.sentry.io/5625184",
+  integrations: [new Integrations.BrowserTracing()],
+  environment: process.env.production ? 'production' : 'development',
+  // We recommend adjusting this value in production,
+  // or using tracesSampler for finer control. Between 0 and 1
+  tracesSampleRate: 1.0,
+});
 
 const stored = store();
 
 const queryClient = new QueryClient({
- defaultOptions: {
-   queries: {
-     refetchOnMount: false,
-     refetchOnWindowFocus: false
-   }
- }
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false
+    }
+  }
 });
 
 export default function App({Component, pageProps}) {

@@ -20,6 +20,7 @@ import Select from "../components/ui/form/formik/select";
 import Mask from "../components/ui/form/formik/mask";
 import privateRoute from "../components/hoc/private-route";
 import useEvent from "../components/hooks/useEvent";
+import Switch from "../components/ui/form/formik/switch";
 
 
 const Register1 = () => {
@@ -32,6 +33,7 @@ const Register1 = () => {
   const [response, setResponse] = useState({success: null, msg: ''})
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
+  const lang = router.locale
 
   const FormSchema = Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
@@ -52,7 +54,8 @@ const Register1 = () => {
     // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     gender: Yup.string().required('validacao.obrigatorio'),
-
+    allow_newsletter: Yup.boolean(),
+    agreedTerms: Yup.boolean().oneOf([true], 'validacao.obrigatorio')
   });
 
   async function handleSubmit(values) {
@@ -114,6 +117,8 @@ const Register1 = () => {
             phone: user.getUserData().phone || '',
             birthdate: user.getUserData().birthdate || '',
             gender: user.getUserData().gender || 'M',
+            allow_newsletter: true,
+            agreedTerms: event.page.lgpd[lang].length === 0  // if there is no url, set to true
           }}
           onSubmit={handleSubmit}
           validationSchema={FormSchema}
@@ -156,6 +161,11 @@ const Register1 = () => {
                     {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
                   </Select>
                 </div>
+
+                <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/>
+                {event.page.lgpd[lang] &&
+                <Switch name="agreedTerms" label={<span>Você concorda com os <a href={event.page.lgpd[lang]} target="_blank">Termos de Serviço</a>?</span>}/>}
+
 
                 {response.msg && <Curtain isOpened={response.msg?.length > 0}>
                   <div className={`alert ${response.success ? 'alert-success' : 'alert-danger'}`}>
