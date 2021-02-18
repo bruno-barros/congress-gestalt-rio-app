@@ -28,7 +28,7 @@ export default function Text({label, containerClass, cepCallback, floatLabel: fl
       const resp = useBuscaCEP(field.value)
       resp.then(resp => {
         cepCallback(resp || null)
-      })
+      }, err => {/** silence */})
 
     }
 
