@@ -43,7 +43,7 @@ const Merging = () => {
 
   }, [router.query])
 
-  return (<ClearLayout>
+  return (<ClearLayout ignoreSessionCountDown>
     <Head>
       <title>{siteTitle('Merging')}</title>
     </Head>
