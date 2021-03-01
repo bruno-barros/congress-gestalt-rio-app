@@ -12,13 +12,12 @@ class Generic extends Component<GenericProps & any> {
 
   render() {
 
-    let triggerLogin = this.props.hasOwnProperty('triggerLogin') ? this.props.triggerLogin : this.noop
-
+    const { children, triggerLogin, btnStyle, ...props } = this.props
     return (<button
       type="button"
-      className={`btn -btn-outline-secondary btn-block ${this.props?.btnStyle}`}
-      onClick={triggerLogin} {...this.props}>
-      {this.props.children}
+      className={`btn -btn-outline-secondary btn-block ${btnStyle}`}
+      onClick={triggerLogin} {...props}>
+      {children}
     </button>)
   }
 
