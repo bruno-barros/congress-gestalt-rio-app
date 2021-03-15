@@ -112,6 +112,8 @@ const Register1 = () => {
             passport: user.getUserData().passport || '',
             firstName: user.getUserData().firstName || '',
             lastName: user.getUserData().lastName || '',
+            email: user.getUserData().email || '',
+            alt_email: user.getUserData().alt_email || '',
             badge_name: user.getUserData().badge_name || '',
             cellphone: user.getUserData().cellphone || '',
             phone: user.getUserData().phone || '',
@@ -143,6 +145,11 @@ const Register1 = () => {
                 <div className="row">
                   <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
                   <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
+                </div>
+
+                <div className="row">
+                <Text name="email" label={`E-mail`} disabled containerClass="col-12 col-md"/>
+                <Text name="alt_email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
                 </div>
 
                 <Text name="badge_name" label={t('cadastro.nome-cracha')} required/>

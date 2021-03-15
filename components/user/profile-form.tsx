@@ -97,6 +97,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       firstName: user.getFirstName() || '',
       lastName: user.getUserData().lastName || '',
       email: user.getUserData().email || '',
+      alt_email: user.getUserData().alt_email || '',
       country: user.getUserData().country || 'BR',
       cpf: user.getUserData().cpf || '',
       passport: user.getUserData().passport || '',
@@ -156,8 +157,10 @@ export default function ProfileForm(props: ProfileFormProps) {
           {values.country !== 'BR'
           && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
         </div>
-
-        <Text name="email" type="email" label="E-mail" required/>
+        <div className="row">
+        <Text name="email" type="email" label="E-mail" required containerClass="col-12 col-md"/>
+        <Text name="alt_email" type="email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
+        </div>
         <div className="row">
           <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required
                 containerClass="col-12 col-md"/>

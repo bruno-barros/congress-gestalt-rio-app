@@ -8,6 +8,7 @@ export interface UserInterface {
   name?: string;
   firstName?: string;
   email?: string;
+  alt_email?: string;
   roles?: any;
   avatar: any;
   phone?: string;
