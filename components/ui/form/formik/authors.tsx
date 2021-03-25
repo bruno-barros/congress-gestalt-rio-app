@@ -40,7 +40,10 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
-
+    if(newAuthor.author_email === mainAuthor.email){
+      toast.warning('Você já é o Autor de contato')
+      return;
+    }
     // fast validation
     if (newAuthor.author_name.length < 2 || newAuthor.author_email.length < 5) {
       toast.error(t('validacao.todos-sao-obrigatorios'), {toastId: 'author-validation'})
@@ -212,5 +215,6 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
       </div>)
     }}</FieldArray>
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
+
   </div>)
 }

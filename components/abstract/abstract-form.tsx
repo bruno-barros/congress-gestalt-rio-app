@@ -171,7 +171,7 @@ export default function AbstractForm(props: AbstractFormProps) {
       <fieldset disabled={!isEditable1}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                 mainAuthor={abstract?.author?.node}
+                 mainAuthor={abstract?.author?.node || user.getUserData()}
                  disabled={!isEditable1}
                  creating={!isEditing}
                  onEdit={(author, metadata) => {
