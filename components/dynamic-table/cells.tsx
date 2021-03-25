@@ -28,7 +28,7 @@ export function Roles({cell}) {
 
   return roles ? roles.map(role => {
     const maped = MapRoles.find(r => r.label === role)
-    return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped.color}}>{role}</span>
+    return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped?.color}}>{role}</span>
   }) : null
 }
 
