@@ -90,6 +90,9 @@ export class User {
   }
 
   isSuperAdmin() {
+    if(process.env.NODE_ENV === 'development' && this.isAdmin()){
+      return true;
+    }
     const superIds = [1, 3]
     return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1
   }

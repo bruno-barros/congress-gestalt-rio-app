@@ -14,9 +14,9 @@ export default function Select({label, containerClass, children, multi, ...props
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  // console.log({field}, {meta});
+  // console.log({field}, {meta}, {helpers}, {...props});
   return (<div className={`form-group ${containerClass || ''}`}>
-    {label && <label htmlFor={`fld_${field.name}`}>{label}</label>}
+    {label && <label htmlFor={`fld_${field.name}`}>{`${label} ${props?.required ? '*': ''}`}</label>}
 
     <select {...field} {...props} id={`fld_${field.name}`} multiple={multi} className={`form-control ${err && 'is-invalid'}`}>
       {children}

@@ -44,7 +44,7 @@ export default function Header(props: HeaderProps) {
           {/*  <Nav.Link active={router.pathname === '/dashboard'}>{t('eventos')}</Nav.Link>*/}
           {/*</Link>*/}
           {user.canManageAbstracts()
-            ? (<>
+            && (<>
               <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
               <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link className="admin"
@@ -53,8 +53,8 @@ export default function Header(props: HeaderProps) {
                 active={router.pathname === '/adm/evaluations'}>Avaliações</Nav.Link></Link>
               <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
-            </>)
-            : (<>
+            </>)}
+            {user.canPublishAbstracts() && (<>
               <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
                 active={router.pathname === '/abstracts' && router.query?.status!=='abstract'}>{t('trabalho.sinopses')}</Nav.Link>
               </Link>
@@ -66,7 +66,7 @@ export default function Header(props: HeaderProps) {
             <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link
               title={`${pending} aguardando revisão`}
               active={router.pathname === '/evaluations'}>Minhas avaliações
-              {pending && <div className="badge badge-warning ml-1">{pending}</div>}
+              {pending > 0 && <div className="badge badge-warning ml-1">{pending}</div>}
             </Nav.Link></Link>
           </>}
           {user.canPublishAbstracts() && <>

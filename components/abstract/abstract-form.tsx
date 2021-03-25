@@ -154,7 +154,7 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       </fieldset>
       <fieldset disabled={!isEditable2}>
-        {abstract?.statusPassed('synopsis_waiting_upd') &&
+        {(abstract?.statusPassed('synopsis_waiting_upd') && edition.getFieldMin('content') > 0) &&
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
                  charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}/>}
 
@@ -171,6 +171,7 @@ export default function AbstractForm(props: AbstractFormProps) {
       <fieldset disabled={!isEditable1}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+                 mainAuthor={abstract.author.node}
                  disabled={!isEditable1}
                  creating={!isEditing}
                  onEdit={(author, metadata) => {
