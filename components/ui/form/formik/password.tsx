@@ -30,7 +30,7 @@ export default function Password({label, containerClass, minStrength, thresholdL
 
   const [strength, setStrength] = useState(0);
 
-  const err = meta?.touched && meta?.error
+  const err = field.value.length > 3 && meta?.error
 
   useEffect(() => {
     handleChange(field.value)
