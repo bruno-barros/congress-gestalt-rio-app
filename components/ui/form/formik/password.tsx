@@ -111,7 +111,7 @@ export default function Password({
           onClick={() => setShowPwd(!showPwd)}
         >
           <span
-            class="input-group-text"
+            className="input-group-text"
             id="password-show"
             style={{ backgroundColor: "white" }}
           >
