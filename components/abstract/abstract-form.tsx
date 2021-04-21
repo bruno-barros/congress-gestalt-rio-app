@@ -185,7 +185,7 @@ export default function AbstractForm(props: AbstractFormProps) {
                  }}/>
       </fieldset>
       <Field name="_intent" type="hidden"/>
-      <pre>{JSON.stringify(errors, null, 2)}</pre>
+
       {(isEditable1 || isEditable2) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}
