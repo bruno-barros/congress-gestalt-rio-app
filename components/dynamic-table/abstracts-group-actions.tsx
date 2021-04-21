@@ -59,6 +59,7 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
 
   function refreshAbstracts() {
     queryClient.refetchQueries(['abstracts', edition?.id])
+    queryClient.refetchQueries(['abstract'])
   }
 
 
@@ -80,8 +81,8 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
       onDismiss={() => {
         setActiveModal('')
       }} onUpdate={() => {
+        refreshAbstracts()
       toggleAllPageRowsSelected(false)
-      refreshAbstracts()
     }}/>
     <SetStatusModal
       abstract_ids={selected?.map(abs => abs.databaseId)} show={activeModal === 'status'}
@@ -89,8 +90,8 @@ export function AbstractsGroupActions<T extends object>({instance}: PropsWithChi
         setActiveModal('')
       }}
       onUpdate={() => {
-        toggleAllPageRowsSelected(false)
         refreshAbstracts()
+        toggleAllPageRowsSelected(false)
       }}/>
     <NotificationModal
       context="abstracts" ids={selected?.map(abs => abs.databaseId)}

@@ -40,7 +40,6 @@ const Login = () => {
         </div>
       </div>
       <div className="form-panel p-4">
-
           <img src={event?.logoPrimary} className="logo img-fluid "/>
         <div className="d-flex align-items-center justify-content-center mb-3">
           <LangSelector/>

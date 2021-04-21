@@ -117,6 +117,7 @@ export class WpAbstract {
     topic
     content
     ev_last_update
+    jlp
     author {
       node {
         avatar {
@@ -182,6 +183,7 @@ export class WpAbstract {
       attachments_count
       authorDatabaseId
       ev_last_update
+      jlp
     }
     pageInfo {
       offsetPagination {

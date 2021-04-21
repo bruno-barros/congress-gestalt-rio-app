@@ -103,7 +103,7 @@ const Abstracts = () => {
         {t('trabalho.limite-atingido')}
       </div>}
 
-      {((edition.abstract.limit_per_user === 0 || abstracts?.count() > 0) || edition.abstract.limit_per_user > abstracts?.getNoRejected().length) &&
+      {(abstracts?.count() > 0 && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)) &&
       <div className="d-md-flex align-items-center">
         <Link href={`/abstracts/new`}><a
           className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>

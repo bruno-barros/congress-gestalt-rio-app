@@ -21,6 +21,7 @@ import Tags from "../ui/form/formik/tags";
 import Wysiwyg from "../ui/form/formik/wysiwyg";
 import isFormDisabled from "../ui/form/form-helpers";
 import {useQueryClient} from "react-query";
+import Switch from '../ui/form/formik/switch';
 
 
 interface AbstractFormProps {
@@ -63,6 +64,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     bibliography: abstract?.bibliography || '',
     attachments: abstract?.attachments || [],
     authors: abstract?.authors || [initialAuthor],
+    jlp: abstract?.jlp || false,
   }
   const Validation = Yup.object().shape({
     topic: Yup.string().required('validacao.obrigatorio'),
@@ -71,12 +73,12 @@ export default function AbstractForm(props: AbstractFormProps) {
     tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
       .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
     resume:  Yup.string().when('topic', {
-      is: (val) => !!edition.abstract.required_fields?.resume,
+      is: (val) => !!edition.abstract.required_fields?.resume?.min,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
     content: Yup.string().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content?.min,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
@@ -168,6 +170,10 @@ export default function AbstractForm(props: AbstractFormProps) {
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                      disabled={!isEditable2}/>}
       </fieldset>
+
+      {abstract?.statusPassed('synopsis_waiting_upd') &&
+      <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
+
       <fieldset disabled={!isEditable1}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
@@ -179,6 +185,7 @@ export default function AbstractForm(props: AbstractFormProps) {
                  }}/>
       </fieldset>
       <Field name="_intent" type="hidden"/>
+      <pre>{JSON.stringify(errors, null, 2)}</pre>
       {(isEditable1 || isEditable2) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}
