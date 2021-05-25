@@ -151,18 +151,22 @@ export default function AbstractForm(props: AbstractFormProps) {
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
         {edition.getFieldMax('tags') > 0 &&
         <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
+
         <Wysiwyg name="resume" label={t('trabalho.sinopse')} maxHeight="sm" disabled={!isEditable1}
-                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}/>
+                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}
+                 countMethod={edition.abstract.count_method}/>
 
       </fieldset>
       <fieldset disabled={!isEditable2}>
         {(abstract?.statusPassed('synopsis_waiting_upd') && edition.getFieldMin('content') > 0) &&
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}/>}
+                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}
+                 countMethod={edition.abstract.count_method}/>}
 
         {abstract?.statusPassed('synopsis_waiting_upd') &&
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}/>}
+                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}
+                 countMethod={edition.abstract.count_method}/>}
 
         {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) &&
         <Attachments name="attachments" label={t('anexos')}
