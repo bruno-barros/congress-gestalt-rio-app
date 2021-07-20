@@ -39,6 +39,10 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_export', {abstracts: args.abstracts});
   }
 
+  static delete(args: {abstracts: number[]}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_delete', {abstracts: args.abstracts});
+  }
+
   static anais(args: {exportEdition: string, cancel?: boolean}): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_anais', {...args});
   }
@@ -117,6 +121,7 @@ export class WpAbstract {
     topic
     content
     ev_last_update
+    jlp
     author {
       node {
         avatar {
@@ -182,6 +187,7 @@ export class WpAbstract {
       attachments_count
       authorDatabaseId
       ev_last_update
+      jlp
     }
     pageInfo {
       offsetPagination {

@@ -110,6 +110,7 @@
         margin-bottom: -.5rem;
         &.admin {
           position: relative;
+          background-color: $gray-100;
           &::before {
             content: "";
             display: block;

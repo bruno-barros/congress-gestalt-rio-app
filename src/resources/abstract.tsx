@@ -45,6 +45,7 @@ export default class Abstract {
     user_id: number
   }[]
   authors?: Author[]
+  jlp?: boolean
 
   constructor(data: any) {
     Object.assign(this, data)

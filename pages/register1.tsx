@@ -112,6 +112,8 @@ const Register1 = () => {
             passport: user.getUserData().passport || '',
             firstName: user.getUserData().firstName || '',
             lastName: user.getUserData().lastName || '',
+            email: user.getUserData().email || '',
+            alt_email: user.getUserData().alt_email || '',
             badge_name: user.getUserData().badge_name || '',
             cellphone: user.getUserData().cellphone || '',
             phone: user.getUserData().phone || '',
@@ -127,22 +129,27 @@ const Register1 = () => {
             <Card>
               <Card.Body>
                 <h3 className="page-title">{t('cadastro.confirme-seus-dados-basicos')}</h3>
-
+                <p className="text-xs">* {t('validacao.obrigatorio')}</p>
 
                 <div className="row">
                   <Select name="country" label={t('cadastro.nacionalidade')} required containerClass="col-12 col-md">
                     {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
                   </Select>
                   {values.country === 'BR' &&
-                  <Mask name="cpf" label="CPF" mask="999.999.999-99" containerClass="col-12 col-md"/>}
+                  <Mask name="cpf" label="CPF" mask="999.999.999-99" containerClass="col-12 col-md" required/>}
                   {values.country !== 'BR' &&
-                  <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
+                  <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md" required/>}
                 </div>
                 {/*row*/}
 
                 <div className="row">
                   <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
                   <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
+                </div>
+
+                <div className="row">
+                <Text name="email" label={`E-mail`} disabled containerClass="col-12 col-md"/>
+                <Text name="alt_email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
                 </div>
 
                 <Text name="badge_name" label={t('cadastro.nome-cracha')} required/>

@@ -16,7 +16,7 @@ export default function Mask({label, mask, containerClass, ...props}: MaskProps 
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
   return (<div className={`form-group ${containerClass || ''}`}>
-    {label && <label htmlFor={`fld_${field.name}`}>{label}</label>}
+    {label && <label htmlFor={`fld_${field.name}`}>{`${label} ${props?.required ? '*': ''}`}</label>}
 
     <InputMask {...field} {...props}
                id={`fld_${field.name}`}

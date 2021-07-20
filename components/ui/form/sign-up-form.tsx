@@ -122,6 +122,9 @@ export default function SignUp(props: SignUpProps) {
               validate={(val) => {
                 return !isPassStrong ? t('validacao.senha-fraca') : ''
               }}/>
+              <div className="-alert -alert-light text-muted text-sm mb-3">
+                Faça uma senha forte, use: letras maiúsculas, minúsculas, números e caracteres especiais.
+              </div>
             <LoadingButton disable={!isValid} loading={loading}>{t('cadastro.cadastrar')}</LoadingButton>
           </Form>
         )}

@@ -20,6 +20,7 @@ export default class WpUser {
     'cpf',
     'doc_prof',
     'email',
+    'alt_email',
     'user_email',
     'name',
     'firstName',
@@ -80,6 +81,7 @@ export default class WpUser {
           user {
             databaseId
             email
+            alt_email
             id
             name
             firstName
@@ -156,6 +158,7 @@ export default class WpUser {
           gender
           firstName
           email
+          alt_email
           description
           cpf
           postcode
@@ -204,6 +207,7 @@ export default class WpUser {
           gender
           firstName
           email
+          alt_email
           description
           cpf
           postcode

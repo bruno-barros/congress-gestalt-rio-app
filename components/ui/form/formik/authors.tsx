@@ -13,7 +13,7 @@ import ToolTip from "../../tooltip";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 import useCurrentUser from "../../../hooks/useCurrentUser";
 import {Loading} from "@brunobarros/react-components";
-import {load} from "dotenv";
+import { User } from '../../../../src/resources/user';
 
 interface AuthorsProps {
   label: string
@@ -22,10 +22,11 @@ interface AuthorsProps {
   creating: boolean
   maxAuthors?: number
   disabled?: boolean
+  mainAuthor?: User
   onEdit: (author, metadata) => void
 }
 
-export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, creating, onEdit, ...props}: AuthorsProps & any) {
+export default function Authors({label, metas, containerClass, maxAuthors: ma, disabled, creating, onEdit, mainAuthor, ...props}: AuthorsProps & any) {
 
   const disp = useDispatch()
   const t = useTrans()
@@ -39,7 +40,10 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
   const maxAuthors = ma || 6
 
   async function handleAdd(push) {
-
+    if(newAuthor.author_email === mainAuthor.email){
+      toast.warning('Você já é o Autor de contato')
+      return;
+    }
     // fast validation
     if (newAuthor.author_name.length < 2 || newAuthor.author_email.length < 5) {
       toast.error(t('validacao.todos-sao-obrigatorios'), {toastId: 'author-validation'})
@@ -130,7 +134,7 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
                 <div className="mr-2">{`#${idx + 1}`}</div>
                 <div className="text-truncate mr-3">{author.name}</div>
               </a>
-              {(parseInt(author.wp_user_id) === user.getId() || creating && idx === 0) &&
+              {(parseInt(author.wp_user_id) === mainAuthor?.databaseId || (creating && idx === 0)) &&
               <span className="badge badge-dark">autor de contato</span>}
               {(!creating && !disabled)
                 ? <>
@@ -211,5 +215,6 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
       </div>)
     }}</FieldArray>
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
+
   </div>)
 }

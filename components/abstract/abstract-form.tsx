@@ -21,6 +21,7 @@ import Tags from "../ui/form/formik/tags";
 import Wysiwyg from "../ui/form/formik/wysiwyg";
 import isFormDisabled from "../ui/form/form-helpers";
 import {useQueryClient} from "react-query";
+import Switch from '../ui/form/formik/switch';
 
 
 interface AbstractFormProps {
@@ -63,6 +64,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     bibliography: abstract?.bibliography || '',
     attachments: abstract?.attachments || [],
     authors: abstract?.authors || [initialAuthor],
+    jlp: abstract?.jlp || false,
   }
   const Validation = Yup.object().shape({
     topic: Yup.string().required('validacao.obrigatorio'),
@@ -71,12 +73,12 @@ export default function AbstractForm(props: AbstractFormProps) {
     tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
       .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
     resume:  Yup.string().when('topic', {
-      is: (val) => !!edition.abstract.required_fields?.resume,
+      is: (val) => !!edition.abstract.required_fields?.resume?.min,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
     content: Yup.string().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content?.min,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
@@ -149,18 +151,22 @@ export default function AbstractForm(props: AbstractFormProps) {
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
         {edition.getFieldMax('tags') > 0 &&
         <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
+
         <Wysiwyg name="resume" label={t('trabalho.sinopse')} maxHeight="sm" disabled={!isEditable1}
-                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}/>
+                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}
+                 countMethod={edition.abstract.count_method}/>
 
       </fieldset>
       <fieldset disabled={!isEditable2}>
-        {abstract?.statusPassed('synopsis_waiting_upd') &&
+        {(abstract?.statusPassed('synopsis_waiting_upd') && edition.getFieldMin('content') > 0) &&
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}/>}
+                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}
+                 countMethod={edition.abstract.count_method}/>}
 
         {abstract?.statusPassed('synopsis_waiting_upd') &&
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}/>}
+                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}
+                 countMethod={edition.abstract.count_method}/>}
 
         {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) &&
         <Attachments name="attachments" label={t('anexos')}
@@ -168,9 +174,14 @@ export default function AbstractForm(props: AbstractFormProps) {
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                      disabled={!isEditable2}/>}
       </fieldset>
+
+      {abstract?.statusPassed('synopsis_waiting_upd') &&
+      <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
+
       <fieldset disabled={!isEditable1}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+                 mainAuthor={abstract?.author?.node || user.getUserData()}
                  disabled={!isEditable1}
                  creating={!isEditing}
                  onEdit={(author, metadata) => {
@@ -178,6 +189,7 @@ export default function AbstractForm(props: AbstractFormProps) {
                  }}/>
       </fieldset>
       <Field name="_intent" type="hidden"/>
+
       {(isEditable1 || isEditable2) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}

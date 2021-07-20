@@ -29,7 +29,8 @@ export default function ProfileForm(props: ProfileFormProps) {
   const {refetch: refreshUsers} = useAllUsers()
   const {refetch: refreshMySelf, user: auth} = useCurrentUser()
   const [loading, setLoading] = useState(false)
-  const FormSchema = Yup.object().shape({
+  let isRequired = !auth.isAdmin()
+  const FormSchema = !isRequired ? null : Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
     cpf: Yup.string().when('country', {
       is: (val) => val === 'BR',
@@ -97,6 +98,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       firstName: user.getFirstName() || '',
       lastName: user.getUserData().lastName || '',
       email: user.getUserData().email || '',
+      alt_email: user.getUserData().alt_email || '',
       country: user.getUserData().country || 'BR',
       cpf: user.getUserData().cpf || '',
       passport: user.getUserData().passport || '',
@@ -128,7 +130,7 @@ export default function ProfileForm(props: ProfileFormProps) {
 
         {editingMode === 'admin'
         && <div className="row border pt-3 pb-2 mb-3">
-          <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required>
+          <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required={isRequired}>
             {MapRoles.map(r => (<option key={r.name} value={r.name}>{r.label}</option>))}
           </Select>
           <div className="col-12 col-md">
@@ -143,30 +145,32 @@ export default function ProfileForm(props: ProfileFormProps) {
         </div>}
 
         <div className="row">
-          <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
-          <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
+          <Text name="firstName" label={t('cadastro.nome')} required={isRequired} containerClass="col-12 col-md"/>
+          <Text name="lastName" label={t('cadastro.sobrenome')} required={isRequired} containerClass="col-12 col-md"/>
         </div>
         <Text name="badge_name" label={t('cadastro.nome-cracha')} required={editingMode === 'user'}/>
         <div className="row">
-          <Select name="country" label={t('cadastro.nacionalidade')} containerClass="col-12 col-md" required>
+          <Select name="country" label={t('cadastro.nacionalidade')} containerClass="col-12 col-md" required={isRequired}>
             {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
           </Select>
           {values.country === 'BR'
-          && <Mask name="cpf" mask="999.999.999-99" label="CPF" containerClass="col-12 col-md"/>}
+          && <Mask name="cpf" mask="999.999.999-99" label="CPF" containerClass="col-12 col-md" required={isRequired}/>}
           {values.country !== 'BR'
-          && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md"/>}
+          && <Text name="passport" label={t('cadastro.passaporte')} containerClass="col-12 col-md" required={isRequired}/>}
         </div>
-
-        <Text name="email" type="email" label="E-mail" required/>
         <div className="row">
-          <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required
+        <Text name="email" type="email" label="E-mail" required containerClass="col-12 col-md"/>
+        <Text name="alt_email" type="email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
+        </div>
+        <div className="row">
+          <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required={isRequired}
                 containerClass="col-12 col-md"/>
           <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
         </div>
         <div className="row">
-          <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required
+          <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required={isRequired}
                 containerClass="col-12 col-md"/>
-          <Select name="gender" label={t('cadastro.genero')} required containerClass="col-12 col-md">
+          <Select name="gender" label={t('cadastro.genero')} required={isRequired} containerClass="col-12 col-md">
             {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
           </Select>
         </div>
@@ -175,7 +179,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       <fieldset>
         <legend>{t('cadastro.endereco')}</legend>
         <div className="form-row">
-          <Text name="postcode" label={t('cadastro.cep')} required containerClass="col-12 col-md-4"
+          <Text name="postcode" label={t('cadastro.cep')} required={isRequired} containerClass="col-12 col-md-4"
                 cepCallback={(data)=>{
                   if(data){
                     setFieldValue('address', data.address)
@@ -187,16 +191,16 @@ export default function ProfileForm(props: ProfileFormProps) {
         </div>
         <div className="form-row">
           {values.country !== 'BR'
-            ? <Text name="state" label={t('cadastro.estado')} required containerClass="col-12 col-md-4"/>
-            : <Select name="state" label={t('cadastro.estado')} required containerClass="col-12 col-md-4">
+            ? <Text name="state" label={t('cadastro.estado')} required={isRequired} containerClass="col-12 col-md-4"/>
+            : <Select name="state" label={t('cadastro.estado')} required={isRequired} containerClass="col-12 col-md-4">
               {states().map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
             </Select>}
-          <Text name="city" label={t('cadastro.cidade')} required containerClass="col-12 col-md-4"/>
-          <Text name="neighborhood" label={t('cadastro.bairro')} required containerClass="col-12 col-md-4"/>
+          <Text name="city" label={t('cadastro.cidade')} required={isRequired} containerClass="col-12 col-md-4"/>
+          <Text name="neighborhood" label={t('cadastro.bairro')} required={isRequired} containerClass="col-12 col-md-4"/>
         </div>
-        <Text name="address" label={t('cadastro.logradouro')} required containerClass=""/>
+        <Text name="address" label={t('cadastro.logradouro')} required={isRequired} containerClass=""/>
         <div className="row">
-          <Text name="number" type="number" label={t('cadastro.numero')} required containerClass="col-12 col-md-6"/>
+          <Text name="number" type="number" label={t('cadastro.numero')} required={isRequired} containerClass="col-12 col-md-6"/>
           <Text name="complement" type="text" label={t('cadastro.complemento')} containerClass="col-12 col-md-6"/>
         </div>
       </fieldset>

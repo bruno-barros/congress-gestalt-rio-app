@@ -107,6 +107,7 @@ export class Edition {
     topics: { id: string; pt: string; en: string }[]
     start_at: string
     end_at: string
+    count_method: 'char'|'word'
     required_fields: {
       topic?: boolean
       title?: boolean

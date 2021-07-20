@@ -17,9 +17,10 @@ interface WysiwygProps {
   disabled?: boolean
   charsMin?: number
   charsMax?: number
+  countMethod?: 'char'|'word'
 }
 
-export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled, charsMin: cm, charsMax, ...props}: WysiwygProps & any) {
+export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled, charsMin: cm, charsMax, countMethod, ...props}: WysiwygProps & any) {
 
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
@@ -28,6 +29,7 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
   const [editorLength, setEditorLength] = useState(0)
   const [editorValid, setEditorValid] = useState(false)
   const charsMin = !cm && charsMax ? 1 : cm
+  const method = countMethod || 'char'
 
   const checkValidity = useCallback(throttle((editorLength) => {
     const isValid = editorLength >= charsMin && editorLength <= charsMax
@@ -49,14 +51,17 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
       value={field.value}
       onChange={(content, delta, source, editor) => {
         helpers.setValue(content)
-        setTimeout(() => setEditorLength(editor.getLength() - 1), 100)
-        // console.log(editor.getText(), editor.getLength());
+        setTimeout(() => {
+          if(method === 'word') setEditorLength(editor.getText().split(/\s+/).length - 1)
+          else setEditorLength(editor.getLength() - 1)
+        }, 100)
+        // console.log(editor.getText(), editor.getText().split(/\s+/).length);
       }}/>
     {(charsMax > 0 && !disabled) &&
     <div className={`wysiwyg-restrictions ${!editorValid ? 'text-danger' : ''}`}>
       <div className={`py-1 px-2 ${(!editorValid && editorLength > charsMin) ? 'bg-danger text-white' : ''}`}>
         <Trans as="div"
-               i18nKey="validacao.minimo-de-maximo-de"
+               i18nKey={method === 'word' ? "validacao.minimo-de-maximo-de-palavra" : "validacao.minimo-de-maximo-de-caracter"}
                values={{charsMin, charsMax}}
                defaults={`Mínimo de {{charsMin}} e máximo de {{charsMax}} caracteres`}/>
       </div>
