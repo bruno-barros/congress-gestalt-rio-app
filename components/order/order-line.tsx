@@ -22,7 +22,7 @@ export default function OrderLine(props: OrderLineProps) {
           <div className={`status-ball ${order.status.toLowerCase()}`}></div>
         </ToolTip>
         <strong className="mx-4">{line.product.name}</strong>
-        <div className="">{line.product.productCategories?.nodes[0]?.name}</div>
+        <div className="">{line.product?.productCategories?.nodes[0]?.name}</div>
       </div>))}
     </div>
   </div>)

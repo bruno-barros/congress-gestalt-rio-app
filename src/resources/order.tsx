@@ -73,7 +73,7 @@ export class OrderCollection {
     if (completed.length === 0) return false
 
     const category = completed.filter(order => {
-      let orders = order.lineItems.nodes.filter(line => line.product.productCategories?.nodes.filter(cat => cat.slug === editionCategorySlug))
+      let orders = order.lineItems.nodes.filter(line => line.product?.productCategories?.nodes.filter(cat => cat.slug === editionCategorySlug))
       return (orders && orders.length > 0) || false
     })
 
