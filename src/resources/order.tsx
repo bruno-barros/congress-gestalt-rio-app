@@ -1,82 +1,104 @@
-export const OrderStatuses = ['CANCELLED', 'COMPLETED', 'FAILED', 'ON_HOLD', 'PENDING', 'PROCESSING', 'REFUNDED'];
+import { Edition } from './event';
+export const OrderStatuses = [
+  "CANCELLED",
+  "COMPLETED",
+  "FAILED",
+  "ON_HOLD",
+  "PENDING",
+  "PROCESSING",
+  "REFUNDED",
+];
 
 export interface Product {
-  databaseId: number
-  name: string
+  databaseId: number;
+  name: string;
   productCategories: {
     nodes: {
-      databaseId: number
-      name: string
-      slug: string
-    }[]
-  }
+      databaseId: number;
+      name: string;
+      slug: string;
+    }[];
+  };
 }
 
 export class Order {
-
-  databaseId: number
-  currency: string
-  date: string
-  dateCompleted: string | number | null
-  paymentMethodTitle: string
-  total: string
-  status: 'CANCELLED' | 'COMPLETED' | 'FAILED' | 'ON_HOLD' | 'PENDING' | 'PROCESSING' | 'REFUNDED'
+  databaseId: number;
+  currency: string;
+  date: string;
+  dateCompleted: string | number | null;
+  paymentMethodTitle: string;
+  total: string;
+  status:
+    | "CANCELLED"
+    | "COMPLETED"
+    | "FAILED"
+    | "ON_HOLD"
+    | "PENDING"
+    | "PROCESSING"
+    | "REFUNDED";
   customer?: {
-    databaseId: number
-    email: string
-    displayName: string
-  }
+    databaseId: number;
+    email: string;
+    displayName: string;
+  };
   lineItems: {
-    nodes: { product: Product }[]
-  }
+    nodes: { product: Product }[];
+  };
 
   constructor(data: any) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   static make(data: any) {
-    return new Order(data)
+    return new Order(data);
   }
 
   getId() {
-    return this.databaseId
+    return this.databaseId;
   }
 
   getItems(): any[] {
-    return this.lineItems?.nodes || []
+    return this.lineItems?.nodes || [];
   }
-
 }
 
-
 export class OrderCollection {
-  collection: Order[]
+  collection: Order[];
 
   constructor(rows: Order[]) {
-    this.collection = rows
+    this.collection = rows;
   }
 
   static make(collection: Order[]) {
-    return new OrderCollection(collection)
+    return new OrderCollection(collection);
   }
 
   getOrders(): Order[] {
-    return this.collection.map(order => Order.make(order))
+    return this.collection.map((order) => Order.make(order));
   }
 
   getCompleted(): Order[] {
-    return this.getOrders().filter(order => order.status === 'COMPLETED')
+    return this.getOrders().filter((order) => order.status === "COMPLETED");
   }
 
-  hasValidSubscription(editionCategorySlug: string) {
-    const completed = this.getCompleted()
-    if (completed.length === 0) return false
+  hasValidSubscription(edition: Edition) {
+    // console.log({edition});
+    const editionCategorySlug = edition?.subscription?.products_category?.slug
 
-    const category = completed.filter(order => {
-      let orders = order.lineItems.nodes.filter(line => line.product?.productCategories?.nodes.filter(cat => cat.slug === editionCategorySlug))
-      return (orders && orders.length > 0) || false
+    const completed = this.getCompleted();
+    if (completed.length === 0) return false;
+    let hasValid = false;
+
+    completed.map((order) => {
+      order.lineItems?.nodes?.map((line) => {
+        line.product?.productCategories?.nodes?.map(cat => {
+          if(cat.slug === editionCategorySlug){
+            hasValid = true;
+          }
+        })
+      })
     })
 
-    return category.length > 0
+    return hasValid;
   }
 }
