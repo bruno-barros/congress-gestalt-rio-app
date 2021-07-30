@@ -19,8 +19,8 @@ export default function EditionSidebar(props: EditionSidebarProps) {
   const {user} = useCurrentUser()
   const {data: event, isLoading} = useEvent()
   const {data: orders, isLoading: ordersLoading} = useUserOrders(user?.getId())
-  const isSubscribed = orders?.hasValidSubscription(edition.id)
   const isCurrent = event?.currentEdition()?.id === edition.id
+  const isSubscribed = orders?.hasValidSubscription(edition)
 
   return (<div className="p-4">
     <figure className="figure-img bg-white p-3">

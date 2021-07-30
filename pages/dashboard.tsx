@@ -47,7 +47,7 @@ const Dashboard = (props: DashboardProps) => {
     return (<MainLayout><Loading vspace={80}/></MainLayout>)
   }
 
-  const isSubscribed = orders?.hasValidSubscription(currentEdition.id)
+  const isSubscribed = orders?.hasValidSubscription(currentEdition)
 
   return (<MainLayout>
     <Head>
