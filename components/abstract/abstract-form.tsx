@@ -131,6 +131,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   return (<Formik
     initialValues={initialValues}
     validationSchema={Validation}
+    validateOnMount={true}
     onSubmit={handleSubmit}
   >{({errors, values, isValid, setFieldValue, submitForm}) => (<>
     <Form>
