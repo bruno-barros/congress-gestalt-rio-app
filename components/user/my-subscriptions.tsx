@@ -33,7 +33,7 @@ export default function MySubscriptions({user}: { user: User }) {
 
     {(collection && collection.length > 0) ? collection.map(order => {
       return (<OrderLine key={order.getId()} order={order}/>)
-    }) : <div><p>{t('voce-nao-tem-inscricoes')}</p></div>}
+    }) : <div className="px-5"><p>{t('voce-nao-tem-inscricoes')}</p></div>}
 
   </div>)
 }
