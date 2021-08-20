@@ -14,6 +14,7 @@ export default function MySubscriptions({user}: { user: User }) {
   const t = useTrans()
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
+  const isSubscribed = data?.hasValidSubscription(edition)
 
   if (isLoading) {
     return <Loading vspace={80}/>
@@ -21,17 +22,18 @@ export default function MySubscriptions({user}: { user: User }) {
 
   return (<div className="">
 
-    {(collection && collection.length === 0) &&
-    <div className="p-5">
-      {edition.subscription.allowed
-        ? (<p><Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link></p>)
-        : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)}
-      <p>{t('voce-nao-tem-inscricoes')}</p>
-    </div>}
 
-    {(collection && collection.length > 0) && collection.map(order => {
+    <div className="px-5 py-3">
+      {edition.isOpenToSubscribe()
+        ? (<>{!isSubscribed
+          && <Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link>}</>)
+        : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)}
+
+    </div>
+
+    {(collection && collection.length > 0) ? collection.map(order => {
       return (<OrderLine key={order.getId()} order={order}/>)
-    })}
+    }) : <div><p>{t('voce-nao-tem-inscricoes')}</p></div>}
 
   </div>)
 }
