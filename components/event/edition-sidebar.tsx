@@ -1,4 +1,4 @@
-import {Edition} from "../../src/resources/event";
+import { Edition } from '../../src/resources/event';
 import Image from "next/image";
 import moment from "moment";
 import useTrans from "../hooks/useTrans";
@@ -14,7 +14,8 @@ interface EditionSidebarProps {
 
 export default function EditionSidebar(props: EditionSidebarProps) {
 
-  const {edition} = props
+  const {edition: ed} = props
+  const edition = Edition.make(ed, {})
   const t = useTrans()
   const {user} = useCurrentUser()
   const {data: event, isLoading} = useEvent()
@@ -32,10 +33,16 @@ export default function EditionSidebar(props: EditionSidebarProps) {
       {isSubscribed && <BadgeSubscribed/>}
       <p>{edition.name}</p>
       <p>{moment(edition.start_at).format('DD/MM/YYYY')} — {moment(edition.end_at).format('DD/MM/YYYY')}</p>
+      {edition.isOpenToSubscribe()
+      ? (<>
       {(isCurrent && user.canPublishAbstracts() && !isSubscribed) &&
       <p><Link href={`/register2`} passHref>
         <a className="btn btn-block btn-outline-primary">{t('fazer-inscricao')}</a>
       </Link></p>}
+      </>)
+      : (``)}
+      <p><Link href={`/profile?tab=subscriptions`} passHref><a className="text-sm">{t('gerenciar-inscricoes')}</a></Link></p>
+
 
     </div>
   </div>)

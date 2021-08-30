@@ -28,8 +28,8 @@ const AdmAbstracts = () => {
 
   function queryAbstracts(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-      console.count('abstracts')
-      console.info('*** FETCHING ABSTRACTS ***');
+      // console.count('abstracts')
+      // console.info('*** FETCHING ABSTRACTS ***');
       WpAbstract.collection({
         edition: String(editionId),
       }).then(resp => {
@@ -72,6 +72,12 @@ const AdmAbstracts = () => {
         Header: 'Autores',
         accessor: 'authors_count',
       },{
+        Header: 'Autor',
+        accessor: 'author_name',
+      },{
+        Header: 'Autor e-mail',
+        accessor: 'author_email',
+      },{
         Header: 'Avaliações',
         accessor: 'evaluations_count',
       },{
@@ -95,6 +101,8 @@ const AdmAbstracts = () => {
         row.topic = topic.hasOwnProperty('pt') && topic[router.locale]
         }
       }
+      row.author_name = row.author?.node?.name
+      row.author_email = row.author?.node?.email
       row.status_pt = t(`status.${row.status}`)
       return row
     })
@@ -116,7 +124,7 @@ const AdmAbstracts = () => {
       name={`abstracts`}
       columns={columns}
       data={data}
-      hiddenColumns={['status_pt', 'subtitle']}
+      hiddenColumns={['status_pt', 'subtitle', 'author_name', 'author_email']}
       onAdd={dummy}
       onEdit={dummy}
       onDelete={dummy}/>

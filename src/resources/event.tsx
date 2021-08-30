@@ -170,6 +170,9 @@ export class Edition {
 
   isOpenToSubscribe() {
     const today = moment()
+    if(this.subscription.allowed === false){
+      return false;
+    }
     const start = this.subscription.start_at ? moment(this.subscription.start_at) : null
     const end = this.subscription.end_at ? moment(this.subscription.end_at) : null
     if (!start || !end) return false
