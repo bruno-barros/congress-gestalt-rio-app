@@ -188,6 +188,12 @@ export class WpAbstract {
       authorDatabaseId
       ev_last_update
       jlp
+      author {
+        node {
+          email
+          name
+        }
+      }
     }
     pageInfo {
       offsetPagination {
