@@ -12,6 +12,7 @@ import Wysiwyg from "./ui/form/formik/wysiwyg";
 import Text from "./ui/form/formik/text";
 import {MessageTypes} from "../src/resources/notification";
 import WpUser from "../src/http/wp-user";
+import Select from "./ui/form/formik/select";
 
 interface NotificationModalProps {
   context: MessageTypes
@@ -55,7 +56,9 @@ export default function NotificationModal(props: NotificationModalProps) {
       ids,
       message: values.message,
       subject: values.subject,
-      coauthors: values.coauthors || false
+      coauthors: values.coauthors || false,
+      merge: values.merge,
+      template: values.template
     })
       .then(resp => {
         if (resp.data.success) {
@@ -84,6 +87,8 @@ export default function NotificationModal(props: NotificationModalProps) {
           initialValues={{
             context: context,
             coauthors: false,
+            merge: false,
+            template: '',
             subject: '',
             message: '',
           }}
@@ -94,7 +99,23 @@ export default function NotificationModal(props: NotificationModalProps) {
             {context === 'abstracts' &&
             <Switch name="coauthors" label="Enviar para coautores?"/>}
             <Text name="subject" label="Assunto"/>
-            <Wysiwyg name="message" label="Mensagem" maxHeight="md"/>
+            <Wysiwyg name="message" label={<div className="d-flex align-items-center justify-content-between">Mensagem <div className="">
+              <div className="text-xs">códigos: <span className="text-muted">[abstract_name] [user_name] [user_email]</span></div>
+            </div></div>} maxHeight="md"/>
+
+            <div className="form-row">
+              <div className="col-12 col-md-3">
+              <Select name="template" label="Modelo de e-mail">
+                <option value="default">Padrão</option>
+                <option value="logos">Com marcas de patrocínio</option>
+              </Select>
+              </div>
+              <div className="col-12 col-md-9">
+                <label htmlFor="">&nbsp;</label>
+                <Switch name="merge" label="Evitar envidos duplicados *"/>
+                <div className="text-xs text-muted" style={{marginTop: '-1rem', marginBottom:'1rem'}}>* Use esta opção para mensagens genéricas. Com esta opção não é possível usar os códigos.</div>
+              </div>
+            </div>
 
             <div className="row">
               <div className="col-12 col-md">

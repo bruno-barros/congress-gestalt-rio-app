@@ -342,13 +342,15 @@ export default class WpUser {
   }
 
   static notify(args: {context: NotificationTypes; ids: number[]; coauthors?:boolean; subject: string;
-    message: string}) {
+    message: string; merge: boolean; template: string}) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_notification_send', {
       context: args.context,
       ids: args.ids,
       coauthors: args.coauthors || false,
       subject: args.subject,
       message: args.message,
+      merge: args.merge || false,
+      template: args.template || '',
     });
   }
 
