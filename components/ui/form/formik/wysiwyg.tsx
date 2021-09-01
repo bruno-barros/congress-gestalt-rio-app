@@ -43,7 +43,7 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
 
 
   return (<div className={`form-group ${containerClass || ''} ${err && 'has-error'}`}>
-    {label && <label htmlFor={`fld_${field.name}`}>{label}</label>}
+    {label && <label htmlFor={`fld_${field.name}`} className="w-100">{label}</label>}
     <ReactQuill
       readOnly={disabled}
       theme="snow"

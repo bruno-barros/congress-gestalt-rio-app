@@ -76,10 +76,10 @@ const AdmEvaluations = () => {
       row.is_public = row.is_public ? 'SIM' : 'NÃO'
 
 
-        row.evaluator_id = row.evaluator.databaseId
-        row.evaluator_name = row.evaluator.name
-        row.email = row.evaluator.email
-        row.cellphone = row.evaluator.cellphone
+        row.evaluator_id = row.evaluator?.databaseId
+        row.evaluator_name = row.evaluator?.name
+        row.email = row.evaluator?.email
+        row.cellphone = row.evaluator?.cellphone
 
       row.date = row.created_at
       return row
