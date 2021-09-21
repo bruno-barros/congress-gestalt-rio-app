@@ -19,6 +19,7 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 
 
+
 const Abstracts = () => {
 
   const queryClient = useQueryClient()
@@ -34,6 +35,7 @@ const Abstracts = () => {
     enabled: !!edition?.id && user.getId() > 0
   })
   const lang = router.locale || 'pt'
+
 
   useEffect(() => {
     if (router.query?.status) setPhase(String(router.query?.status))
@@ -121,6 +123,7 @@ const Abstracts = () => {
     <Head>
       <title>{siteTitle('Meus trabalhos', queryClient)}</title>
     </Head>
+
     <div className="row">
       <div className="col-12 p-4">
 

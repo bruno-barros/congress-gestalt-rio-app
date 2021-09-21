@@ -35,12 +35,12 @@ const Dashboard = (props: DashboardProps) => {
    * Redirect to client: ABRISCO
    * -----------------------------
    */
-  useEffect(()=>{
-    if(!user || !user?.getUserData().roles) return
-    if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
-    else router.push(`/abstracts`)
-  }, [user])
-  return (<MainLayout><Loading vspace={80}/></MainLayout>)
+  // useEffect(()=>{
+  //   if(!user || !user?.getUserData().roles) return
+  //   if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
+  //   else router.push(`/abstracts`)
+  // }, [user])
+  // return (<MainLayout><Loading vspace={80}/></MainLayout>)
 
 
   if (isLoading || ordersLoading) {

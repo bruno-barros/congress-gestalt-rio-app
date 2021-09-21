@@ -126,6 +126,12 @@ export class Edition {
     tags: {
       min: number
       max: number
+    },
+    consent?: {
+      text: {pt: string, en:string},
+      consents: {
+        id: string, pt: string, en: string, required: boolean
+      }[]
     }
   }
   review: {
@@ -193,5 +199,20 @@ export class Edition {
   }
   getFieldMax(field: 'subtitle'|'tags'|'resume'|'content'|'bibliography'|'authors'|'attachments'){
     return this.abstract.required_fields[field].hasOwnProperty('max') ? this.abstract.required_fields[field]?.max : undefined
+  }
+
+  hasConsent(){
+    return !!this.abstract.consent
+  }
+
+  consentText(lang: string = 'pt'){
+    return this.abstract.consent?.text[lang] || ''
+  }
+
+  consentTerms(lang: string = 'pt'): {id: string; label: string; required: boolean}[]{
+    return this.abstract.consent?.consents.map(c => {
+      return {id: c.id, label: c[lang], required: c.required}
+    })
+
   }
 }
