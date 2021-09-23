@@ -206,10 +206,11 @@ export class Edition {
   }
 
   consentText(lang: string = 'pt'){
-    return this.abstract.consent?.text[lang] || ''
+    return this.abstract.consent && this.abstract.consent?.text[lang] || ''
   }
 
   consentTerms(lang: string = 'pt'): {id: string; label: string; required: boolean}[]{
+    if(!this.abstract.consent) return;
     return this.abstract.consent?.consents.map(c => {
       return {id: c.id, label: c[lang], required: c.required}
     })

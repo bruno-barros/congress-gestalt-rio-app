@@ -66,12 +66,14 @@ export default function EditionSidebar(props: EditionSidebarProps) {
             <a className="text-sm">{t("gerenciar-inscricoes")}</a>
           </Link>
         </p>
+        {edition.hasConsent() &&
         <p>
             <a href="#" onClick={(e)=>{
               e.preventDefault()
               consent.show();
             }} className="text-sm">{t('gerenciar-consentimento')}</a>
-        </p>
+        </p>}
+
 
 
       </div>
