@@ -120,7 +120,7 @@ const Register1 = () => {
             birthdate: user.getUserData().birthdate || '',
             gender: user.getUserData().gender || 'M',
             allow_newsletter: true,
-            agreedTerms: event.page.lgpd[lang].length === 0  // if there is no url, set to true
+            agreedTerms: event?.page?.lgpd[lang].length === 0  // if there is no url, set to true
           }}
           onSubmit={handleSubmit}
           validationSchema={FormSchema}

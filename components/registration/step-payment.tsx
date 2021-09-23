@@ -60,14 +60,12 @@ export default function StepPayment(props: StepProps) {
       (<><h3 className="mb-3 pb-2 border-bottom">Ops!</h3>
         <div className="alert alert-warning d-flex align-items-center justify-content-between">
           <div className="text-sm">Algo deu errado. Não registramos o plano que você escolheu.</div>
-          <button type="button" className="btn btn-sm btn-warning text-nowrap" onClick={() => goPrev(1)}>Tente
-            novamente
+          <button type="button" className="btn btn-sm btn-warning text-nowrap" onClick={() => goPrev(1)}>Tente novamente
           </button>
         </div>
       </>)
       : (<><h3 className="mb-3 pb-2 border-bottom">Estamos quase lá!</h3>
-        <p>Você será redirecionado para a página de pagamento. Após o pagamento você será redirecionado para o sistema
-          de gestão de trabalhos.</p>
+        <p>Você será redirecionado para a página de pagamento.</p>
         <p>Se algo der errado você pode reiniciar o processo de inscrição a qualquer momento.</p></>)}
 
 

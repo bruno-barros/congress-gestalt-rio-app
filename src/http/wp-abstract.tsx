@@ -47,6 +47,10 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_anais', {...args});
   }
 
+  static consent(args: {abstract_id: number, consents: any[]}): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_consents', args);
+  }
+
   static authors(id: number): Promise<AxiosResponse> {
     return httpApi.post('/index.php?graphql&authors', {
       query: `query find {
@@ -122,6 +126,7 @@ export class WpAbstract {
     content
     ev_last_update
     jlp
+    consents
     author {
       node {
         avatar {

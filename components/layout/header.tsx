@@ -40,9 +40,9 @@ export default function Header(props: HeaderProps) {
       <Navbar.Collapse id="basic-navbar-nav" className="">
         <Nav className="mr-auto">
 
-          <Link href="/dashboard" passHref>
+          {/* <Link href="/dashboard" passHref>
            <Nav.Link active={router.pathname === '/dashboard'}>Home</Nav.Link>
-          </Link>
+          </Link> */}
           {user.canManageAbstracts()
             && (<>
               <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link className="admin"
