@@ -176,6 +176,8 @@ export default class WpUser {
           user_status
           locale
           allow_newsletter
+          institution_name
+          institution_occupation
           roles {
             nodes {
               name
@@ -227,6 +229,8 @@ export default class WpUser {
           passport
           locale
           consents
+          institution_name
+          institution_occupation
           roles {
             nodes {
               name
