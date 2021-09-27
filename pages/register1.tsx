@@ -119,6 +119,8 @@ const Register1 = () => {
             phone: user.getUserData().phone || '',
             birthdate: user.getUserData().birthdate || '',
             gender: user.getUserData().gender || 'M',
+            institution_name: user.getUserData().institution_name,
+            institution_occupation: user.getUserData().institution_occupation,
             allow_newsletter: true,
             agreedTerms: event?.page?.lgpd[lang].length === 0  // if there is no url, set to true
           }}
@@ -167,6 +169,11 @@ const Register1 = () => {
                   <Select name="gender" label={t('cadastro.genero')} required containerClass="col-12 col-md">
                     {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
                   </Select>
+                </div>
+
+                <div className="row">
+                  <Text name="institution_name" label={t('cadastro.instituicao.nome')} required containerClass="col-12 col-md"/>
+                  <Text name="institution_occupation" label={t('cadastro.ocupacao')} required containerClass="col-12 col-md"/>
                 </div>
 
                 <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/>

@@ -8,6 +8,7 @@ import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 import usePendingReview from "../hooks/usePendingReview";
 import NotificationPanel from "../notification-panel";
+import { useEffect, useState } from "react";
 
 interface HeaderProps {
   event: Event
@@ -21,8 +22,23 @@ export default function Header(props: HeaderProps) {
   const {data: pending} = usePendingReview()
   const {user, event} = props
   const edition: Edition = event.currentEdition()
+  const [stupid, setStupid] = useState(false)//[*abrisco]
+
+  useEffect(()=>{
+    setStupid(router.query?.tab && router.query.tab === 'subscriptions')
+  }, [router.query])
 
   return (<header className="mainHeader">
+    {stupid ? <style jsx global>{`
+        .navbar-nav {
+          display: none;
+        }
+      `}</style>: <style jsx global>{`
+      .navbar-nav {
+        display: flex;
+      }
+    `}</style>}
+
     <Navbar expand="lg">
       <div className="d-flex justify-content-between flex-grow-1 flex-lg-grow-0">
         <div className="header-start d-flex align-items-center">
@@ -69,11 +85,11 @@ export default function Header(props: HeaderProps) {
               {pending > 0 && <div className="badge badge-warning ml-1">{pending}</div>}
             </Nav.Link></Link>
           </>}
-          {user.canPublishAbstracts() && <>
+          {/* [*abrisco] {user.canPublishAbstracts() && <>
             <Link href={`/profile?tab=subscriptions`} passHref>
               <Nav.Link>{t('minhas-inscricoes')}
             </Nav.Link></Link>
-          </>}
+          </>} */}
           {/*<NavDropdown title="Dropdown" id="basic-nav-dropdown" className="dropdown-on-hover">*/}
           {/*  <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>*/}
           {/*  <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>*/}

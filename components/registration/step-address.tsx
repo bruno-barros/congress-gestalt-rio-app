@@ -74,6 +74,7 @@ export default function StepAddress(props: StepProps) {
 
   return (<div className="px-md-5 py-md-3">
     <h3 className="mb-3 pb-2 border-bottom">{step[router.locale]}</h3>
+    <p>Endereço do titular do cartão para fins de pagamento.</p>
     {/*<button onClick={goPrev}>voltar</button>*/}
     {/*<button onClick={goNext}>avançar</button>*/}
     <Formik
