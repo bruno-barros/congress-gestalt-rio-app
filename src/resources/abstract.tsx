@@ -20,6 +20,7 @@ export default class Abstract {
   bibliography?: string
   synopsis?: string
   content?: string
+  consents?: string
   author?: {
     node: {
       avatar: {
@@ -77,4 +78,23 @@ export default class Abstract {
   getResponsible(){
     return this.author?.node
   }
+
+  hasConsents(){
+    return this.consents ? true : false
+  }
+
+  getConsents(){
+    return this.consents ? JSON.parse(this.consents) : {}
+  }
+
+  hasConsentsAgreement(){
+    if(Object.keys(this.getConsents()).length === 0){
+      return true;
+    }
+    const consents = this.getConsents();
+    return Object.keys(consents).filter(k => {
+      return consents[k] === false
+    }).length === 0
+  }
+
 }

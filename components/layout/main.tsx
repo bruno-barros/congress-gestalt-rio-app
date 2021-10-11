@@ -21,6 +21,7 @@ import CurtainDelayed from "../ui/curtain-delayed";
 import useTrans from "../hooks/useTrans";
 import {Trans} from "react-i18next";
 import {useRouter} from "next/router";
+import ConsentTerms from '../user/consent-terms';
 
 
 interface MainLayoutProps {
@@ -54,7 +55,7 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
         <title>{siteTitle('', queryClient)}</title>
         <link rel="icon" href={asset('/favicon.ico')}/>
       </Head>
-
+      <ConsentTerms />
       <Header event={event} user={user}/>
 
       {!user.hasMinimumRegisteredFields() &&

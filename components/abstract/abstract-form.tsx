@@ -22,6 +22,8 @@ import Wysiwyg from "../ui/form/formik/wysiwyg";
 import isFormDisabled from "../ui/form/form-helpers";
 import {useQueryClient} from "react-query";
 import Switch from '../ui/form/formik/switch';
+import Button from "react-bootstrap/cjs/Button";
+import AbstractConsentTerms from './abstract-consent-terms';
 
 
 interface AbstractFormProps {
@@ -41,6 +43,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   const isEditing = !!abstract
   const isEditable1 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
   const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
+  const [consentModal, setConsentModal] = useState(false)
 
   const initialAuthor = isEditing ? {} : {
     id: null,
@@ -165,15 +168,32 @@ export default function AbstractForm(props: AbstractFormProps) {
                  countMethod={edition.abstract.count_method}/>}
 
         {abstract?.statusPassed('synopsis_waiting_upd') &&
-        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')} maxHeight="md" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('bibliography')} charsMax={edition.getFieldMax('bibliography')}
+        <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')}
+        maxHeight="md" disabled={!isEditable2}
+                 charsMin={edition.getFieldMin('bibliography')}
+                 charsMax={edition.getFieldMax('bibliography')}
                  countMethod={edition.abstract.count_method}/>}
 
-        {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) &&
-        <Attachments name="attachments" label={t('anexos')}
+        {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) && (<>{abstract.hasConsentsAgreement() ? (
+          <Attachments name="attachments" label={t('anexos')}
                      maxFiles={edition.getFieldMax('attachments')}
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                     disabled={!isEditable2}/>}
+                     disabled={!isEditable2}/>
+          ) : (
+          <div className="bg-light p-3 mb-3">
+            <div className="mb-2">{t('anexos')}</div>
+            <div className="d-md-flex align-items-center">
+            <Button variant="warning" className="col-auto" onClick={()=>{
+              setConsentModal(true)
+            }}>{t('termo-autorizacao')}</Button>
+            <div className="mt-1 mt-md-0 ml-md-4 text-xs">{t('termo-autorizacao-concordar')}</div>
+            </div>
+            <AbstractConsentTerms show={consentModal} abstract={abstract} onDismiss={()=>{
+              setConsentModal(false)
+            }}/>
+          </div>)}</>
+          )}
+
       </fieldset>
 
       {abstract?.statusPassed('synopsis_waiting_upd') &&

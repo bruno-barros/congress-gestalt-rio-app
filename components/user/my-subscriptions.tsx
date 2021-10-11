@@ -23,13 +23,13 @@ export default function MySubscriptions({user}: { user: User }) {
   return (<div className="">
 
 
-    <div className="px-5 py-3">
+    {/* [*abrisco]<div className="px-5 py-3">
       {edition.isOpenToSubscribe()
         ? (<>{!isSubscribed
           && <Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link>}</>)
         : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)}
 
-    </div>
+    </div> */}
 
     {(collection && collection.length > 0) ? collection.map(order => {
       return (<OrderLine key={order.getId()} order={order}/>)

@@ -19,6 +19,7 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 
 
+
 const Abstracts = () => {
 
   const queryClient = useQueryClient()
@@ -34,6 +35,7 @@ const Abstracts = () => {
     enabled: !!edition?.id && user.getId() > 0
   })
   const lang = router.locale || 'pt'
+
 
   useEffect(() => {
     if (router.query?.status) setPhase(String(router.query?.status))
@@ -83,6 +85,8 @@ const Abstracts = () => {
             <Link href={`/abstracts/new`} passHref><a
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a>
             </Link>
+            <Link href={`/abstracts?edition=${edition.id}&status=abstract`}><a
+          className="btn btn-outline-primary ml-3">{t('trabalho.meus-trabalhos')}</a></Link>
 
             {edition.abstract.limit_per_user > 0 &&
             <div className="ml-3">
@@ -107,6 +111,7 @@ const Abstracts = () => {
       <div className="d-md-flex align-items-center">
         <Link href={`/abstracts/new`}><a
           className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
+
         {edition.abstract.limit_per_user > 0 &&
         <div className="my-3 ml-md-4">
           {`${t('trabalho.existe-um-limite')} ${edition.abstract.limit_per_user} ${t('trabalho.trabalhos-por-autor')}.`}
@@ -121,6 +126,7 @@ const Abstracts = () => {
     <Head>
       <title>{siteTitle('Meus trabalhos', queryClient)}</title>
     </Head>
+
     <div className="row">
       <div className="col-12 p-4">
 

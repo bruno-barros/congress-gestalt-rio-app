@@ -37,6 +37,7 @@ export interface UserInterface {
   institution_phone?: string
   onesignal_hash?: string
   allow_newsletter: boolean
+  consents: string
 }
 
 /**
@@ -133,6 +134,10 @@ export class User {
     })
 
     return valid
+  }
+
+  getConsents(){
+    return this.user.consents ? JSON.parse(this.user.consents) : {}
   }
 }
 

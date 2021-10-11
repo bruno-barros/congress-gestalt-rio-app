@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Form, Formik} from "formik";
 import * as Yup from 'yup';
 import {LoadingButton} from "@brunobarros/react-components";
@@ -24,6 +24,7 @@ import {errorNotification} from "../../../src/resources/responses";
 import AccountRecover from "./account-recover";
 import {ErrorMessage} from "../../../src/store/store.d";
 import PopOver from "../popover";
+import trimStart from 'lodash/trimStart'
 
 const LoginForm = () => {
 
@@ -40,11 +41,18 @@ const LoginForm = () => {
   const [response, setResponse] = useState(null)
   const [merging, setMerging] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [redirect, setRedirect] = useState(null)
 
   const LoginSchema = Yup.object().shape({
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
     password: Yup.string().min(6, 'validacao.curto').required('validacao.obrigatorio'),
   });
+
+  useEffect(()=>{
+    if(router.query?.redirect){
+      setRedirect(router.query.redirect)
+    }
+  },[router.query])
 
 
   async function handleSocialSuccess(user, provider) {
@@ -67,7 +75,8 @@ const LoginForm = () => {
           refresh: data?.login?.refreshToken
         }
       }, () => {
-        data.next_action === 'profile_fase_1' ? router.push('/register1') : router.push('/dashboard')
+        redirectAfterSuccess(data.next_action === 'profile_fase_1' ? '/register1' : '/dashboard')
+
       }))
       setTimeout(() => {
         queryClient.refetchQueries('auth')
@@ -92,12 +101,22 @@ const LoginForm = () => {
       },
       (user: any, error: ErrorMessage) => {
         if(user) {
-          router.push(`/dashboard`)
+          redirectAfterSuccess();
         } else if(error){
           errorNotification({message: t(`validacao.${error.msg}`)})
         }
         setLoading(false)
       }))
+  }
+
+  function redirectAfterSuccess(preferred: string|null = null ){
+    let page = '/dashboard'
+    if(redirect){
+      page = `/${trimStart(redirect)}`
+    } else if(preferred){
+      page = String(preferred)
+    }
+    router.push(page)
   }
 
   function handleFailure(error: Error, provider: Providers) {

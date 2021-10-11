@@ -176,6 +176,8 @@ export default class WpUser {
           user_status
           locale
           allow_newsletter
+          institution_name
+          institution_occupation
           roles {
             nodes {
               name
@@ -226,6 +228,9 @@ export default class WpUser {
           badge_name
           passport
           locale
+          consents
+          institution_name
+          institution_occupation
           roles {
             nodes {
               name
@@ -338,6 +343,12 @@ export default class WpUser {
   static block(userId: number) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
       user_id: userId, status: 1
+    });
+  }
+
+  static consent(args: {userId: number; consents:any[]}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_user_consents', {
+      user_id: args.userId, consents: args.consents
     });
   }
 
