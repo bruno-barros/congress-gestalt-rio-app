@@ -76,7 +76,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
       .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
     resume:  Yup.string().when('topic', {
-      is: (val) => !!edition.abstract.required_fields?.resume?.min,
+      is: (val) => !!edition.abstract.required_fields?.resume?.min && !user.byPassSynopsis(),
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
@@ -116,7 +116,11 @@ export default function AbstractForm(props: AbstractFormProps) {
           message: isEditing ? t('atualizado-com-sucesso') : t('trabalho.criado-com-sucesso'),
           heroTitle: isEditing ? null : t('parabens')
         })
-        if (!isEditing) setTimeout(()=> router.push(`/abstracts/${data.ID}?created=1`), 2000)
+        if (!isEditing) {
+          let redirect = `/abstracts/${data.ID}`
+          if(!user.byPassSynopsis()) redirect = `${redirect}?created=1`
+          setTimeout(()=> router.push(redirect), 2000)
+        }
         if(isEditing) queryClient.invalidateQueries(['abstract', abstract?.databaseId])
         if (isEditing && data._intent === 'review') router.reload()
       } else {
@@ -143,6 +147,11 @@ export default function AbstractForm(props: AbstractFormProps) {
       && <div className="alert alert-warning">
         {t('trabalho.nao-pode-editar')}
       </div>}
+      {(user.byPassSynopsis() && !isEditing) && <div className="alert alert-warning">
+        Caro, {user.getUserData().name}. <br/>
+        Seu trabalho não passará pela validação da sinopse. Após registrar os dados básicos, você poderá anexar o trabalho final.
+      </div>}
+
       <fieldset disabled={!isEditable1}>
         {/*<code style={{maxWidth: 700}}>{JSON.stringify(values, null, 2)}</code>*/}
         <Select name="topic" label={t('trabalho.topico')}>
@@ -156,9 +165,13 @@ export default function AbstractForm(props: AbstractFormProps) {
         {edition.getFieldMax('tags') > 0 &&
         <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
 
-        <Wysiwyg name="resume" label={t('trabalho.sinopse')} maxHeight="sm" disabled={!isEditable1}
-                 charsMin={edition.getFieldMin('resume')} charsMax={edition.getFieldMax('resume')}
-                 countMethod={edition.abstract.count_method}/>
+        {!user.byPassSynopsis() &&
+        <Wysiwyg name="resume" label={t('trabalho.sinopse')}
+        maxHeight="sm" disabled={!isEditable1}
+                 charsMin={edition.getFieldMin('resume')}
+                 charsMax={edition.getFieldMax('resume')}
+                 countMethod={edition.abstract.count_method}/>}
+
 
       </fieldset>
       <fieldset disabled={!isEditable2}>

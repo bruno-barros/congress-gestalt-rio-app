@@ -11,6 +11,7 @@ import {Trans} from "react-i18next";
 import {useQueryClient} from "react-query";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
+import useCurrentUser from '../../components/hooks/useCurrentUser';
 
 
 interface NewAbstractProps {

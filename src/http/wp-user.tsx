@@ -231,6 +231,7 @@ export default class WpUser {
           consents
           institution_name
           institution_occupation
+          special_behaviors
           roles {
             nodes {
               name
