@@ -11,7 +11,7 @@ import {countries} from "../src/countries";
 import * as Yup from "yup";
 import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Error from "../src/resources/error";
 import Curtain from "../components/ui/curtain";
 import {Loading} from "@brunobarros/react-components";
@@ -30,10 +30,17 @@ const Register1 = () => {
   const queryClient = useQueryClient()
   const {authLoading, user, refetch} = useCurrentUser()
   const [loading, setLoading] = useState(false)
+  const [firstAccess, setFirstAccess] = useState(false)
   const [response, setResponse] = useState({success: null, msg: ''})
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
   const lang = router.locale
+
+  useEffect(()=>{
+    if(router.query?.fa){
+      setFirstAccess(true)
+    }
+  }, [router.query])
 
   const FormSchema = Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
@@ -73,7 +80,7 @@ const Register1 = () => {
       success === false && dismissAlert()
       if (success) {
         refetch()
-        if(edition.subscription.allowed) router.push(`/register2`)
+        if(edition.subscription.allowed && !firstAccess) router.push(`/register2`)
         else router.push('/dashboard')
       }
 

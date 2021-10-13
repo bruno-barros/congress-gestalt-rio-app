@@ -77,7 +77,7 @@ export default function SignUp(props: SignUpProps) {
               handleClose()
             },
             willClose: () => {
-              data.next_action === 'profile_fase_1' ? router.push('/register1') : router.push('/dashboard')
+              data.next_action === 'profile_fase_1' ? router.push('/register1?fa=1') : router.push('/dashboard')
             }
           })
 

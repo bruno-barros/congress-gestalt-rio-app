@@ -142,7 +142,7 @@ export class User {
   }
 
   byPassSynopsis(){
-    return this.user.special_behaviors.indexOf('bypass_synopsis') !== -1
+    return this.user?.special_behaviors && this.user.special_behaviors.indexOf('bypass_synopsis') !== -1
   }
 }
 
