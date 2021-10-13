@@ -38,6 +38,7 @@ export interface UserInterface {
   onesignal_hash?: string
   allow_newsletter: boolean
   consents: string
+special_behaviors?: string
 }
 
 /**
@@ -138,6 +139,10 @@ export class User {
 
   getConsents(){
     return this.user.consents ? JSON.parse(this.user.consents) : {}
+  }
+
+  byPassSynopsis(){
+    return this.user?.special_behaviors && this.user.special_behaviors.indexOf('bypass_synopsis') !== -1
   }
 }
 
