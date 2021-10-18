@@ -40,6 +40,8 @@ export default function EvaluationForm(props: EvaluationFormProps) {
   const FormSchema = Yup.object().shape({
     quality: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
     relevance: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+    clarity: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+    contributions: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
     status: Yup.string().required('validacao.obrigatorio'),
     comment: Yup.string().when('status', {
       is: (val) => val?.indexOf('approved') !== -1,
@@ -55,6 +57,8 @@ export default function EvaluationForm(props: EvaluationFormProps) {
   let initialValues = {
     quality: evaluation.quality || -2,
     relevance: evaluation.relevance || -2,
+    clarity: evaluation.clarity || -2,
+    contributions: evaluation.contributions || -2,
     status: evaluation.status || '',
     comment: evaluation.comment || '',
     answers: evaluation.getAnswers() || {},
@@ -118,9 +122,23 @@ export default function EvaluationForm(props: EvaluationFormProps) {
       validationSchema={FormSchema}
     >{({values, touched, errors, isSubmitting, isValid, setFieldValue}) => (
       <Form>
+
         {/*<pre>{JSON.stringify(values, null, 2)}</pre>*/}
         <fieldset disabled={!evaluation.isEditable()}>
-
+        <style jsx global>{`
+        .evaluation-select {
+          display: flex;
+          align-items: center;
+        }
+        .evaluation-select label {
+          flex: 1;
+          margin-right: 1rem;
+          margin-bottom: 0;
+        }
+        .evaluation-select  .form-control {
+          flex: 0 0 70px;
+        }
+        `}</style>
           <h5 className="border-bottom pb-2 mb-3">{evaluation.statusPassed('synopsis_approved')
             ? 'Sua avaliação do trabalho' : 'Sua avaliação da sinopse'}</h5>
           {questions && Object.keys(initialValues.answers).map(key => {
@@ -129,7 +147,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
             </div>
           })}
 
-          <div className="form-group row">
+          {/* <div className="form-group row">
             <div className="col-6">
               <label className="m-0">Qualidade</label>
               <AbstractRating value={values.quality} disabled={!evaluation.isEditable()}
@@ -142,7 +160,28 @@ export default function EvaluationForm(props: EvaluationFormProps) {
                               onChange={(r) => setFieldValue('relevance', r)}/>
               <FieldError message={touched?.relevance && errors?.relevance}/>
             </div>
-          </div>
+          </div> */}
+
+          <Select name="quality" label="Qualidade" containerClass="evaluation-select">
+            <option value="-2"></option>
+            {Array.from(Array(11).keys()).map(num => (
+              <option key={num} value={num}>{num}</option>))}
+          </Select>
+          <Select name="relevance" label="Relevância" containerClass="evaluation-select">
+            <option value="-2"></option>
+            {Array.from(Array(11).keys()).map(num => (
+              <option key={num} value={num}>{num}</option>))}
+          </Select>
+          <Select name="clarity" label="Clareza" containerClass="evaluation-select">
+            <option value="-2"></option>
+            {Array.from(Array(11).keys()).map(num => (
+              <option key={num} value={num}>{num}</option>))}
+          </Select>
+          <Select name="contributions" label="Contribuição" containerClass="evaluation-select">
+            <option value="-2"></option>
+            {Array.from(Array(11).keys()).map(num => (
+              <option key={num} value={num}>{num}</option>))}
+          </Select>
 
 
           <Select name="status" label="Status sugerido">

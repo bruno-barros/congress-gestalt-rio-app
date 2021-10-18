@@ -11,7 +11,7 @@ import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import WpEvaluation from "../../src/http/wp-evaluation";
-import {siteTitle} from "../../src/helpers";
+import { siteTitle, average } from '../../src/helpers';
 import Head from "next/head";
 import useEvaluations from "../../components/hooks/useEvaluations";
 
@@ -50,6 +50,9 @@ const AdmEvaluations = () => {
         Header: 'Status',
         accessor: 'status',
       },{
+        Header: 'Média',
+        accessor: 'average',
+      },{
         Header: 'Dias passados',
         accessor: 'days_of_delay',
       },{
@@ -76,10 +79,11 @@ const AdmEvaluations = () => {
       row.is_public = row.is_public ? 'SIM' : 'NÃO'
 
 
-        row.evaluator_id = row.evaluator?.databaseId
-        row.evaluator_name = row.evaluator?.name
-        row.email = row.evaluator?.email
-        row.cellphone = row.evaluator?.cellphone
+      row.evaluator_id = row.evaluator?.databaseId
+      row.evaluator_name = row.evaluator?.name
+      row.email = row.evaluator?.email
+      row.cellphone = row.evaluator?.cellphone
+      row.average = average([row.relevance, row.quality, row.clarity, row.contributions], 1)
 
       row.date = row.created_at
       return row

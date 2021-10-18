@@ -1,5 +1,7 @@
 import {Status, Statuses} from "../../components/abstract/abstract.d";
+import { average } from "../helpers";
 import Abstract from "./abstract";
+import { Order } from './order';
 
 export class Evaluation {
   id: number | string
@@ -13,6 +15,8 @@ export class Evaluation {
   updated_at: string
   relevance: number
   quality: number
+  clarity: number
+  contributions: number
   status: Status
   is_public: boolean
   evaluator?: {
@@ -62,6 +66,10 @@ export class Evaluation {
 
   getAnswers(){
     return this.answers && JSON.parse(this.answers) || null
+  }
+
+  getAverage(){
+    return average([this.relevance, this.quality, this.clarity, this.contributions], 1)
   }
 
   isEditable(){
