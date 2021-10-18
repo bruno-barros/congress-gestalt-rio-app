@@ -130,10 +130,19 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                 <Card.Body>
                   <div className="d-flex align-items-center justify-content-between mb-2">
                     <div className="d-flex align-items-center">
-                      <div className="mb-1 mr-1">Relevância</div>
-                      <AbstractRating value={eva.relevance} disabled={true}/>
-                      <div className="ml-4 mb-1 mr-1">Qualidade</div>
-                      <AbstractRating value={eva.quality} disabled={true}/>
+                      <div className="mb-1 mr-1 text-sm">Relevância</div>
+                      <div className="badge badge-secondary">{eva.relevance}</div>
+
+                      <div className="ml-3 mb-1 mr-1 text-sm">Qualidade</div>
+                      <div className="badge badge-secondary">{eva.quality}</div>
+
+                      <div className="ml-3 mb-1 mr-1 text-sm">Clareza</div>
+                      <div className="badge badge-secondary">{eva.clarity}</div>
+
+                      <div className="ml-3 mb-1 mr-1 text-sm">Contribuição</div>
+                      <div className="badge badge-secondary">{eva.contributions}</div>
+
+                      <div className="ml-3 mr-1 badge badge-primary">{eva.getAverage()}</div>
                     </div>
                     {eva.updated_at && <div>Atualizado em {moment(eva.updated_at).format('DD/MM/YYYY H:mm')}</div>}
 

@@ -42,6 +42,8 @@ export default class WpEvaluation {
       status
       quality
       relevance
+      clarity
+      contributions
       created_at
       abstract_id
       user_id
@@ -77,6 +79,8 @@ export default class WpEvaluation {
     id
     relevance
     quality
+    clarity
+    contributions
     status
     user_id
     is_public
@@ -161,6 +165,8 @@ export default class WpEvaluation {
       comment
       quality
       relevance
+      clarity
+      contributions
       status
       edition_id
       is_public

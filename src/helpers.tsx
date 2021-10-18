@@ -305,3 +305,13 @@ export function dispatchOnENTER(event, callback) {
     callback()
   }
 }
+
+export function average(numbers: any[], round: number = 1){
+  const divby = numbers.length
+  const sum = numbers.reduce((prev, curr)=>{
+    const val = curr > 0 ? parseInt(String(curr)) : 0
+    return prev + val
+  }, 0)
+
+  return (Math.round((sum/divby) * 100) / 100).toFixed(round)
+}
