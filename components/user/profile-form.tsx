@@ -165,7 +165,7 @@ export default function ProfileForm(props: ProfileFormProps) {
         <div className="row">
           <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required={isRequired}
                 containerClass="col-12 col-md"/>
-          <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
+          <Mask name="phone" mask="(99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
         </div>
         <div className="row">
           <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required={isRequired}
