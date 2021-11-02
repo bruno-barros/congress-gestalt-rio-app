@@ -133,10 +133,10 @@ export default function SetStatusByCriteriaModal(props: SetStatusModalProps) {
                     <option value="synopsis_no_evaluated">
                       (Sinopse) Que tenham avaliações, mas nenhuma realizada
                     </option>
-                    <option value="evaluation_status|approved|1">
+                    <option value="evaluation_status|pre_approved|1">
                       (Trabalho) Uma - ou mais - avaliações de aprovação
                     </option>
-                    <option value="evaluation_status|approved|2">
+                    <option value="evaluation_status|pre_approved|2">
                     (Trabalho) Duas - ou mais - avaliações de aprovação
                     </option>
                     <option value="evaluation_status|rejected|1">
