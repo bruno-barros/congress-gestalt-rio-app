@@ -21,6 +21,7 @@ import NotificationModal from "../notification-modal";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import { blockUi } from '../../src/store/ui.actions';
 import { useDispatch } from 'react-redux';
+import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -39,7 +40,7 @@ export function AbstractsGroupActions<T extends object>({
   const selected = selectedFlatRows.map((row) => row.original);
   const selectedCount = selected.length;
   const [activeModal, setActiveModal] = useState<
-    "designar" | "status" | string
+    "designar" | "status" | "status_criteria" | string
   >("");
   const { data: event } = useEvent();
   const [exportData, setExportData] = useState([]);
@@ -103,6 +104,13 @@ export function AbstractsGroupActions<T extends object>({
         variant="outline-secondary"
       >
         <Dropdown.Item
+          onClick={() => openModal('status_criteria')}
+        >
+          Mudar status por critérios
+        </Dropdown.Item>
+        <Dropdown.Divider/>
+        <Dropdown.Header>Seleção {`${selectedCount > 0 ? `(${selectedCount})` : '(nenhum)'}`}</Dropdown.Header>
+        <Dropdown.Item
           disabled={selectedCount === 0}
           onClick={handleExportData}
         >
@@ -153,6 +161,17 @@ export function AbstractsGroupActions<T extends object>({
       <SetStatusModal
         abstract_ids={selected?.map((abs) => abs.databaseId)}
         show={activeModal === "status"}
+        onDismiss={() => {
+          setActiveModal("");
+        }}
+        onUpdate={() => {
+          refreshAbstracts();
+          toggleAllPageRowsSelected(false);
+        }}
+      />
+      <SetStatusByCriteriaModal
+        abstract_ids={selected?.map((abs) => abs.databaseId)}
+        show={activeModal === "status_criteria"}
         onDismiss={() => {
           setActiveModal("");
         }}

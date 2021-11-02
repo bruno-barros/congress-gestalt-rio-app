@@ -50,6 +50,21 @@ export class WpAbstract {
   static consent(args: {abstract_id: number, consents: any[]}): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_consents', args);
   }
+  // quantity: int
+  // *   status: string
+  // *   criteria: [abstract_status, evaluation_status,
+  // *              synopsis_no_evaluated, abstracts_no_evaluated]
+  // *   return: (optional) [ids, object, array, minimum]
+  // *   editionId: (optional) string
+  static findByCriteria(args: {
+    criteria: 'abstract_status' | 'evaluation_status'|'synopsis_no_evaluated'|'abstracts_no_evaluated',
+    quantity?: number,
+    status?: string,
+    return?: 'ids' | 'object' | 'array'| 'minimum',
+    editionId?: string
+  }): Promise<AxiosResponse> {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_find_criteria', args);
+  }
 
   static authors(id: number): Promise<AxiosResponse> {
     return httpApi.post('/index.php?graphql&authors', {
