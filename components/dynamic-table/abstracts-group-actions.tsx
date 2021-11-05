@@ -139,7 +139,7 @@ export function AbstractsGroupActions<T extends object>({
           onClick={() => openModal("evaluation_visibility")}
           disabled={selectedCount === 0}
         >
-          Status dos comentários
+          Visibilidade dos comentários
         </Dropdown.Item>
         <Dropdown.Item
           className="text-danger"
