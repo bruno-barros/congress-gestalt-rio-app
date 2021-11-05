@@ -212,11 +212,11 @@ export default function AbstractForm(props: AbstractFormProps) {
       {abstract?.statusPassed('synopsis_waiting_upd') &&
       <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
 
-      <fieldset disabled={!isEditable1}>
+      <fieldset disabled={!isEditable1 && !isEditable2}>
         <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
                  metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                  mainAuthor={abstract?.author?.node || user.getUserData()}
-                 disabled={!isEditable1}
+                 disabled={!isEditable1 && !isEditable2}
                  creating={!isEditing}
                  onEdit={(author, metadata) => {
                    setAuthorModal({show: true, author, metadata})
@@ -229,7 +229,7 @@ export default function AbstractForm(props: AbstractFormProps) {
           <LoadingButton variant="secondary" size="lg" block loading={false}
                          disable={!isValid}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>
         </div>
-        {isEditing
+        {(isEditing && abstract.status !== 'approved')
         && <div className="col-12 col-md">
           <LoadingButton type="button" variant="primary" size="lg" block loading={false}
                          disable={!isValid} onClick={() => {

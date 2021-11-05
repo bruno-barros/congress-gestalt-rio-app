@@ -22,6 +22,7 @@ import WpEvaluation from "../../src/http/wp-evaluation";
 import { blockUi } from '../../src/store/ui.actions';
 import { useDispatch } from 'react-redux';
 import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
+import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -40,7 +41,7 @@ export function AbstractsGroupActions<T extends object>({
   const selected = selectedFlatRows.map((row) => row.original);
   const selectedCount = selected.length;
   const [activeModal, setActiveModal] = useState<
-    "designar" | "status" | "status_criteria" | string
+    "designar" | "status" | "status_criteria" | "evaluation_visibility" | string
   >("");
   const { data: event } = useEvent();
   const [exportData, setExportData] = useState([]);
@@ -135,6 +136,12 @@ export function AbstractsGroupActions<T extends object>({
           Enviar mensagem
         </Dropdown.Item>
         <Dropdown.Item
+          onClick={() => openModal("evaluation_visibility")}
+          disabled={selectedCount === 0}
+        >
+          Status dos comentários
+        </Dropdown.Item>
+        <Dropdown.Item
           className="text-danger"
           onClick={handleDelete}
           disabled={selectedCount === 0}
@@ -179,6 +186,17 @@ export function AbstractsGroupActions<T extends object>({
           refreshAbstracts();
           toggleAllPageRowsSelected(false);
         }}
+      />
+      <SetEvaluationVisibilityModal
+       abstract_ids={selected?.map((abs) => abs.databaseId)}
+       show={activeModal === "evaluation_visibility"}
+       onDismiss={() => {
+         setActiveModal("");
+       }}
+       onUpdate={() => {
+         refreshAbstracts();
+         toggleAllPageRowsSelected(false);
+       }}
       />
       <NotificationModal
         context="abstracts"
