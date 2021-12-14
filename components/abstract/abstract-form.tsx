@@ -209,7 +209,8 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       </fieldset>
 
-      {abstract?.statusPassed('synopsis_waiting_upd') &&
+      {/* Exclusivo para ABRISCO */}
+      {(false && abstract?.statusPassed('synopsis_waiting_upd')) &&
       <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
 
       <fieldset disabled={!isEditable1 && !isEditable2}>

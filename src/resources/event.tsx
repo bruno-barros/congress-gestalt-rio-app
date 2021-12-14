@@ -154,11 +154,11 @@ export class Edition {
   }
 
   get logoPrimary() {
-    return this.logo.primary || this.defaults.logo.primary;
+    return this.logo.primary || this.defaults.logo?.primary;
   }
 
   get logoSecondary() {
-    return this.logo.secondary || this.defaults.logo.secondary;
+    return this.logo.secondary || this.defaults.logo?.secondary;
   }
 
   steps() {

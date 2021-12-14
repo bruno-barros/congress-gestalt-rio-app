@@ -25,7 +25,7 @@ export default function Header(props: HeaderProps) {
   const [stupid, setStupid] = useState(false)//[*abrisco]
 
   useEffect(()=>{
-    setStupid(router.query?.tab && router.query.tab === 'subscriptions')
+    // setStupid(router.query?.tab && router.query.tab === 'subscriptions')
   }, [router.query])
 
   return (<header className="mainHeader">

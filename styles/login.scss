@@ -82,7 +82,8 @@
     min-height: 100vh;
 
     .brand-panel {
-      background-image: url(https://congressoabrisco.com.br/src/themes/congresso/assets/img/login-bg.jpg);
+      // background-image: url(https://congressoabrisco.com.br/src/themes/congresso/assets/img/login-bg.jpg);
+      background-color: #e1e8ed;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -94,6 +95,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.17);
 
       > *:not(.logo) {
         min-width: 300px;

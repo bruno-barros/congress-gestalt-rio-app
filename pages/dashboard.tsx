@@ -38,9 +38,9 @@ const Dashboard = (props: DashboardProps) => {
   useEffect(()=>{
     if(!user || !user?.getUserData().roles) return
     if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
-    else router.push(`/abstracts`)
+    // else router.push(`/abstracts`)
   }, [user])
-  return (<MainLayout><Loading vspace={80}/></MainLayout>)
+  // return (<MainLayout><Loading vspace={80}/></MainLayout>)
 
 
   if (isLoading || ordersLoading) {
