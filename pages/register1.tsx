@@ -35,7 +35,7 @@ const Register1 = () => {
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
   const lang = router.locale
-
+// console.log(edition)
   useEffect(()=>{
     if(router.query?.fa){
       setFirstAccess(true)
