@@ -73,7 +73,7 @@ const Dashboard = (props: DashboardProps) => {
               </Card.Body>
               <Card.Footer className="p-0 border-0 bg-white">
                 <div className="btn-group w-100 end start">
-                  {(user.canPublishAbstracts()) && <>
+                  {(user.canPublishAbstracts() && edition.isOpenToAbstracts() && isSubscribed) && <>
                     <Link href={`/abstracts?edition=${edition.id}`} passHref>
                       <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('trabalho.meus-trabalhos')}</a>
                     </Link>
