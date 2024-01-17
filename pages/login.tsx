@@ -41,9 +41,10 @@ const Login = () => {
       </div>
       <div className="form-panel p-4">
           <img src={event?.logoPrimary} className="logo img-fluid "/>
-        <div className="d-flex align-items-center justify-content-center mb-3">
+        {event && event.languages.length > 1 && <div className="d-flex align-items-center justify-content-center mb-3">
           <LangSelector/>
-        </div>
+        </div>}
+
 
         {(user && user.getId() > -1 && authToken.factory().isValid) && <div className="text-center"><div className="alert alert-warning">
           Olá {user?.getFirstName()}. Você já está logado. <br/><Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
