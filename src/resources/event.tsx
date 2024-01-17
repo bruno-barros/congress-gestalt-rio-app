@@ -6,6 +6,8 @@ export default class Event {
   logo: { primary: string; secondary: string };
   url: { pt: string; en: string };
   app: { pt: string; en: string };
+  languages: string[];
+  description?: string;
   page: {
     checkout: {
       pt: string; // url=[PRODUCT_ID]
@@ -181,6 +183,22 @@ export class Edition {
       : null;
     const end = this.subscription.end_at
       ? moment(this.subscription.end_at)
+      : null;
+    if (!start || !end) return false;
+    if (today >= start && today <= end) return true;
+    return false;
+  }
+
+  isOpenToAbstracts(){
+    const today = moment();
+    if (this.abstract.allowed === false) {
+      return false;
+    }
+    const start = this.abstract.start_at
+      ? moment(this.abstract.start_at)
+      : null;
+    const end = this.abstract.end_at
+      ? moment(this.abstract.end_at)
       : null;
     if (!start || !end) return false;
     if (today >= start && today <= end) return true;
