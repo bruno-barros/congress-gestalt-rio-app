@@ -59,6 +59,9 @@ export default function Header(props: HeaderProps) {
           <Link href="/dashboard" passHref>
            <Nav.Link active={router.pathname === '/dashboard'}>Home</Nav.Link>
           </Link>
+          <Link href="/profile?tab=subscriptions" passHref>
+           <Nav.Link>Inscrição</Nav.Link>
+          </Link>
           {user.canManageAbstracts()
             && (<>
               <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link className="admin"
@@ -70,7 +73,7 @@ export default function Header(props: HeaderProps) {
               <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)}
-            {user.canPublishAbstracts() && (<>
+            {(user.canPublishAbstracts() && edition && edition?.isOpenToAbstracts()) && (<>
               <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
                 active={router.pathname === '/abstracts' && router.query?.status!=='abstract'}>{t('trabalho.sinopses')}</Nav.Link>
               </Link>
