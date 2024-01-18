@@ -24,4 +24,5 @@ module.exports = {
     domains: ['localhost', 'congressoabrisco.com.br', 'evento.conceito-online.com.br', 'optimole.com', 'gestalt2020.com.br'],
   },
   trailingSlash: false,
+  swcMinify: true
 }
