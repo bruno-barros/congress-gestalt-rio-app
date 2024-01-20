@@ -117,13 +117,13 @@ const AbstractEditing = () => {
               as="div"
               i18nKey="trabalho.confira-as-regras"
               defaults={`Confira 2 as <1>regras de submissão de trabalhos</1>.`}
-              components={[
+              components={([
                 "Confira 3 as ",
                 <a href={edition.abstract.rules[lang]} target="_blank">
                   regras de submissão de trabalhos
                 </a>,
                 ".",
-              ]}
+              ]) as any}
             />
           </div>
         </div>
