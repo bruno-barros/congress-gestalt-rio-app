@@ -41,7 +41,7 @@ $pink:    #e83e8c !default;
 $red:     #D2072A !default;
 $orange:  #fd7e14 !default;
 $yellow:  #E6B40E !default;
-$green:   #1D9844 !default;
+$green:   #007A7A !default;
 $teal:    #20c997 !default;
 $cyan:    #17a2b8 !default;
 
@@ -66,7 +66,7 @@ $colors: map-merge(
   $colors
 );
 
-$primary:       $blue !default;
+$primary:       $green !default;
 $secondary:     $gray-600 !default;
 $success:       $green !default;
 $info:          $cyan !default;
