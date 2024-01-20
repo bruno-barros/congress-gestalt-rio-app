@@ -1,9 +1,7 @@
 import { useField } from "formik";
 import FieldError from "../field-error";
 import React, { useEffect, useState } from "react";
-import useTrans from "../../../hooks/useTrans";
 import zxcvbn from "zxcvbn";
-import scope from "ast-types/lib/scope";
 import { Icon } from "@brunobarros/react-components";
 
 interface PasswordProps {
@@ -58,7 +56,7 @@ export default function Password({
     setStrength(0);
     helpers.setValue("");
     helpers.setTouched(false);
-    helpers.setError({});
+    helpers.setError('');
   }
 
   function handleChange(value: string) {

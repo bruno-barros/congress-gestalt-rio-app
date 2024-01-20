@@ -116,9 +116,9 @@ const AbstractEditing = () => {
             <Trans
               as="div"
               i18nKey="trabalho.confira-as-regras"
-              defaults={`Confira as <1>regras de submissão de trabalhos</1>.`}
+              defaults={`Confira 2 as <1>regras de submissão de trabalhos</1>.`}
               components={[
-                "Confira as ",
+                "Confira 3 as ",
                 <a href={edition.abstract.rules[lang]} target="_blank">
                   regras de submissão de trabalhos
                 </a>,

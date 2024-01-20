@@ -34,9 +34,12 @@ const Login = () => {
       <title>{siteTitle('Login', queryClient)}</title>
     </Head>
     <div className="login-main-panel">
-      <div className="brand-panel">
+      <div className="brand-panel" style={{
+        backgroundImage: `url(/img/intro.jpg)`,
+        // backgroundSize: 'contain',
+      }}>
         <div className="p-4">
-          {/*<img src={event.logoPrimary} className="logo img-fluid"/>*/}
+          {/* <img src={event?.logoPrimary} className="logo img-fluid"/> */}
         </div>
       </div>
       <div className="form-panel p-4">
