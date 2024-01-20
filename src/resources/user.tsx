@@ -122,6 +122,9 @@ export class User {
 
   hasMinimumRegisteredFields() {
     let required = ['name', 'firstName', 'email', 'gender', 'lastName', 'birthdate', 'cellphone', 'badge_name']
+    if(this.isAdmin()){
+      return true;
+    }
     if (this.user.country === 'BR') {
       required.push('cpf')
     } else {
