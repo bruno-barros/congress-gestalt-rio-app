@@ -86,10 +86,10 @@ export const logUserByType = (
 ) => {
   return (dispatch: any, getState: any) => {
     const users = {
-      admin: {login: 'admin', password: 'admin'},
-      editor: {login: 'outro', password: 'DntekhEPQx$lei@Yk2r3Ap^h'},
-      contributor: {login: 'avaliador', password: 'wS!!LE4r5AeiibF83xBvMrt^'},
-      subscriber: {login: 'user3@user.com', password: 'rLbpBsGLd8HW8!@dARX*q!m2'},
+      admin: {login: 'admin-debug', password: '(tzu(^ZdM5zLcNmj1&VLX8Cd'},
+      editor: {login: 'editor-debug', password: 'vyvN9Z326FDJC(h56umsXpwo'},
+      contributor: {login: 'avaliador-debug', password: 'wS!!LE4r5AeiibF83xBvMrt^'},
+      subscriber: {login: 'email1@email.com', password: 'email1@email.com'},
     }
 
     dispatch(postLogin(users[type], (user, error) => {
