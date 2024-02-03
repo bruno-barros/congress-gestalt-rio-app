@@ -19,8 +19,8 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import NotificationModal from "../notification-modal";
 import WpEvaluation from "../../src/http/wp-evaluation";
-import { blockUi } from '../../src/store/ui.actions';
-import { useDispatch } from 'react-redux';
+import { blockUi } from "../../src/store/ui.actions";
+import { useDispatch } from "react-redux";
 import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
 import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
 
@@ -31,7 +31,7 @@ type GroupActions<T extends object> = {
 export function AbstractsGroupActions<T extends object>({
   instance,
 }: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
-  const disp = useDispatch()
+  const disp = useDispatch();
   const queryClient = useQueryClient();
   const {
     selectedFlatRows,
@@ -79,20 +79,20 @@ export function AbstractsGroupActions<T extends object>({
 
   function handleDelete(e) {
     e.preventDefault();
-    disp(blockUi(true))
+    disp(blockUi(true));
     WpAbstract.delete({
       abstracts: selected.map((row) => row.databaseId),
     }).then(
       (resp) => {
         if (resp.data.success) {
-          successNotification({message: resp.data.data.msg});
-          disp(blockUi(false))
-          refreshAbstracts()
+          successNotification({ message: resp.data.data.msg });
+          disp(blockUi(false));
+          refreshAbstracts();
         }
       },
       (err) => {
         errorNotification({ error: err });
-        disp(blockUi(false))
+        disp(blockUi(false));
       }
     );
   }
@@ -104,13 +104,13 @@ export function AbstractsGroupActions<T extends object>({
         title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ""}`}
         variant="outline-secondary"
       >
-        <Dropdown.Item
-          onClick={() => openModal('status_criteria')}
-        >
+        <Dropdown.Item onClick={() => openModal("status_criteria")}>
           Mudar status por critérios
         </Dropdown.Item>
-        <Dropdown.Divider/>
-        <Dropdown.Header>Seleção {`${selectedCount > 0 ? `(${selectedCount})` : '(nenhum)'}`}</Dropdown.Header>
+        <Dropdown.Divider />
+        <Dropdown.Header>
+          Seleção {`${selectedCount > 0 ? `(${selectedCount})` : "(nenhum)"}`}
+        </Dropdown.Header>
         <Dropdown.Item
           disabled={selectedCount === 0}
           onClick={handleExportData}
@@ -188,15 +188,15 @@ export function AbstractsGroupActions<T extends object>({
         }}
       />
       <SetEvaluationVisibilityModal
-       abstract_ids={selected?.map((abs) => abs.databaseId)}
-       show={activeModal === "evaluation_visibility"}
-       onDismiss={() => {
-         setActiveModal("");
-       }}
-       onUpdate={() => {
-         refreshAbstracts();
-         toggleAllPageRowsSelected(false);
-       }}
+        abstract_ids={selected?.map((abs) => abs.databaseId)}
+        show={activeModal === "evaluation_visibility"}
+        onDismiss={() => {
+          setActiveModal("");
+        }}
+        onUpdate={() => {
+          refreshAbstracts();
+          toggleAllPageRowsSelected(false);
+        }}
       />
       <NotificationModal
         context="abstracts"
@@ -462,13 +462,32 @@ export function SubscriptionsGroupActions<T extends object>({
     setLoading(true);
 
     setTimeout(() => {
+      console.log(selected);
       setExportData(
-        selected.map((item) =>
-          omit(item, ["status_woo", "status", "customer", "lineItems"])
-        )
+        selected.map((item) => {
+          return {
+            PEDIDO: item.databaseId,
+            DATA: item.date,
+            METODO: item.paymentMethodTitle,
+            TOTAL: item.total.replace("&nbsp;", " "),
+            PLANO: item.package,
+            NOME: item.customer_name,
+            EMAIL: item.customer_email,
+            STATUS: item.order_status,
+            PDC: usermeta(item, 'is_pdc') === '1' ? 'Sim' : 'Não',
+            NECESSIDADES: usermeta(item, 'pdc_needs'),
+            CRIANÇA: usermeta(item, 'is_child_care') === '1' ? 'Sim' : 'Não',
+          };
+        })
       );
       setLoading(false);
     }, 2000);
+  }
+
+  function usermeta(item: any, key: string){
+    if(!item?.customer?.metaData) return ''
+    let meta = item.customer.metaData.find((m) => m.key === key)
+    return meta ? meta.value : ''
   }
 
   return (
