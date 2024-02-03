@@ -472,11 +472,14 @@ export function SubscriptionsGroupActions<T extends object>({
             TOTAL: item.total.replace("&nbsp;", " "),
             PLANO: item.package,
             NOME: item.customer_name,
+            NOME_CRACHA: usermeta(item, "badge_name"),
             EMAIL: item.customer_email,
             STATUS: item.order_status,
-            PDC: usermeta(item, 'is_pdc') === '1' ? 'Sim' : 'Não',
-            NECESSIDADES: usermeta(item, 'pdc_needs'),
-            CRIANÇA: usermeta(item, 'is_child_care') === '1' ? 'Sim' : 'Não',
+            PDC: usermeta(item, "is_pdc") === "1" ? "Sim" : "Não",
+            NECESSIDADES: usermeta(item, "pdc_needs"),
+            CRIANÇA: usermeta(item, "is_child_care") === "1" ? "Sim" : "Não",
+            USO_EMAIL: usermeta(item, "allow_newsletter") === "1" ? "Sim" : "Não",
+            //
           };
         })
       );
@@ -484,10 +487,10 @@ export function SubscriptionsGroupActions<T extends object>({
     }, 2000);
   }
 
-  function usermeta(item: any, key: string){
-    if(!item?.customer?.metaData) return ''
-    let meta = item.customer.metaData.find((m) => m.key === key)
-    return meta ? meta.value : ''
+  function usermeta(item: any, key: string) {
+    if (!item?.customer?.metaData) return "";
+    let meta = item.customer.metaData.find((m) => m.key === key);
+    return meta ? meta.value : "";
   }
 
   return (
