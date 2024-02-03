@@ -38,7 +38,10 @@ export interface UserInterface {
   onesignal_hash?: string
   allow_newsletter: boolean
   consents: string
-special_behaviors?: string
+  special_behaviors?: string
+  is_pdc?: boolean
+  pdc_needs?: string
+  is_child_care?: boolean
 }
 
 /**
