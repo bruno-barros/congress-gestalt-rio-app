@@ -1,7 +1,7 @@
-import {ServerResponse} from "http";
+import { ServerResponse } from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
-import {QueryClient} from 'react-query'
+import { QueryClient } from "react-query";
 import Event from "./resources/event";
 
 /**
@@ -9,16 +9,18 @@ import Event from "./resources/event";
  * @param src
  */
 export function asset(src: string) {
-  let s = trimStart(src, '/');
-  return `${process.env.RELATIVE_PATH?.length > 1
-    ? process.env.RELATIVE_PATH : ''}/${s}`;
+  let s = trimStart(src, "/");
+  return `${
+    process.env.RELATIVE_PATH?.length > 1 ? process.env.RELATIVE_PATH : ""
+  }/${s}`;
 }
 
-export function siteTitle(name: string = '', queryClient?: QueryClient) {
-  const event: Event | any = queryClient ? queryClient.getQueryData('event') : {}
-  return name ? name + ` - ${event?.eventName}` : (event ? event.eventName : '')
+export function siteTitle(name: string = "", queryClient?: QueryClient) {
+  const event: Event | any = queryClient
+    ? queryClient.getQueryData("event")
+    : {};
+  return name ? name + ` - ${event?.eventName}` : event ? event.eventName : "";
 }
-
 
 export const redirectToLogin = (server?: ServerResponse) => {
   // add the redirected query param for debugging
@@ -36,7 +38,6 @@ export const redirectToLogin = (server?: ServerResponse) => {
   }
 };
 
-
 /**
  * Adds time to a date. Modelled after MySQL DATE_ADD function.
  * Example: dateAdd(new Date(), 'minutes', 30)  //returns 30 minutes from now.
@@ -52,39 +53,39 @@ export const dateAdd = (date: Date, interval: string, units: number) => {
     if (ret.getDate() != date.getDate()) ret.setDate(0);
   };
   switch (String(interval).toLowerCase()) {
-    case 'year'   :
+    case "year":
       ret.setFullYear(ret.getFullYear() + units);
       checkRollover();
       break;
-    case 'quarter':
+    case "quarter":
       ret.setMonth(ret.getMonth() + 3 * units);
       checkRollover();
       break;
-    case 'month'  :
+    case "month":
       ret.setMonth(ret.getMonth() + units);
       checkRollover();
       break;
-    case 'week'   :
+    case "week":
       ret.setDate(ret.getDate() + 7 * units);
       break;
-    case 'day'    :
+    case "day":
       ret.setDate(ret.getDate() + units);
       break;
-    case 'hour'   :
+    case "hour":
       ret.setTime(ret.getTime() + units * 3600000);
       break;
-    case 'minute' :
+    case "minute":
       ret.setTime(ret.getTime() + units * 60000);
       break;
-    case 'second' :
+    case "second":
       ret.setTime(ret.getTime() + units * 1000);
       break;
-    default       :
+    default:
       ret = undefined;
       break;
   }
   return ret;
-}
+};
 
 /**
  * Fake promise for mocking purpose
@@ -93,9 +94,9 @@ export const dateAdd = (date: Date, interval: string, units: number) => {
 export function fakePromise(timeout: number = 1000): Promise<any> {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(`Promise timeout reached (limit: ${timeout} ms)`)
+      resolve(`Promise timeout reached (limit: ${timeout} ms)`);
     }, timeout);
-  })
+  });
 }
 
 /**
@@ -109,23 +110,28 @@ export function rand(min, max) {
 }
 
 export function generate_tmp_id(user_id: number) {
-  return `${user_id}@${rand(1111111111, 9999999999)}`
+  return `${user_id}@${rand(1111111111, 9999999999)}`;
 }
 
-
-export function truncateMiddle(fullStr: string, strLen: number = 24, separator: string = '...') {
+export function truncateMiddle(
+  fullStr: string,
+  strLen: number = 24,
+  separator: string = "..."
+) {
   if (fullStr.length <= strLen) return fullStr;
 
-  separator = separator || '...';
+  separator = separator || "...";
 
   let sepLen = separator.length,
     charsToShow = strLen - sepLen,
     frontChars = Math.ceil(charsToShow / 2),
     backChars = Math.floor(charsToShow / 2);
 
-  return fullStr.substr(0, frontChars) +
+  return (
+    fullStr.substr(0, frontChars) +
     separator +
-    fullStr.substr(fullStr.length - backChars);
+    fullStr.substr(fullStr.length - backChars)
+  );
 }
 
 /**
@@ -135,183 +141,199 @@ export function truncateMiddle(fullStr: string, strLen: number = 24, separator: 
  * @param  plural
  * @param zero
  */
-export function plural(count: number, singular: string, plural: string, zero?: string) {
-
+export function plural(
+  count: number,
+  singular: string,
+  plural: string,
+  zero?: string
+) {
   if (count === 0 && zero) {
-    return zero
+    return zero;
   }
   if (count > 1) {
-    return plural.replace('%c', String(count))
+    return plural.replace("%c", String(count));
   }
-  return singular.replace('%c', String(count))
+  return singular.replace("%c", String(count));
 }
 
-
-export function inputFloatClass(inputValue: any, appendClasses: string = '') {
-  let classes = ['form-control']
-  if (inputValue && inputValue.length > 0) classes.push('filled')
-  if (appendClasses) classes.push(appendClasses)
-  return classes.join(' ')
+export function inputFloatClass(inputValue: any, appendClasses: string = "") {
+  let classes = ["form-control"];
+  if (inputValue && inputValue.length > 0) classes.push("filled");
+  if (appendClasses) classes.push(appendClasses);
+  return classes.join(" ");
 }
 
 export function getGenres() {
   return [
-    {value: 'M', name: 'masculino'},
-    {value: 'F', name: 'feminino'},
-    {value: 'I', name: 'outro'},
-  ]
+    { value: "M", name: "masculino" },
+    { value: "F", name: "feminino" },
+    { value: "NB", name: "nao-binario" },
+    { value: "I", name: "outro" },
+  ];
 }
 
 export const MapLocales = [
-  {app: 'pt', site: 'pt_BR', label: 'Português'},
-  {app: 'en', site: 'en_US', label: 'Inglês'},
-]
+  { app: "pt", site: "pt_BR", label: "Português" },
+  { app: "en", site: "en_US", label: "Inglês" },
+];
 
 export function ev_locale(locale): string {
-  if (!locale) return 'pt'
-  if (locale.indexOf('en') !== -1) return 'en';
-  if (locale.indexOf('es') !== -1) return 'es';
-  return 'pt'
+  if (!locale) return "pt";
+  if (locale.indexOf("en") !== -1) return "en";
+  if (locale.indexOf("es") !== -1) return "es";
+  return "pt";
 }
 
-export function statusColorName(status: string): 'warning' | 'success' | 'danger' | 'secondary'|'info' {
-  if (['pending', 'waiting_update', 'synopsis_waiting_upd'].indexOf(status) !== -1) return 'secondary'
-  if (['synopsis_revision', 'final_revision'].indexOf(status) !== -1) return 'warning'
-  if (['synopsis_approved', 'pre_approved', 'approved'].indexOf(status) !== -1) return 'success'
-  if (['synopsis_rejected', 'rejected'].indexOf(status) !== -1) return 'danger'
-  if (['synopsis_evaluating', 'evaluating'].indexOf(status) !== -1) return 'info'
+export function statusColorName(
+  status: string
+): "warning" | "success" | "danger" | "secondary" | "info" {
+  if (
+    ["pending", "waiting_update", "synopsis_waiting_upd"].indexOf(status) !== -1
+  )
+    return "secondary";
+  if (["synopsis_revision", "final_revision"].indexOf(status) !== -1)
+    return "warning";
+  if (["synopsis_approved", "pre_approved", "approved"].indexOf(status) !== -1)
+    return "success";
+  if (["synopsis_rejected", "rejected"].indexOf(status) !== -1) return "danger";
+  if (["synopsis_evaluating", "evaluating"].indexOf(status) !== -1)
+    return "info";
 }
-
 
 export function states(empty: boolean = true) {
-  let states = [{
-    value: "AC",
-    label: "Acre"
-  },
+  let states = [
+    {
+      value: "AC",
+      label: "Acre",
+    },
     {
       value: "AL",
-      label: "Alagoas"
+      label: "Alagoas",
     },
     {
       value: "AM",
-      label: "Amazonas"
+      label: "Amazonas",
     },
     {
       value: "AP",
-      label: "Amapá"
+      label: "Amapá",
     },
     {
       value: "BA",
-      label: "Bahia"
+      label: "Bahia",
     },
     {
       value: "CE",
-      label: "Ceará"
+      label: "Ceará",
     },
     {
       value: "DF",
-      label: "Distrito Federal"
+      label: "Distrito Federal",
     },
     {
       value: "ES",
-      label: "Espírito Santo"
+      label: "Espírito Santo",
     },
     {
       value: "GO",
-      label: "Goiás"
+      label: "Goiás",
     },
     {
       value: "MA",
-      label: "Maranhão"
+      label: "Maranhão",
     },
     {
       value: "MG",
-      label: "Minas Gerais"
+      label: "Minas Gerais",
     },
     {
       value: "MS",
-      label: "Mato Grosso do Sul"
+      label: "Mato Grosso do Sul",
     },
     {
       value: "MT",
-      label: "Mato Grosso"
+      label: "Mato Grosso",
     },
     {
       value: "PA",
-      label: "Pará"
+      label: "Pará",
     },
     {
       value: "PB",
-      label: "Paraíba"
+      label: "Paraíba",
     },
     {
       value: "PE",
-      label: "Pernambuco"
+      label: "Pernambuco",
     },
     {
       value: "PI",
-      label: "Piauí"
+      label: "Piauí",
     },
     {
       value: "PR",
-      label: "Paraná"
+      label: "Paraná",
     },
     {
       value: "RJ",
-      label: "Rio de Janeiro"
+      label: "Rio de Janeiro",
     },
     {
       value: "RN",
-      label: "Rio Grande do Norte"
+      label: "Rio Grande do Norte",
     },
     {
       value: "RO",
-      label: "Rondônia"
+      label: "Rondônia",
     },
     {
       value: "RR",
-      label: "Roraima"
+      label: "Roraima",
     },
     {
       value: "RS",
-      label: "Rio Grande do Sul"
+      label: "Rio Grande do Sul",
     },
     {
       value: "SC",
-      label: "Santa Catarina"
+      label: "Santa Catarina",
     },
     {
       value: "SE",
-      label: "Sergipe"
+      label: "Sergipe",
     },
     {
       value: "SP",
-      label: "São Paulo"
+      label: "São Paulo",
     },
     {
       value: "TO",
-      label: "Tocantins"
-    }]
+      label: "Tocantins",
+    },
+  ];
 
-  if (empty) states.unshift({label: '', value: ''})
+  if (empty) states.unshift({ label: "", value: "" });
 
-  return states
+  return states;
 }
 
-
 export function dispatchOnENTER(event, callback) {
-  if (event?.key === 13 || event?.keyIdentifier === 13 || event?.keyCode === 13) {
-    event.preventDefault()
-    callback()
+  if (
+    event?.key === 13 ||
+    event?.keyIdentifier === 13 ||
+    event?.keyCode === 13
+  ) {
+    event.preventDefault();
+    callback();
   }
 }
 
-export function average(numbers: any[], round: number = 1){
-  const divby = numbers.length
-  const sum = numbers.reduce((prev, curr)=>{
-    const val = curr > 0 ? parseInt(String(curr)) : 0
-    return prev + val
-  }, 0)
+export function average(numbers: any[], round: number = 1) {
+  const divby = numbers.length;
+  const sum = numbers.reduce((prev, curr) => {
+    const val = curr > 0 ? parseInt(String(curr)) : 0;
+    return prev + val;
+  }, 0);
 
-  return (Math.round((sum/divby) * 100) / 100).toFixed(round)
+  return (Math.round((sum / divby) * 100) / 100).toFixed(round);
 }
