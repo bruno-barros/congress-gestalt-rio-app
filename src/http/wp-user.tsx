@@ -178,6 +178,9 @@ export default class WpUser {
           allow_newsletter
           institution_name
           institution_occupation
+          is_pdc
+          pdc_needs
+          is_child_care
           roles {
             nodes {
               name
@@ -232,6 +235,9 @@ export default class WpUser {
           institution_name
           institution_occupation
           special_behaviors
+          is_pdc
+          pdc_needs
+          is_child_care
           roles {
             nodes {
               name

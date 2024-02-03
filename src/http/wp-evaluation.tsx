@@ -123,6 +123,10 @@ export default class WpEvaluation {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_delete', {id});
   }
 
+  static visibility(args: {abstract_ids:number[], is_public: boolean, criteria: string}) {
+    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_visibility', args);
+  }
+
 
   static countInReview(userId: number | string): Promise<AxiosResponse> {
     return httpApi.post('/index.php?graphql&countInReview', {

@@ -1,7 +1,7 @@
+//@ts-ignore
 import {useTranslation} from "react-i18next";
 import {useEffect} from "react";
 import {useRouter} from "next/router";
-
 export default function useTrans() {
   const router = useRouter()
 

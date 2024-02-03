@@ -72,7 +72,7 @@ export default function StepPlan(props: StepProps) {
                           label={<Label prod={prod}/>}
                           id={`produto_${prod.id}`}
               />
-              <div className="text-sm">{prod.desc}</div>
+              <div className="text-sm ml-4">{prod.desc}</div>
             </div>))}
             {errors?.product && <Curtain isOpened={!!errors?.product}>
               <div className="alert alert-warning">

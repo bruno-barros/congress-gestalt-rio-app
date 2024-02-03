@@ -132,7 +132,7 @@ const LoginForm = () => {
         <span className="text-xs">{t('cadastro.login-social')}</span>
       </button>
     </PopOver>
-    <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
+    {/* <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/> */}
     <Google onFailed={handleFailure} onSuccess={handleSocialSuccess}/>
 
     <Hr label={t('cadastro.ou-entre-com-email')} className="" bgColor="#ffffff"/>

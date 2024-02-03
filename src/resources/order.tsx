@@ -9,6 +9,27 @@ export const OrderStatuses = [
   "REFUNDED",
 ];
 
+export function orderStatusLabel(status: string) {
+  switch (status) {
+    case "CANCELLED":
+      return "Cancelado";
+    case "COMPLETED":
+      return "Completo";
+    case "FAILED":
+      return "Falhou";
+    case "ON_HOLD":
+      return "Em espera";
+    case "PENDING":
+      return "Pendente";
+    case "PROCESSING":
+      return "Processando";
+    case "REFUNDED":
+      return "Reembolsado";
+    default:
+      return status;
+  }
+}
+
 export interface Product {
   databaseId: number;
   name: string;

@@ -35,7 +35,7 @@ const Register1 = () => {
   const {data: event} = useEvent()
   const edition = event && event.currentEdition()
   const lang = router.locale
-
+// console.log(edition)
   useEffect(()=>{
     if(router.query?.fa){
       setFirstAccess(true)
@@ -128,8 +128,11 @@ const Register1 = () => {
             gender: user.getUserData().gender || 'M',
             institution_name: user.getUserData().institution_name,
             institution_occupation: user.getUserData().institution_occupation,
-            allow_newsletter: true,
-            agreedTerms: event?.page?.lgpd[lang].length === 0  // if there is no url, set to true
+            allow_newsletter: user.getUserData().allow_newsletter || false,
+            agreedTerms: event?.page?.lgpd[lang].length === 0,  // if there is no url, set to true
+            is_pdc: user.getUserData()?.is_pdc ? String(Number(user.getUserData().is_pdc)) : '0',
+            pdc_needs: user.getUserData()?.pdc_needs || '',
+            is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0'
           }}
           onSubmit={handleSubmit}
           validationSchema={FormSchema}
@@ -177,6 +180,27 @@ const Register1 = () => {
                     {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
                   </Select>
                 </div>
+
+                <fieldset className="border p-3 mb-3">
+                  <legend className="px-2 text-sm w-auto">Acessibilidade</legend>
+                  <div className="row">
+                    <Select name="is_pdc" label="É pessoa com deficiência (PCD)?" containerClass="col-12 col-md-4">
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">{t('sim')}</option>
+                    </Select>
+
+                    <Select name="is_child_care" label="Necessita de sala de apoio para amamentação ou outros cuidados com crianças?" containerClass="col-12 col-md">
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">{t('sim')}</option>
+                    </Select>
+                  </div>
+                  {values.is_pdc === '1' &&
+                  <div className="row">
+                    <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md"/>
+                  </div>}
+
+                </fieldset>
+
 
                 <div className="row">
                   <Text name="institution_name" label={t('cadastro.instituicao.nome')} required containerClass="col-12 col-md"/>

@@ -19,8 +19,10 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/router";
 import NotificationModal from "../notification-modal";
 import WpEvaluation from "../../src/http/wp-evaluation";
-import { blockUi } from '../../src/store/ui.actions';
-import { useDispatch } from 'react-redux';
+import { blockUi } from "../../src/store/ui.actions";
+import { useDispatch } from "react-redux";
+import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
+import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -29,7 +31,7 @@ type GroupActions<T extends object> = {
 export function AbstractsGroupActions<T extends object>({
   instance,
 }: PropsWithChildren<GroupActions<T>> & any): ReactElement | null {
-  const disp = useDispatch()
+  const disp = useDispatch();
   const queryClient = useQueryClient();
   const {
     selectedFlatRows,
@@ -39,7 +41,7 @@ export function AbstractsGroupActions<T extends object>({
   const selected = selectedFlatRows.map((row) => row.original);
   const selectedCount = selected.length;
   const [activeModal, setActiveModal] = useState<
-    "designar" | "status" | string
+    "designar" | "status" | "status_criteria" | "evaluation_visibility" | string
   >("");
   const { data: event } = useEvent();
   const [exportData, setExportData] = useState([]);
@@ -77,20 +79,20 @@ export function AbstractsGroupActions<T extends object>({
 
   function handleDelete(e) {
     e.preventDefault();
-    disp(blockUi(true))
+    disp(blockUi(true));
     WpAbstract.delete({
       abstracts: selected.map((row) => row.databaseId),
     }).then(
       (resp) => {
         if (resp.data.success) {
-          successNotification({message: resp.data.data.msg});
-          disp(blockUi(false))
-          refreshAbstracts()
+          successNotification({ message: resp.data.data.msg });
+          disp(blockUi(false));
+          refreshAbstracts();
         }
       },
       (err) => {
         errorNotification({ error: err });
-        disp(blockUi(false))
+        disp(blockUi(false));
       }
     );
   }
@@ -102,6 +104,13 @@ export function AbstractsGroupActions<T extends object>({
         title={`Ações ${selectedCount > 0 ? `(${selectedCount})` : ""}`}
         variant="outline-secondary"
       >
+        <Dropdown.Item onClick={() => openModal("status_criteria")}>
+          Mudar status por critérios
+        </Dropdown.Item>
+        <Dropdown.Divider />
+        <Dropdown.Header>
+          Seleção {`${selectedCount > 0 ? `(${selectedCount})` : "(nenhum)"}`}
+        </Dropdown.Header>
         <Dropdown.Item
           disabled={selectedCount === 0}
           onClick={handleExportData}
@@ -125,6 +134,12 @@ export function AbstractsGroupActions<T extends object>({
           disabled={selectedCount === 0}
         >
           Enviar mensagem
+        </Dropdown.Item>
+        <Dropdown.Item
+          onClick={() => openModal("evaluation_visibility")}
+          disabled={selectedCount === 0}
+        >
+          Visibilidade dos comentários
         </Dropdown.Item>
         <Dropdown.Item
           className="text-danger"
@@ -153,6 +168,28 @@ export function AbstractsGroupActions<T extends object>({
       <SetStatusModal
         abstract_ids={selected?.map((abs) => abs.databaseId)}
         show={activeModal === "status"}
+        onDismiss={() => {
+          setActiveModal("");
+        }}
+        onUpdate={() => {
+          refreshAbstracts();
+          toggleAllPageRowsSelected(false);
+        }}
+      />
+      <SetStatusByCriteriaModal
+        abstract_ids={selected?.map((abs) => abs.databaseId)}
+        show={activeModal === "status_criteria"}
+        onDismiss={() => {
+          setActiveModal("");
+        }}
+        onUpdate={() => {
+          refreshAbstracts();
+          toggleAllPageRowsSelected(false);
+        }}
+      />
+      <SetEvaluationVisibilityModal
+        abstract_ids={selected?.map((abs) => abs.databaseId)}
+        show={activeModal === "evaluation_visibility"}
         onDismiss={() => {
           setActiveModal("");
         }}
@@ -425,13 +462,35 @@ export function SubscriptionsGroupActions<T extends object>({
     setLoading(true);
 
     setTimeout(() => {
+      console.log(selected);
       setExportData(
-        selected.map((item) =>
-          omit(item, ["status_woo", "status", "customer", "lineItems"])
-        )
+        selected.map((item) => {
+          return {
+            PEDIDO: item.databaseId,
+            DATA: item.date,
+            METODO: item.paymentMethodTitle,
+            TOTAL: item.total.replace("&nbsp;", " "),
+            PLANO: item.package,
+            NOME: item.customer_name,
+            NOME_CRACHA: usermeta(item, "badge_name"),
+            EMAIL: item.customer_email,
+            STATUS: item.order_status,
+            PDC: usermeta(item, "is_pdc") === "1" ? "Sim" : "Não",
+            NECESSIDADES: usermeta(item, "pdc_needs"),
+            CRIANÇA: usermeta(item, "is_child_care") === "1" ? "Sim" : "Não",
+            USO_EMAIL: usermeta(item, "allow_newsletter") === "1" ? "Sim" : "Não",
+            //
+          };
+        })
       );
       setLoading(false);
     }, 2000);
+  }
+
+  function usermeta(item: any, key: string) {
+    if (!item?.customer?.metaData) return "";
+    let meta = item.customer.metaData.find((m) => m.key === key);
+    return meta ? meta.value : "";
   }
 
   return (

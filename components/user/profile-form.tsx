@@ -120,6 +120,9 @@ export default function ProfileForm(props: ProfileFormProps) {
       institution_email: user.getUserData().institution_email,
       institution_phone: user.getUserData().institution_phone,
       allow_newsletter: user.getUserData().allow_newsletter,
+      is_pdc: user.getUserData()?.is_pdc ? String(Number(user.getUserData().is_pdc)) : '0',
+      pdc_needs: user.getUserData()?.pdc_needs || '',
+      is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0'
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
@@ -165,7 +168,7 @@ export default function ProfileForm(props: ProfileFormProps) {
         <div className="row">
           <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required={isRequired}
                 containerClass="col-12 col-md"/>
-          <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
+          <Mask name="phone" mask="(99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
         </div>
         <div className="row">
           <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required={isRequired}
@@ -174,6 +177,25 @@ export default function ProfileForm(props: ProfileFormProps) {
             {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
           </Select>
         </div>
+        <fieldset className="border p-3 mb-3">
+          <legend className="px-2 text-sm w-auto">Acessibilidade</legend>
+          <div className="row">
+            <Select name="is_pdc" label="É pessoa com deficiência (PCD)?" containerClass="col-12 col-md-4">
+              <option value="0">{t('nao')}</option>
+              <option value="1">{t('sim')}</option>
+            </Select>
+
+            <Select name="is_child_care" label="Necessita de sala de apoio para amamentação ou outros cuidados com crianças?" containerClass="col-12 col-md">
+              <option value="0">{t('nao')}</option>
+              <option value="1">{t('sim')}</option>
+            </Select>
+          </div>
+          {values.is_pdc === '1' &&
+          <div className="row">
+            <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md"/>
+          </div>}
+
+        </fieldset>
         <Textarea name="description" label="Bio"/>
       </fieldset>
       <fieldset>

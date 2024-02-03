@@ -39,7 +39,8 @@ export default class WpOrder {
 
   static subscriptions(args: {
     dateStart: { day: number; month: number; year: number },
-    dateEnd: { day: number; month: number; year: number }
+    dateEnd: { day: number; month: number; year: number },
+    metadata?: string[]
   }): Promise<AxiosResponse> {
 
     const afd = args.dateStart.day
@@ -48,6 +49,7 @@ export default class WpOrder {
     const bed = args.dateEnd.day
     const bem = args.dateEnd.month
     const bey = args.dateEnd.year
+    const metas = args.metadata ? args.metadata.join('","') : ''
 
     return httpApi.post('/index.php?graphql&subscriptions', {
       query: `query subscriptions {
@@ -65,6 +67,10 @@ export default class WpOrder {
         databaseId
         email
         displayName
+        metaData(keysIn: ["${metas}"], multiple: false) {
+          key
+          value
+        }
       }
       lineItems {
         nodes {

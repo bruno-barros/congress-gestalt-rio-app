@@ -38,7 +38,10 @@ export interface UserInterface {
   onesignal_hash?: string
   allow_newsletter: boolean
   consents: string
-special_behaviors?: string
+  special_behaviors?: string
+  is_pdc?: boolean
+  pdc_needs?: string
+  is_child_care?: boolean
 }
 
 /**
@@ -122,6 +125,9 @@ export class User {
 
   hasMinimumRegisteredFields() {
     let required = ['name', 'firstName', 'email', 'gender', 'lastName', 'birthdate', 'cellphone', 'badge_name']
+    if(this.isAdmin()){
+      return true;
+    }
     if (this.user.country === 'BR') {
       required.push('cpf')
     } else {

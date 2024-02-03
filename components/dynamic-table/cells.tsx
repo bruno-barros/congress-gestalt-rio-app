@@ -20,7 +20,13 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'order_status') return <OrderStatus cell={cell}/>
   if (cell.props.cell.column.id === 'title') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
+  if (cell.props.cell.column.id === 'total') return <Html cell={cell}/>
   return cell
+}
+
+export function Html({cell}) {
+  const val = cell.props.cell.value
+  return <div dangerouslySetInnerHTML={{__html: val}}/>
 }
 
 export function Roles({cell}) {

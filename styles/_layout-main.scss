@@ -110,15 +110,19 @@
         margin-bottom: -.5rem;
         &.admin {
           position: relative;
-          background-color: $gray-100;
+          color: #fff;
+          background-color: $gray-500;
           &::before {
-            content: "";
-            display: block;
-            border-top: solid 3px $gray-400;
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
+            // content: "";
+            // display: block;
+            // border-top: solid 3px $gray-400;
+            // position: absolute;
+            // bottom: -2px;
+            // left: 0;
+            // right: 0;
+          }
+          &.active {
+            color: #000;
           }
         }
         &.active {

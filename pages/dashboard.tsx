@@ -37,10 +37,10 @@ const Dashboard = (props: DashboardProps) => {
    */
   useEffect(()=>{
     if(!user || !user?.getUserData().roles) return
-    if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
-    else router.push(`/abstracts`)
+    // if(user.canManageAbstracts()) router.push(`/adm/abstracts`)
+    // else router.push(`/abstracts`)
   }, [user])
-  return (<MainLayout><Loading vspace={80}/></MainLayout>)
+  // return (<MainLayout><Loading vspace={80}/></MainLayout>)
 
 
   if (isLoading || ordersLoading) {
@@ -73,7 +73,7 @@ const Dashboard = (props: DashboardProps) => {
               </Card.Body>
               <Card.Footer className="p-0 border-0 bg-white">
                 <div className="btn-group w-100 end start">
-                  {(user.canPublishAbstracts()) && <>
+                  {(user.canPublishAbstracts() && edition.isOpenToAbstracts() && isSubscribed) && <>
                     <Link href={`/abstracts?edition=${edition.id}`} passHref>
                       <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('trabalho.meus-trabalhos')}</a>
                     </Link>
