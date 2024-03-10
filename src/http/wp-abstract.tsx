@@ -138,6 +138,7 @@ export class WpAbstract {
     status
     title
     topic
+    type
     content
     ev_last_update
     jlp
@@ -176,6 +177,7 @@ export class WpAbstract {
       wp_user_id
       is_speaker
       order
+      company
     }
   }
 }`
@@ -199,6 +201,7 @@ export class WpAbstract {
       title
       subtitle
       topic
+      type
       status
       date
       edition_id

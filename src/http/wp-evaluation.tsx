@@ -95,6 +95,7 @@ export default class WpEvaluation {
       status
       title
       topic
+      type
       content
       attachments {
         abstract_id
