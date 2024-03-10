@@ -23,6 +23,7 @@ import { blockUi } from "../../src/store/ui.actions";
 import { useDispatch } from "react-redux";
 import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
 import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
+import { formatCPF } from "../../src/helpers";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -473,6 +474,7 @@ export function SubscriptionsGroupActions<T extends object>({
             PLANO: item.package,
             NOME: item.customer_name,
             NOME_CRACHA: usermeta(item, "badge_name"),
+            CPF: formatCPF(usermeta(item, "cpf")),
             EMAIL: item.customer_email,
             STATUS: item.order_status,
             PDC: usermeta(item, "is_pdc") === "1" ? "Sim" : "Não",
