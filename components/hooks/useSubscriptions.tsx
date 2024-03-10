@@ -18,7 +18,7 @@ export default function useSubscriptions(edition?: Edition) {
   function queryData(): Promise<OrderCollection|null> {
     return new Promise((resolve, reject) => {
       WpOrder.subscriptions({
-        metadata: ["is_pdc","pdc_needs","is_child_care", "allow_newsletter", "badge_name"],
+        metadata: ["is_pdc","pdc_needs","is_child_care", "allow_newsletter", "badge_name", "cpf"],
         dateStart: {
           day: Number(s.format('DD')),
           month: Number(s.format('MM')),
