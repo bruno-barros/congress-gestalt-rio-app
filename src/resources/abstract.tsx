@@ -7,6 +7,7 @@ export default class Abstract {
   title: string
   subtitle: string
   topic: string
+  type: string
   status: Status
   date: string
   edition_id?: string

@@ -2,7 +2,7 @@ import { ServerResponse } from "http";
 import Router from "next/router";
 import trimStart from "lodash/trimStart";
 import { QueryClient } from "react-query";
-import Event from "./resources/event";
+import Event, { Edition } from "./resources/event";
 
 /**
  * Used to load files from '/public' folder
@@ -336,4 +336,44 @@ export function average(numbers: any[], round: number = 1) {
   }, 0);
 
   return (Math.round((sum / divby) * 100) / 100).toFixed(round);
+}
+
+
+export function specialValidationRules(field: string, subfield: 'min'|'max', edition: Edition, values: any){
+  const v = edition.abstract.required_fields[field].hasOwnProperty(subfield)
+  ? edition.abstract.required_fields[field][subfield]
+  : undefined;
+  const type = values.type || ''
+
+  if(type == 'MR' && field == 'resume'){
+    return subfield == 'min' ? 500 : 7000
+  } else if(type == 'CO' && field == 'resume'){
+    return subfield == 'min' ? 1500 : 2000
+  } else if(type == 'MC' && field == 'resume'){
+    return subfield == 'min' ? 1000 : 3000
+  } else if(type == 'RC' && field == 'resume'){
+    return subfield == 'min' ? 1500 : 2200
+  } else if(type == 'PO' && field == 'resume'){
+    return subfield == 'min' ? 1500 : 2500
+  } else if(type == 'WS' && field == 'resume'){
+    return subfield == 'min' ? 1500 : 2200
+  } else if(type == 'PF' && field == 'resume'){
+    return subfield == 'min' ? 1500 : 2200
+  }
+
+  return v
+}
+
+export function formatCPF(cpf) {
+  // Remove all non-numeric characters
+  cpf = cpf.replace(/\D/g, '');
+
+  if(cpf.length !== 11){
+    return cpf
+  }
+
+  // Add the dots and the dash to the CPF
+  cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
+
+  return cpf;
 }
