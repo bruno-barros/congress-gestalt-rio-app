@@ -35,9 +35,10 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
     const isValid = editorLength >= charsMin && editorLength <= charsMax
     if (!isValid) helpers.setError('Não está dentro do limite de caracteres')
     setEditorValid(isValid)
-  }, 1000), [])
+  }, 1000), [charsMin, charsMax])
 
   useEffect(() => {
+    // console.log(editorLength)
     checkValidity(editorLength)
   }, [editorLength])
 
