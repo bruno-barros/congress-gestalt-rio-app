@@ -48,7 +48,7 @@ const AdmAbstracts = () => {
 
 
   const columns = useMemo(() => {
-    return [
+    let columns = [
       {
         Header: '#',
         accessor: 'databaseId',
@@ -90,7 +90,16 @@ const AdmAbstracts = () => {
         Header: 'Atualizado em',
         accessor: 'ev_last_update',
       }
-    ]}, [])
+    ];
+
+    // remove coluna de anexos se status não conta com anexo de trabalhos
+    if(event?.abstract?.statuses?.filter(st => st === 'evaluating').length === 0){
+      columns = columns.filter(col => col.accessor !== 'attachments_count')
+    }
+
+    return columns
+
+  }, [event])
 
   const data = useMemo(() => {
     if(!abstracts || !edition) return []
