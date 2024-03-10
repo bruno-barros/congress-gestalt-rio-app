@@ -66,7 +66,7 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
     <p className="mb-1"><strong>Status</strong></p>
     <div className="status-container">
       {statuses.map((stats, i) => {
-        let active = stats === abstract.status
+        let active = stats === abstract.status || (abstract.status === 'pre_approved' && stats === 'synopsis_evaluating')
         let sel = stats === selected
         if (active && isPast) {
           isPast = false

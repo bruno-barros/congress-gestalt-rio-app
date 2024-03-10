@@ -1,6 +1,6 @@
 import {Edition} from "../../src/resources/event";
-import React, {useState} from "react";
-import {Field, Form, Formik} from "formik";
+import React, {useRef, useState} from "react";
+import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from 'yup'
 import Text from "../ui/form/formik/text";
 import {LoadingButton} from "@brunobarros/react-components";
@@ -8,7 +8,7 @@ import useTrans from "../hooks/useTrans";
 import Select from "../ui/form/formik/select";
 import Attachments from "../ui/form/formik/attachments";
 import Authors from "../ui/form/formik/authors";
-import {generate_tmp_id, rand} from "../../src/helpers";
+import {generate_tmp_id, rand, specialValidationRules} from "../../src/helpers";
 import useCurrentUser from "../hooks/useCurrentUser";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {useDispatch} from "react-redux";
@@ -44,6 +44,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   const isEditable1 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
   const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
   const [consentModal, setConsentModal] = useState(false)
+  const form = useRef<FormikProps<any>>(null)
 
   const initialAuthor = isEditing ? {} : {
     id: null,
@@ -59,6 +60,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     id: !abstract ? null : abstract.databaseId,
     tmp_id: !abstract ? generate_tmp_id(user.getId()) : null,
     topic: abstract?.topic || '',
+    type: abstract?.type || '',
     title: abstract?.title || '',
     subtitle: abstract?.subtitle || '',
     tags: abstract?.abstract_tags || [],
@@ -71,11 +73,12 @@ export default function AbstractForm(props: AbstractFormProps) {
   }
   const Validation = Yup.object().shape({
     topic: Yup.string().required('validacao.obrigatorio'),
+    type: Yup.string().required('validacao.obrigatorio'),
     title: Yup.string().required('validacao.obrigatorio'),
     // subtitle: Yup.string().required('validacao.obrigatorio'),
     tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
       .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
-    resume:  Yup.string().when('topic', {
+    resume:  Yup.string().when('type', {
       is: (val) => !!edition.abstract.required_fields?.resume?.min && !user.byPassSynopsis(),
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
@@ -136,12 +139,16 @@ export default function AbstractForm(props: AbstractFormProps) {
   }
 
   return (<Formik
+    innerRef={form}
     initialValues={initialValues}
     validationSchema={Validation}
+    validateOnChange={true}
     validateOnMount={true}
     onSubmit={handleSubmit}
   >{({errors, values, isValid, setFieldValue, submitForm}) => (<>
-    <Form>
+    <Form onChange={()=>{
+      // console.log('form changed', form.current?.)
+    }}>
       {abstract && <h2>#{abstract.databaseId}</h2>}
       {(!isEditable1 && !isEditable2)
       && <div className="alert alert-warning">
@@ -159,6 +166,11 @@ export default function AbstractForm(props: AbstractFormProps) {
           {edition?.abstract?.topics
           && edition.abstract.topics.map(top => <option key={top.id} value={top.id}>{top[router.locale]}</option>)}
         </Select>
+        <Select name="type" label={t('trabalho.tipo')}>
+          <option value="" disabled></option>
+          {edition?.abstract?.types
+          && edition.abstract.types.map(t => <option key={t.id} value={t.id}>{t[router.locale]}</option>)}
+        </Select>
         <Text name="title" label={t('trabalho.titulo')}/>
         {edition.getFieldMax('subtitle') > 0 &&
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
@@ -167,9 +179,9 @@ export default function AbstractForm(props: AbstractFormProps) {
 
         {!user.byPassSynopsis() &&
         <Wysiwyg name="resume" label={t('trabalho.sinopse')}
-        maxHeight="sm" disabled={!isEditable1}
-                 charsMin={edition.getFieldMin('resume')}
-                 charsMax={edition.getFieldMax('resume')}
+        maxHeight="md" disabled={!isEditable1}
+                 charsMin={specialValidationRules('resume', 'min', edition, values)}
+                 charsMax={specialValidationRules('resume', 'max', edition, values)}
                  countMethod={edition.abstract.count_method}/>}
 
 
@@ -180,12 +192,11 @@ export default function AbstractForm(props: AbstractFormProps) {
                  charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}
                  countMethod={edition.abstract.count_method}/>}
 
-        {abstract?.statusPassed('synopsis_waiting_upd') &&
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')}
-        maxHeight="md" disabled={!isEditable2}
+        maxHeight="md" disabled={!isEditable1}
                  charsMin={edition.getFieldMin('bibliography')}
                  charsMax={edition.getFieldMax('bibliography')}
-                 countMethod={edition.abstract.count_method}/>}
+                 countMethod={edition.abstract.count_method}/>
 
         {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) && (<>{abstract.hasConsentsAgreement() ? (
           <Attachments name="attachments" label={t('anexos')}
