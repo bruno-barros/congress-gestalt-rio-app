@@ -74,12 +74,15 @@ export default function Header(props: HeaderProps) {
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)}
             {(user.canPublishAbstracts() && edition && edition?.isOpenToAbstracts()) && (<>
-              <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
-                active={router.pathname === '/abstracts' && router.query?.status!=='abstract'}>{t('trabalho.sinopses')}</Nav.Link>
+              <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
+                active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link>
               </Link>
-              <Link href={`/abstracts?edition=${edition.id}&status=abstract`} passHref><Nav.Link
+              {/* <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
+                active={router.pathname === '/abstracts' && router.query?.status!=='synopsis'}>{t('trabalho.sinopses')}</Nav.Link>
+              </Link> */}
+              {/* <Link href={`/abstracts?edition=${edition.id}&status=abstract`} passHref><Nav.Link
                 active={router.pathname === '/abstracts' && router.query?.status==='abstract'}>{t('trabalhos')}</Nav.Link>
-              </Link>
+              </Link> */}
             </>)}
           {user.canEvaluateAbstracts() && <>
             <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link

@@ -107,12 +107,14 @@ export class Edition {
     statuses: Status[];
     attachments: number;
     topics: { id: string; pt: string; en: string }[];
+    types: { id: string; pt: string; en: string }[];
     start_at: string;
     end_at: string;
     count_method: "char" | "word";
     required_fields:
       | {
           topic?: boolean;
+          type?: boolean;
           title?: boolean;
           subtitle?: boolean;
           tags?: boolean | { min: number; max: number };
@@ -223,6 +225,10 @@ export class Edition {
       | "authors"
       | "attachments"
   ) {
+    /**
+     * TODO
+     * Implementar regras customizadas baseadas no tipo de modalidade 'type'
+     */
     return this.abstract.required_fields[field].hasOwnProperty("min")
       ? this.abstract.required_fields[field].min
       : undefined;

@@ -34,7 +34,7 @@ export default function AbstractCard(props: AbstractCardProps) {
       <Link href={`/abstracts/${abstract.databaseId}`} passHref><a className="abs-text">
         <div className="abs-title">({abstract.databaseId}) {abstract.title}</div>
         <div className="abs-desc mb-1">{abstract.subtitle}</div>
-        <small className="d-block font-italic">{edition.abstract.topics.find(top => top.id === abstract.topic)[router.locale]}</small>
+        <small className="d-block font-italic">({abstract.type}) {edition.abstract.topics.find(top => top.id === abstract.topic)?.[router.locale] || ''}</small>
       </a></Link>
       <div className="abs-status">
         {abstract.isLockedToEdition() ? <Icon name={`lock-closed-outline`}/> : <Icon name={`pencil-outline`}/>}
