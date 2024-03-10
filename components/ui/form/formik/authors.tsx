@@ -195,18 +195,17 @@ export default function Authors({label, metas, containerClass, maxAuthors: ma, d
               setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
             }}/>
           </div>
-          {/*<div className="input-group">*/}
-          {/*  <div className="input-group-prepend">*/}
-          {/*    <span className="input-group-text text-sm" style={{minWidth: 100}}>Bio</span>*/}
-          {/*  </div>*/}
-          {/*  <textarea rows={3} name="author_bio" value={newAuthor.author_bio} placeholder={t('trabalho.autor-bio')}*/}
-          {/*            className="form-control" onChange={(e) => {*/}
-          {/*    setNewAuthor({...newAuthor, [e.target.name]: e.target.value})*/}
-          {/*  }}/>*/}
-          {/*</div>*/}
-          <button type="button" onClick={() => {
-            handleAdd(push)
-          }}
+          <div className="input-group">
+          <div className="input-group-prepend">
+            <span className="input-group-text text-sm" style={{minWidth: 100}}>Bio</span>
+          </div>
+          <textarea rows={3} name="author_bio" value={newAuthor.author_bio}
+            placeholder={t('trabalho.autor-bio')}
+            className="form-control" onChange={(e) => {
+            setNewAuthor({...newAuthor, [e.target.name]: e.target.value})
+          }}/>
+          </div>
+          <button type="button" onClick={() => { handleAdd(push) }}
                   className="btn btn-outline-primary btn-sm btn-block mt-1">{t('trabalho.adicionar-autor')}</button>
 
         </div>}
