@@ -85,8 +85,8 @@ const Abstracts = () => {
             <Link href={`/abstracts/new`} passHref><a
               className="btn btn-primary">{t('trabalho.novo-trabalho')}</a>
             </Link>
-            <Link href={`/abstracts?edition=${edition.id}&status=abstract`}><a
-          className="btn btn-outline-primary ml-3">{t('trabalho.meus-trabalhos')}</a></Link>
+            {/* <Link href={`/abstracts?edition=${edition.id}&status=abstract`}><a
+          className="btn btn-outline-primary ml-3">{t('trabalho.meus-trabalhos')}</a></Link> */}
 
             {edition.abstract.limit_per_user > 0 &&
             <div className="ml-3">
@@ -130,7 +130,7 @@ const Abstracts = () => {
     <div className="row">
       <div className="col-12 p-4">
 
-        {phase === 'synopsis' && <SynopsisIntro/>}
+        {phase !== 'abstract' && <SynopsisIntro/>}
 
         {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
