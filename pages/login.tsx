@@ -5,7 +5,7 @@ import LangSelector from "../components/ui/lang-selector";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import Link from "next/link";
 import Head from "next/head";
-import {siteTitle} from "../src/helpers";
+import {asset, siteTitle} from "../src/helpers";
 import useEvent from "../components/hooks/useEvent";
 import {useQueryClient} from "react-query";
 import {useEffect} from "react";
@@ -58,10 +58,9 @@ const Login = () => {
       </div>
     </div>
 
-    <div className="footer-panel px-4 py-3 text-center text-muted" style={{fontSize:10}}>
-      {t('versao')} {process.env.version} &nbsp; @{today.getFullYear()} <a
-      href="https://conceito-online.com.br??utm_source=app&utm_medium=link&utm_campaign=Sistema_Evento"
-      target="_blank">Conceito</a>
+    <div className="footer-panel px-4 py-3 text-center text-muted d-md-flex align-items-center" style={{fontSize:10, gap: 15}}>
+      {t('versao')} {process.env.version} 
+      <span className="d-flex align-items-center" style={{gap: 5}}>Apoio: <img src={asset('img/abg.png')} alt="ABG" className="img-fluid" style={{maxWidth: 60}} /></span>
     </div>
   </div>)
 }
