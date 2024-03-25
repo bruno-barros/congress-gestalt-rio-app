@@ -175,7 +175,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         {edition.getFieldMax('subtitle') > 0 &&
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
         {edition.getFieldMax('tags') > 0 &&
-        <Tags name="tags" label="Tags" maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
+        <Tags name="tags" label={t('trabalho.tags')} maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
 
         {!user.byPassSynopsis() &&
         <Wysiwyg name="resume" label={t('trabalho.sinopse')}

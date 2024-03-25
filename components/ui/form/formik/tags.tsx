@@ -71,7 +71,7 @@ export default function Tags({label, containerClass, maxTags: ma, disabled, ...p
               <button type="button" onClick={() => {
                 handleAdd(push)
               }}
-                      className="btn btn-outline-primary">{t('adicionar')} tag
+                      className="btn btn-outline-primary">{t('adicionar')}
               </button>
             </div>
           </div>
