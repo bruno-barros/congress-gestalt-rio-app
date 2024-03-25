@@ -2,6 +2,7 @@ import Abstract from "../../src/resources/abstract";
 import {Status} from "./abstract.d";
 import {Icon} from "@brunobarros/react-components";
 import useEvent from "../hooks/useEvent";
+import useTrans from "../hooks/useTrans";
 
 interface AbstractViewProps {
   abstract: Abstract
@@ -10,6 +11,7 @@ interface AbstractViewProps {
 export default function AbstractView(props: AbstractViewProps) {
 
   const {abstract} = props
+  const t = useTrans()
   const {data: event} = useEvent()
   const edition = abstract.edition_id && event.getEdition(abstract.edition_id) || event && event.currentEdition()
 
@@ -37,12 +39,12 @@ export default function AbstractView(props: AbstractViewProps) {
 
     {abstract?.abstract_tags?.length > 0 &&
     <div className="form-group">
-      <strong>TAGS</strong>
+      <strong>{t('trabalho.tags').toUpperCase()}</strong>
       <div className="py-3">{abstract.abstract_tags?.map((tag, i) => <div key={i}
                                                                           className="border d-inline-block  px-3 py-1 mr-1 mb-1">{tag}</div>)}</div>
     </div>}
     <div className="form-group">
-      <strong>RESUMO</strong>
+      <strong>{t('trabalho.sinopse').toUpperCase()}</strong>
       <div className="border-bottom py-3" dangerouslySetInnerHTML={{__html: abstract.excerpt}}/>
     </div>
     {/*<div className="form-group">*/}
