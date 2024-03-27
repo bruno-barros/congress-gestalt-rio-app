@@ -365,8 +365,9 @@ export function specialValidationRules(field: string, subfield: 'min'|'max', edi
 }
 
 export function formatCPF(cpf) {
+  if(!cpf) return cpf
   // Remove all non-numeric characters
-  cpf = cpf.replace(/\D/g, '');
+  cpf = String(cpf).replace(/\D/g, '');
 
   if(cpf.length !== 11){
     return cpf
