@@ -17,6 +17,8 @@ import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import {useEffect, useState} from "react";
+import useUserOrders from "../../components/hooks/useUserOrders";
+import Button from "react-bootstrap/Button";
 
 
 
@@ -34,6 +36,11 @@ const Abstracts = () => {
   const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id, phase], queryAbstracts, {
     enabled: !!edition?.id && user.getId() > 0
   })
+  const { data: orders, isLoading: ordersLoading } = useUserOrders(
+    user?.getId()
+  );
+  const isSubscribed = orders?.hasValidSubscription(edition);
+  
   const lang = router.locale || 'pt'
 
 
@@ -120,6 +127,20 @@ const Abstracts = () => {
     </>)
   }
 
+  function SubscriptionNotAllowed(){
+    return <Card border="warning" className="mb-5">
+      <Card.Body>
+        <h5>Faça sua inscrição!</h5>
+        <p>Caro congressista, para submeter seu trabalho é necessário que você esteja inscrito no evento.</p>
+        <Link href={`/register2`} passHref>
+          <a className="btn btn-primary">
+            {t("fazer-inscricao")}
+          </a>
+        </Link>
+        </Card.Body>
+    </Card>
+  }
+
 
   return (<MainLayout
     sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
@@ -130,9 +151,10 @@ const Abstracts = () => {
     <div className="row">
       <div className="col-12 p-4">
 
-        {phase !== 'abstract' && <SynopsisIntro/>}
+        {!isSubscribed && <SubscriptionNotAllowed/>}
+        {(phase !== 'abstract' && isSubscribed) && <SynopsisIntro/>}
 
-        {abstracts && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {(abstracts && isSubscribed) && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
         {(abstracts && abstracts?.count() === 0 && phase === 'abstract') &&
         <div className="alert alert-light border">
