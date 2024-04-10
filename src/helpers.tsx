@@ -1,5 +1,5 @@
 import { ServerResponse } from "http";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import trimStart from "lodash/trimStart";
 import { QueryClient } from "react-query";
 import Event, { Edition } from "./resources/event";
@@ -377,4 +377,11 @@ export function formatCPF(cpf) {
   cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 
   return cpf;
+}
+
+
+export function dump(any: any){
+  const router = useRouter()
+  if(!router.query.hasOwnProperty('debug')) return null
+  return <pre>{JSON.stringify(arguments, null, 2)}</pre>
 }

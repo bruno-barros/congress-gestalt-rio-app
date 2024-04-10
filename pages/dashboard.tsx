@@ -12,7 +12,7 @@ import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 import privateRoute from "../components/hoc/private-route";
 import {useEffect} from "react";
-import {siteTitle} from "../src/helpers";
+import {dump, siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 
@@ -105,7 +105,13 @@ const Dashboard = (props: DashboardProps) => {
 
                 </div>
               </Card.Footer>
+              {dump({
+                canpublich: user.canPublishAbstracts(),
+                is_open: edition.isOpenToAbstracts(),
+                isSubscribed
+              })}
             </Card>)
+
           })}
         </CardDeck>
 
