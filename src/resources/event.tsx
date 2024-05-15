@@ -137,7 +137,7 @@ export class Edition {
     per_abstract_consent?: Consent;
   };
   review: {
-    questions?: any[];
+    questions?: object;
   };
 
   constructor(data: any, def: any) {
@@ -213,8 +213,8 @@ export class Edition {
     return this.subscription.products[lang] || [];
   }
 
-  getReviewQuestions() {
-    return this.review.questions || null;
+  getReviewQuestions(): object {
+    return this.review?.questions || null;
   }
 
   getFieldMin(
