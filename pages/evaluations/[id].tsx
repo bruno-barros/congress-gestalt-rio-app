@@ -44,7 +44,7 @@ const EvaluationEditing = () => {
     </MainLayout>;
   }
 
-  if (evaluation.abstract.authorDatabaseId === user.getId()) {
+  if (evaluation.abstract?.authorDatabaseId === user.getId()) {
     return <MainLayout>
       <div className="container">
         <div className="row">
