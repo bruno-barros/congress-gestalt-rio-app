@@ -32,7 +32,7 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
   const method = countMethod || 'char'
 
   const checkValidity = useCallback(throttle((editorLength) => {
-    const isValid = editorLength >= charsMin && editorLength <= charsMax
+    const isValid = (editorLength >= charsMin && editorLength <= charsMax) || charsMax === 0
     if (!isValid) helpers.setError('Não está dentro do limite de caracteres')
     setEditorValid(isValid)
   }, 1000), [charsMin, charsMax])
