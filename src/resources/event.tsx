@@ -137,6 +137,10 @@ export class Edition {
     per_abstract_consent?: Consent;
   };
   review: {
+    assessment?: {
+      quantitative: boolean;
+      qualitative: boolean;
+    };
     questions?: object;
   };
 
@@ -191,7 +195,7 @@ export class Edition {
     return false;
   }
 
-  isOpenToAbstracts(){
+  isOpenToAbstracts() {
     // correção emergencial. No iPhone o calculo de datas não está correto.
     return this.abstract.allowed;
     const today = moment();
@@ -201,9 +205,7 @@ export class Edition {
     const start = this.abstract.start_at
       ? moment(this.abstract.start_at)
       : null;
-    const end = this.abstract.end_at
-      ? moment(this.abstract.end_at)
-      : null;
+    const end = this.abstract.end_at ? moment(this.abstract.end_at) : null;
     if (!start || !end) return false;
     if (today >= start && today <= end) return true;
     return false;
@@ -272,7 +274,11 @@ export class Edition {
   }
 
   abstractConsentText(lang: string = "pt") {
-    return (this.abstract.per_abstract_consent && this.abstract.per_abstract_consent?.text[lang]) || "";
+    return (
+      (this.abstract.per_abstract_consent &&
+        this.abstract.per_abstract_consent?.text[lang]) ||
+      ""
+    );
   }
 
   abstractConsentTerms(
