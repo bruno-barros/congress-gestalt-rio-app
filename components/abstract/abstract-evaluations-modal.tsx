@@ -17,6 +17,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import {LoadingButton} from "@brunobarros/react-components";
 import ToolTip from "../ui/tooltip";
+import useEvent from "../hooks/useEvent";
 
 
 interface AbstractEvaluationsModalProps {
@@ -40,6 +41,9 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
   const {data, isLoading, isFetching, error} = useQuery<any[]>(['abstract_evaluations', abstract_id], queryEvaluations, {
     enabled: abstract_id && show
   })
+  const { data: event } = useEvent()
+  const edition = event?.currentEdition()
+  const allowQuantitative = edition.review?.assessment?.quantitative
 
   function queryEvaluations(): Promise<any[] | null> {
     return new Promise((resolve) => {
@@ -129,6 +133,7 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
               <Accordion.Collapse eventKey={`${eva.databaseId}`}>
                 <Card.Body>
                   <div className="d-flex align-items-center justify-content-between mb-2">
+                    {allowQuantitative &&
                     <div className="d-flex align-items-center">
                       <div className="mb-1 mr-1 text-sm">Relevância</div>
                       <div className="badge badge-secondary">{eva.relevance}</div>
@@ -143,7 +148,8 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                       <div className="badge badge-secondary">{eva.contributions}</div>
 
                       <div className="ml-3 mr-1 badge badge-primary">{eva.getAverage()}</div>
-                    </div>
+                    </div>}
+
                     {eva.updated_at && <div>Atualizado em {moment(eva.updated_at).format('DD/MM/YYYY H:mm')}</div>}
 
                   </div>

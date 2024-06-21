@@ -33,15 +33,32 @@ export default function EvaluationForm(props: EvaluationFormProps) {
   const {refetch: refetchReviews} = usePendingReview()
   const [loading, setLoading] = useState(false)
   const {data: event, isLoading} = useEvent()
-  const edition = event && event.currentEdition()
+  const edition = event?.currentEdition()
   const questions = edition?.getReviewQuestions()
   const answers = evaluation.getAnswers()
+  const allowQuantitative = edition.review?.assessment?.quantitative
 
   const FormSchema = Yup.object().shape({
-    quality: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
-    relevance: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
-    clarity: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
-    contributions: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+    quality: Yup.number().when('status', {
+      is: () => allowQuantitative,
+      then: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+      otherwise: Yup.number().notRequired()
+    }),
+    relevance: Yup.number().when('status', {
+      is: () => allowQuantitative,
+      then: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+      otherwise: Yup.number().notRequired()
+    }),
+    clarity: Yup.number().when('status', {
+      is: () => allowQuantitative,
+      then: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+      otherwise: Yup.number().notRequired()
+    }),
+    contributions: Yup.number().when('status', {
+      is: () => allowQuantitative,
+      then: Yup.number().moreThan(-2, 'validacao.obrigatorio').required('validacao.obrigatorio'),
+      otherwise: Yup.number().notRequired()
+    }),
     status: Yup.string().required('validacao.obrigatorio'),
     comment: Yup.string().when('status', {
       is: (val) => val?.indexOf('approved') !== -1,
@@ -162,26 +179,30 @@ export default function EvaluationForm(props: EvaluationFormProps) {
             </div>
           </div> */}
 
-          <Select name="quality" label="Qualidade" containerClass="evaluation-select">
-            <option value="-2"></option>
-            {Array.from(Array(11).keys()).map(num => (
-              <option key={num} value={num}>{num}</option>))}
-          </Select>
-          <Select name="relevance" label="Relevância" containerClass="evaluation-select">
-            <option value="-2"></option>
-            {Array.from(Array(11).keys()).map(num => (
-              <option key={num} value={num}>{num}</option>))}
-          </Select>
-          <Select name="clarity" label="Clareza" containerClass="evaluation-select">
-            <option value="-2"></option>
-            {Array.from(Array(11).keys()).map(num => (
-              <option key={num} value={num}>{num}</option>))}
-          </Select>
-          <Select name="contributions" label="Contribuição" containerClass="evaluation-select">
-            <option value="-2"></option>
-            {Array.from(Array(11).keys()).map(num => (
-              <option key={num} value={num}>{num}</option>))}
-          </Select>
+          {allowQuantitative && <>
+            <Select name="quality" label="Qualidade" containerClass="evaluation-select">
+              <option value="-2"></option>
+              {Array.from(Array(11).keys()).map(num => (
+                <option key={num} value={num}>{num}</option>))}
+            </Select>
+            <Select name="relevance" label="Relevância" containerClass="evaluation-select">
+              <option value="-2"></option>
+              {Array.from(Array(11).keys()).map(num => (
+                <option key={num} value={num}>{num}</option>))}
+            </Select>
+            <Select name="clarity" label="Clareza" containerClass="evaluation-select">
+              <option value="-2"></option>
+              {Array.from(Array(11).keys()).map(num => (
+                <option key={num} value={num}>{num}</option>))}
+            </Select>
+            <Select name="contributions" label="Contribuição" containerClass="evaluation-select">
+              <option value="-2"></option>
+              {Array.from(Array(11).keys()).map(num => (
+                <option key={num} value={num}>{num}</option>))}
+            </Select>
+          </>}
+
+
 
 
           <Select name="status" label="Status sugerido">
