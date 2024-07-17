@@ -73,7 +73,7 @@ export default function Header(props: HeaderProps) {
               <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)}
-            {(user.canPublishAbstracts() && edition && edition?.isOpenToAbstracts()) && (<>
+            {(user.canPublishAbstracts()) && (<>
               <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
                 active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link>
               </Link>

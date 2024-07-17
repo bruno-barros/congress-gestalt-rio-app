@@ -380,8 +380,10 @@ export function formatCPF(cpf) {
 }
 
 
-export function dump(any: any){
-  const router = useRouter()
-  if(!router.query.hasOwnProperty('debug')) return null
-  return <pre>{JSON.stringify(arguments, null, 2)}</pre>
+export function dump(args: any){
+  const params = new URLSearchParams(window.location.search);
+
+  if (process.env.NODE_ENV === "development" || !!params.get("debug")) {
+    return <pre className="pre-scrollable">{JSON.stringify(args, null, 2)}</pre>
+  }
 }

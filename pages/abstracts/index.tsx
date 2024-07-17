@@ -14,7 +14,7 @@ import {useRouter} from "next/router";
 import {AbstractCollection, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
-import {siteTitle} from "../../src/helpers";
+import {dump, siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import {useEffect, useState} from "react";
 import useUserOrders from "../../components/hooks/useUserOrders";
@@ -40,7 +40,7 @@ const Abstracts = () => {
     user?.getId()
   );
   const isSubscribed = orders?.hasValidSubscription(edition);
-  
+
   const lang = router.locale || 'pt'
 
 
@@ -76,8 +76,11 @@ const Abstracts = () => {
 
   function SynopsisIntro() {
     return (<>
-      {(abstracts?.count() === 0) && isCurrent
-      && <Card style={{maxWidth: 600}}>
+      {(
+        (abstracts?.count() === 0)
+        && isCurrent
+        && edition?.isOpenToAbstracts()
+      ) && <Card style={{maxWidth: 600}}>
         <Card.Body className="p-5">
           <Trans as="div"
                  i18nKey="trabalho.boas-vindas"
@@ -114,7 +117,11 @@ const Abstracts = () => {
         {t('trabalho.limite-atingido')}
       </div>}
 
-      {(abstracts?.count() > 0 && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)) &&
+      {(
+        abstracts?.count() > 0
+        && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)
+        && edition?.isOpenToAbstracts()
+      ) &&
       <div className="d-md-flex align-items-center">
         <Link href={`/abstracts/new`}><a
           className="btn btn-lg btn-primary">{t('trabalho.novo-trabalho')}</a></Link>
@@ -164,6 +171,7 @@ const Abstracts = () => {
 
       </div>
     </div>
+    {dump({ isOpenToAbstracts: edition.isOpenToAbstracts()})}
   </MainLayout>)
 }
 

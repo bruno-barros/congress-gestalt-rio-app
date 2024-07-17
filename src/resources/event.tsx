@@ -197,7 +197,7 @@ export class Edition {
 
   isOpenToAbstracts() {
     // correção emergencial. No iPhone o calculo de datas não está correto.
-    return this.abstract.allowed;
+    // return this.abstract.allowed;
     const today = moment();
     if (this.abstract.allowed === false) {
       return false;
