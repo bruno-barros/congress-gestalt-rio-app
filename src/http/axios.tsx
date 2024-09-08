@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import AuthToken from "../../src/http/auth-token";
 
 /**
@@ -20,13 +20,16 @@ export const restApi = axios.create({
 
 
 // Set the AUTH token for any request
-httpApi.interceptors.request.use(function (config) {
+httpApi.interceptors.request.use(defaultApiInterceptor);
+restApi.interceptors.request.use(defaultApiInterceptor);
+
+function defaultApiInterceptor(config: AxiosRequestConfig){
   const auth = AuthToken.factory();
   const token = AuthToken.getToken();
 
    config.headers.Authorization =  auth.isValid ? `Bearer ${token}` : '';
   return config;
-});
+}
 
 export const httpServiceXYZ = axios.create({
   baseURL: '//www.omdbapi.com',

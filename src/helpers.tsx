@@ -381,6 +381,7 @@ export function formatCPF(cpf) {
 
 
 export function dump(args: any){
+  if(typeof window === 'undefined') return
   const params = new URLSearchParams(window.location.search);
 
   if (process.env.NODE_ENV === "development" || !!params.get("debug")) {

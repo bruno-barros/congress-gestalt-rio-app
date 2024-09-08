@@ -1,6 +1,6 @@
-import OverlayTrigger from "react-bootstrap/cjs/OverlayTrigger";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import {rand} from "../../src/helpers";
-import Tooltip from "react-bootstrap/cjs/Tooltip";
+import Tooltip from "react-bootstrap/Tooltip";
 
 interface TooltipProps {
   text: string

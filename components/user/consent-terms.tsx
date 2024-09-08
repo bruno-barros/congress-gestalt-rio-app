@@ -58,7 +58,7 @@ export default function ConsentTerms(props: ConsentTermsProps) {
     let showConsent = false;
     let initValues = {};
 
-    if(!edition.hasConsent()){
+    if(!edition?.hasConsent()){
       return;
     }
     edition.consentTerms(lang).map((c) => {

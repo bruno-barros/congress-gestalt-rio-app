@@ -1,5 +1,6 @@
 import { Status } from "../../components/abstract/abstract.d";
 import moment from "moment";
+import subscriptions from "../../pages/adm/subscriptions";
 
 export default class Event {
   name: string;
@@ -8,6 +9,16 @@ export default class Event {
   app: { pt: string; en: string };
   languages: string[];
   description?: string;
+  global: {
+    name: "",
+    description_pt: "",
+    description_en: "",
+    phone: "",
+    phone_country: "55",
+    email_general: "",
+    email_financial: "",
+    editions: []
+  };
   page: {
     checkout: {
       pt: string; // url=[PRODUCT_ID]
@@ -25,6 +36,8 @@ export default class Event {
     attachments: number;
     attachments_max_size: number;
   };
+  subscription?: any;
+  review?: any;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -34,8 +47,11 @@ export default class Event {
     return new Event(data);
   }
 
+  debug(){
+    return this.global?.name;
+  }
   get eventName() {
-    return this.name;
+    return  this.global?.name || this.name;
   }
 
   get logoPrimary() {
@@ -51,17 +67,26 @@ export default class Event {
   }
 
   getEditions() {
-    let keys = Object.keys(this.editions);
-    return keys.map((k) =>
-      Edition.make(this.editions[k], {
+    let keys = this.getEditionsKeys();
+    return keys.map((k) =>{
+      // debugger;
+      if(typeof this.editions[k] === 'undefined') return null;
+      return Edition.make(this.editions[k], {
+        id: k,
         url: this.url,
         logo: this.logo,
-      })
-    );
+      });
+    });
+  }
+
+  getEditionsKeys(): string[]{
+    return this.global?.editions || [];
   }
 
   currentEdition(): Edition {
-    return this.getEditions()[0];
+    // console.log(this.global, this.abstract);
+    const data = {...this.global, abstract: this.abstract, subscription: this.subscription, review: this.review};
+    return Edition.make(data, {});
   }
 
   buildUrlCheckout(cart, token) {
@@ -147,6 +172,8 @@ export class Edition {
   constructor(data: any, def: any) {
     Object.assign(this, data);
     this.defaults = def;
+    // console.log({def})
+    if(def?.id) this.id = def.id;
   }
 
   static make(data: any, defaults: any) {

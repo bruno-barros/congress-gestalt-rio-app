@@ -1,3 +1,4 @@
+'use client'
 import Document, {Html, Main, Head, NextScript} from "next/document";
 
 class MyDocument extends Document {
