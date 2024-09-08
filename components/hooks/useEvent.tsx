@@ -8,6 +8,7 @@ export default function useEvent() {
     const resp = await WpConfig.load()
     return Event.make(resp.data)
   }, {
-    staleTime: Infinity
+    staleTime: Infinity,
+    // initialData: Event.make({})
   })
 }
