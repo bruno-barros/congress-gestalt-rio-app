@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
   env: {
-    version: '1.4.13',
+    version: '1.4.14',
     apiUrl: process.env.API_BASEURL,
     GOOGLE_OAUTH_ID: process.env.GOOGLE_OAUTH_ID,
     FACEBOOK_OAUTH_ID: process.env.FACEBOOK_OAUTH_ID,
@@ -21,7 +21,7 @@ module.exports = {
     defaultLocale: 'pt'
   },
   images: {
-    domains: ['localhost', 'congressoabrisco.com.br', 'evento.conceito-online.com.br', 'optimole.com', 'gestalt2020.com.br'],
+    domains: ['localhost', 'congressogestaltrj.com.br', 'app.congressogestaltrj.com.br', 'evento.conceito-online.com.br', 'optimole.com', 'gestalt2020.com.br'],
   },
   trailingSlash: false,
   swcMinify: true
