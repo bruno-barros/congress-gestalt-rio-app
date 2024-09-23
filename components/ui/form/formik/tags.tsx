@@ -1,10 +1,10 @@
 import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
 import React, {useRef, useState} from "react";
-import {Icon} from "@brunobarros/react-components";
 import useTrans from "../../../hooks/useTrans";
 import {errorNotification} from "../../../../src/resources/responses";
 import {dispatchOnENTER} from "../../../../src/helpers";
+import Icon from "../../ionicon";
 
 interface TagsProps {
   label: string

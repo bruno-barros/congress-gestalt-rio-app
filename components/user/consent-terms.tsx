@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "react-bootstrap/cjs";
 import { Form, Formik } from "formik";
-import { LoadingButton, Loading } from "@brunobarros/react-components";
 import Switch from "../ui/form/formik/switch";
 import useEvent from "../hooks/useEvent";
 import { useRouter } from "next/router";
@@ -11,6 +10,8 @@ import useConsent from "../hooks/useConsent";
 import WpUser from "../../src/http/wp-user";
 import { toast } from "react-toastify";
 import { useQueryClient } from "react-query";
+import LoadingButton from "../ui/loading-button";
+import Loading from "../ui/loading";
 
 interface ConsentTermsProps {}
 

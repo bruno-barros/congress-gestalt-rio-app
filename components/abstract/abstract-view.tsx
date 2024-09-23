@@ -1,8 +1,7 @@
 import Abstract from "../../src/resources/abstract";
-import {Status} from "./abstract.d";
-import {Icon} from "@brunobarros/react-components";
 import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
+import Icon from "../ui/ionicon";
 
 interface AbstractViewProps {
   abstract: Abstract

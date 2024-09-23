@@ -4,7 +4,6 @@ import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {useCallback, useMemo} from "react";
 import MainLayout from "../../components/layout";
 import {DynamicTable} from "../../components/dynamic-table";
-import {Loading} from "@brunobarros/react-components";
 import useSubscriptions from "../../components/hooks/useSubscriptions";
 import useEvent from "../../components/hooks/useEvent";
 import {Order} from "../../src/resources/order";
@@ -13,6 +12,7 @@ import privateRoute from "../../components/hoc/private-route";
 import {useQueryClient} from "react-query";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
+import Loading from "../../components/ui/loading";
 
 
 const AdmSubscriptions = () => {

@@ -34,8 +34,11 @@
   @media (min-width: 768px) {
     padding-top: 1.9rem;
   }
-}
 
+}
+.nolabel {
+      padding-top: 0 !important;
+    }
 .lang_selector {
 //   outline: solid 1px green;
   display: flex;

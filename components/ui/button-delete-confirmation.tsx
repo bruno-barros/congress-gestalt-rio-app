@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
-import {Icon} from "@brunobarros/react-components";
 import ToolTip from "./tooltip";
-import {Loading} from "@brunobarros/react-components";
 import useTrans from "../hooks/useTrans";
+import Icon from "./ionicon";
+import Loading from "./loading";
 
 interface ButtonDeleteConfirmationProps {
   buttonClass?: string

@@ -5,15 +5,14 @@ import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
 import {useQuery, useQueryClient} from "react-query";
-import {WpAbstract} from "../../src/http/wp-abstract";
-import {errorNotification} from "../../src/resources/responses";
-import {Loading} from "@brunobarros/react-components";
+
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import { siteTitle, average } from '../../src/helpers';
 import Head from "next/head";
 import useEvaluations from "../../components/hooks/useEvaluations";
+import Loading from "../../components/ui/loading";
 
 const AdmEvaluations = () => {
 

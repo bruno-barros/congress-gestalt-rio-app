@@ -4,12 +4,12 @@ import useTrans from "../hooks/useTrans";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from "yup";
 import Curtain from "../ui/curtain";
-import {LoadingButton} from "@brunobarros/react-components";
 import Text from "../ui/form/formik/text";
 import Textarea from "../ui/form/formik/textarea";
 import CurtainDelayed from "../ui/curtain-delayed";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import Modal from "react-bootstrap/Modal";
+import LoadingButton from "../ui/loading-button";
 
 interface AuthorEditModalProps {
   show: boolean

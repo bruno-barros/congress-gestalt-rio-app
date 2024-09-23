@@ -1,10 +1,10 @@
 import {User} from "../../src/resources/user";
 import useUserOrders from "../hooks/useUserOrders";
 import OrderLine from "../order/order-line";
-import {Loading} from "@brunobarros/react-components";
 import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import useEvent from "../hooks/useEvent";
+import Loading from "../ui/loading";
 
 
 export default function MySubscriptions({user}: { user: User }) {

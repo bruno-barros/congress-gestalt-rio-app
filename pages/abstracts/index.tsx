@@ -2,7 +2,6 @@ import MainLayout from "../../components/layout";
 import Card from "react-bootstrap/cjs/Card";
 import useEvent from "../../components/hooks/useEvent";
 import EditionSidebar from "../../components/event/edition-sidebar";
-import {Loading} from "@brunobarros/react-components";
 import AbstractCard from "../../components/abstract/abstract-card";
 import Link from "next/link";
 import {useQuery, useQueryClient} from "react-query";
@@ -19,6 +18,7 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import useUserOrders from "../../components/hooks/useUserOrders";
 import Button from "react-bootstrap/Button";
+import Loading from "../../components/ui/loading";
 
 
 

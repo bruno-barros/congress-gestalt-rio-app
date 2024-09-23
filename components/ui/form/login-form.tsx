@@ -1,7 +1,6 @@
 import {useState, useEffect} from "react";
 import {Form, Formik} from "formik";
 import * as Yup from 'yup';
-import {LoadingButton} from "@brunobarros/react-components";
 import PasswordRecover from "./password-recover";
 import useTrans from "../../hooks/useTrans";
 import Facebook from "../../social-login/facebook";
@@ -12,7 +11,6 @@ import {Providers} from "../../social-login/social-buttons.d";
 import MaybeLoginWithEmail from "../maybe-login-with-email";
 import {useQueryClient} from "react-query";
 import {useDispatch} from "react-redux";
-import {BlockUi, Icon} from "@brunobarros/react-components";
 import WpUser from "../../../src/http/wp-user";
 import {postLogin, setUpUser} from "../../../src/store/user.actions";
 import MergingUsers from "../merging-users";
@@ -25,6 +23,9 @@ import AccountRecover from "./account-recover";
 import {ErrorMessage} from "../../../src/store/store.d";
 import PopOver from "../popover";
 import trimStart from 'lodash/trimStart'
+import LoadingButton from "../loading-button";
+import BlockUi from "../block-ui";
+import Icon from "../ionicon";
 
 const LoginForm = () => {
 

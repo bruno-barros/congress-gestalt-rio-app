@@ -4,7 +4,7 @@ import {useQueryClient} from "react-query";
 import Error from "../../src/resources/error";
 import {SocialLoginButtonProps} from "./social-buttons.d";
 import React from "react";
-import {Icon} from "@brunobarros/react-components";
+import Icon from "../ui/ionicon";
 
 export default function Facebook(props: SocialLoginButtonProps) {
 

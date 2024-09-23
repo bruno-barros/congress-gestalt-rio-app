@@ -1,11 +1,11 @@
 import Abstract from "../../src/resources/abstract";
-import {Loading} from "@brunobarros/react-components";
 import {useQuery} from "react-query";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import useTrans from "../hooks/useTrans";
 import moment from "moment";
 import {statusColorName} from "../../src/helpers";
 import {Status} from "./abstract.d";
+import Loading from "../ui/loading";
 
 interface AbstractCommentsProps {
   abstract: Abstract

@@ -7,13 +7,13 @@ import {Form, Formik} from "formik";
 import {useRouter} from "next/router";
 import Text from "../ui/form/formik/text";
 import Textarea from "../ui/form/formik/textarea";
-import {LoadingButton} from "@brunobarros/react-components";
 import {useState} from "react";
 import * as Yup from 'yup'
 import ToolTip from "../ui/tooltip";
-import {Icon} from "@brunobarros/react-components";
 import Sweet from "../ui/sweet-alert";
 import Select from "../ui/form/formik/select";
+import LoadingButton from "../ui/loading-button";
+import Icon from "../ui/ionicon";
 
 export default function PushNotifications() {
 

@@ -9,18 +9,18 @@ import {Field, Form, Formik} from "formik";
 import useTrans from "../components/hooks/useTrans";
 import {countries} from "../src/countries";
 import * as Yup from "yup";
-import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
 import React, {useEffect, useState} from "react";
 import Error from "../src/resources/error";
 import Curtain from "../components/ui/curtain";
-import {Loading} from "@brunobarros/react-components";
 import Text from "../components/ui/form/formik/text";
 import Select from "../components/ui/form/formik/select";
 import Mask from "../components/ui/form/formik/mask";
 import privateRoute from "../components/hoc/private-route";
 import useEvent from "../components/hooks/useEvent";
 import Switch from "../components/ui/form/formik/switch";
+import LoadingButton from "../components/ui/loading-button";
+import Loading from "../components/ui/loading";
 
 
 const Register1 = () => {

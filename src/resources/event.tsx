@@ -17,7 +17,11 @@ export default class Event {
     phone_country: "55",
     email_general: "",
     email_financial: "",
-    editions: []
+    editions: [],
+    rate_send_now: number|string,
+    rate_limit_per_minute: number|string,
+    notification_sender_name: "",
+    notification_copy: "",
   };
   page: {
     checkout: {
@@ -31,10 +35,14 @@ export default class Event {
   };
   editions: any[];
   abstract: {
+    abstract_allowed: string;
+    status_model: 'sinopse_abstract' | 'abstract';
     statuses: any[];
     limit_per_user: number;
     attachments: number;
     attachments_max_size: number;
+    start_at: string;
+    end_at: string;
   };
   subscription?: any;
   review?: any;

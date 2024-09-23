@@ -7,12 +7,13 @@ import styles from "./main.module.scss";
 import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
-import {BlockUi, Loading} from "@brunobarros/react-components";
 import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";
 import useSessionCountdown from "../hooks/useSessionCountdown";
+import Loading from "../ui/loading";
+import BlockUi from "../ui/block-ui";
 
 interface ClearLayoutProps {
   children: any;

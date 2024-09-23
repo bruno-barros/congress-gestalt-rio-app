@@ -5,17 +5,13 @@ import s from "./settings.module.scss";
 import * as Yup from "yup";
 import { dump } from "../../src/helpers";
 import Text from "../../components/ui/form/formik/text";
-import { LoadingButton, Loading } from "@brunobarros/react-components";
 import Textarea from "../../components/ui/form/formik/textarea";
-import Mask, { Masks } from "../../components/ui/form/formik/mask";
 import { Field } from "../../components/settings/settings-helpers";
 import useSettingsContext, {
   SettingsContextProvider,
 } from "../../components/settings/settings-context";
 import LangSelector from "../../components/settings/lang-selector";
 import useSettings, { invalidateSettings } from "../../components/hooks/useSettings";
-import useEvent from "../../components/hooks/useEvent";
-import Event from "../../src/resources/event";
 import { useState } from "react";
 import { WpSettings } from "../../src/http/wp-settings";
 import { toast } from "react-toastify";
@@ -23,6 +19,7 @@ import Phone from "../../components/ui/form/formik/phone";
 import { useQueryClient } from "react-query";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
+import LoadingButton from "../../components/ui/loading-button";
 export default function CreateContext() {
   return (
     <SettingsContextProvider>
@@ -46,6 +43,11 @@ function Settings() {
     phone_country: evt?.global?.phone_country || "55",
     email_general: evt?.global?.email_general || "",
     email_financial: evt?.global?.email_financial || "",
+
+    rate_send_now: evt?.global?.rate_send_now || 1,
+    rate_limit_per_minute: evt?.global?.rate_limit_per_minute || 1,
+    notification_sender_name: evt?.global?.notification_sender_name || "",
+    notification_copy: evt?.global?.notification_copy || "",
   };
   const validationSchema = Yup.object({
     name: Yup.string().required("Obrigatório"),
@@ -101,6 +103,9 @@ function Settings() {
               />
             </Field>
 
+            {/* 
+            //region Dados de contato
+            */}
             <fieldset className={s.fieldset}>
               <legend className={s.fieldset__legend}>Dados de contato</legend>
               <Field infos="">
@@ -112,6 +117,29 @@ function Settings() {
               <Field infos="Email para receber notificações de pagamento e inscrição.">
                 <Text name="email_financial" label="Email do financeiro" />
               </Field>
+            </fieldset>
+            {/* 
+            //region Sistema de notificação
+            */}
+            <fieldset>
+              <legend>Sistema de notificação</legend>
+              <Field infos="Limites para notificações por email.">
+                <div className="form-row">
+                  <div className="col">
+                    <Text name="rate_send_now" type="number" label="Quantidade para envio imediato" min={1} />
+                  </div>
+                  <div className="col">
+                    <Text name="rate_limit_per_minute" type="number" label="Quantidade de envio por minuto" min={1} />
+                  </div>
+                </div>
+              </Field>
+              <Field infos="Nome do remetente nas notificações por email.">
+                <Text name="notification_sender_name" label="Nome remetente" />                  
+              </Field>
+              <Field infos="Separe os emails com vírgula.">
+                <Text name="notification_copy" label="E-mails de cópia" />                  
+              </Field>
+
             </fieldset>
 
             <fieldset className={s.fieldset}>

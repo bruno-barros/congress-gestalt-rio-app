@@ -1,6 +1,6 @@
-import {Loading} from '@brunobarros/react-components'
 import {useRouter} from "next/router";
 import {useEffect} from "react";
+import Loading from "../../components/ui/loading";
 
 export default function Merging() {
 

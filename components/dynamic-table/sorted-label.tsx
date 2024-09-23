@@ -1,5 +1,5 @@
 import React from "react";
-import {Icon} from "@brunobarros/react-components";
+import Icon from "../ui/ionicon";
 
 interface SortedLabelProps {
   active: boolean

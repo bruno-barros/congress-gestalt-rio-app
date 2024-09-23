@@ -2,14 +2,14 @@ import useTrans from "../hooks/useTrans";
 import React, {useEffect, useState} from "react";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
-import {Loading} from "@brunobarros/react-components";
 import {Form, Formik} from "formik";
 import Select from "../ui/form/formik/select";
-import {LoadingButton} from "@brunobarros/react-components";
 import Switch from "../ui/form/formik/switch";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useEvent from "../hooks/useEvent";
 import {WpAbstract} from "../../src/http/wp-abstract";
+import LoadingButton from "../ui/loading-button";
+import Loading from "../ui/loading";
 
 interface SetStatusModalProps {
   abstract_ids: number[]

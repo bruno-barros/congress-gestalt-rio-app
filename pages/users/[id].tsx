@@ -2,7 +2,6 @@ import MainLayout from "../../components/layout";
 import useTrans from "../../components/hooks/useTrans";
 import useEvent from "../../components/hooks/useEvent";
 import {useRouter} from "next/router";
-import {Loading} from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {useQuery} from "react-query";
 import WpUser from "../../src/http/wp-user";
@@ -11,6 +10,7 @@ import ProfileForm from "../../components/user/profile-form";
 import {User} from "../../src/resources/user";
 import UsersListSidebar from "../../components/user/users-list-sidebar";
 import privateRoute from "../../components/hoc/private-route";
+import Loading from "../../components/ui/loading";
 
 
 const UserEditing = () => {

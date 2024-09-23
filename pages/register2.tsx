@@ -6,21 +6,21 @@ import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import {useEffect, useState} from "react";
 import Card from "react-bootstrap/cjs/Card";
-import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../components/hooks/useTrans";
 import {MultiStepForm, Step} from 'react-multi-form'
 import useEvent from "../components/hooks/useEvent";
 import {Edition} from "../src/resources/event";
-import {Loading} from "@brunobarros/react-components";
 import StepPlan from "../components/registration/step-plan";
 import StepAddress from "../components/registration/step-address";
 import StepInstitution from "../components/registration/step-institution";
 import StepPayment from "../components/registration/step-payment";
 import Curtain from "../components/ui/curtain";
 import {FormikProps} from "formik";
-import {Icon} from "@brunobarros/react-components";
 import privateRoute from "../components/hoc/private-route";
 import Link from "next/link";
+import LoadingButton from "../components/ui/loading-button";
+import Loading from "../components/ui/loading";
+import Icon from "../components/ui/ionicon";
 
 
 const Register2 = () => {

@@ -7,11 +7,11 @@ import useEvent from "../../components/hooks/useEvent";
 import {useQuery, useQueryClient} from "react-query";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
-import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
+import Loading from "../../components/ui/loading";
 
 const AdmAbstracts = () => {
 

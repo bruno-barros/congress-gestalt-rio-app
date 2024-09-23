@@ -1,9 +1,9 @@
 import useAllUsers from "../hooks/useAllUsers";
-import {Loading} from "@brunobarros/react-components";
-import {Icon} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import Link from "next/link";
 import {useEffect, useState} from "react";
+import Loading from "../ui/loading";
+import Icon from "../ui/ionicon";
 
 export default function UsersListSidebar() {
 

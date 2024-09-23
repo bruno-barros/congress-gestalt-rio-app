@@ -2,7 +2,7 @@ import { useField } from "formik";
 import FieldError from "../field-error";
 import React, { useEffect, useState } from "react";
 import zxcvbn from "zxcvbn";
-import { Icon } from "@brunobarros/react-components";
+import Icon from "../../ionicon";
 
 interface PasswordProps {
   label: string;

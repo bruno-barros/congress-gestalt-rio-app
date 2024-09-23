@@ -8,8 +8,8 @@ import Link from "next/link";
 import { dump } from "../../src/helpers";
 import useSettings from "../../components/hooks/useSettings";
 import Form from "react-bootstrap/Form";
-import { Loading } from "@brunobarros/react-components";
 import useSettingsContext from "../../components/settings/settings-context";
+import Loading from "../../components/ui/loading";
 
 interface LayoutProps {}
 export default function Layout(props: PropsWithChildren<LayoutProps>) {

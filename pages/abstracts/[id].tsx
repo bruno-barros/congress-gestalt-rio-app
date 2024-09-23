@@ -7,7 +7,6 @@ import EditionSidebar from "../../components/event/edition-sidebar";
 import AbstractForm from "../../components/abstract/abstract-form";
 import AbstractStatusBar from "../../components/abstract/abstract-status-bar";
 import useAbstract from "../../components/hooks/useAbstract";
-import { Loading } from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import Sweet from "../../components/ui/sweet-alert";
 import { useEffect } from "react";
@@ -18,6 +17,7 @@ import { Trans } from "react-i18next";
 import { useQueryClient } from "react-query";
 import { siteTitle } from "../../src/helpers";
 import Head from "next/head";
+import Loading from "../../components/ui/loading";
 
 const AbstractEditing = () => {
   const queryClient = useQueryClient();

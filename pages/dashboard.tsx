@@ -7,7 +7,6 @@ import Card from "react-bootstrap/cjs/Card";
 import Link from "next/link";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import {Edition} from "../src/resources/event";
-import {Loading} from "@brunobarros/react-components";
 import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 import privateRoute from "../components/hoc/private-route";
@@ -15,6 +14,7 @@ import {useEffect} from "react";
 import {dump, siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
+import Loading from "../components/ui/loading";
 
 interface DashboardProps {
 

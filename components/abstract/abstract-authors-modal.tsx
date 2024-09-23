@@ -3,11 +3,11 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
 import {useQuery} from "react-query";
-import {Loading} from "@brunobarros/react-components";
 import {errorNotification} from "../../src/resources/responses";
 import AbstractAuthorLine from "./abstract-author-line";
 import Accordion from "react-bootstrap/cjs/Accordion";
 import {Author} from "../../src/resources/user";
+import Loading from "../ui/loading";
 
 interface AbstractAuthorsModalProps {
   show: boolean
