@@ -1,0 +1,32 @@
+.form_ctrl {
+    // outline: solid 1px red;
+    margin-bottom: 1rem;
+}
+.wrapper {    
+    // outline: solid 1px blue;
+    margin-bottom: 1rem;
+    border-bottom: solid 1px #c9c9c9;
+    padding-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.col_fields {
+    flex: 1;
+    display: flex;
+    gap: 5px;
+    :global {
+        .form-group {
+            margin-bottom: 0rem;
+            flex: 1;
+            // @media (min-width: 768px) {
+            //     margin-bottom: 0;
+            // }
+        }
+    }
+}
+.col_ctrls {
+    display: flex ;
+    // justify-content: end;
+    align-items: flex-end;
+}

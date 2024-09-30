@@ -6,8 +6,10 @@ export class WpSettings
 {
   static namespace = '/event/v1';
 
-  static all(): Promise<AxiosResponse<WpRestResponse<any>>>{
-    return restApi.get(`${WpSettings.namespace}/settings`);
+  static all(args?: { edition: string }): Promise<AxiosResponse<WpRestResponse<any>>>{
+    const params = []
+    if(args?.edition) params.push(`edition=${args.edition}`);
+    return restApi.get(`${WpSettings.namespace}/settings?${params.join('&')}`);
   }
 
   static save(args: {

@@ -15,23 +15,21 @@ interface LayoutProps {}
 export default function Layout(props: PropsWithChildren<LayoutProps>) {
   const { children } = props;
   const router = useRouter();
-  const { data: evt, isLoading, isFetching } = useSettings();
-  const ed = router.query?.edition || evt?.getEditionsKeys()[0];
   const { currentEdition, setCurrentEdition } = useSettingsContext()
+  const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
 
 
   useEffect(()=>{
-    const ed = String(router.query?.edition || evt?.getEditionsKeys()[0]);
-    // console.log(ed)
+    const ed = router.query?.edition ? String(router.query?.edition) : null;
     if(ed) setCurrentEdition(ed)
-  }, [router.query, evt])
+  }, [router.query])
 
   function str(s: string){
     return s.replaceAll('_', ' ')
   }
 
   function handleChangeEdition(e){
-    // console.log(router)
+    console.log(e.target.value)
     router.push(`${router.pathname}?edition=${e.target.value}`)
   }
 
@@ -46,18 +44,22 @@ export default function Layout(props: PropsWithChildren<LayoutProps>) {
                 <NavLink label="Geral" path="" />
                 <Form className="mt-4">
                   <Form.Group controlId="exampleForm.SelectCustom">
-                    <Form.Label>Edição</Form.Label>
+                    <Form.Label>Edições</Form.Label>
                     {isLoading && <Loading size="sm" />}
                     {evt?.getEditionsKeys() &&
-                    <Form.Control as="select" custom onChange={handleChangeEdition}>
+                    <Form.Control as="select" custom onChange={handleChangeEdition} value={currentEdition}>
+                      <option value="">Selecione</option>
                       {evt?.getEditionsKeys().map((e) => {
-                        return <option key={e} value={e} selected={e === currentEdition}>{str(e)}</option>;
+                        return <option key={e} value={e}>{str(e)}</option>;
                       })}
                     </Form.Control>}
 
                   </Form.Group>
                 </Form>
-                <NavLink label="Trabalhos" path="/abstracts" />
+                {currentEdition && <>
+                  <NavLink label="Edição" path="/edition" />
+                  <NavLink label="Trabalhos" path="/abstracts" />
+                </>}
               </Nav>
             </div>
           </div>

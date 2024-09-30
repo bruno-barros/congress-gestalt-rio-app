@@ -36,7 +36,7 @@ export default function Text({label, containerClass, cepCallback, floatLabel: fl
 
   // console.log({field}, {meta});
   return (<div className={`form-group ${floatLabel} ${containerClass || ''} ${err && 'has-error'}`}>
-    {(label && !floatLabel) && <label htmlFor={`fld_${field.name}`}>{`${label} ${props?.required ? '*': ''}`}</label>}
+    {(label && !floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}{` ${props?.required ? '*': ''}`}</label>}
 
     <input {...field} {...props} id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
 

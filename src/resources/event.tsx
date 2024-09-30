@@ -10,18 +10,19 @@ export default class Event {
   languages: string[];
   description?: string;
   global: {
-    name: "",
-    description_pt: "",
-    description_en: "",
-    phone: "",
+    name: string,
+    description_pt: string,
+    description_en: string,
+    description_es: string,
+    phone: string,
     phone_country: "55",
-    email_general: "",
-    email_financial: "",
-    editions: [],
+    email_general: string,
+    email_financial: string,
+    editions: string[],
     rate_send_now: number|string,
     rate_limit_per_minute: number|string,
-    notification_sender_name: "",
-    notification_copy: "",
+    notification_sender_name: string,
+    notification_copy: string,
   };
   page: {
     checkout: {
@@ -33,7 +34,10 @@ export default class Event {
       en: string;
     };
   };
-  editions: any[];
+  edition: {
+    name: string;
+    logo: string;
+  };
   abstract: {
     abstract_allowed: string;
     status_model: 'sinopse_abstract' | 'abstract';
@@ -43,6 +47,9 @@ export default class Event {
     attachments_max_size: number;
     start_at: string;
     end_at: string;
+    required_fields: any
+    fields: any
+    topics: any[];
   };
   subscription?: any;
   review?: any;
@@ -78,8 +85,8 @@ export default class Event {
     let keys = this.getEditionsKeys();
     return keys.map((k) =>{
       // debugger;
-      if(typeof this.editions[k] === 'undefined') return null;
-      return Edition.make(this.editions[k], {
+      if(typeof this.global.editions[k] === 'undefined') return null;
+      return Edition.make(this.global.editions[k], {
         id: k,
         url: this.url,
         logo: this.logo,
@@ -93,7 +100,7 @@ export default class Event {
 
   currentEdition(): Edition {
     // console.log(this.global, this.abstract);
-    const data = {...this.global, abstract: this.abstract, subscription: this.subscription, review: this.review};
+    const data = {...this.global, edition: this.edition, abstract: this.abstract, subscription: this.subscription, review: this.review};
     return Edition.make(data, {});
   }
 
@@ -139,7 +146,7 @@ export class Edition {
     rules: { pt: string; en: string };
     statuses: Status[];
     attachments: number;
-    topics: { id: string; pt: string; en: string }[];
+    topics: { id: string; pt: string; en: string; es: string }[];
     types: { id: string; pt: string; en: string }[];
     start_at: string;
     end_at: string;
@@ -158,6 +165,7 @@ export class Edition {
           authors?: boolean | { min: number; max: number };
         }
       | any;
+    fields: any;
     limit_per_user: number;
     authors: {
       max: number;

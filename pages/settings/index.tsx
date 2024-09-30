@@ -20,6 +20,8 @@ import { useQueryClient } from "react-query";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import LoadingButton from "../../components/ui/loading-button";
+import Loading from "../../components/ui/loading";
+import LangIndicator from "../../components/settings/lang-indicator";
 export default function CreateContext() {
   return (
     <SettingsContextProvider>
@@ -28,9 +30,9 @@ export default function CreateContext() {
   );
 }
 function Settings() {
-  const { lang, setLang } = useSettingsContext();
-  const { data: evt, isLoading, isFetching } = useSettings();
-  const [Loading, setLoading] = useState(false);
+  const { lang, setLang, currentEdition } = useSettingsContext();
+  const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
+  const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
   // console.log(evt);
@@ -39,6 +41,7 @@ function Settings() {
     name: evt?.eventName || "",
     description_pt: evt?.global?.description_pt || "",
     description_en: evt?.global?.description_en || "",
+    description_es: evt?.global?.description_es || "",
     phone: evt?.global?.phone || "",
     phone_country: evt?.global?.phone_country || "55",
     email_general: evt?.global?.email_general || "",
@@ -82,8 +85,9 @@ function Settings() {
       <h2 className={s.title}>
         Geral
         <LangSelector />
+        {(isLoading || isFetching) && <Loading />}
       </h2>
-      {/* {dump({ name: evt?.debug(), name2: evt?.eventName, aaa: typeof evt })} */}
+      {/* {dump(initialValues)} */}
 
       <Formik
         enableReinitialize
@@ -94,12 +98,12 @@ function Settings() {
         {({ values, errors, isValid }) => (
           <Form>
             <Field infos="">
-              <Text name={`name`} label={`Nome do projeto`} />
+              <Text name="name" label={`Nome do projeto`} />
             </Field>
-            <Field>
+            <Field infos="Breve descrição para cada idioma.">
               <Textarea
                 name={`description_${lang}`}
-                label={`Descrição do projeto (${lang})`}
+                label={<LangIndicator lang={lang}>Descrição do projeto</LangIndicator>}
               />
             </Field>
 
@@ -109,7 +113,7 @@ function Settings() {
             <fieldset className={s.fieldset}>
               <legend className={s.fieldset__legend}>Dados de contato</legend>
               <Field infos="">
-                <Phone name="phone" countryName="phone_country" label="Telefone"  />
+                {/* <Phone name="phone" countryName="phone_country" label="Telefone"  /> */}
               </Field>
               <Field infos="Email de contato para dúvidas gerais ou suporte.">
                 <Text name="email_general" label="Email para suporte" />
@@ -147,7 +151,7 @@ function Settings() {
               <Alert variant="info">Identifiadores das edições registradas.</Alert>
               {(evt?.getEditionsKeys()) && <ul>
                 {evt?.getEditionsKeys().map((edi, idx) => {
-                  return <li>{edi}</li>
+                  return <li key={idx}>{edi}</li>
                 })}
                 </ul>}
               {/* <FieldArray name="editions" render={helpers => {
@@ -174,12 +178,12 @@ function Settings() {
             </fieldset>
 
             <div className={s.limit_field}>
-              <LoadingButton loading={Loading} disable={!isValid} block>
+              <LoadingButton loading={loading} disable={!isValid} block>
                 Salvar
               </LoadingButton>
             </div>
 
-            {/* {dump({ values, errors, isValid })} */}
+            {dump({ values, errors, isValid })}
           </Form>
         )}
       </Formik>
