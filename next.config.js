@@ -16,8 +16,9 @@ module.exports = {
     GA_ID: process.env.GA_ID,
     production: isProd
   },
+  // configuração de integração do i18n com Nextjs: router.locales
   i18n: {
-    locales: ['pt', 'en'],
+    locales: ['pt', 'en', 'es'],
     defaultLocale: 'pt'
   },
   images: {
