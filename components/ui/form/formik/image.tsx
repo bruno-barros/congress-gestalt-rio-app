@@ -1,6 +1,6 @@
 import { useField } from "formik";
 import FieldError from "../field-error";
-import { useRef, useState } from "react";
+import { CSSProperties, useRef, useState } from "react";
 import { DragDrop, StatusBar, useUppy } from "@uppy/react";
 import { uppyDocument, uppyUploadV1 } from "../../../../src/http/uppy";
 import { toast } from "react-toastify";
@@ -15,9 +15,10 @@ interface ImageProps {
   containerClass?: string;
   required?: boolean;
   disabled?: boolean;
+  imgStyle?: CSSProperties;
 }
 export default function Image(props: ImageProps) {
-  const { name, label, containerClass, required, disabled: _disabled } = props;
+  const { name, label, containerClass, required, disabled: _disabled, imgStyle } = props;
 
   const disabled = typeof _disabled !== 'undefined' ? _disabled : false
   const [field, meta, helpers] = useField(name);
@@ -80,7 +81,7 @@ export default function Image(props: ImageProps) {
 
     {field.value.length > 0 && 
     <div className={s.wrapper}>
-        <img src={field.value} alt=" " className={s.img} />
+        <img src={field.value} alt=" " className={s.img} style={imgStyle} />
         <div>
             <Button size="sm" variant="outline-link" onClick={handleDelete}>remover</Button>
         </div>

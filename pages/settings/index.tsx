@@ -97,7 +97,7 @@ function Settings() {
       >
         {({ values, errors, isValid }) => (
           <Form>
-            <Field infos="">
+            <Field infos="Nome geral. Sem incluir a edição.">
               <Text name="name" label={`Nome do projeto`} />
             </Field>
             <Field infos="Breve descrição para cada idioma.">

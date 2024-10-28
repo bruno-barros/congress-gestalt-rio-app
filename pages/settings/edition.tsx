@@ -24,6 +24,8 @@ import Alert from "react-bootstrap/Alert";
 import LoadingButton from "../../components/ui/loading-button";
 import Loading from "../../components/ui/loading";
 import Image from "../../components/ui/form/formik/image";
+import DateRange from "../../components/ui/form/formik/date-range";
+import { start } from "repl";
 export default function CreateContext() {
   return (
     <SettingsContextProvider>
@@ -40,6 +42,8 @@ function Settings() {
   const initialValues = {
     name: evt?.edition?.name || "",
     logo: evt?.edition?.logo || "",
+    start_at: evt?.edition?.start_at,
+    end_at: evt?.edition?.end_at,
   };
   const validationSchema = Yup.object({
     name: Yup.string().required("Nome é obrigatório"),
@@ -85,8 +89,15 @@ function Settings() {
                 <Text name="name" label="Nome" />
             </Field>
             <Field infos="Tamanho recomendado: 300 px de largura.">
-                <Image name="logo" label="Logo do evento" />
+                <Image name="logo" label="Logo do evento" imgStyle={{maxHeight: 120}} />
             </Field>
+            <DateRange
+              label="Período da edição"
+              startDateName="start_at"
+              endDateName="end_at"
+              dateFormat="YYYY-MM-DD"
+              defaultValue={[values.start_at, values.end_at]}
+            />
             
 
          

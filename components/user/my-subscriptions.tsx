@@ -5,6 +5,7 @@ import Link from "next/link";
 import useTrans from "../hooks/useTrans";
 import useEvent from "../hooks/useEvent";
 import Loading from "../ui/loading";
+import useSettings from "../hooks/useSettings";
 
 
 export default function MySubscriptions({user}: { user: User }) {
@@ -12,8 +13,9 @@ export default function MySubscriptions({user}: { user: User }) {
   const {data, error, isLoading} = useUserOrders(user.getId())
   const collection = data && data.getOrders() || null
   const t = useTrans()
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
+  // const {data: event} = useEvent()
+  // const edition = event && event.currentEdition()
+  const { data: event, currentEdition: edition } = useSettings()
   const isSubscribed = data?.hasValidSubscription(edition)
 
   if (isLoading) {
@@ -24,7 +26,7 @@ export default function MySubscriptions({user}: { user: User }) {
 
 
     {<div className="px-5 py-3">
-      {edition.isOpenToSubscribe()
+      {edition?.isOpenToSubscribe()
         ? (<>{!isSubscribed
           && <Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link>}</>)
         : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)}

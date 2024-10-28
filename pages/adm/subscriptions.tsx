@@ -13,6 +13,7 @@ import {useQueryClient} from "react-query";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
 
 
 const AdmSubscriptions = () => {
@@ -21,8 +22,9 @@ const AdmSubscriptions = () => {
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
-  const {data: event} = useEvent()
-  const edition = event && event.getEdition(String(router.query?.edition))
+  // const {data: event} = useEvent()
+  // const edition = event && event.getEdition(String(router.query?.edition))
+  const { data: event, currentEdition: edition } = useSettings()
   const {data: subscriptions, isLoading, methods} = useSubscriptions(edition)
 
   const columns = useMemo(() => {
@@ -85,7 +87,7 @@ const AdmSubscriptions = () => {
   }
 
   return (<MainLayout sidebar={{
-    title: edition.name, component: <EditionSidebar edition={edition}/>, sidebarCompact: true
+    title: edition.getName(), component: <EditionSidebar edition={edition}/>, sidebarCompact: true
   }}>
     <Head>
       <title>{siteTitle('Admin - Inscrições', queryClient)}</title>

@@ -59,6 +59,7 @@ export default function Layout(props: PropsWithChildren<LayoutProps>) {
                 {currentEdition && <>
                   <NavLink label="Edição" path="/edition" />
                   <NavLink label="Trabalhos" path="/abstracts" />
+                  <NavLink label="Inscrições" path="/subscriptions" />
                 </>}
               </Nav>
             </div>

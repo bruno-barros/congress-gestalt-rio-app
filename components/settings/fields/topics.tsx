@@ -40,12 +40,12 @@ export default function Topics(props: TopicsProps) {
                   return (
                     <div key={idx} className={s.wrapper}>
                         <div className={s.col_fields}>
-                        <Text name={`topics.${idx}.pt`} label={<LangIndicator lang="pt">Nome</LangIndicator>} />
-                        <Text name={`topics.${idx}.en`} label={<LangIndicator lang="en">Nome</LangIndicator>} />
-                        <Text name={`topics.${idx}.es`} label={<LangIndicator lang="es">Nome</LangIndicator>} />
+                        <Text name={`topics.${idx}.pt`} label={<LangIndicator lang="pt">Nome</LangIndicator>} inputClass="form-control-sm" />
+                        <Text name={`topics.${idx}.en`} label={<LangIndicator lang="en">Nome</LangIndicator>} inputClass="form-control-sm" />
+                        <Text name={`topics.${idx}.es`} label={<LangIndicator lang="es">Nome</LangIndicator>} inputClass="form-control-sm" />
                         </div>
                         <div className={s.col_ctrls}>
-                            <Button variant="outline-danger" onClick={() => helpers.remove(idx)}>-</Button>
+                            <Button variant="outline-danger" size="sm" onClick={() => helpers.remove(idx)}>-</Button>
                         </div>
                     </div>
                   );

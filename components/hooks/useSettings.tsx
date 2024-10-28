@@ -1,7 +1,11 @@
 import {QueryClient, useQuery, useQueryClient} from "react-query";
 import Event, { Edition } from "../../src/resources/event";
 import { WpSettings } from "../../src/http/wp-settings";
-
+/**
+ * Retorna as configurações globais com a edição atual
+ * @param edition 
+ * @returns 
+ */
 export default function useSettings(edition?: string|undefined) {
 
   const query = useQuery<Event, any>(['settings', edition], async () => {

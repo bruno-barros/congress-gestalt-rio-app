@@ -28,12 +28,12 @@ import Topics from "../../components/settings/fields/topics";
 export default function Context() {
   return (
     <SettingsContextProvider>
-      <Global />
+      <Abstracts />
     </SettingsContextProvider>
   );
 }
 
-function Global() {
+function Abstracts() {
   const { lang, setLang, currentEdition } = useSettingsContext();
   const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
   const [loading, setLoading] = useState(false);

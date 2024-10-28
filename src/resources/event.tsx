@@ -1,6 +1,7 @@
 import { Status } from "../../components/abstract/abstract.d";
 import moment from "moment";
 import subscriptions from "../../pages/adm/subscriptions";
+import { start } from 'repl';
 
 export default class Event {
   name: string;
@@ -37,9 +38,11 @@ export default class Event {
   edition: {
     name: string;
     logo: string;
+    start_at: string;
+    end_at: string;
   };
   abstract: {
-    abstract_allowed: string;
+    abstract_allowed: string|'0'|'1';
     status_model: 'sinopse_abstract' | 'abstract';
     statuses: any[];
     limit_per_user: number;
@@ -51,7 +54,12 @@ export default class Event {
     fields: any
     topics: any[];
   };
-  subscription?: any;
+  subscription?: {
+    allowed: string|'0'|'1';
+    start_at: string;
+    end_at: string;
+    category_id: number|string;
+  };
   review?: any;
 
   constructor(data: any) {
@@ -114,17 +122,25 @@ export default class Event {
 export class Edition {
   defaults: any;
   locale: string = "pt";
-  id: string;
   name: string;
   start_at: string;
   end_at: string;
   logo: { primary: string; secondary: string };
   url: { pt: string; en: string };
   app: { pt: string; en: string };
-  subscription: {
-    allowed: boolean;
+  // -----daqui para cima será removido
+  id: string;
+  edition: {// nova api
+    name: string;
+    logo: string;
     start_at: string;
     end_at: string;
+  }
+  subscription: {
+    allowed: string|'0'|'1';
+    start_at: string;
+    end_at: string;
+    category_id: number;
     products_category: {
       id: number;
       slug: string;
@@ -142,7 +158,7 @@ export class Edition {
     };
   };
   abstract: {
-    allowed: boolean;
+    abstract_allowed: string|'0'|'1';
     rules: { pt: string; en: string };
     statuses: Status[];
     attachments: number;
@@ -201,7 +217,7 @@ export class Edition {
   }
 
   get year() {
-    return this.start_at.substr(0, 4);
+    return this.edition.start_at.substr(0, 4);
   }
 
   get logoPrimary() {
@@ -210,6 +226,30 @@ export class Edition {
 
   get logoSecondary() {
     return this.logo.secondary || this.defaults.logo?.secondary;
+  }
+
+  isSubscriptionAllowed(){
+    return this.subscription.allowed === '1';
+  }
+
+  isAbstractAllowed(){
+    return this.abstract.abstract_allowed === '1';
+  }
+
+  getName(){
+    return this.edition?.name || 'desconhecido';
+  }
+
+  getLogo(){
+    return this.edition?.logo || '';
+  }
+
+  getStartDate(): moment.Moment|null {
+    return this.edition?.start_at ? moment(this.edition.start_at) : null;
+  }
+
+  getEndDate(): moment.Moment|null {
+    return this.edition?.end_at ? moment(this.edition.end_at) : null;
   }
 
   steps() {
@@ -224,7 +264,7 @@ export class Edition {
 
   isOpenToSubscribe() {
     const today = moment();
-    if (this.subscription.allowed === false) {
+    if (!this.isSubscriptionAllowed()) {
       return false;
     }
     const start = this.subscription.start_at
@@ -233,8 +273,9 @@ export class Edition {
     const end = this.subscription.end_at
       ? moment(this.subscription.end_at)
       : null;
+    // console.log({ after: today.isSameOrAfter(start), before: today.isSameOrBefore(end) });
     if (!start || !end) return false;
-    if (today >= start && today <= end) return true;
+    if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
     return false;
   }
 
@@ -242,7 +283,7 @@ export class Edition {
     // correção emergencial. No iPhone o calculo de datas não está correto.
     // return this.abstract.allowed;
     const today = moment();
-    if (this.abstract.allowed === false) {
+    if (!this.isAbstractAllowed()) {
       return false;
     }
     const start = this.abstract.start_at
@@ -250,7 +291,7 @@ export class Edition {
       : null;
     const end = this.abstract.end_at ? moment(this.abstract.end_at) : null;
     if (!start || !end) return false;
-    if (today >= start && today <= end) return true;
+    if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
     return false;
   }
 

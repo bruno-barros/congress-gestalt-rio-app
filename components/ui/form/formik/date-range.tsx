@@ -35,11 +35,17 @@ export default function DateRange(_props: DateRangeProps & any) {
   // @ts-ignore
   const [field1, meta1, helpers1] = useField(startDateName);
   const [field2, meta2, helpers2] = useField(endDateName);
-  const v1 = typeof defaultValue[0] !== 'undefined' ? moment(defaultValue[0]).toDate() : null;
-  const v2 = typeof defaultValue[1] !== 'undefined' ? moment(defaultValue[1]).toDate() : null;
+  const v1 = typeof defaultValue?.[0] !== 'undefined' ? moment(defaultValue[0]).toDate() : null;
+  const v2 = typeof defaultValue?.[1] !== 'undefined' ? moment(defaultValue[1]).toDate() : null;
   const [dates, setDates] = useState<Value>([v1, v2]);
 
   const err = meta1?.touched && meta1?.error;
+
+  useEffect(()=> {
+    const v1 = typeof defaultValue?.[0] !== 'undefined' ? moment(defaultValue[0]).toDate() : null;
+  const v2 = typeof defaultValue?.[1] !== 'undefined' ? moment(defaultValue[1]).toDate() : null;
+  setDates([v1, v2]);
+  }, [defaultValue])
 
   function handleDateChange(date: Value) {
     if (Array.isArray(date) && date?.length === 2) {
