@@ -26,9 +26,9 @@ export default class WpEcommerce {
 
 
   static products(args?: { categoryId: number }): Promise<AxiosResponse> {
-    return httpApi.post('/index.php?graphql&productCategories', {
-      query: `query productCategories {
-        products {
+    return httpApi.post('/index.php?graphql&products', {
+      query: `query products {
+        products(where: {categoryId: ${args?.categoryId}}) {
           nodes {
             databaseId
             description(format: RENDERED)

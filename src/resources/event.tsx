@@ -213,6 +213,10 @@ export class Edition {
     return new Edition(data, defaults);
   }
 
+  Subscription(){
+    return Edition_Subscription.make(this.subscription);
+  }
+
   setLocale(locale) {
     this.locale = locale;
   }
@@ -384,4 +388,43 @@ interface Consent {
     en: string;
     required: boolean;
   }[];
+}
+
+
+class Edition_Subscription {
+  allowed: StringBoolean;
+  start_at: string;
+  end_at: string;
+  category_id: number;
+  products_category: {
+    id: number;
+    slug: string;
+  };
+  products: {
+    pt: { id: number; name: string; price: number; desc: string }[];
+    en: { id: number; name: string; price: number; desc: string }[];
+  };
+  // steps after basic data (register1)
+  steps: {
+    plan: { pt: string; en: string };
+    address: { pt: string; en: string };
+    institution: { pt: string; en: string };
+    payment: { pt: string; en: string };
+  };
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
+
+  static make(data: any) {
+    return new Edition_Subscription(data);
+  }
+
+  isAllowed(){
+    return this.allowed === '1';
+  }
+
+  getCategoryId(){
+    return Number(this.category_id || 0);
+  }
 }
