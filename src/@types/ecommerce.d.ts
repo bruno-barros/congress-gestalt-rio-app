@@ -11,7 +11,7 @@ export interface ProductCategory {
   slug: string;
 }
 
-export interface Product {
+export interface ProductSchema {
   databaseId: number;
   description: string
   shortDescription: string

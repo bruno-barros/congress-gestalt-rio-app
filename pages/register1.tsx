@@ -111,7 +111,7 @@ const Register1 = () => {
       <title>{siteTitle('Cadastro', queryClient)}</title>
     </Head>
     <div className="row">
-      <div className="col-12">
+      <div className="col-12 col-lg-10 offset-lg-1">
         <Formik
           initialValues={{
             country: user.getUserData().country || 'BR',

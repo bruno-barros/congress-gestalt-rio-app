@@ -14,6 +14,7 @@ import {useQueryClient} from "react-query";
 import useSessionCountdown from "../hooks/useSessionCountdown";
 import Loading from "../ui/loading";
 import BlockUi from "../ui/block-ui";
+import useSettings from "../hooks/useSettings";
 
 interface ClearLayoutProps {
   children: any;
@@ -23,7 +24,7 @@ interface ClearLayoutProps {
 function ClearLayout({children, ignoreSessionCountDown}: ClearLayoutProps) {
 
   const queryClient = useQueryClient()
-  const {data: event, isLoading} = useEvent()
+  const { data: event, currentEdition: edition, isLoading} = useSettings()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
   useSessionCountdown({ignore: !!ignoreSessionCountDown});
@@ -44,9 +45,9 @@ function ClearLayout({children, ignoreSessionCountDown}: ClearLayoutProps) {
         <Container>
           <Row>
             <Col>
-              {event.logoPrimary
-                ? <img src={event.logoPrimary} className="brand img-fluid" alt={event.eventName}/>
-                : <div className="brand">{event.eventName}</div>}
+              {edition.getLogo()
+                ? <img src={edition.getLogo()} className="brand img-fluid" alt={edition.getName()}/>
+                : <div className="brand">{edition.getName()}</div>}
             </Col>
           </Row>
         </Container>
