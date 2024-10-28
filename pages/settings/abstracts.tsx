@@ -41,6 +41,7 @@ function Abstracts() {
 
   const initialValues = {
     abstract_allowed: evt?.abstract.abstract_allowed === "1",
+    only_subscribed: evt?.abstract.only_subscribed === "1",
     status_model: evt?.abstract.status_model || "sinopse_abstract",
     start_at: evt?.abstract.start_at,
     end_at: evt?.abstract.end_at,
@@ -98,6 +99,11 @@ function Abstracts() {
             <Switch
               name="abstract_allowed"
               label="Permitir submissão de trabalhos"
+            />
+            
+            <Switch
+              name="only_subscribed"
+              label="Apenas inscritos podem submeter trabalhos"
             />
 
             <DateRange

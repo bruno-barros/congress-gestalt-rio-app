@@ -1,7 +1,6 @@
 import { Status } from "../../components/abstract/abstract.d";
 import moment from "moment";
-import subscriptions from "../../pages/adm/subscriptions";
-import { start } from 'repl';
+import { StringBoolean } from "../@types/general";
 
 export default class Event {
   name: string;
@@ -42,7 +41,8 @@ export default class Event {
     end_at: string;
   };
   abstract: {
-    abstract_allowed: string|'0'|'1';
+    abstract_allowed: StringBoolean;
+    only_subscribed: StringBoolean;
     status_model: 'sinopse_abstract' | 'abstract';
     statuses: any[];
     limit_per_user: number;
@@ -55,7 +55,7 @@ export default class Event {
     topics: any[];
   };
   subscription?: {
-    allowed: string|'0'|'1';
+    allowed: StringBoolean;
     start_at: string;
     end_at: string;
     category_id: number|string;
@@ -137,7 +137,7 @@ export class Edition {
     end_at: string;
   }
   subscription: {
-    allowed: string|'0'|'1';
+    allowed: StringBoolean;
     start_at: string;
     end_at: string;
     category_id: number;
@@ -158,7 +158,8 @@ export class Edition {
     };
   };
   abstract: {
-    abstract_allowed: string|'0'|'1';
+    abstract_allowed: StringBoolean;
+    only_subscribed: StringBoolean;
     rules: { pt: string; en: string };
     statuses: Status[];
     attachments: number;
