@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "./ui/curtain-delayed";
-import {Loading, Icon} from "@brunobarros/react-components";
 import {Form, Formik} from "formik";
-import {LoadingButton} from "@brunobarros/react-components";
 import * as Yup from 'yup'
 import Switch from "./ui/form/formik/switch";
 import {errorNotification, successNotification} from "../src/resources/responses";
@@ -13,6 +11,8 @@ import Text from "./ui/form/formik/text";
 import {MessageTypes} from "../src/resources/notification";
 import WpUser from "../src/http/wp-user";
 import Select from "./ui/form/formik/select";
+import LoadingButton from "./ui/loading-button";
+import Loading from "./ui/loading";
 
 interface NotificationModalProps {
   context: MessageTypes

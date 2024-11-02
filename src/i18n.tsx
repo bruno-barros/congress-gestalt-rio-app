@@ -10,7 +10,7 @@ i18n
   .init({
     // resources,
     fallbackLng: "pt",
-    supportedLngs: ['pt', 'en'],
+    supportedLngs: ['pt', 'en', 'es'],
     debug: false,
     keySeparator: '.', // we do not use keys in form messages.welcome
     interpolation: {

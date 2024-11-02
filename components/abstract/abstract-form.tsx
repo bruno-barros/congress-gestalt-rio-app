@@ -3,7 +3,6 @@ import React, {useRef, useState} from "react";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from 'yup'
 import Text from "../ui/form/formik/text";
-import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../hooks/useTrans";
 import Select from "../ui/form/formik/select";
 import Attachments from "../ui/form/formik/attachments";
@@ -24,6 +23,7 @@ import {useQueryClient} from "react-query";
 import Switch from '../ui/form/formik/switch';
 import Button from "react-bootstrap/cjs/Button";
 import AbstractConsentTerms from './abstract-consent-terms';
+import LoadingButton from "../ui/loading-button";
 
 
 interface AbstractFormProps {

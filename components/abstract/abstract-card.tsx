@@ -1,4 +1,3 @@
-import {Icon} from "@brunobarros/react-components";
 import {AbstractType} from "./abstract.d";
 import useTrans from "../hooks/useTrans";
 import moment from "moment";
@@ -6,6 +5,7 @@ import Abstract from "../../src/resources/abstract";
 import Link from "next/link";
 import useEvent from "../hooks/useEvent";
 import {useRouter} from "next/router";
+import Icon from "../ui/ionicon";
 
 interface AbstractCardProps {
   abstract: AbstractType

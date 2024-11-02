@@ -381,9 +381,16 @@ export function formatCPF(cpf) {
 
 
 export function dump(args: any){
+  if(typeof window === 'undefined') return
   const params = new URLSearchParams(window.location.search);
 
   if (process.env.NODE_ENV === "development" || !!params.get("debug")) {
     return <pre className="pre-scrollable">{JSON.stringify(args, null, 2)}</pre>
   }
+}
+
+export function moneyFormat(value: number|string, locale: string = 'pt-BR'){
+  if(!value) return value
+  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(Number(value))
+
 }

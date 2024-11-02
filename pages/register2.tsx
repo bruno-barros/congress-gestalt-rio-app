@@ -1,26 +1,27 @@
 import ClearLayout from "../components/layout/clear";
-import {siteTitle} from "../src/helpers";
+import {dump, siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import {useEffect, useState} from "react";
 import Card from "react-bootstrap/cjs/Card";
-import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../components/hooks/useTrans";
 import {MultiStepForm, Step} from 'react-multi-form'
 import useEvent from "../components/hooks/useEvent";
 import {Edition} from "../src/resources/event";
-import {Loading} from "@brunobarros/react-components";
 import StepPlan from "../components/registration/step-plan";
 import StepAddress from "../components/registration/step-address";
 import StepInstitution from "../components/registration/step-institution";
 import StepPayment from "../components/registration/step-payment";
 import Curtain from "../components/ui/curtain";
 import {FormikProps} from "formik";
-import {Icon} from "@brunobarros/react-components";
 import privateRoute from "../components/hoc/private-route";
 import Link from "next/link";
+import LoadingButton from "../components/ui/loading-button";
+import Loading from "../components/ui/loading";
+import Icon from "../components/ui/ionicon";
+import useSettings from "../components/hooks/useSettings";
 
 
 const Register2 = () => {
@@ -29,9 +30,11 @@ const Register2 = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
-  const {data: event, isLoading} = useEvent()
-  const edition: Edition = event && event.currentEdition()
+  // const {data: event, isLoading} = useEvent()
+  // const edition: Edition = event && event.currentEdition()
+  const { data: event, currentEdition: edition, isLoading } = useSettings()
   const steps: { pt: string; en: string; id: string }[] = edition?.stepsArr()
+
   const lang = router.locale
   const [loading, setLoading] = useState(false)
 
@@ -57,9 +60,12 @@ const Register2 = () => {
     <Head>
       <title>{siteTitle('Inscrição', queryClient)}</title>
     </Head>
+    {/* {dump({
+      alllowed: edition.isSubscriptionAllowed(),
+      })} */}
     <div className="row">
 
-      {edition.subscription.allowed === false &&
+      {!edition.isSubscriptionAllowed() &&
       <div className="col-12 d-flex flex-column align-items-center justify-content-center">
         <h4 className="text-center font-weight-light my-4">
           {t('inscrioes-nao-estao-abertas')}
@@ -67,7 +73,7 @@ const Register2 = () => {
         <Link href={`/dashboard`} passHref><a className="btn btn-outline-primary">{t('voltar-para-dashboard')}</a></Link>
       </div>}
 
-      {edition.subscription.allowed &&
+      {edition.isSubscriptionAllowed() &&
       <div className="col-12 col-lg-8 offset-lg-2">
         <div className="multi-steps">
           <MultiStepForm activeStep={step} accentColor="var(--primary)">

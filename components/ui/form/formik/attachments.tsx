@@ -5,7 +5,6 @@ import {useUppy} from "../../../hooks/useUppy";
 import {uppyDocument} from "../../../../src/http/uppy";
 import {toast} from "react-toastify";
 import {DragDrop, StatusBar} from "@uppy/react";
-import {Icon} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import useTrans from "../../../hooks/useTrans";
 import {useDispatch} from "react-redux";

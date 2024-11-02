@@ -8,6 +8,10 @@ import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 import Form from "react-bootstrap/cjs/Form";
 import {saveCart} from "../../src/store/user.actions";
+import useProducts from "../hooks/useProducts";
+import { dump } from "../../src/helpers";
+import Loading from "../ui/loading";
+import Product from "../../src/resources/product";
 
 
 export default function StepPlan(props: StepProps) {
@@ -17,6 +21,7 @@ export default function StepPlan(props: StepProps) {
   const {step, user, event, edition, onLoading, goPrev, goNext, formInstance} = props
   const t = useTrans()
   const router = useRouter()
+  const {data: prods, isLoading, isFetching} = useProducts(edition?.Subscription().getCategoryId())
   const [response, setResponse] = useState({success: null, msg: ''})
   const form = useRef(null)
   const lang = router.locale
@@ -44,13 +49,24 @@ export default function StepPlan(props: StepProps) {
 
   }
 
-  function Label({prod}) {
-    return <span>{prod.name} <span className="price">R$ {prod.price}</span></span>
+  function Label({prod}: {prod: Product}) {
+    return <span>{prod.getName()} <span className="price">{prod.getSalePrice(true)}</span></span>
+  }
+
+  if(isLoading || isFetching){
+    return <Loading />
   }
 
   return (<div className="px-md-5 py-md-3">
     <h3 className="mb-3 pb-2 border-bottom">{step[router.locale]}</h3>
+    {/* {dump({
+      sale: prods?.[0]?.getSalePrice(),
+      sale_formated: prods?.[0]?.getSalePrice(true),
+      full: prods?.[0]?.getFullPrice(),
+      full_form: prods?.[0]?.getFullPrice(true),
+    })} */}
     {/*<button onClick={goNext}>avançar</button>*/}
+    {!isLoading && prods.length === 0 && <div className="alert alert-warning">Nenhum plano disponível.</div>}
     <Formik
       innerRef={form}
       initialValues={{
@@ -65,7 +81,18 @@ export default function StepPlan(props: StepProps) {
           <div className="col-12">
 
             <p>{t('cadastro.escolha-seu-plano')}</p>
-            {edition.getProducts(lang).map(prod => (<div key={prod.id} className="mb-4">
+            {(prods && prods.length > 0) && prods.map(prod => {
+              return <div key={prod.getId()} className="mb-4">
+                <Form.Check custom className="radio-lg"
+                            onClick={() => setFieldValue('product', prod.getId())}
+                            name="product" type="radio"
+                            label={<Label prod={prod}/>}
+                            id={`produto_${prod.id}`}
+                />
+                <div className="text-sm ml-4" dangerouslySetInnerHTML={{__html: prod.getShortDescription()}}></div>
+              </div>
+            })}
+            {/* {edition.getProducts(lang).map(prod => (<div key={prod.id} className="mb-4">
               <Form.Check custom className="radio-lg"
                           onClick={() => setFieldValue('product', prod.id)}
                           name="product" type="radio"
@@ -73,7 +100,7 @@ export default function StepPlan(props: StepProps) {
                           id={`produto_${prod.id}`}
               />
               <div className="text-sm ml-4">{prod.desc}</div>
-            </div>))}
+            </div>))} */}
             {errors?.product && <Curtain isOpened={!!errors?.product}>
               <div className="alert alert-warning">
                 {t(String(errors?.product))}
@@ -89,6 +116,7 @@ export default function StepPlan(props: StepProps) {
             {response.msg}
           </div>
         </Curtain>}
+        {/* {dump(values)} */}
       </FormikForm>
     )}</Formik>
   </div>)

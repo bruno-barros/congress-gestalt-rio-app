@@ -1,13 +1,13 @@
 import {useEffect, useState} from "react";
 import {WpAbstract} from "../../src/http/wp-abstract";
-import Modal from "react-bootstrap/cjs/Modal";
+import Modal from "react-bootstrap/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
 import {useQuery} from "react-query";
-import {Loading} from "@brunobarros/react-components";
 import {errorNotification} from "../../src/resources/responses";
-import Card from "react-bootstrap/cjs/Card";
-import {Icon} from "@brunobarros/react-components";
+import Card from "react-bootstrap/Card";
 import moment from "moment";
+import Loading from "../ui/loading";
+import Icon from "../ui/ionicon";
 
 interface AbstractAttachmentsModalProps {
   show: boolean

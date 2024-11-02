@@ -1,6 +1,6 @@
 import useEvent from "../hooks/useEvent";
 import React from "react";
-import {Icon} from "@brunobarros/react-components";
+import Icon from "../ui/ionicon";
 
 interface AbstractAnswersProps {
   answers: any[]

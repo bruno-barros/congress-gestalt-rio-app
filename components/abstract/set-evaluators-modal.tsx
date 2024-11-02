@@ -4,10 +4,8 @@ import {useQuery, useQueryClient} from "react-query";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
-import {Loading, Icon} from "@brunobarros/react-components";
 import {Form, Formik, FormikProps, FormikState} from "formik";
 import Select from "../ui/form/formik/select";
-import {LoadingButton} from "@brunobarros/react-components";
 import * as Yup from 'yup'
 import Switch from "../ui/form/formik/switch";
 import WpUser from "../../src/http/wp-user";
@@ -16,6 +14,8 @@ import {plural} from "../../src/helpers";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useEvent from "../hooks/useEvent";
 import useEvaluators from "../hooks/useEvaluators";
+import LoadingButton from "../ui/loading-button";
+import Loading from "../ui/loading";
 
 interface SetEvaluatorsModalProps {
   abstract_ids: number[]

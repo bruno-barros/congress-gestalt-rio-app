@@ -2,13 +2,13 @@ import {Edition} from "../../src/resources/event";
 import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import React, {useState} from "react";
-import {LoadingButton} from "@brunobarros/react-components";
 import Abstract from "../../src/resources/abstract";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import Form from "react-bootstrap/cjs/Form";
 import {useRouter} from "next/router";
 import useAbstract from "../hooks/useAbstract";
+import LoadingButton from "../ui/loading-button";
 
 interface AbstractStatusBarProps {
   edition: Edition

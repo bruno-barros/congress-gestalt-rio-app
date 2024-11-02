@@ -1,8 +1,6 @@
 import Modal from "react-bootstrap/cjs/Modal";
 import {useEffect, useRef, useState} from "react";
 import Button from "react-bootstrap/cjs/Button";
-import {LoadingButton} from "@brunobarros/react-components";
-import {motion} from 'framer-motion';
 import useTrans from "../../hooks/useTrans";
 import {toast} from "react-toastify";
 import {Field, Form, Formik, FormikProps} from "formik";
@@ -13,6 +11,7 @@ import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Curtain from "../curtain";
 import CurtainDelayed from "../curtain-delayed";
+import LoadingButton from "../loading-button";
 
 interface PasswordRecoverProps {
   show: boolean

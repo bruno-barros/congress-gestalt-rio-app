@@ -3,19 +3,13 @@ import {useEffect, useRef, useState} from "react";
 import useTrans from "../hooks/useTrans";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from "yup";
-import WpUser from "../../src/http/wp-user";
-import Modal from "react-bootstrap/cjs/Modal";
-import {motion} from "framer-motion";
-import {inputFloatClass} from "../../src/helpers";
-import FieldError from "../ui/form/field-error";
 import Curtain from "../ui/curtain";
-import {toast} from "react-toastify";
-import Button from "react-bootstrap/cjs/Button";
-import {LoadingButton} from "@brunobarros/react-components";
 import Text from "../ui/form/formik/text";
 import Textarea from "../ui/form/formik/textarea";
 import CurtainDelayed from "../ui/curtain-delayed";
 import {WpAbstract} from "../../src/http/wp-abstract";
+import Modal from "react-bootstrap/Modal";
+import LoadingButton from "../ui/loading-button";
 
 interface AuthorEditModalProps {
   show: boolean

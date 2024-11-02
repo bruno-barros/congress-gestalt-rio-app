@@ -1,6 +1,5 @@
 import {useRouter} from "next/router";
 import Card from "react-bootstrap/cjs/Card";
-import {Loading, Icon} from '@brunobarros/react-components'
 import {useEffect, useState} from "react";
 import Link from "next/link";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
@@ -9,6 +8,8 @@ import useTrans from "../../components/hooks/useTrans";
 import Head from "next/head";
 import {siteTitle} from "../../src/helpers";
 import ClearLayout from "../../components/layout/clear";
+import Loading from "../../components/ui/loading";
+import Icon from "../../components/ui/ionicon";
 
 
 const Merging = () => {

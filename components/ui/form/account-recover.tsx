@@ -1,18 +1,16 @@
 import Modal from "react-bootstrap/cjs/Modal";
 import {useEffect, useRef, useState} from "react";
-import Button from "react-bootstrap/cjs/Button";
-import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../../hooks/useTrans";
 import {toast} from "react-toastify";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from "yup";
-import FieldError from "./field-error";
 import WpUser from "../../../src/http/wp-user";
 import {useRouter} from "next/router";
 import Curtain from "../curtain";
 import CurtainDelayed from "../curtain-delayed";
 import Text from "./formik/text";
 import Textarea from "./formik/textarea";
+import LoadingButton from "../loading-button";
 
 interface AccountRecoverProps {
   show: boolean

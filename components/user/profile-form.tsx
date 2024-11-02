@@ -4,7 +4,6 @@ import {MapRoles, User} from "../../src/resources/user";
 import {countries} from "../../src/countries";
 import useTrans from "../hooks/useTrans";
 import Text from "../ui/form/formik/text";
-import {LoadingButton} from "@brunobarros/react-components";
 import Select from "../ui/form/formik/select";
 import Mask from "../ui/form/formik/mask";
 import {getGenres, MapLocales, states} from "../../src/helpers";
@@ -16,6 +15,7 @@ import Textarea from "../ui/form/formik/textarea";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Switch from "../ui/form/formik/switch";
 import Card from "react-bootstrap/cjs/Card";
+import LoadingButton from "../ui/loading-button";
 
 interface ProfileFormProps {
   user: User

@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
-import {Loading} from "@brunobarros/react-components";
 import {useQueryClient} from "react-query";
 import {useRouter} from "next/router";
 import {useDispatch} from "react-redux";
 import {logout} from "../src/store/user.actions";
+import Loading from "../components/ui/loading";
 
 const Logout = ({location}) => {
 
