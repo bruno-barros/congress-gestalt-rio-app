@@ -1,11 +1,11 @@
 import {AxiosResponse} from "axios";
-import {httpApi} from "./axios";
+import {httpApi, restApi} from "./axios";
 import {LoginInputs} from "../store/store.d";
 import isFinite from 'lodash/isFinite'
 import {Providers} from '../../components/social-login/social-buttons.d'
 import {NotificationTypes} from "../resources/notification";
 export default class WpUser {
-
+  static namespace = "/event/v1";
   static FILLABLE = [
     'clientMutationId',
     'id',
@@ -320,8 +320,13 @@ export default class WpUser {
     });
   }
 
-  static update(data: any) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user', {...data});
+  static update(args: {
+    databaseId: number;
+    email: string;
+    [key: string]: any;
+  }) {
+    return restApi.put(`${WpUser.namespace}/users/${args.databaseId}`, {...args});
+    // return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user', {...data});
   }
 
   static export(args: {ids: number[]}): Promise<AxiosResponse> {
