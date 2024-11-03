@@ -39,7 +39,7 @@ export default function Tags({label, containerClass, maxTags: ma, disabled, ...p
     tagInput.current.focus()
   }
 
-  return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
+  return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
     <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxTags})</small></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 

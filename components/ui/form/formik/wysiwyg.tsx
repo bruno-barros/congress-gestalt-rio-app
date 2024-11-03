@@ -43,7 +43,7 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
   }, [editorLength])
 
 
-  return (<div className={`form-group ${containerClass || ''} ${err && 'has-error'}`}>
+  return (<div className={`form-group ${containerClass || ''} ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
     {label && <label htmlFor={`fld_${field.name}`} className="w-100">{label}</label>}
     <ReactQuill
       readOnly={disabled}
