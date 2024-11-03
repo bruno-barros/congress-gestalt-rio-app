@@ -26,6 +26,7 @@ import Loading from "../../components/ui/loading";
 import Image from "../../components/ui/form/formik/image";
 import DateRange from "../../components/ui/form/formik/date-range";
 import { start } from "repl";
+import LangIndicator from "../../components/settings/lang-indicator";
 export default function CreateContext() {
   return (
     <SettingsContextProvider>
@@ -44,6 +45,9 @@ function Settings() {
     logo: evt?.edition?.logo || "",
     start_at: evt?.edition?.start_at,
     end_at: evt?.edition?.end_at,
+    lgpd_url_pt: evt?.edition?.lgpd_url_pt || "",
+    lgpd_url_en: evt?.edition?.lgpd_url_en || "",
+    lgpd_url_es: evt?.edition?.lgpd_url_es || "",
   };
   const validationSchema = Yup.object({
     name: Yup.string().required("Nome é obrigatório"),
@@ -98,6 +102,9 @@ function Settings() {
               dateFormat="YYYY-MM-DD"
               defaultValue={[values.start_at, values.end_at]}
             />
+            <Field infos="Endereço da página com a Política de Privacidade.">
+                <Text name={`lgpd_url_${lang}`} label={<LangIndicator lang={lang}>Link da Política de Privacidade</LangIndicator>} />
+            </Field>
             
 
          
