@@ -39,6 +39,9 @@ export default class Event {
     logo: string;
     start_at: string;
     end_at: string;
+    lgpd_url_pt: string;
+    lgpd_url_en: string;
+    lgpd_url_es: string;
   };
   abstract: {
     abstract_allowed: StringBoolean;
@@ -135,6 +138,9 @@ export class Edition {
     logo: string;
     start_at: string;
     end_at: string;
+    lgpd_url_pt: string;
+    lgpd_url_en: string;
+    lgpd_url_es: string;
   }
   subscription: {
     allowed: StringBoolean;
@@ -255,6 +261,10 @@ export class Edition {
 
   getEndDate(): moment.Moment|null {
     return this.edition?.end_at ? moment(this.edition.end_at) : null;
+  }
+
+  getLgpdUrl(lang: string = "pt") {
+    return this.edition[`lgpd_url_${lang}`] || "";
   }
 
   steps() {

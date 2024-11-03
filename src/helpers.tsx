@@ -17,9 +17,10 @@ export function asset(src: string) {
 
 export function siteTitle(name: string = "", queryClient?: QueryClient) {
   const event: Event | any = queryClient
-    ? queryClient.getQueryData("event")
+    ? queryClient.getQueryData(["settings", null])
     : {};
-  return name ? name + ` - ${event?.eventName}` : event ? event.eventName : "";
+    // console.log(event)
+  return name ? name + ` - ${event?.global?.name}` : event ? event?.global?.name : "";
 }
 
 export const redirectToLogin = (server?: ServerResponse) => {
@@ -165,16 +166,30 @@ export function inputFloatClass(inputValue: any, appendClasses: string = "") {
 
 export function getGenres() {
   return [
-    { value: "M", name: "masculino" },
-    { value: "F", name: "feminino" },
+    { value: "I", name: "prefiro-nao-responder" },
+    { value: "M", name: "homem-cis" },
+    { value: "MT", name: "homem-trans" },
+    { value: "F", name: "mulher-cis" },
+    { value: "FT", name: "mulher-trans" },
+    { value: "T", name: "travesti" },
     { value: "NB", name: "nao-binario" },
-    { value: "I", name: "outro" },
+  ];
+}
+
+export function getRaces() {
+  return [
+    { value: "Parda", name: "parda" },
+    { value: "Preta", name: "preta" },
+    { value: "Indigena", name: "indigena" },
+    { value: "Amarela", name: "amarela" },
+    { value: "Branca", name: "branca" },
   ];
 }
 
 export const MapLocales = [
   { app: "pt", site: "pt_BR", label: "Português" },
   { app: "en", site: "en_US", label: "Inglês" },
+  { app: "es", site: "es_ES", label: "Espanhol" },
 ];
 
 export function ev_locale(locale): string {

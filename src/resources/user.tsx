@@ -1,4 +1,5 @@
 import moment from "moment";
+import { StringBoolean } from "../@types/general";
 
 // import {weekdayTrans} from "./date-time-week";
 
@@ -12,7 +13,9 @@ export interface UserInterface {
   roles?: any;
   avatar: any;
   phone?: string;
+  phone_country?: string;
   gender?: string;
+  race?: string;
   description?: string;
   cpf?: string;
   postcode?: string;
@@ -20,6 +23,7 @@ export interface UserInterface {
   address?: string;
   birthdate?: string;
   cellphone?: string;
+  cellphone_country?: string;
   city?: string;
   country?: string;
   number?: number;
@@ -30,18 +34,30 @@ export interface UserInterface {
   user_status?: number;
   passport?: string
   badge_name?: string
+  social_name?: string
   locale?: string
   institution_name?: string
   institution_occupation?: string
   institution_email?: string
   institution_phone?: string
+  education?: string
+  has_institution?: StringBoolean
+  abg_member?: StringBoolean
   onesignal_hash?: string
   allow_newsletter: boolean
   consents: string
   special_behaviors?: string
-  is_pdc?: boolean
+  is_pdc?: StringBoolean
   pdc_needs?: string
-  is_child_care?: boolean
+  is_child_care?: StringBoolean
+  child_care_needs?: string
+  is_affirmative_action?: StringBoolean
+  affirmative_action?: string
+  apply_affirmative_action?: StringBoolean
+  is_artist?: StringBoolean
+  is_artist_volunteer?: StringBoolean
+  artistic_skill?: string
+  languages?: string[]
 }
 
 /**
