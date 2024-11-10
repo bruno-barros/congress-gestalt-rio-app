@@ -9,10 +9,8 @@ import useSettingsContext, {
 } from "../../components/settings/settings-context";
 import Switch from "../../components/ui/form/formik/switch";
 import { dump } from "../../src/helpers";
-import Text from "../../components/ui/form/formik/text";
-import Textarea from "../../components/ui/form/formik/textarea";
-import Layout from "./layout";
-import s from "./settings.module.scss";
+import Layout from "../../components/settings/settings-layout";
+import s from "../../components/settings/settings.module.scss";
 import { useState } from "react";
 import * as Yup from "yup";
 import { WpSettings } from "../../src/http/wp-settings";
