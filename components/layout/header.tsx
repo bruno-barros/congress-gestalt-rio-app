@@ -60,7 +60,7 @@ export default function Header(props: HeaderProps) {
            <Nav.Link active={router.pathname === '/dashboard'}>Home</Nav.Link>
           </Link>
           <Link href="/profile?tab=subscriptions" passHref>
-           <Nav.Link>Inscrição</Nav.Link>
+           <Nav.Link>{t('inscricao')}</Nav.Link>
           </Link>
           {user.canManageAbstracts()
             && (<>

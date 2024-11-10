@@ -1,4 +1,4 @@
-import { ProductStatusEnum } from "../@types/ecommerce";
+import { ProductStatusEnum } from "../types/ecommerce";
 import { moneyFormat } from "../helpers";
 
 export default class Product {
@@ -29,38 +29,38 @@ export default class Product {
     this.name = data?.name;
     this.status = data?.status;
     this.type = data?.type;
-    this.price = data?.price;// preço com desconto
-    this.salePrice = data?.salePrice;// preço com desconto
-    this.regularPrice = data?.regularPrice;// preço cheio
+    this.price = data?.price; // preço com desconto
+    this.salePrice = data?.salePrice; // preço com desconto
+    this.regularPrice = data?.regularPrice; // preço cheio
   }
 
   static make(data: any) {
     return new Product(data);
   }
 
-  getId(){
-    return this.databaseId || this.id
+  getId() {
+    return this.databaseId || this.id;
   }
 
-  getName(){
-    return this.name || 'Sem nome'
+  getName() {
+    return this.name || "Sem nome";
   }
 
-  getFullPrice(formated: boolean = false){
-    const value =  this.regularPrice || this.price
-    return formated ? moneyFormat(value) : value
+  getFullPrice(formated: boolean = false) {
+    const value = this.regularPrice || this.price;
+    return formated ? moneyFormat(value) : value;
   }
 
-  getSalePrice(formated: boolean = false){
-    const value = this.salePrice || this.price
-    return formated ? moneyFormat(value) : value
+  getSalePrice(formated: boolean = false) {
+    const value = this.salePrice || this.price;
+    return formated ? moneyFormat(value) : value;
   }
 
-  getShortDescription(){
-    return this.shortDescription || this.description
+  getShortDescription() {
+    return this.shortDescription || this.description;
   }
 
-  getLongDescription(){
-    return this.description || this.shortDescription
+  getLongDescription() {
+    return this.description || this.shortDescription;
   }
 }

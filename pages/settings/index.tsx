@@ -50,6 +50,7 @@ function Settings() {
     rate_send_now: evt?.global?.rate_send_now || 1,
     rate_limit_per_minute: evt?.global?.rate_limit_per_minute || 1,
     notification_sender_name: evt?.global?.notification_sender_name || "",
+    notification_sender_email: evt?.global?.notification_sender_email || "",
     notification_copy: evt?.global?.notification_copy || "",
   };
   const validationSchema = Yup.object({
@@ -139,6 +140,9 @@ function Settings() {
               </Field>
               <Field infos="Nome do remetente nas notificações por email.">
                 <Text name="notification_sender_name" label="Nome remetente" />                  
+              </Field>
+              <Field infos="Atenção: use o email configurado no serviço de SMTP.">
+                <Text name="notification_sender_email" label="E-mail remetente" />                  
               </Field>
               <Field infos="Separe os emails com vírgula.">
                 <Text name="notification_copy" label="E-mails de cópia" />                  

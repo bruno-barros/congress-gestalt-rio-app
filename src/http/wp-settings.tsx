@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 import { restApi } from "./axios";
-import { WpRestResponse } from "../@types/restapi";
-import { EditionsResponse } from "../@types/settings";
+import { WpRestResponse } from "../types/restapi";
+import { EditionsResponse } from "../types/settings";
 
 export class WpSettings {
   static namespace = "/event/v1";

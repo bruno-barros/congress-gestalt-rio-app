@@ -6,7 +6,7 @@ import useTrans from "../hooks/useTrans";
 import Text from "../ui/form/formik/text";
 import Select from "../ui/form/formik/select";
 import Mask from "../ui/form/formik/mask";
-import {getGenres, MapLocales, states} from "../../src/helpers";
+import {dump, getGenres, getRaces, MapLocales, states} from "../../src/helpers";
 import * as Yup from "yup";
 import WpUser from "../../src/http/wp-user";
 import {errorNotification, successNotification} from "../../src/resources/responses";
@@ -16,6 +16,12 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Switch from "../ui/form/formik/switch";
 import Card from "react-bootstrap/cjs/Card";
 import LoadingButton from "../ui/loading-button";
+import Ac from "../access-control";
+import { REQUIREMENTS } from "../access-control/requirements";
+import Phone from "../ui/form/formik/phone";
+import { useRouter } from "next/router";
+import useSettings from "../hooks/useSettings";
+import useUserDocuments from "../hooks/useUserDocuments";
 
 interface ProfileFormProps {
   user: User
@@ -30,6 +36,10 @@ export default function ProfileForm(props: ProfileFormProps) {
   const {refetch: refreshMySelf, user: auth} = useCurrentUser()
   const [loading, setLoading] = useState(false)
   let isRequired = !auth.isAdmin()
+  const {data: event, currentEdition: edition} = useSettings()
+  const {data: documents, isLoading: docLoading} = useUserDocuments(user.getId())
+  const router = useRouter()
+  const lang = router.locale
   const FormSchema = !isRequired ? null : Yup.object().shape({
     country: Yup.string().matches(/[A-Z]{2}/, 'validacao.obrigatorio').required('validacao.obrigatorio'),
     cpf: Yup.string().when('country', {
@@ -104,7 +114,9 @@ export default function ProfileForm(props: ProfileFormProps) {
       passport: user.getUserData().passport || '',
       badge_name: user.getUserData().badge_name || '',
       cellphone: user.getUserData().cellphone || '',
+      cellphone_country: user.getUserData().cellphone_country || '55',
       phone: user.getUserData().phone || '',
+      phone_country: user.getUserData().phone_country || '55',
       birthdate: user.getUserData().birthdate || '',
       gender: user.getUserData().gender || 'M',
       description: user.getUserData().description || '',
@@ -122,17 +134,27 @@ export default function ProfileForm(props: ProfileFormProps) {
       allow_newsletter: user.getUserData().allow_newsletter,
       is_pdc: user.getUserData()?.is_pdc ? String(Number(user.getUserData().is_pdc)) : '0',
       pdc_needs: user.getUserData()?.pdc_needs || '',
-      is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0'
+      is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0',
+      child_care_needs: user.getUserData()?.child_care_needs || '',
+      // --------------------------------
+      race: user.getUserData().race || '',
+      education: user.getUserData().education || '',
+      has_institution: user.getUserData().has_institution || '0',
+      abg_member: user.getUserData().abg_member || '0',
+      is_affirmative_action: user.getUserData()?.is_affirmative_action || '0',
+      affirmative_action: user.getUserData()?.affirmative_action || '',
+      apply_affirmative_action: user.getUserData()?.apply_affirmative_action || '0',
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
   >{({errors, values, touched, isValid, setFieldValue}) => (
     <Form>
+      {/* {dump(documents)} */}
       <fieldset>
         <legend>{t('dados-pessoais')}</legend>
 
-        {editingMode === 'admin'
-        && <div className="row border pt-3 pb-2 mb-3">
+      <Ac requires={[REQUIREMENTS.user.editSensitive]}>
+        <div className="row border pt-3 pb-2 mb-3">
           <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required={isRequired}>
             {MapRoles.map(r => (<option key={r.name} value={r.name}>{r.label}</option>))}
           </Select>
@@ -145,7 +167,8 @@ export default function ProfileForm(props: ProfileFormProps) {
               <option value="1">Inativo</option>
             </Select>
           </div>
-        </div>}
+        </div>
+      </Ac>
 
         <div className="row">
           <Text name="firstName" label={t('cadastro.nome')} required={isRequired} containerClass="col-12 col-md"/>
@@ -166,9 +189,10 @@ export default function ProfileForm(props: ProfileFormProps) {
         <Text name="alt_email" type="email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
         </div>
         <div className="row">
-          <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required={isRequired}
-                containerClass="col-12 col-md"/>
-          <Mask name="phone" mask="(99) 9999-9999" label={t('cadastro.telefone')} containerClass="col-12 col-md"/>
+          <Phone name="cellphone" countryName="cellphone_country" mask="(99) 99999-9999" label={t('cadastro.celular')} required={isRequired}
+                        containerClass="col-12 col-md"/>
+          <Phone name="phone" countryName="phone_country" mask="(99) 9999-9999" label={t('cadastro.telefone')}
+                        containerClass="col-12 col-md"/>
         </div>
         <div className="row">
           <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required={isRequired}
@@ -176,28 +200,70 @@ export default function ProfileForm(props: ProfileFormProps) {
           <Select name="gender" label={t('cadastro.genero')} required={isRequired} containerClass="col-12 col-md">
             {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
           </Select>
+          <Select name="race" label={t('cadastro.raca')} required containerClass="col-12 col-md">
+            {getRaces().map(g => (<option key={g.value} value={g.value}>{t(`raca.${g.name}`)}</option>))}
+          </Select>
         </div>
-        <fieldset className="border p-3 mb-3">
-          <legend className="px-2 text-sm w-auto">Acessibilidade</legend>
+        <Textarea name="description" label="Bio"/>
+        <fieldset className="border p-3 mb-3 bg-light">
+          <legend className="px-2 text-sm w-auto"><strong>Acessibilidade</strong></legend>
           <div className="row">
             <Select name="is_pdc" label="É pessoa com deficiência (PCD)?" containerClass="col-12 col-md-4">
               <option value="0">{t('nao')}</option>
               <option value="1">{t('sim')}</option>
-            </Select>
-
-            <Select name="is_child_care" label="Necessita de sala de apoio para amamentação ou outros cuidados com crianças?" containerClass="col-12 col-md">
+            </Select>          
+            <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
+            
+          </div>
+          <div className="row">
+            <Select name="is_child_care" label="Necessita de apoio para criança menor?" containerClass="col-12 col-md-4">
               <option value="0">{t('nao')}</option>
               <option value="1">{t('sim')}</option>
             </Select>
+                              
+            <Select name="child_care_needs" label="Gostaria de levar minha(meu) filha(o) ao Congresso sob supervisão de um recreador/cuidador." containerClass="col-12 col-md"  disabled={values.is_child_care === '0'}>
+              <option value="De zero a um ano">De zero a um ano</option>
+              <option value="De dois a cinco anos">De dois a cinco anos</option>
+              <option value="De seis a sete anos">De seis a sete anos</option>
+              <option value="Acima de oito anos">Acima de oito anos</option>
+              </Select>
           </div>
-          {values.is_pdc === '1' &&
-          <div className="row">
-            <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md"/>
-          </div>}
-
         </fieldset>
-        <Textarea name="description" label="Bio"/>
+        
       </fieldset>
+
+      <fieldset className="border p-3 mb-3 bg-light">
+        <legend className="px-2 text-sm w-auto"><strong>Ações Afirmativas</strong></legend>
+        <div className="row">
+          <Select name="is_affirmative_action" label="Você se identifica como Ação Afirmativa?" containerClass="col-12 col-md-6">
+            <option value="0">{t('nao')}</option>
+            <option value="1">{t('sim')}</option>
+          </Select>
+
+          <Select name="affirmative_action" label="Que tipo de Ação Afirmativa?" containerClass="col-12 col-md" disabled={values.is_affirmative_action === '0'}>
+            <option value="">Nenhuma</option>
+            <option value="Sou pessoa negra">Sou pessoa negra</option>
+            <option value="Sou indígena">Sou indígena</option>
+            <option value="Sou mulher/homem trans">Sou mulher/homem trans</option>
+            <option value="Sou travesti">Sou travesti</option>
+            <option value="Sou não-binário">Sou não-binário</option>
+          </Select>
+        </div>
+        {values.is_affirmative_action === '1' &&
+        <div className="row">
+          <Select name="apply_affirmative_action" label="Deseja participar do edital para concorrer às vagas das ações afirmativas?" containerClass="col-12">
+            <option value="0">{t('nao')}</option>
+            <option value="1">{t('sim')}</option>
+          </Select>
+          {values.apply_affirmative_action == '1' && 
+          <div className="col-12"><div className="badge text-danger">É obrigatório o envio de documentos e/ou autodeclaração que comprove sua identidade.</div></div>}
+          
+        </div>}
+
+        {/* {dump(values)} */}
+
+      </fieldset>
+
       <fieldset>
         <legend>{t('cadastro.endereco')}</legend>
         <div className="form-row">
@@ -240,11 +306,11 @@ export default function ProfileForm(props: ProfileFormProps) {
       <fieldset>
         <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/>
       </fieldset>
+      {edition?.getLgpdUrl(lang) && <p>Leia os <a href={edition.getLgpdUrl(lang)} target="_blank">Termos de Serviço</a></p>}
+      
+      
       <LoadingButton variant="primary" block size="lg" className={` mt-3`} disable={!isValid}
                      loading={loading}>{t('salvar')}</LoadingButton>
-      {/*<code>{JSON.stringify(values, null, 2)}</code>*/}
-      {/*<hr/>*/}
-      {/*<code>{JSON.stringify(user, null, 2)}</code>*/}
 
     </Form>
   )}</Formik>)

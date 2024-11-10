@@ -50,7 +50,7 @@ const Login = () => {
 
 
         {(user && user.getId() > -1 && authToken.factory().isValid) && <div className="text-center"><div className="alert alert-warning">
-          Olá {user?.getFirstName()}. Você já está logado. <br/><Link href={`/dashboard`} passHref><a>Entrar</a></Link> | <Link href={`/logout`} passHref><a>Sair</a></Link>
+          Olá {user?.getFirstName()}. {t('ja-autenticado')}. <br/><Link href={`/dashboard`} passHref><a>{t('entrar')}</a></Link> | <Link href={`/logout`} passHref><a>{t('sair')}</a></Link>
         </div></div>}
 
         <LoginForm/>

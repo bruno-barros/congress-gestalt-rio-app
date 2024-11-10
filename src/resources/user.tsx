@@ -1,5 +1,5 @@
 import moment from "moment";
-import { StringBoolean } from "../@types/general";
+import { StringBoolean } from "../types/general";
 
 // import {weekdayTrans} from "./date-time-week";
 
@@ -32,32 +32,32 @@ export interface UserInterface {
   state?: string;
   registeredDate?: string;
   user_status?: number;
-  passport?: string
-  badge_name?: string
-  social_name?: string
-  locale?: string
-  institution_name?: string
-  institution_occupation?: string
-  institution_email?: string
-  institution_phone?: string
-  education?: string
-  has_institution?: StringBoolean
-  abg_member?: StringBoolean
-  onesignal_hash?: string
-  allow_newsletter: boolean
-  consents: string
-  special_behaviors?: string
-  is_pdc?: StringBoolean
-  pdc_needs?: string
-  is_child_care?: StringBoolean
-  child_care_needs?: string
-  is_affirmative_action?: StringBoolean
-  affirmative_action?: string
-  apply_affirmative_action?: StringBoolean
-  is_artist?: StringBoolean
-  is_artist_volunteer?: StringBoolean
-  artistic_skill?: string
-  languages?: string[]
+  passport?: string;
+  badge_name?: string;
+  social_name?: string;
+  locale?: string;
+  institution_name?: string;
+  institution_occupation?: string;
+  institution_email?: string;
+  institution_phone?: string;
+  education?: string;
+  has_institution?: StringBoolean;
+  abg_member?: StringBoolean;
+  onesignal_hash?: string;
+  allow_newsletter: boolean;
+  consents: string;
+  special_behaviors?: string;
+  is_pdc?: StringBoolean;
+  pdc_needs?: string;
+  is_child_care?: StringBoolean;
+  child_care_needs?: string;
+  is_affirmative_action?: StringBoolean;
+  affirmative_action?: string;
+  apply_affirmative_action?: StringBoolean;
+  is_artist?: StringBoolean;
+  is_artist_volunteer?: StringBoolean;
+  artistic_skill?: string;
+  languages?: string[];
 }
 
 /**
@@ -73,122 +73,148 @@ export class User {
 
   static make(user: any) {
     // console.log({makeAuth: user});
-    return new User(user)
+    return new User(user);
   }
 
   getUserData() {
-    return this.user
+    return this.user;
   }
 
   getId() {
-    return this.user?.databaseId || -1
+    return this.user?.databaseId || -1;
   }
 
   getFirstName() {
-    return this.user?.firstName || this.user?.name?.split(' ')[0] || null
+    return this.user?.firstName || this.user?.name?.split(" ")[0] || null;
   }
 
   getAvatarUrl() {
-    return this.user.avatar?.url || null
+    return this.user.avatar?.url || null;
   }
 
   get registeredDate() {
-    return this.user.registeredDate
-      && moment(this.user.registeredDate).format('DD/MM/YYYY') || ''
+    return (
+      (this.user.registeredDate &&
+        moment(this.user.registeredDate).format("DD/MM/YYYY")) ||
+      ""
+    );
   }
 
-
+  /**
+   * @deprecated Usar component/access-control/resolvers/Abstract.tsx
+   * @returns 
+   */
   canManageAbstracts() {
-    return this.isAdmin() || this.isSupervisor() || this.isSuperAdmin() || this.isShopManager()
+    return (
+      this.isAdmin() ||
+      this.isSupervisor() ||
+      this.isSuperAdmin() ||
+      this.isShopManager()
+    );
   }
 
   canPublishAbstracts() {
-    return this.isParticipant()
+    return this.isParticipant();
   }
 
   canEvaluateAbstracts() {
-    return this.isEvaluator()
+    return this.isEvaluator();
   }
 
   isSuperAdmin() {
-    if(process.env.NODE_ENV === 'development' && this.isAdmin()){
+    if (process.env.NODE_ENV === "development" && this.isAdmin()) {
       return true;
     }
-    const superIds = [1, 3]
-    return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1
+    const superIds = [1, 3];
+    return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1;
   }
 
   isAdmin() {
-    return !!this.user?.roles?.nodes.find(role => role.name === 'administrator');
+    return !!this.user?.roles?.nodes.find(
+      (role) => role.name === "administrator"
+    );
   }
 
   isSupervisor() {
-    return !!this.user?.roles?.nodes.find(role => role.name === 'editor');
+    return !!this.user?.roles?.nodes.find((role) => role.name === "editor");
   }
 
   isEvaluator() {
-    return !!this.user?.roles?.nodes.find(role => role.name === 'contributor');
+    return !!this.user?.roles?.nodes.find(
+      (role) => role.name === "contributor"
+    );
   }
 
-
   isParticipant() {
-    return !!this.user?.roles?.nodes.find(role => role.name === 'subscriber');
+    return !!this.user?.roles?.nodes.find((role) => role.name === "subscriber");
   }
 
   isShopManager() {
-    return !!this.user?.roles?.nodes.find(role => role.name === 'shop_manager');
+    return !!this.user?.roles?.nodes.find(
+      (role) => role.name === "shop_manager"
+    );
   }
 
   hasMinimumRegisteredFields() {
-    let required = ['name', 'firstName', 'email', 'gender', 'lastName', 'birthdate', 'cellphone', 'badge_name']
-    if(this.isAdmin()){
+    let required = [
+      "name",
+      "firstName",
+      "email",
+      "gender",
+      "lastName",
+      "birthdate",
+      "cellphone",
+      "badge_name",
+    ];
+    if (this.isAdmin()) {
       return true;
     }
-    if (this.user.country === 'BR') {
-      required.push('cpf')
+    if (this.user.country === "BR") {
+      required.push("cpf");
     } else {
-      required.push('passport')
+      required.push("passport");
     }
-  let valid = true
-    required.map(field => {
-      if(!this.user[field]){
-        valid = false
+    let valid = true;
+    required.map((field) => {
+      if (!this.user[field]) {
+        valid = false;
       }
-    })
+    });
 
-    return valid
+    return valid;
   }
 
-  getConsents(){
-    return this.user.consents ? JSON.parse(this.user.consents) : {}
+  getConsents() {
+    return this.user.consents ? JSON.parse(this.user.consents) : {};
   }
 
-  byPassSynopsis(){
-    return this.user?.special_behaviors && this.user.special_behaviors.indexOf('bypass_synopsis') !== -1
+  byPassSynopsis() {
+    return (
+      this.user?.special_behaviors &&
+      this.user.special_behaviors.indexOf("bypass_synopsis") !== -1
+    );
   }
 }
 
-
 export class Author {
-  id: number
-  wp_user_id?: number
-  name: string
-  email: string
-  active: number
-  company: string
-  bio: string
-  is_speaker: number
-  order: number
+  id: number;
+  wp_user_id?: number;
+  name: string;
+  email: string;
+  active: number;
+  company: string;
+  bio: string;
+  is_speaker: number;
+  order: number;
 
   constructor(data: any) {
-    Object.assign(this, data)
+    Object.assign(this, data);
   }
 
   static make(data: any) {
-    return new Author(data)
+    return new Author(data);
   }
 }
-
 
 // export function getGenres() {
 //   return [
@@ -199,45 +225,45 @@ export class Author {
 // }
 export const Genders = () => {
   const genres = {
-    M: 'Homem',
-    F: 'Mulher',
-    I: 'Indefinido',
-  }
+    M: "Homem",
+    F: "Mulher",
+    I: "Indefinido",
+  };
 
   function getAll() {
-    return genres
+    return genres;
   }
 
   function getAllAsArray() {
-    let genresArr = []
-    Object.keys(genres).map(k => {
-      genresArr.push({id: k, value: genres[k]})
-    })
-    return genresArr
+    let genresArr = [];
+    Object.keys(genres).map((k) => {
+      genresArr.push({ id: k, value: genres[k] });
+    });
+    return genresArr;
   }
 
   function findByKey(k) {
-    return genres[k.toUpperCase()] || null
+    return genres[k.toUpperCase()] || null;
   }
 
   function findByName(n) {
-    return getAllAsArray()
-      .find(genre => genre.value.toLowerCase() === n.toLowerCase())
+    return getAllAsArray().find(
+      (genre) => genre.value.toLowerCase() === n.toLowerCase()
+    );
   }
 
   return {
     all: getAll,
     allAsArray: getAllAsArray,
     findByKey,
-    findByName
-  }
+    findByName,
+  };
 };
-
 
 export const MapRoles = [
   // {name: 'customer', label: 'Cliente', color: '#ada900'},
-  {name: 'subscriber', label: 'Participante', color: '#ada900'},
-  {name: 'contributor', label: 'Avaliador', color: '#bc6402'},
-  {name: 'editor', label: 'Supervisor', color: '#868686'},
-  {name: 'administrator', label: 'Admin', color: '#000000'},
-]
+  { name: "subscriber", label: "Participante", color: "#ada900" },
+  { name: "contributor", label: "Avaliador", color: "#bc6402" },
+  { name: "editor", label: "Supervisor", color: "#868686" },
+  { name: "administrator", label: "Admin", color: "#000000" },
+];

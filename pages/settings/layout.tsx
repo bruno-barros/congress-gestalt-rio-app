@@ -1,5 +1,5 @@
 'use client';
-import { PropsWithChildren, useEffect } from "react";
+import { CSSProperties, PropsWithChildren, useEffect } from "react";
 import MainLayout from "../../components/layout";
 import s from "./settings.module.scss";
 import Nav from "react-bootstrap/Nav";
@@ -17,6 +17,7 @@ export default function Layout(props: PropsWithChildren<LayoutProps>) {
   const router = useRouter();
   const { currentEdition, setCurrentEdition } = useSettingsContext()
   const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
+  const linksStyle: CSSProperties = isLoading ? { opacity: ".4", pointerEvents: 'none' } : {};
 
 
   useEffect(()=>{
@@ -56,11 +57,11 @@ export default function Layout(props: PropsWithChildren<LayoutProps>) {
 
                   </Form.Group>
                 </Form>
-                {currentEdition && <>
+                {currentEdition && <div style={linksStyle}>
                   <NavLink label="Edição" path="/edition" />
                   <NavLink label="Inscrições" path="/subscriptions" />
                   <NavLink label="Trabalhos" path="/abstracts" />
-                </>}
+                </div>}
               </Nav>
             </div>
           </div>

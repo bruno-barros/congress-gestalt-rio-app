@@ -201,7 +201,7 @@ export class WpAbstract {
       title
       subtitle
       topic
-      type
+      
       status
       date
       edition_id

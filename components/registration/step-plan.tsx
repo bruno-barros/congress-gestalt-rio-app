@@ -27,9 +27,10 @@ export default function StepPlan(props: StepProps) {
   const lang = router.locale
 
   useEffect(() => {
+    // console.log(form.current)
     formInstance(form.current)
     return ()=> formInstance(null)
-  }, [])
+  }, [form, prods])
 
   function dismissAlert() {
     setTimeout(() => {
@@ -92,20 +93,15 @@ export default function StepPlan(props: StepProps) {
                 <div className="text-sm ml-4" dangerouslySetInnerHTML={{__html: prod.getShortDescription()}}></div>
               </div>
             })}
-            {/* {edition.getProducts(lang).map(prod => (<div key={prod.id} className="mb-4">
-              <Form.Check custom className="radio-lg"
-                          onClick={() => setFieldValue('product', prod.id)}
-                          name="product" type="radio"
-                          label={<Label prod={prod}/>}
-                          id={`produto_${prod.id}`}
-              />
-              <div className="text-sm ml-4">{prod.desc}</div>
-            </div>))} */}
             {errors?.product && <Curtain isOpened={!!errors?.product}>
               <div className="alert alert-warning">
                 {t(String(errors?.product))}
               </div>
             </Curtain>}
+
+            {edition?.Subscription()?.getPlansDescription(lang) && <div className="mt-4 border-left bg-light p-3 text-sm">
+              <div dangerouslySetInnerHTML={{__html: edition.Subscription().getPlansDescription(lang)}}></div>  
+            </div>}
 
 
           </div>

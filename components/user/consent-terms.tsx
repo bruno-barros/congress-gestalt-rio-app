@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { useQueryClient } from "react-query";
 import LoadingButton from "../ui/loading-button";
 import Loading from "../ui/loading";
+import useSettings from "../hooks/useSettings";
 
 interface ConsentTermsProps {}
 
@@ -25,9 +26,12 @@ export default function ConsentTerms(props: ConsentTermsProps) {
   const [show, setShow] = useState(false);
   const [submiting, setSubmiting] = useState(false);
   const [consent, setConsent] = useState(null);
-  const { data: event, isLoading } = useEvent();
-  const edition = event?.currentEdition();
+  // const { data: event, isLoading } = useEvent();
+  // const edition = event?.currentEdition();
+  const { data: event, isLoading, currentEdition: edition } = useSettings();
   const [initValues, setInitValues] = useState({});
+
+  return <></>;// desativado para usar nova api
 
   useEffect(() => {
     // consent configurations

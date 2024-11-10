@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { ProductCategory } from "../../src/@types/ecommerce";
+import { ProductCategory } from "../../src/types/ecommerce";
 import WpEcommerce from "../../src/http/wp-ecommerce";
 
 export default function useProductCategories() {

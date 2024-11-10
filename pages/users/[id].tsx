@@ -11,6 +11,8 @@ import {User} from "../../src/resources/user";
 import UsersListSidebar from "../../components/user/users-list-sidebar";
 import privateRoute from "../../components/hoc/private-route";
 import Loading from "../../components/ui/loading";
+import useUserDocuments from "../../components/hooks/useUserDocuments";
+import { DocumentContexts } from "../../src/resources/document";
 
 
 const UserEditing = () => {
@@ -22,6 +24,7 @@ const UserEditing = () => {
   const {data: user, error, isLoading: loadingUser} = useQuery(['user', router.query.id], queryUser, {
     enabled: true
   })
+  const {data: documents, isLoading: docLoading} = useUserDocuments(Number(router.query.id))
   let editingMode: 'user'|'admin' = auth.canManageAbstracts() ? 'admin' : 'user'
 
   function queryUser(): Promise<any>{
@@ -68,7 +71,15 @@ const UserEditing = () => {
         <ProfileForm editingMode={editingMode} user={user}/>
       </div>
       <div className="col-12 col-md-4">
-        <p><strong>Histórico de inscrições</strong></p>
+        <p><strong>Documentos</strong></p>
+        {docLoading && <Loading />}
+        {(!docLoading && documents.length === 0) && <div className="alert alert-light border">Nenhum documento enviado.</div>}
+        {(documents && documents.length > 0) && <ul className="list-group">{documents.map(doc => {
+          return <li key={doc.id} className="list-group-item text-sm">
+            <a href={doc.url} target="_blank" className="d-block">{doc.name}</a>
+            <span className="badge badge-primary badge-pill">{DocumentContexts(doc.context)?.[0]?.name}</span>
+          </li>
+        })}</ul>}
       </div>
     </div>
   </MainLayout>)

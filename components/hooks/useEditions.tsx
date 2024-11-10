@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { EditionsResponse } from "../../src/@types/settings";
+import { EditionsResponse } from "../../src/types/settings";
 import { WpSettings } from "../../src/http/wp-settings";
 import { Edition } from "../../src/resources/event";
 
@@ -11,10 +11,10 @@ export default function useEditions() {
     const global = axios.data.data.global || {};
     const editions = axios.data.data.editions || {};
     return keys.map((key) => {
-        return Edition.make(editions[key], {
-            id: key,
-            global
-        });
+      return Edition.make(editions[key], {
+        id: key,
+        global,
+      });
     });
   }
 

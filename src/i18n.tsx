@@ -10,7 +10,7 @@ i18n
   .init({
     // resources,
     fallbackLng: "pt",
-    supportedLngs: ['pt', 'en', 'es'],
+    supportedLngs: ['pt', 'es', 'en'],// @see next.config.js
     debug: false,
     keySeparator: '.', // we do not use keys in form messages.welcome
     interpolation: {

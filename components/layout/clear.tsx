@@ -1,13 +1,10 @@
 import Head from "next/head";
-import Image from 'next/image'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import styles from "./main.module.scss";
 import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
-import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";

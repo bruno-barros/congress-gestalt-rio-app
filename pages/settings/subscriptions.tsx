@@ -25,6 +25,8 @@ import DateRange from "../../components/ui/form/formik/date-range";
 import Loading from "../../components/ui/loading";
 import Topics from "../../components/settings/fields/topics";
 import useProductCategories from "../../components/hooks/useProductCategories";
+import LangIndicator from "../../components/settings/lang-indicator";
+import Wysiwyg from "../../components/ui/form/formik/wysiwyg";
 
 export default function Context() {
   return (
@@ -46,6 +48,9 @@ function Subscription() {
     start_at: evt?.subscription.start_at,
     end_at: evt?.subscription.end_at,
     category_id: evt?.subscription.category_id || '',
+    plans_description_pt: evt?.subscription.plans_description_pt || '',
+    plans_description_en: evt?.subscription.plans_description_en || '',
+    plans_description_es: evt?.subscription.plans_description_es
   };
   const validationSchema = Yup.object({
     // name: Yup.string().required("Obrigatório"),
@@ -115,8 +120,15 @@ function Subscription() {
                   {(categories && categories.length > 0) && categories.map(cat => {
                     return <option key={cat.databaseId} value={cat.databaseId}>{cat.name}</option>
                   })}
-
                 </Select>
+            </Field>
+
+            <Field infos="Texto que será exibido na tela de seleção do plano (pacote).">
+              <Wysiwyg
+                name={`plans_description_${lang}`}
+                label={<LangIndicator lang={lang}>Observações sobre planos de inscrição</LangIndicator>}
+                 charsMax={500}
+                 />
             </Field>
 
 

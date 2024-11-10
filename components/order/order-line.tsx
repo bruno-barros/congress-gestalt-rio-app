@@ -1,6 +1,7 @@
 import moment from "moment";
 import ToolTip from "../ui/tooltip";
 import {Order, orderStatusLabel} from "../../src/resources/order";
+import Icon from "../ui/ionicon";
 
 interface OrderLineProps {
   order: Order
@@ -19,7 +20,9 @@ export default function OrderLine(props: OrderLineProps) {
     <div className="pt-3 pb-1" style={{fontSize: '1.4em'}}>
       {order.getItems().map(line => (<div key={line.product?.databaseId} className="d-flex align-items-center">
         <ToolTip text={orderStatusLabel(order.status)}>
-          <div className={`status-ball ${order.status.toLowerCase()}`}></div>
+          <div className={`status-ball ${order.status.toLowerCase()}`}>
+            {order.isCompleted() && <Icon name="checkmark" style={{color: '#fff', fontSize: 24}} />}
+          </div>
         </ToolTip>
         <strong className="mx-4">{line.product?.name}</strong>
         <div className="">{line.product?.productCategories?.nodes[0]?.name}</div>

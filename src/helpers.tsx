@@ -3,6 +3,7 @@ import Router, { useRouter } from "next/router";
 import trimStart from "lodash/trimStart";
 import { QueryClient } from "react-query";
 import Event, { Edition } from "./resources/event";
+import { DocumentSchema } from "./types/document";
 
 /**
  * Used to load files from '/public' folder
@@ -19,8 +20,12 @@ export function siteTitle(name: string = "", queryClient?: QueryClient) {
   const event: Event | any = queryClient
     ? queryClient.getQueryData(["settings", null])
     : {};
-    // console.log(event)
-  return name ? name + ` - ${event?.global?.name}` : event ? event?.global?.name : "";
+  // console.log(event)
+  return name
+    ? name + ` - ${event?.global?.name}`
+    : event
+    ? event?.global?.name
+    : "";
 }
 
 export const redirectToLogin = (server?: ServerResponse) => {
@@ -353,39 +358,43 @@ export function average(numbers: any[], round: number = 1) {
   return (Math.round((sum / divby) * 100) / 100).toFixed(round);
 }
 
-
-export function specialValidationRules(field: string, subfield: 'min'|'max', edition: Edition, values: any){
+export function specialValidationRules(
+  field: string,
+  subfield: "min" | "max",
+  edition: Edition,
+  values: any
+) {
   const v = edition.abstract.required_fields[field].hasOwnProperty(subfield)
-  ? edition.abstract.required_fields[field][subfield]
-  : undefined;
-  const type = values.type || ''
+    ? edition.abstract.required_fields[field][subfield]
+    : undefined;
+  const type = values.type || "";
 
-  if(type == 'MR' && field == 'resume'){
-    return subfield == 'min' ? 500 : 7000
-  } else if(type == 'CO' && field == 'resume'){
-    return subfield == 'min' ? 1500 : 2000
-  } else if(type == 'MC' && field == 'resume'){
-    return subfield == 'min' ? 1000 : 3000
-  } else if(type == 'RC' && field == 'resume'){
-    return subfield == 'min' ? 1500 : 2200
-  } else if(type == 'PO' && field == 'resume'){
-    return subfield == 'min' ? 1500 : 2500
-  } else if(type == 'WS' && field == 'resume'){
-    return subfield == 'min' ? 1500 : 2200
-  } else if(type == 'PF' && field == 'resume'){
-    return subfield == 'min' ? 1500 : 2200
+  if (type == "MR" && field == "resume") {
+    return subfield == "min" ? 500 : 7000;
+  } else if (type == "CO" && field == "resume") {
+    return subfield == "min" ? 1500 : 2000;
+  } else if (type == "MC" && field == "resume") {
+    return subfield == "min" ? 1000 : 3000;
+  } else if (type == "RC" && field == "resume") {
+    return subfield == "min" ? 1500 : 2200;
+  } else if (type == "PO" && field == "resume") {
+    return subfield == "min" ? 1500 : 2500;
+  } else if (type == "WS" && field == "resume") {
+    return subfield == "min" ? 1500 : 2200;
+  } else if (type == "PF" && field == "resume") {
+    return subfield == "min" ? 1500 : 2200;
   }
 
-  return v
+  return v;
 }
 
 export function formatCPF(cpf) {
-  if(!cpf) return cpf
+  if (!cpf) return cpf;
   // Remove all non-numeric characters
-  cpf = String(cpf).replace(/\D/g, '');
+  cpf = String(cpf).replace(/\D/g, "");
 
-  if(cpf.length !== 11){
-    return cpf
+  if (cpf.length !== 11) {
+    return cpf;
   }
 
   // Add the dots and the dash to the CPF
@@ -394,18 +403,22 @@ export function formatCPF(cpf) {
   return cpf;
 }
 
-
-export function dump(args: any){
-  if(typeof window === 'undefined') return
+export function dump(args: any) {
+  if (typeof window === "undefined") return;
   const params = new URLSearchParams(window.location.search);
 
   if (process.env.NODE_ENV === "development" || !!params.get("debug")) {
-    return <pre className="pre-scrollable">{JSON.stringify(args, null, 2)}</pre>
+    return (
+      <pre className="pre-scrollable">{JSON.stringify(args, null, 2)}</pre>
+    );
   }
 }
 
-export function moneyFormat(value: number|string, locale: string = 'pt-BR'){
-  if(!value) return value
-  return new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(Number(value))
-
+export function moneyFormat(value: number | string, locale: string = "pt-BR") {
+  if (!value) return value;
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "BRL",
+  }).format(Number(value));
 }
+

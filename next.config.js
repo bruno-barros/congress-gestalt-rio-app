@@ -17,12 +17,13 @@ module.exports = {
     production: isProd
   },
   // configuração de integração do i18n com Nextjs: router.locales
+  // https://nextjs.org/docs/pages/building-your-application/routing/internationalization
   i18n: {
-    locales: ['pt', 'en', 'es'],
+    locales: ['pt', 'es'],// 'en',
     defaultLocale: 'pt'
   },
   images: {
-    domains: ['localhost', 'congressogestaltrj.com.br', 'app.congressogestaltrj.com.br', 'evento.conceito-online.com.br', 'optimole.com', 'gestalt2020.com.br'],
+    domains: ['localhost', 'congressogestaltrj.com.br', 'app.congressogestaltrj.com.br', 'cbl2025loja.gestalt.com.br', 'optimole.com', 'gestalt2020.com.br'],
   },
   trailingSlash: false,
   swcMinify: true

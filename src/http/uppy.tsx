@@ -8,6 +8,7 @@ interface UppyInterface {
   locale?: string;
   max_size?: number;
   allowedFileTypes?: string[];
+  context?: string;
 }
 
 export function uppyAvatar(args?: UppyInterface) {
@@ -76,7 +77,9 @@ export function uppyUploadV1(args?: UppyInterface) {
     const token = AuthToken.getToken();
     const uppy = Uppy({
       locale: args?.locale === "pt" ? Portuguese : null,
-      meta: { type: "document" },
+      meta: { 
+        context: args?.context ? args.context : "document" 
+      },
       restrictions: {
         maxFileSize: (args?.max_size && args.max_size * 1024 * 1024) || 5242880,
         maxNumberOfFiles: 1,
