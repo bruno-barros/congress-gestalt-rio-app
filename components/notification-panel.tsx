@@ -1,4 +1,3 @@
-import {Icon} from "@brunobarros/react-components";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import Curtain from "./ui/curtain";
 import dynamic from 'next/dynamic'
@@ -9,6 +8,7 @@ import {Notification} from "../src/resources/notification";
 import moment from "moment";
 import debounce from 'lodash/debounce'
 import useTrans from "./hooks/useTrans";
+import Icon from "./ui/ionicon";
 
 const ScrollArea = dynamic(
   () => import('react-scrollbar'),

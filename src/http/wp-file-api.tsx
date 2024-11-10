@@ -1,10 +1,10 @@
 import {AxiosResponse} from "axios";
 import {httpApi} from "./axios";
-import {Document} from "../resources/document";
+import { DocumentSchema } from "../types/document";
 
 export default class WpFileApi {
 
-  static updateDocument(file: Document, options?: any): Promise<AxiosResponse<any>> {
+  static updateDocument(file: DocumentSchema, options?: any): Promise<AxiosResponse<any>> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=document_update', {file, options});
   }
 

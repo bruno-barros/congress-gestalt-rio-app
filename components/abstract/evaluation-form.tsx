@@ -2,7 +2,6 @@ import {Form, Formik} from "formik";
 import * as Yup from 'yup'
 import Textarea from "../ui/form/formik/textarea";
 import Select from "../ui/form/formik/select";
-import {LoadingButton} from "@brunobarros/react-components";
 import {Evaluation} from "../../src/resources/evaluation";
 import AbstractRating from "./abstract-rating";
 import {useRouter} from "next/router";
@@ -11,12 +10,13 @@ import useTrans from "../hooks/useTrans";
 import FieldError from "../ui/form/field-error";
 import React, {useState} from "react";
 import {Status} from "./abstract.d";
-import {Loading} from "@brunobarros/react-components";
 import Switch from "../ui/form/formik/switch";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useCurrentUser from "../hooks/useCurrentUser";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import usePendingReview from "../hooks/usePendingReview";
+import LoadingButton from "../ui/loading-button";
+import Loading from "../ui/loading";
 
 
 interface EvaluationFormProps {

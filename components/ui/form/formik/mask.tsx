@@ -4,6 +4,13 @@ import React from "react";
 import useTrans from "../../../hooks/useTrans";
 import InputMask from "react-input-mask";
 
+export const Masks = {
+  CPF: '999.999.999-99',
+  PHONE: '(99) 9999-9999',
+  CELLPHONE: '(99) 99999-9999',
+  DATE: '99/99/9999',
+}
+
 interface MaskProps {
   label: string
   mask: string
@@ -15,8 +22,8 @@ export default function Mask({label, mask, containerClass, ...props}: MaskProps 
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  return (<div className={`form-group ${containerClass || ''}`}>
-    {label && <label htmlFor={`fld_${field.name}`}>{`${label} ${props?.required ? '*': ''}`}</label>}
+  return (<div className={`form-group ${containerClass || ''} ${props?.disabled ? 'text-muted' : ''}`}>
+    {label && <label htmlFor={`fld_${field.name}`}>{label}{` ${props?.required ? '*': ''}`}</label>}
 
     <InputMask {...field} {...props}
                id={`fld_${field.name}`}

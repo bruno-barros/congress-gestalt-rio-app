@@ -1,7 +1,7 @@
 import {useRouter} from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
 import Head from "next/head";
-import {getGenres, siteTitle} from "../src/helpers";
+import { getGenres, siteTitle, getRaces, dump } from '../src/helpers';
 import {useQueryClient} from "react-query";
 import Card from "react-bootstrap/cjs/Card";
 import ClearLayout from "../components/layout/clear";
@@ -9,18 +9,21 @@ import {Field, Form, Formik} from "formik";
 import useTrans from "../components/hooks/useTrans";
 import {countries} from "../src/countries";
 import * as Yup from "yup";
-import {LoadingButton} from '@brunobarros/react-components'
 import WpUser from "../src/http/wp-user";
 import React, {useEffect, useState} from "react";
 import Error from "../src/resources/error";
 import Curtain from "../components/ui/curtain";
-import {Loading} from "@brunobarros/react-components";
 import Text from "../components/ui/form/formik/text";
 import Select from "../components/ui/form/formik/select";
 import Mask from "../components/ui/form/formik/mask";
 import privateRoute from "../components/hoc/private-route";
 import useEvent from "../components/hooks/useEvent";
 import Switch from "../components/ui/form/formik/switch";
+import LoadingButton from "../components/ui/loading-button";
+import Loading from "../components/ui/loading";
+import useSettings from "../components/hooks/useSettings";
+import Phone from "../components/ui/form/formik/phone";
+import Checkboxes from "../components/ui/form/formik/checkboxes";
 
 
 const Register1 = () => {
@@ -32,8 +35,10 @@ const Register1 = () => {
   const [loading, setLoading] = useState(false)
   const [firstAccess, setFirstAccess] = useState(false)
   const [response, setResponse] = useState({success: null, msg: ''})
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
+  // const {data: event} = useEvent()
+  // const edition = event && event.currentEdition()
+  const {data: event, currentEdition: edition} = useSettings()
+  
   const lang = router.locale
 // console.log(edition)
   useEffect(()=>{
@@ -61,8 +66,12 @@ const Register1 = () => {
     // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     gender: Yup.string().required('validacao.obrigatorio'),
-    allow_newsletter: Yup.boolean(),
-    agreedTerms: Yup.boolean().oneOf([true], 'validacao.obrigatorio')
+    // allow_newsletter: Yup.boolean(),
+    agreedTerms: Yup.object().shape({
+      truthy: Yup.boolean().oneOf([true], 'validacao.obrigatorio'),
+      image: Yup.boolean().oneOf([true], 'validacao.obrigatorio'),
+      terms: Yup.boolean().oneOf([true], 'validacao.obrigatorio')
+    })
   });
 
   async function handleSubmit(values) {
@@ -75,12 +84,14 @@ const Register1 = () => {
       const resp = await WpUser.update(values)
       const success = resp.data.success
       const data = resp.data?.data
+      const isAffirmative = values.apply_affirmative_action === '1'
       setLoading(false)
       setResponse({success, msg: data.msg})
       success === false && dismissAlert()
       if (success) {
         refetch()
-        if(edition.subscription.allowed && !firstAccess) router.push(`/register2`)
+        if(isAffirmative){router.push(`/register3`)}
+        else if(edition.Subscription().isAllowed() && !firstAccess) router.push(`/register2`)
         else router.push('/dashboard')
       }
 
@@ -111,7 +122,7 @@ const Register1 = () => {
       <title>{siteTitle('Cadastro', queryClient)}</title>
     </Head>
     <div className="row">
-      <div className="col-12">
+      <div className="col-12 col-lg-10 offset-lg-1">
         <Formik
           initialValues={{
             country: user.getUserData().country || 'BR',
@@ -122,17 +133,36 @@ const Register1 = () => {
             email: user.getUserData().email || '',
             alt_email: user.getUserData().alt_email || '',
             badge_name: user.getUserData().badge_name || '',
+            social_name: user.getUserData().social_name || '',
             cellphone: user.getUserData().cellphone || '',
+            cellphone_country: user.getUserData().cellphone_country || '55',
             phone: user.getUserData().phone || '',
+            phone_country: user.getUserData().phone_country || '55',
             birthdate: user.getUserData().birthdate || '',
             gender: user.getUserData().gender || 'M',
+            race: user.getUserData().race || '',
+            education: user.getUserData().education || '',
+            has_institution: user.getUserData().has_institution || '0',
+            abg_member: user.getUserData().abg_member || '0',
             institution_name: user.getUserData().institution_name,
             institution_occupation: user.getUserData().institution_occupation,
             allow_newsletter: user.getUserData().allow_newsletter || false,
-            agreedTerms: event?.page?.lgpd[lang].length === 0,  // if there is no url, set to true
+            agreedTerms: {
+              truthy: false,
+              image: false,
+              terms: edition?.getLgpdUrl(lang).length === 0 // if there is no url, set to true
+            }, 
             is_pdc: user.getUserData()?.is_pdc ? String(Number(user.getUserData().is_pdc)) : '0',
             pdc_needs: user.getUserData()?.pdc_needs || '',
-            is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0'
+            is_child_care: user.getUserData()?.is_child_care ? String(Number(user.getUserData().is_child_care)) : '0',
+            child_care_needs: user.getUserData()?.child_care_needs || '',
+            is_affirmative_action: user.getUserData()?.is_affirmative_action || '0',
+            affirmative_action: user.getUserData()?.affirmative_action || '',
+            apply_affirmative_action: user.getUserData()?.apply_affirmative_action || '0',
+            is_artist: user.getUserData()?.is_artist || '0',
+            is_artist_volunteer: user.getUserData()?.is_artist_volunteer || '0',
+            artistic_skill: user.getUserData()?.artistic_skill || '',
+            languages: user.getUserData()?.languages || []
           }}
           onSubmit={handleSubmit}
           validationSchema={FormSchema}
@@ -164,52 +194,149 @@ const Register1 = () => {
                 <Text name="alt_email" label={t('cadastro.email-alternativo')} containerClass="col-12 col-md"/>
                 </div>
 
-                <Text name="badge_name" label={t('cadastro.nome-cracha')} required/>
+                <div className="row">
+                  <Text name="badge_name" label={t('cadastro.nome-cracha')} containerClass="col-12 col-md" required />
+                  <Text name="social_name" label={t('cadastro.social_name')} containerClass="col-12 col-md"/>
+                </div>
+
+
 
                 <div className="row">
-                  <Mask name="cellphone" mask="(99) 99999-9999" label={t('cadastro.celular')} required
+                  <Phone name="cellphone" countryName="cellphone_country" mask="(99) 99999-9999" label={t('cadastro.celular')} required
                         containerClass="col-12 col-md"/>
-                  <Mask name="phone" mask="99) 9999-9999" label={t('cadastro.telefone')}
+                  <Phone name="phone" countryName="phone_country" mask="(99) 9999-9999" label={t('cadastro.telefone')}
                         containerClass="col-12 col-md"/>
                 </div>
 
                 <div className="row">
                   <Mask name="birthdate" mask="99/99/9999" label={t('cadastro.nascimento')} required
-                        containerClass="col-12 col-md"/>
+                        containerClass="col-12 col-md" placeholder="xx/xx/xxxx"/>
                   <Select name="gender" label={t('cadastro.genero')} required containerClass="col-12 col-md">
                     {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
                   </Select>
+                  <Select name="race" label={t('cadastro.raca')} required containerClass="col-12 col-md">
+                    {getRaces().map(g => (<option key={g.value} value={g.value}>{t(`raca.${g.name}`)}</option>))}
+                  </Select>
                 </div>
 
-                <fieldset className="border p-3 mb-3">
-                  <legend className="px-2 text-sm w-auto">Acessibilidade</legend>
+                <fieldset className="border p-3 mb-3 bg-light">
+                  <legend className="px-2 text-sm w-auto"><strong>Ações Afirmativas</strong></legend>
+                  <div className="row">
+                    <Select name="is_affirmative_action" label="Você se identifica como Ação Afirmativa?" containerClass="col-12 col-md-6">
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">{t('sim')}</option>
+                    </Select>
+
+                    <Select name="affirmative_action" label="Que tipo de Ação Afirmativa?" containerClass="col-12 col-md" disabled={values.is_affirmative_action === '0'}>
+                      <option value="">Nenhuma</option>
+                      <option value="Sou pessoa negra">Sou pessoa negra</option>
+                      <option value="Sou indígena">Sou indígena</option>
+                      <option value="Sou mulher/homem trans">Sou mulher/homem trans</option>
+                      <option value="Sou travesti">Sou travesti</option>
+                      <option value="Sou não-binário">Sou não-binário</option>
+                    </Select>
+                  </div>
+                  {values.is_affirmative_action === '1' &&
+                  <div className="row">
+                    <Select name="apply_affirmative_action" label="Deseja participar do edital para concorrer às vagas das ações afirmativas?" containerClass="col-12">
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">{t('sim')}</option>
+                    </Select>
+                    {values.apply_affirmative_action == '1' && 
+                    <div className="col-12"><div className="badge text-danger">É obrigatório o envio de documentos e/ou autodeclaração que comprove sua identidade.</div></div>}
+                    
+                  </div>}
+
+                  {/* {dump(values)} */}
+
+                </fieldset>
+                
+                <fieldset className="border p-3 mb-3 bg-light">
+                  <legend className="px-2 text-sm w-auto"><strong>Acessibilidade</strong></legend>
                   <div className="row">
                     <Select name="is_pdc" label="É pessoa com deficiência (PCD)?" containerClass="col-12 col-md-4">
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
-                    </Select>
-
-                    <Select name="is_child_care" label="Necessita de sala de apoio para amamentação ou outros cuidados com crianças?" containerClass="col-12 col-md">
+                    </Select>          
+                    <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
+                    
+                  </div>
+                  <div className="row">
+                    <Select name="is_child_care" label="Necessita de apoio para criança menor?" containerClass="col-12 col-md-4">
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
                     </Select>
+                                     
+                    <Select name="child_care_needs" label="Gostaria de levar minha(meu) filha(o) ao Congresso sob supervisão de um recreador/cuidador." containerClass="col-12 col-md"  disabled={values.is_child_care === '0'}>
+                      <option value="De zero a um ano">De zero a um ano</option>
+                      <option value="De dois a cinco anos">De dois a cinco anos</option>
+                      <option value="De seis a sete anos">De seis a sete anos</option>
+                      <option value="Acima de oito anos">Acima de oito anos</option>
+                      </Select>
                   </div>
-                  {values.is_pdc === '1' &&
+                </fieldset>
+                
+                <fieldset className="border p-3 mb-3 bg-light">
+                  <legend className="px-2 text-sm w-auto"><strong>Habilidades artísticas</strong></legend>
                   <div className="row">
-                    <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md"/>
-                  </div>}
-
+                    <Select name="is_artist" label="Você tem habilidades artísticas?" containerClass="col-12 col-md-3">
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">{t('sim')}</option>
+                    </Select>
+                    <Select name="is_artist_volunteer" label="Deseja participar como voluntário?" containerClass="col-12 col-md-3" disabled={values.is_artist === '0'}>
+                      <option value="0">{t('nao')}</option>
+                      <option value="1">Ofereço minha participação voluntária</option>
+                      <option value="Orçamento">Posso oferecer meu trabalho mediante orçamento prévio</option>
+                    </Select>                                     
+                    <Text name="artistic_skill" label="Tenho habilidade artística na seguinte área:" containerClass="col-12 col-md" disabled={values.is_artist === '0'}/>                    
+                  </div>
                 </fieldset>
 
+                <fieldset className="border p-3 mb-3 bg-light">
+                  <legend className="px-2 text-sm w-auto"><strong>Linguagem</strong></legend>
+                  <div className="row_">
+                    <Checkboxes name="languages" label="" options={[
+                      {value: 'Espanhol e posso traduzir para português', label: 'Tenho fluência da língua espanhola e posso voluntariamente traduzir o expositor para o português.'},
+                      {value: 'Português e posso traduzir para espanhol', label: 'Tenho fluência da língua portuguesa e posso traduzir o expositor para o espanhol.'},
+                      {value: 'Libras e posso traduzir', label: 'Tenho domínio da linguagem de libras e posso voluntariamente traduzir o expositor.'}
+                    ]} />       
+                  </div>
+                </fieldset>
 
+                {/* {dump(values)} */}
+
+                <h3 className="page-title mt-5">{t('cadastro.dados-profissionais')}</h3>
+                <p className="text-xs">* {t('validacao.obrigatorio')}</p>
+
+                <Select name="education" label={t('cadastro.escolaridade')} required>
+                  <option value="" selected disabled>Selecione uma opção</option>
+                  <option value="estudante">Estudante</option>
+                  <option value="profissional">Profissional</option>
+                </Select>
+
+                <Switch name="abg_member" label={lang==='pt' ? 'Sou associada/o/e à ABG e me encontro adimplente com todas as minhas anuidades.' : 'Soy miembro de ABG y cumplo con todas mis cuotas anuales.'} disabled={values.education !== 'profissional'}/>
+
+                <Switch name="has_institution" label={t('cadastro.tem_instituicao')} />
+                
                 <div className="row">
-                  <Text name="institution_name" label={t('cadastro.instituicao.nome')} required containerClass="col-12 col-md"/>
-                  <Text name="institution_occupation" label={t('cadastro.ocupacao')} required containerClass="col-12 col-md"/>
+                  <Text name="institution_name" label={t('cadastro.instituicao.nome')} containerClass="col-12 col-md" disabled={!values.has_institution}/>
+                  <Select name="institution_occupation" label={t('cadastro.ocupacao')} containerClass="col-12 col-md" disabled={!values.has_institution}>
+                    <option value="" selected disabled>Selecione uma opção</option>
+                    <option value="Aluna/o/e em formação">Aluna/o/e em formação</option>
+                    <option value="Docente">Docente</option>
+                    <option value="Administrador/a/e">Administrador/a/e</option>
+                    <option value="Colaborador/a/e">Colaborador/a/e</option>
+                  </Select>
                 </div>
+                
 
-                <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/>
-                {event.page.lgpd[lang] &&
-                <Switch name="agreedTerms" label={<span>Você concorda com os <a href={event.page.lgpd[lang]} target="_blank">Termos de Serviço</a>?</span>}/>}
+                <hr />
+                {/* {dump(values.agreedTerms)} */}
+                <Switch name="agreedTerms.truthy" label={lang==='pt'?'Declaro que todas as informações acima são verdadeiras e estou disponível para comprovar todos os dados.':'Declaro que toda la información anterior es cierta y estoy disponible para confirmar todos los datos.'}/>
+                <Switch name="agreedTerms.image" label={lang==='pt'?'Autorizo o uso da minha imagem nas atividades do congresso.':'Autorizo ​​el uso de mi imagen en las actividades del congreso.'}/>
+                {/* <Switch name="allow_newsletter" label={t('cadastro.aceita-compartinhar-email')}/> */}
+                {edition.getLgpdUrl(lang) &&
+                <Switch name="agreedTerms.terms" label={<span>Você concorda com os <a href={edition.getLgpdUrl(lang)} target="_blank">Termos de Serviço</a>?</span>}/>}
 
 
                 {response.msg && <Curtain isOpened={response.msg?.length > 0}>

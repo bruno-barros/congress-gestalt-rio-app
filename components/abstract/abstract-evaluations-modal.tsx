@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
-import {Loading} from "@brunobarros/react-components";
 import Accordion from "react-bootstrap/cjs/Accordion";
 import {Button, Card} from "react-bootstrap/cjs";
 import {useQuery, useQueryClient} from "react-query";
@@ -15,9 +14,10 @@ import AbstractAnswers from "./abstract-answers";
 import ButtonDeleteConfirmation from "../ui/button-delete-confirmation";
 import useCurrentUser from "../hooks/useCurrentUser";
 import {errorNotification, successNotification} from "../../src/resources/responses";
-import {LoadingButton} from "@brunobarros/react-components";
 import ToolTip from "../ui/tooltip";
 import useEvent from "../hooks/useEvent";
+import LoadingButton from "../ui/loading-button";
+import Loading from "../ui/loading";
 
 
 interface AbstractEvaluationsModalProps {

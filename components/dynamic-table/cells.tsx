@@ -1,6 +1,5 @@
 import React, {useMemo, useState} from "react";
 import moment from "moment";
-import {Icon} from "@brunobarros/react-components";
 import {statusColorName} from "../../src/helpers";
 import useTrans from "../hooks/useTrans";
 import AbstractAuthorsModal from "../abstract/abstract-authors-modal";
@@ -8,6 +7,7 @@ import AbstractAttachmentsModal from "../abstract/abstract-attachments-modal";
 import {MapRoles} from "../../src/resources/user";
 import Link from "next/link";
 import AbstractEvaluationsModal from "../abstract/abstract-evaluations-modal";
+import Icon from "../ui/ionicon";
 
 export function RenderCell({cell}) {
   // console.log(cell.props.cell.value);

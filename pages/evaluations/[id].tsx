@@ -3,7 +3,6 @@ import useTrans from "../../components/hooks/useTrans";
 import useEvent from "../../components/hooks/useEvent";
 import {Edition} from "../../src/resources/event";
 import {useRouter} from "next/router";
-import {Loading} from "@brunobarros/react-components";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvaluation from "../../components/hooks/useEvaluation";
 import AbstractView from "../../components/abstract/abstract-view";
@@ -12,6 +11,7 @@ import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
+import Loading from "../../components/ui/loading";
 
 
 const EvaluationEditing = () => {

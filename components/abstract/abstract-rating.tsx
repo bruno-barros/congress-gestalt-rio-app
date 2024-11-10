@@ -1,6 +1,6 @@
 import Rating from "react-rating";
-import {Icon} from "@brunobarros/react-components";
 import isFinite from 'lodash/isFinite'
+import Icon from "../ui/ionicon";
 interface AbstractRatingProps {
   value: number|undefined|null
   onChange?: (value: number) => void

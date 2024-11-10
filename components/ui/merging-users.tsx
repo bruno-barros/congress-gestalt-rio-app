@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
-import Modal from "react-bootstrap/cjs/Modal";
-import {Loading} from "@brunobarros/react-components";
+import Modal from "react-bootstrap/Modal";
 import WpUser from "../../src/http/wp-user";
+import Loading from "./loading";
 
 interface MergingUsersProps {
   show: boolean

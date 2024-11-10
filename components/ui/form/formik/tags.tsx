@@ -1,10 +1,10 @@
 import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
 import React, {useRef, useState} from "react";
-import {Icon} from "@brunobarros/react-components";
 import useTrans from "../../../hooks/useTrans";
 import {errorNotification} from "../../../../src/resources/responses";
 import {dispatchOnENTER} from "../../../../src/helpers";
+import Icon from "../../ionicon";
 
 interface TagsProps {
   label: string
@@ -39,7 +39,7 @@ export default function Tags({label, containerClass, maxTags: ma, disabled, ...p
     tagInput.current.focus()
   }
 
-  return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
+  return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
     <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxTags})</small></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 

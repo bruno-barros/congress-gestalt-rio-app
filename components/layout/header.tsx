@@ -60,21 +60,21 @@ export default function Header(props: HeaderProps) {
            <Nav.Link active={router.pathname === '/dashboard'}>Home</Nav.Link>
           </Link>
           <Link href="/profile?tab=subscriptions" passHref>
-           <Nav.Link>Inscrição</Nav.Link>
+           <Nav.Link>{t('inscricao')}</Nav.Link>
           </Link>
           {user.canManageAbstracts()
             && (<>
-              <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref><Nav.Link className="admin"
+              <Link href={`/adm/subscriptions?edition=${edition?.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
-              <Link href={`/adm/abstracts?edition=${edition.id}`} passHref><Nav.Link className="admin"
+              <Link href={`/adm/abstracts?edition=${edition?.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-              <Link href={`/adm/evaluations?edition=${edition.id}`} passHref><Nav.Link className="admin"
+              <Link href={`/adm/evaluations?edition=${edition?.id}`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/evaluations'}>Avaliações</Nav.Link></Link>
               <Link href={`/adm/users`} passHref><Nav.Link className="admin"
                 active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
             </>)}
             {(user.canPublishAbstracts()) && (<>
-              <Link href={`/abstracts?edition=${edition.id}`} passHref><Nav.Link
+              <Link href={`/abstracts?edition=${edition?.id}`} passHref><Nav.Link
                 active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link>
               </Link>
               {/* <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
@@ -85,7 +85,7 @@ export default function Header(props: HeaderProps) {
               </Link> */}
             </>)}
           {user.canEvaluateAbstracts() && <>
-            <Link href={`/evaluations?edition=${edition.id}`} passHref><Nav.Link
+            <Link href={`/evaluations?edition=${edition?.id}`} passHref><Nav.Link
               title={`${pending} aguardando revisão`}
               active={router.pathname === '/evaluations'}>Minhas avaliações
               {pending > 0 && <div className="badge badge-warning ml-1">{pending}</div>}

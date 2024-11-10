@@ -1,14 +1,9 @@
 import Head from "next/head";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import styles from "./main.module.scss";
 import {asset, siteTitle} from "../../src/helpers";
 
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
-import {BlockUi, Loading} from "@brunobarros/react-components";
-import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";
@@ -22,6 +17,9 @@ import useTrans from "../hooks/useTrans";
 import {Trans} from "react-i18next";
 import {useRouter} from "next/router";
 import ConsentTerms from '../user/consent-terms';
+import Loading from "../ui/loading";
+import BlockUi from "../ui/block-ui";
+import useSettings from "../hooks/useSettings";
 
 
 interface MainLayoutProps {
@@ -36,7 +34,7 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
   const t = useTrans()
   const router = useRouter()
   const queryClient = useQueryClient()
-  const {data: event, isLoading} = useEvent()
+  const { data: event, isLoading} = useSettings()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
   const {InitPushNotification, isInitialized} = usePushNotification()

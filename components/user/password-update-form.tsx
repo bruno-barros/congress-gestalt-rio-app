@@ -1,11 +1,6 @@
 import {Form, Formik} from "formik";
-import Select from "../ui/form/formik/select";
-import {countries} from "../../src/countries";
-import Mask from "../ui/form/formik/mask";
 import Text from "../ui/form/formik/text";
-import {getGenres} from "../../src/helpers";
 import React, {useState} from "react";
-import {LoadingButton} from "@brunobarros/react-components";
 import {User} from "../../src/resources/user";
 import useTrans from "../hooks/useTrans";
 import * as Yup from "yup";
@@ -13,6 +8,7 @@ import WpUser from "../../src/http/wp-user";
 import {toast} from "react-toastify";
 import Error from "../../src/resources/error";
 import Password from "../ui/form/formik/password";
+import LoadingButton from "../ui/loading-button";
 
 interface PasswordUpdateFormProps {
   user: User

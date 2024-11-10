@@ -1,5 +1,5 @@
-import {Icon} from "@brunobarros/react-components";
 import useTrans from "../hooks/useTrans";
+import Icon from "./ionicon";
 
 interface BadgeSubscribedProps {
   className?: string

@@ -7,7 +7,7 @@ export default function usePendingReview() {
 
   const {user} = useCurrentUser()
 
-  function queryCount() {
+  function queryCount(): Promise<number> {
     return new Promise((resolve) => {
       if(!user.canEvaluateAbstracts()) {
         resolve(0)

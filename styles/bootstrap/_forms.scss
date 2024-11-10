@@ -184,6 +184,10 @@ textarea.form-control {
 
 .form-group {
   margin-bottom: $form-group-margin-bottom;
+  & > label {
+    font-size: .9em;
+    line-height: 1em;
+  }
 }
 
 .form-text {

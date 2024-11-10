@@ -5,23 +5,24 @@ import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
 import useEvent from "../../components/hooks/useEvent";
 import {useQuery, useQueryClient} from "react-query";
-import {WpAbstract} from "../../src/http/wp-abstract";
-import {errorNotification} from "../../src/resources/responses";
-import {Loading} from "@brunobarros/react-components";
+
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import { siteTitle, average } from '../../src/helpers';
 import Head from "next/head";
 import useEvaluations from "../../components/hooks/useEvaluations";
+import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
 
 const AdmEvaluations = () => {
 
   const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
+  // const {data: event} = useEvent()
+  // const edition = event && event.currentEdition()
+  const { data: event, currentEdition: edition } = useSettings()
   const editionId = router.query.edition || edition?.id
   const {data: evaluations, error, isLoading} = useEvaluations(String(editionId))
 

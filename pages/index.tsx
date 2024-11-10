@@ -10,7 +10,7 @@ import {useQueryClient} from "react-query";
 import {logUserByType} from "../src/store/user.actions";
 import {useRouter} from "next/router";
 import React, {useEffect} from "react";
-import {Loading} from "@brunobarros/react-components";
+import Loading from '../components/ui/loading';
 
 
 export default function Home() {

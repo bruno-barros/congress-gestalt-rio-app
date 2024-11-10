@@ -2,10 +2,9 @@ import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
 import React, {useRef, useState} from "react";
 import {useUppy} from "../../../hooks/useUppy";
-import {uppyDocument} from "../../../../src/http/uppy";
+import {uppyDocument, uppyUploadV1} from "../../../../src/http/uppy";
 import {toast} from "react-toastify";
 import {DragDrop, StatusBar} from "@uppy/react";
-import {Icon} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import useTrans from "../../../hooks/useTrans";
 import {useDispatch} from "react-redux";
@@ -35,15 +34,16 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   const {user}=useCurrentUser()
   const [field, meta, helpers] = useField(props);
   const err = meta?.touched && meta?.error
-  const [metaData, setMetaData] = useState<any>(metas);
+  const [metaData, setMetaData] = useState<any>(metas || {});
   const added = useRef(false)
   const maxFiles = mf || 20
 
-  const uppy = useUppy(uppyDocument({
+  const uppy = useUppy(uppyUploadV1({
     locale: router.locale,
     max_size: event?.abstract?.attachments_max_size
   }))
-  metas && uppy.setMeta(metas)
+  // console.log(metas)
+  uppy.setMeta(metaData)
   uppy.on('upload', (data) => {
     added.current = false
   })

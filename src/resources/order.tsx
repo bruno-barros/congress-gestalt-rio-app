@@ -1,29 +1,30 @@
+import { OrderStatusEnum } from '../types/ecommerce.d';
 import { Edition } from './event';
-export const OrderStatuses = [
-  "CANCELLED",
-  "COMPLETED",
-  "FAILED",
-  "ON_HOLD",
-  "PENDING",
-  "PROCESSING",
-  "REFUNDED",
+export const OrderStatuses: OrderStatusEnum[] = [
+  OrderStatusEnum.CANCELLED,
+  OrderStatusEnum.COMPLETED,
+  OrderStatusEnum.FAILED,
+  OrderStatusEnum.ON_HOLD,
+  OrderStatusEnum.PENDING,
+  OrderStatusEnum.PROCESSING,
+  OrderStatusEnum.REFUNDED,
 ];
 
-export function orderStatusLabel(status: string) {
+export function orderStatusLabel(status: OrderStatusEnum) {
   switch (status) {
-    case "CANCELLED":
+    case OrderStatusEnum.CANCELLED:
       return "Cancelado";
-    case "COMPLETED":
+    case OrderStatusEnum.COMPLETED:
       return "Completo";
-    case "FAILED":
+    case OrderStatusEnum.FAILED:
       return "Falhou";
-    case "ON_HOLD":
+    case OrderStatusEnum.ON_HOLD:
       return "Em espera";
-    case "PENDING":
+    case OrderStatusEnum.PENDING:
       return "Pendente";
-    case "PROCESSING":
+    case OrderStatusEnum.PROCESSING:
       return "Processando";
-    case "REFUNDED":
+    case OrderStatusEnum.REFUNDED:
       return "Reembolsado";
     default:
       return status;
@@ -49,14 +50,7 @@ export class Order {
   dateCompleted: string | number | null;
   paymentMethodTitle: string;
   total: string;
-  status:
-    | "CANCELLED"
-    | "COMPLETED"
-    | "FAILED"
-    | "ON_HOLD"
-    | "PENDING"
-    | "PROCESSING"
-    | "REFUNDED";
+  status: OrderStatusEnum;
   customer?: {
     databaseId: number;
     email: string;
@@ -81,6 +75,10 @@ export class Order {
   getItems(): any[] {
     return this.lineItems?.nodes || [];
   }
+
+  isCompleted(){
+    return this.status === OrderStatusEnum.COMPLETED;
+  }
 }
 
 export class OrderCollection {
@@ -99,21 +97,22 @@ export class OrderCollection {
   }
 
   getCompleted(): Order[] {
-    return this.getOrders().filter((order) => order.status === "COMPLETED");
+    return this.getOrders().filter((order) => order.status === OrderStatusEnum.COMPLETED);
   }
 
   hasValidSubscription(edition: Edition) {
     // console.log({edition});
-    const editionCategorySlug = edition?.subscription?.products_category?.slug
+    const categoryId = edition?.Subscription().getCategoryId()
 
     const completed = this.getCompleted();
+
     if (completed.length === 0) return false;
     let hasValid = false;
 
     completed.map((order) => {
       order.lineItems?.nodes?.map((line) => {
         line.product?.productCategories?.nodes?.map(cat => {
-          if(cat.slug === editionCategorySlug){
+          if(cat.databaseId === categoryId){
             hasValid = true;
           }
         })

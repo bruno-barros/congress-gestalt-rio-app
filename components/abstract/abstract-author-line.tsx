@@ -1,5 +1,4 @@
 import React from "react";
-import {Icon} from "@brunobarros/react-components";
 import {Button, Accordion, Card} from "react-bootstrap/cjs";
 import {Author} from "../../src/resources/user";
 

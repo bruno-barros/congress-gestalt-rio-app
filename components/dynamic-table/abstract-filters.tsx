@@ -1,6 +1,5 @@
 import React, {PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState} from "react";
 import {TableInstance} from "react-table";
-import {Icon} from "@brunobarros/react-components";
 import Curtain from "../ui/curtain";
 import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
@@ -8,6 +7,7 @@ import {useRouter} from "next/router";
 import {MapRoles} from "../../src/resources/user";
 import {OrderStatuses} from "../../src/resources/order";
 import useEvaluators from "../hooks/useEvaluators";
+import Icon from "../ui/ionicon";
 
 
 export function getEvaluationsFilterableFields() {

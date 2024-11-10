@@ -1,18 +1,17 @@
 import Head from "next/head";
-import Image from 'next/image'
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import styles from "./main.module.scss";
 import {asset, siteTitle} from "../../src/helpers";
 import {useSelector} from "react-redux";
 import {RootReducers} from "../../src/store/store.d";
-import {BlockUi, Loading} from "@brunobarros/react-components";
-import useEvent from "../hooks/useEvent";
 import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import {useQueryClient} from "react-query";
 import useSessionCountdown from "../hooks/useSessionCountdown";
+import Loading from "../ui/loading";
+import BlockUi from "../ui/block-ui";
+import useSettings from "../hooks/useSettings";
 
 interface ClearLayoutProps {
   children: any;
@@ -22,7 +21,7 @@ interface ClearLayoutProps {
 function ClearLayout({children, ignoreSessionCountDown}: ClearLayoutProps) {
 
   const queryClient = useQueryClient()
-  const {data: event, isLoading} = useEvent()
+  const { data: event, currentEdition: edition, isLoading} = useSettings()
   const {authLoading, user} = useCurrentUser()
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
   useSessionCountdown({ignore: !!ignoreSessionCountDown});
@@ -43,9 +42,9 @@ function ClearLayout({children, ignoreSessionCountDown}: ClearLayoutProps) {
         <Container>
           <Row>
             <Col>
-              {event.logoPrimary
-                ? <img src={event.logoPrimary} className="brand img-fluid" alt={event.eventName}/>
-                : <div className="brand">{event.eventName}</div>}
+              {edition.getLogo()
+                ? <img src={edition.getLogo()} className="brand img-fluid" alt={edition.getName()}/>
+                : <div className="brand">{edition.getName()}</div>}
             </Col>
           </Row>
         </Container>

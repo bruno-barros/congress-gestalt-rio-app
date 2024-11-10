@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
+import { dump } from "../../src/helpers";
 
 
 interface LangSelectorProps {
@@ -26,6 +27,7 @@ export default function LangSelector(props: LangSelectorProps) {
   let s = size || 30
 
   return (<div className={`lang-selector ${className || ''}`}>
+    {/* {dump(router)} */}
     {label && <div className="lang-selector-label">{label}</div>}
     {router.locales.map(lng => (
       <Link href={base} locale={lng} key={lng} passHref>

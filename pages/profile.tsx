@@ -12,6 +12,7 @@ import DebugPanel from "../components/user/debug";
 import {siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
+import UserDocuments from "../components/user/user-documents";
 
 
 const Profile = () => {
@@ -44,6 +45,11 @@ const Profile = () => {
             </Link>
           </li>
           <li className="nav-item">
+            <Link href={`/profile?tab=documents`} passHref>
+              <a className={`nav-link ${tab === 'documents' && 'active'}`}>{t('documentos')}</a>
+            </Link>
+          </li>
+          <li className="nav-item">
             <Link href={`/profile?tab=password`} passHref>
               <a className={`nav-link ${tab === 'password' && 'active'}`}>{t('mudar-senha')}</a>
             </Link>
@@ -53,12 +59,10 @@ const Profile = () => {
       <div className="col-12 col-md-9">
         {tab === 'personal' &&
         <div className=" py-3 px-md-3"><ProfileForm user={user} editingMode={user.isSuperAdmin()?'admin':undefined}/></div>}
-        {tab === 'subscriptions' &&
-        <MySubscriptions user={user}/>}
-        {tab === 'password' &&
-        <div className=" py-3 px-md-3"><PasswordUpdateForm user={user}/></div>}
-        {tab === 'debug' &&
-        <div className=" py-3 px-md-3"><DebugPanel/></div>}
+        {tab === 'subscriptions' && <MySubscriptions user={user}/>}
+        {tab === 'documents' && <UserDocuments user={user}/>}
+        {tab === 'password' && <div className=" py-3 px-md-3"><PasswordUpdateForm user={user}/></div>}
+        {tab === 'debug' && <div className=" py-3 px-md-3"><DebugPanel/></div>}
       </div>
     </div>
   </MainLayout>)

@@ -6,6 +6,8 @@ import {OrderCollection} from "../../src/resources/order";
 import useEvent from "./useEvent";
 import {Edition} from "../../src/resources/event";
 import moment from "moment";
+import { REQUIREMENTS } from "../access-control/requirements";
+import { ac } from "../access-control";
 
 export default function useSubscriptions(edition?: Edition) {
 
@@ -18,7 +20,7 @@ export default function useSubscriptions(edition?: Edition) {
   function queryData(): Promise<OrderCollection|null> {
     return new Promise((resolve, reject) => {
       WpOrder.subscriptions({
-        metadata: ["is_pdc","pdc_needs","is_child_care", "allow_newsletter", "badge_name", "cpf"],
+        metadata: ["is_pdc","pdc_needs","is_child_care", "allow_newsletter", "badge_name", "cpf", 'affirmative_action', 'apply_affirmative_action'],
         dateStart: {
           day: Number(s.format('DD')),
           month: Number(s.format('MM')),
@@ -53,8 +55,8 @@ export default function useSubscriptions(edition?: Edition) {
 
   const methods = useQuery('payment_methods', queryMethods, {staleTime: Infinity})
 
-  const subscriptions = useQuery<OrderCollection|null, any>(['subscriptions', edition?.id], queryData, {
-    enabled: user.canManageAbstracts() && !! edition?.id,
+  const subscriptions = useQuery<OrderCollection|null, any>(['subscriptions', edition?.getId()], queryData, {
+    enabled: ac(user, [REQUIREMENTS.subscription.read]) && !! edition?.getId(),
     staleTime: Infinity
   })
 

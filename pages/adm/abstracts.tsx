@@ -3,15 +3,15 @@ import {useCallback, useMemo} from "react";
 import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
-import useEvent from "../../components/hooks/useEvent";
 import {useQuery, useQueryClient} from "react-query";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
-import {Loading} from "@brunobarros/react-components";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
+import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
 
 const AdmAbstracts = () => {
 
@@ -19,8 +19,9 @@ const AdmAbstracts = () => {
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
+  // const {data: event} = useEvent()
+  // const edition = event && event.currentEdition()
+  const { data: event, currentEdition: edition } = useSettings()
   const editionId = router.query.edition || edition?.id
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', editionId], queryAbstracts, {
     enabled: !!editionId && user.canManageAbstracts(),

@@ -1,6 +1,5 @@
 import Modal from "react-bootstrap/cjs/Modal";
 import {useEffect, useState} from "react";
-import {LoadingButton} from "@brunobarros/react-components";
 import useTrans from "../../hooks/useTrans";
 import {Field, Form, Formik} from "formik";
 import * as Yup from "yup";
@@ -15,6 +14,7 @@ import {useDispatch} from "react-redux";
 import Curtain from "../curtain";
 import Password from "./formik/password";
 import Text from "./formik/text";
+import LoadingButton from "../loading-button";
 
 interface SignUpProps {
   show: boolean

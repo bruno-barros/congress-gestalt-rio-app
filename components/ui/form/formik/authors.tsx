@@ -1,7 +1,6 @@
 import {FieldArray, useField} from "formik";
 import FieldError from "../field-error";
 import React, {useState} from "react";
-import {Icon} from "@brunobarros/react-components";
 import {useDispatch} from "react-redux";
 import {blockUi} from "../../../../src/store/ui.actions";
 import {toast} from "react-toastify";
@@ -12,8 +11,9 @@ import {errorNotification, exceptionNotification, successNotification} from "../
 import ToolTip from "../../tooltip";
 import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 import useCurrentUser from "../../../hooks/useCurrentUser";
-import {Loading} from "@brunobarros/react-components";
 import { User } from '../../../../src/resources/user';
+import Loading from "../../loading";
+import Icon from "../../ionicon";
 
 interface AuthorsProps {
   label: string

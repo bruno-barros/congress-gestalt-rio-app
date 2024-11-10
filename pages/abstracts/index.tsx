@@ -2,7 +2,6 @@ import MainLayout from "../../components/layout";
 import Card from "react-bootstrap/cjs/Card";
 import useEvent from "../../components/hooks/useEvent";
 import EditionSidebar from "../../components/event/edition-sidebar";
-import {Loading} from "@brunobarros/react-components";
 import AbstractCard from "../../components/abstract/abstract-card";
 import Link from "next/link";
 import {useQuery, useQueryClient} from "react-query";
@@ -19,6 +18,10 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import useUserOrders from "../../components/hooks/useUserOrders";
 import Button from "react-bootstrap/Button";
+import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
+import { event } from '../../src/gtag';
+import useEditions from "../../components/hooks/useEditions";
 
 
 
@@ -28,13 +31,20 @@ const Abstracts = () => {
   const t = useTrans()
   const router = useRouter()
   const {user} = useCurrentUser()
-  const {data: event} = useEvent()
-  const currentEdition = event && event.currentEdition()
-  const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
+  const selectedEditionKey = String(router.query.edition)
+  // const {data: event} = useEvent()
+  // const currentEdition = event && event.currentEdition()
+  // const edition = router.query?.edition && event?.getEdition(String(router.query.edition)) || currentEdition
+
+  const { data: editions } = useEditions()
+  const { data: event, currentEdition } = useSettings()
+
+  const edition = editions?.find(ed => ed.id === selectedEditionKey)
+
   const [phase, setPhase] = useState(String(router.query?.status))
-  const isCurrent = currentEdition?.id === edition?.id
-  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.id, phase], queryAbstracts, {
-    enabled: !!edition?.id && user.getId() > 0
+  const isCurrent = currentEdition?.id === edition?.getId()
+  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.getId(), phase], queryAbstracts, {
+    enabled: !!edition?.getId() && user.getId() > 0
   })
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
     user?.getId()
@@ -51,7 +61,7 @@ const Abstracts = () => {
   function queryAbstracts(): Promise<AbstractCollection> {
     return new Promise((resolve, reject) => {
       WpAbstract.collection({
-        edition: edition.id,
+        edition: edition?.getId(),
         authorId: user.getId(),
         statuses: phase === 'abstract' ? StatusesPhaseAbstract() : (phase === 'synopsis' ? StatusesPhaseSynopsis() : null)
       }).then(resp => {
@@ -84,12 +94,12 @@ const Abstracts = () => {
         <Card.Body className="p-5">
           <Trans as="div"
                  i18nKey="trabalho.boas-vindas"
-                 values={{limit: edition.abstract.limit_per_user}}
+                 values={{limit: edition?.abstract?.limit_per_user}}
                  defaults={`<0>Olá, congressista.</0>
               Antes de submeter seu trabalho confira as
                 <1>regras de submissão de trabalhos</1>.`}
                  components={[<p>Olá, congressista.</p>,
-                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>]}
+                   <a href={edition?.abstract?.rules[lang]} target="_blank">regras de submissão de trabalhos</a>]}
           />
           <div className="my-3 d-flex align-items-center">
             <Link href={`/abstracts/new`} passHref><a
@@ -150,7 +160,7 @@ const Abstracts = () => {
 
 
   return (<MainLayout
-    sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>
+    sidebar={{title: edition?.getName(), component: <EditionSidebar edition={edition}/>}}>
     <Head>
       <title>{siteTitle('Meus trabalhos', queryClient)}</title>
     </Head>
@@ -171,7 +181,7 @@ const Abstracts = () => {
 
       </div>
     </div>
-    {dump({ isOpenToAbstracts: edition.isOpenToAbstracts()})}
+    {dump({ isOpenToAbstracts: edition?.isOpenToAbstracts()})}
   </MainLayout>)
 }
 

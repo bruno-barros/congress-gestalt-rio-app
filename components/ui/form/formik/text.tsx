@@ -7,11 +7,12 @@ import useBuscaCEP, {CEP} from "../../../hooks/useBuscaCEP";
 interface TextProps {
   label: string
   containerClass?: string
+  inputClass?: string
   floatLabel?: boolean
   cepCallback?: (data: CEP | null) => void
 }
 
-export default function Text({label, containerClass, cepCallback, floatLabel: fl, ...props}: TextProps & any) {
+export default function Text({label, containerClass, inputClass, cepCallback, floatLabel: fl, ...props}: TextProps & any) {
 
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
@@ -35,10 +36,10 @@ export default function Text({label, containerClass, cepCallback, floatLabel: fl
   }, [field.value])
 
   // console.log({field}, {meta});
-  return (<div className={`form-group ${floatLabel} ${containerClass || ''} ${err && 'has-error'}`}>
-    {(label && !floatLabel) && <label htmlFor={`fld_${field.name}`}>{`${label} ${props?.required ? '*': ''}`}</label>}
+  return (<div className={`form-group ${floatLabel} ${containerClass || ''} ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
+    {(label && !floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}{` ${props?.required ? '*': ''}`}</label>}
 
-    <input {...field} {...props} id={`fld_${field.name}`} className={`form-control ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
+    <input {...field} {...props} id={`fld_${field.name}`} className={`form-control ${inputClass || ''} ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
 
     {(label && floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}</label>}
 
