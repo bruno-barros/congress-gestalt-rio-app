@@ -1,10 +1,12 @@
 import {AxiosResponse} from "axios";
-import {httpApi} from "./axios";
+import { httpApi, restApi } from './axios';
+import { WpRestResponse } from "../types/restapi";
 
 export default class WpConfig {
+  static namespace = "/event/v1";
 
-  static load(){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_configurations');
+  static load(): Promise<AxiosResponse<WpRestResponse<any>>> {
+    return restApi.get(`${WpConfig.namespace}/settings`);
   }
 
   static pushNotificationSend(data: any){

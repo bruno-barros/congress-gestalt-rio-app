@@ -7,9 +7,9 @@ export default class Event {
   logo: { primary: string; secondary: string };
   url: { pt: string; en: string };
   app: { pt: string; en: string };
-  languages: string[];
   description?: string;
   global: {
+    languages: string[];
     name: string;
     description_pt: string;
     description_en: string;
@@ -96,11 +96,14 @@ export default class Event {
   }
 
   get logoPrimary() {
-    return this.logo?.primary;
+    return this.edition?.logo;
   }
 
+  /**
+   * @deprecated
+   */
   get logoSecondary() {
-    return this.logo?.secondary;
+    return this.edition?.logo;
   }
 
   getEdition(editionId: string) {
@@ -140,6 +143,10 @@ export default class Event {
     let url = this.global.page.checkout[cart.locale || "pt"];
     url = url.replace("[PRODUCT_ID]", cart.product);
     return url + `&lang=${cart.locale}&sso=${token}`;
+  }
+
+  getLanguages(){
+    return this.global.languages || [];
   }
 }
 

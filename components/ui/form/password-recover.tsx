@@ -49,11 +49,12 @@ export default function PasswordRecover(props: PasswordRecoverProps) {
       setResponse({success: null, msg: ''})
 
     try {
-      const resp = await WpUser.rememberPassword(values.email, router.locale)
-      const success = resp.data.success
-      const data = resp.data?.data
+      const axios = await WpUser.rememberPassword(values.email, router.locale)
+      const resp = axios.data
+      const success = resp.success
+      const msg = resp.message
       setLoading(false)
-      setResponse({success, msg: data?.msg})
+      setResponse({success, msg})
       formRef.current.resetForm()
     }catch (err) {
       setLoading(false)

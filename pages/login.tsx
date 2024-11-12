@@ -11,12 +11,14 @@ import {useQueryClient} from "react-query";
 import {useEffect} from "react";
 import {toast} from "react-toastify";
 import authToken from '../src/http/auth-token'
+import useSettings from "../components/hooks/useSettings";
 
 const Login = () => {
 
   const today = new Date;
   const queryClient = useQueryClient()
-  const {data: event} = useEvent()
+  // const {data: event} = useEvent()
+  const { data: event, currentEdition } = useSettings()
   const router = useRouter()
   const t = useTrans()
   const {authLoading, user} = useCurrentUser()
@@ -43,8 +45,8 @@ const Login = () => {
         </div>
       </div>
       <div className="form-panel p-4">
-          <img src={event?.logoPrimary} className="logo img-fluid "/>
-        {event && event.languages.length > 1 && <div className="d-flex align-items-center justify-content-center mb-3">
+        {event?.logoPrimary && <img src={event?.logoPrimary} className="logo img-fluid "/>}        
+        {router.locales && router.locales?.length > 1 && <div className="d-flex align-items-center justify-content-center mb-3">
           <LangSelector/>
         </div>}
 

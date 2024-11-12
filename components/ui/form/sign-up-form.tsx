@@ -49,12 +49,17 @@ export default function SignUp(props: SignUpProps) {
     let success = false
     let data: any = {}
     try {
-      const resp = await WpUser.signUpWithEmail(values, router.locale)
-      success = resp.data.success
-      data = resp.data?.data
+      const axios = await WpUser.signUpWithEmail({
+        username: values.username,
+        password: values.password,
+        locale: router.locale
+      })
+      const resp = axios.data
+      success = resp.success
+      data = resp?.data
       setLoading(false)
       if (!success) {
-        let err = Error.make(data)
+        let err = Error.make(resp)
         setResponse({success: false, msg: err.message})
         setTimeout(() => {
           setResponse({success: null, msg: ''})
