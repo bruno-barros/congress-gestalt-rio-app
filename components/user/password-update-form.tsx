@@ -35,13 +35,15 @@ export default function PasswordUpdateForm(props: PasswordUpdateFormProps) {
     setLoading(true)
 
     try {
-      const resp = await WpUser.updatePassword(user.getId(), values.newPassword)
-      const success = resp.data.success
-      const data = resp.data?.data
+      const axios = await WpUser.updatePassword(user.getId(), values.newPassword)
+      const resp = axios.data
+      const success = resp.success
+      const data = resp.data
+      const msg = resp.message
       setLoading(false)
       setSubmitted(true)
 
-      success === false && toast.error(data?.msg)
+      success === false && toast.error(msg)
       success === true && toast.success(t('atualizado-com-sucesso'))
 
       setTimeout(()=>{
