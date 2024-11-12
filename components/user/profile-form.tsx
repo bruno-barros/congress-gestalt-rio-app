@@ -79,12 +79,14 @@ export default function ProfileForm(props: ProfileFormProps) {
     values._context = 'profile'
     setLoading(true)
     try {
-      const resp = await WpUser.update(values)
-      const success = resp.data.success
-      const data = resp.data?.data
+      const axios = await WpUser.update(values)
+      const resp = axios.data
+      const success = resp.success
+      const msg = resp.message
+      const data = resp.data
       setLoading(false)
 
-      success === false && errorNotification({message: data?.msg})
+      success === false && errorNotification({message: msg})
       if(success){
         successNotification({message: t('atualizado-com-sucesso')})
         user.canManageAbstracts() && refreshUsers()

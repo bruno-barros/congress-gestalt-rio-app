@@ -60,9 +60,10 @@ const LoginForm = () => {
     // console.log(user);
     setBlockUi(true)
     // exibe mensagem de aguarde...
-    const resp = await WpUser.socialLogin(user._profile, provider, router.locale)
-    const success = resp.data.success
-    const data = resp.data.data
+    const axios = await WpUser.socialLogin(user._profile, provider, router.locale)
+    const resp = axios.data
+    const success = resp.success
+    const data = resp.data
     setBlockUi(false)
 
     if (!success) {

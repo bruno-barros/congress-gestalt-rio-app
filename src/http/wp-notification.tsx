@@ -1,11 +1,12 @@
 import {AxiosResponse} from "axios";
-import {httpApi} from "./axios";
+import {httpApi, restApi} from "./axios";
 import {Notification, NotificationTypes} from "../resources/notification";
 
 export default class WpNotification {
+  static namespace = "/event/v1";
 
   static setAsRead(notifications: Notification[]){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_notification_read', {notifications});
+    return restApi.post(`${WpNotification.namespace}/notifications/read`, {notifications});
   }
 
   static get(args: { context: NotificationTypes, recipient_id?: number, read?:boolean; limit?: number }): Promise<AxiosResponse> {

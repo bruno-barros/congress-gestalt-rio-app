@@ -4,6 +4,8 @@ import {LoginInputs} from "../store/store.d";
 import isFinite from 'lodash/isFinite'
 import {Providers} from '../../components/social-login/social-buttons.d'
 import {NotificationTypes} from "../resources/notification";
+import { WpRestResponse } from "../types/restapi";
+import { UserInterface } from "../resources/user";
 export default class WpUser {
   static namespace = "/event/v1";
   static FILLABLE = [
@@ -36,24 +38,35 @@ export default class WpUser {
   ];
 
   static saveRemoteSession(userId: number, token: string){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_save_remote', {user_id: userId, token});
+
+    return restApi.post(`${WpUser.namespace}/users/${userId}/remote_session`, {token});
   }
 
-  static signUpWithEmail(values: any, locale: string){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_signup_with_email', {...values, locale});
+  static signUpWithEmail(args: {username: string, password: string, locale?:string}): Promise<AxiosResponse<WpRestResponse<{
+    next_action: string;
+    provider: string;
+    login: {authToken: string, refreshToken: string}
+    current_user: any
+  }>>> {
+    return restApi.post(`${WpUser.namespace}/auth/signup_with_email`, {...args});
   }
 
-  static socialLogin(profile: any, provider: Providers, locale: string){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_social_login', {...profile, provider, locale});
+  static socialLogin(profile: any, provider: Providers, locale: string): Promise<AxiosResponse<WpRestResponse<{
+    next_action: string;
+    provider: string;
+    login: {authToken: string, refreshToken: string}
+    current_user: any
+  }>>> {
+    return restApi.post(`${WpUser.namespace}/auth/social_login`, {...profile, provider, locale});
   }
 
   static mergeProfiles(profile: any, provider: Providers, locale: string){
-    let merging_url = `${window.location.protocol}//${window.location.host}/merging`
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_profiles', {...profile, provider, merging_url, locale});
+    let merging_url = `${window.location.protocol}//${window.location.host}/merging`;
+    return restApi.post(`${WpUser.namespace}/auth/merge_profiles`, {...profile, provider, merging_url, locale});
   }
 
-  static mergeApproved(uuid: any){
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_merge_approved', {uuid});
+  static mergeApproved(uuid: any): Promise<AxiosResponse<WpRestResponse<any>>>{
+    return restApi.post(`${WpUser.namespace}/auth/merge_approved`, {uuid});
   }
 
   /**
@@ -326,55 +339,38 @@ export default class WpUser {
     [key: string]: any;
   }) {
     return restApi.put(`${WpUser.namespace}/users/${args.databaseId}`, {...args});
-    // return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user', {...data});
   }
 
   static export(args: {ids: number[]}): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_users_export', {ids: args.ids});
   }
 
-  static sendInvitation(args: any) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_send_invitation', {...args});
-  }
 
-  static rememberPassword(email: string, locale: string) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_remember_password', {email, locale});
+  static rememberPassword(email: string, locale: string): Promise<AxiosResponse<WpRestResponse<null>>> {
+    return restApi.post(`${WpUser.namespace}/auth/remember_password`, {email, locale});
   }
-  static accountRecover(args: {name: string, email: string, phone: string, message: string, locale: string}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_account_recover', {...args});
+  static accountRecover(args: {name: string, email: string, phone: string, message: string, locale: string}): Promise<AxiosResponse<WpRestResponse<null>>> {
+    return restApi.post(`${WpUser.namespace}/auth/account_recover`, {...args});
   }
-  static updatePassword(id: number, password: string) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_password', {id, password});
-  }
-
-  static unblock(userId: number) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
-      user_id: userId, status: 0
-    });
-  }
-  static block(userId: number) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_update_user_status', {
-      user_id: userId, status: 1
-    });
+  static updatePassword(id: number, password: string): Promise<AxiosResponse<WpRestResponse<null>>> {
+    return restApi.post(`${WpUser.namespace}/users/${id}/password_update`, {password});
   }
 
   static consent(args: {userId: number; consents:any[]}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_user_consents', {
-      user_id: args.userId, consents: args.consents
-    });
+    return restApi.post(`${WpUser.namespace}/users/${args.userId}/consents`, {consents: args.consents});
   }
 
   static notify(args: {context: NotificationTypes; ids: number[]; coauthors?:boolean; subject: string;
     message: string; merge: boolean; template: string}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_notification_send', {
-      context: args.context,
-      ids: args.ids,
-      coauthors: args.coauthors || false,
-      subject: args.subject,
-      message: args.message,
-      merge: args.merge || false,
-      template: args.template || '',
-    });
+      return restApi.post(`${WpUser.namespace}/notification/send`, {
+        context: args.context,
+        ids: args.ids,
+        coauthors: args.coauthors || false,
+        subject: args.subject,
+        message: args.message,
+        merge: args.merge || false,
+        template: args.template || '',
+      });
   }
 
 

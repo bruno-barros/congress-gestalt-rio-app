@@ -45,17 +45,18 @@ export default function AccountRecover(props: AccountRecoverProps) {
     setResponse({success: null, msg: ''})
 
     try {
-      const resp = await WpUser.accountRecover({
+      const axios = await WpUser.accountRecover({
         name: values.name,
         email: values.email,
         phone: values.phone,
         message: values.message,
         locale: router.locale
       })
-      const success = resp.data.success
-      const data = resp.data?.data
+      const resp = axios.data
+      const success = resp.success
+      const msg = resp.message
       setLoading(false)
-      setResponse({success, msg: data?.msg})
+      setResponse({success, msg})
       formRef.current.resetForm()
     } catch (err) {
       setLoading(false)
@@ -84,7 +85,7 @@ export default function AccountRecover(props: AccountRecoverProps) {
           {({errors, touched, values, isValid}) => (<Form>
             <Text name="name" label={t('cadastro.nome')}/>
             <Text name="email" label="E-mail"/>
-            <Text name="phone" label={t('cadastro.telefone')}/>
+            <Text name="phone" label={t('cadastro.celular')}/>
             <Textarea name="message" label={t('cadastro.descreva-sua-dificuldade')}/>
             <LoadingButton disable={!isValid} loading={loading}>{t('enviar-mensagem')}</LoadingButton>
 
