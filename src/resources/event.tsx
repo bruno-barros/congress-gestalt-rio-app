@@ -54,6 +54,10 @@ export default class Event {
     lgpd_url_pt: string;
     lgpd_url_en: string;
     lgpd_url_es: string;
+    welcome_email_allowed: StringBoolean;
+    welcome_email_content_pt: string;
+    welcome_email_content_en: string;
+    welcome_email_content_es: string
   };
   abstract: {
     abstract_allowed: StringBoolean;
@@ -171,6 +175,10 @@ export class Edition {
     lgpd_url_pt: string;
     lgpd_url_en: string;
     lgpd_url_es: string;
+    welcome_email_allowed: StringBoolean;
+    welcome_email_content_pt: string;
+    welcome_email_content_en: string;
+    welcome_email_content_es: string
   };
   subscription: {
     allowed: StringBoolean;

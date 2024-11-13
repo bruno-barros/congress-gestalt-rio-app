@@ -27,6 +27,8 @@ import Image from "../../components/ui/form/formik/image";
 import DateRange from "../../components/ui/form/formik/date-range";
 import { start } from "repl";
 import LangIndicator from "../../components/settings/lang-indicator";
+import Select from "../../components/ui/form/formik/select";
+import Wysiwyg from "../../components/ui/form/formik/wysiwyg";
 export default function CreateContext() {
   return (
     <SettingsContextProvider>
@@ -48,6 +50,10 @@ function Settings() {
     lgpd_url_pt: evt?.edition?.lgpd_url_pt || "",
     lgpd_url_en: evt?.edition?.lgpd_url_en || "",
     lgpd_url_es: evt?.edition?.lgpd_url_es || "",
+    welcome_email_allowed: evt?.edition?.welcome_email_allowed || "0",
+    welcome_email_content_pt: evt?.edition?.welcome_email_content_pt || "",
+    welcome_email_content_en: evt?.edition?.welcome_email_content_en || "",
+    welcome_email_content_es: evt?.edition?.welcome_email_content_es || "",
   };
   const validationSchema = Yup.object({
     name: Yup.string().required("Nome é obrigatório"),
@@ -104,6 +110,15 @@ function Settings() {
             />
             <Field infos="Endereço da página com a Política de Privacidade.">
                 <Text name={`lgpd_url_${lang}`} label={<LangIndicator lang={lang}>Link da Política de Privacidade</LangIndicator>} />
+            </Field>
+            <Field infos="E-mail enviado quando participante faz o cadastro.">
+                <Select name="welcome_email_allowed" label="Permitir envio de email de boas-vindas">
+                  <option value="1">Sim</option>
+                  <option value="0">Não</option>
+                </Select>
+            </Field>
+            <Field infos="Conteúdo do e-mail enviado quando participante faz o cadastro. Máximo de 1.500 caracteres.">
+                <Wysiwyg name={`welcome_email_content_${lang}`} label={<LangIndicator lang={lang}>Mensagem de boas vindas</LangIndicator>} charsMax={1500} charsMin={0} disabled={values.welcome_email_allowed === '0'} />
             </Field>
             
 
