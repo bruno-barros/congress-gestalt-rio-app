@@ -217,7 +217,7 @@ export default class WpUser {
     return httpApi.post('/index.php?graphql&fetchLogged', {
       query: `query fetchLogged {
         __typename
-        user(id: "${id}", idType: ${type}) {
+        viewer {
           id
           databaseId
           phone
