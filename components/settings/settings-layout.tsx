@@ -1,7 +1,7 @@
 "use client";
 import { CSSProperties, PropsWithChildren, useEffect } from "react";
 import MainLayout from "../../components/layout";
-import s from "./setting-helpers.module.scss";
+import s from "./settings.module.scss";
 import Nav from "react-bootstrap/Nav";
 import { useRouter } from "next/router";
 import Link from "next/link";
