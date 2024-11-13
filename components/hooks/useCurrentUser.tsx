@@ -15,9 +15,9 @@ function fetchCurrentUser(dispatch) {
 
       WpUser.fetchLogged(id).then((resp) => {
         // console.log({id}, 'fetching AUTH again...');
-        if (resp.data?.data?.user) {
-          dispatch({type: USER_ACTYPE.UPDATED, payload: resp.data.data.user})
-          resolve(resp.data.data.user)
+        if (resp.data?.data?.viewer) {
+          dispatch({type: USER_ACTYPE.UPDATED, payload: resp.data.data.viewer})
+          resolve(resp.data.data.viewer)
         } else {
           reject(null)
         }
