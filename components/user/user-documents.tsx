@@ -22,6 +22,7 @@ export default function UserDocuments(props: UserDocumentsProps) {
   }
 
   return <div className="mt-3">
+    {(!isLoading && data.length === 0) && <div className="alert alert-info">{t('cadastro.nenhum-arquivo')}</div>}
     {(data && data.length > 0) && data.map(doc => {
         return <div key={doc.id} className="mb-2 border bg-light p-3 d-md-flex justify-content-between align-items-center">
             <div><a href={doc.url} target="_blank">{doc.name}</a></div>

@@ -20,6 +20,7 @@ import ConsentTerms from '../user/consent-terms';
 import Loading from "../ui/loading";
 import BlockUi from "../ui/block-ui";
 import useSettings from "../hooks/useSettings";
+import AffirmativeActionAlert from "../user/affirmative-action-alert";
 
 
 interface MainLayoutProps {
@@ -66,6 +67,7 @@ function MainLayout({children, sidebar, pageHeader, fullWidth}: MainLayoutProps)
 
         </div>
       </CurtainDelayed>}
+      <AffirmativeActionAlert />
 
       {pageHeader && <div className="page-header">
         <div className="title">{pageHeader.title}</div>
