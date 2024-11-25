@@ -49,6 +49,9 @@ const Register3 = () => {
         attachments: values.attachments
     })
     const resp = axios.data;
+
+    queryClient.resetQueries('auth');
+    queryClient.resetQueries('user-documents');
     
     setLoading(false);
     router.push(`/register3?success=${resp.success ? '1' : '0'}`);   
