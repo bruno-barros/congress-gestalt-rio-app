@@ -53,7 +53,7 @@ export interface UserInterface {
   child_care_needs?: string;
   is_affirmative_action?: StringBoolean;
   affirmative_action?: string;
-  apply_affirmative_action?: StringBoolean;
+  apply_affirmative_action?: StringBoolean;// deprecated
   is_artist?: StringBoolean;
   is_artist_volunteer?: StringBoolean;
   artistic_skill?: string;
@@ -86,6 +86,10 @@ export class User {
 
   getFirstName() {
     return this.user?.firstName || this.user?.name?.split(" ")[0] || null;
+  }
+
+  getFullName(){
+    return this.user?.name || (this.user?.firstName + ' ' + this.user?.lastName);
   }
 
   getAvatarUrl() {
@@ -193,6 +197,10 @@ export class User {
       this.user?.special_behaviors &&
       this.user.special_behaviors.indexOf("bypass_synopsis") !== -1
     );
+  }
+
+  applyToAffirmativeAction(){
+    return this.user?.is_affirmative_action === '1';
   }
 }
 
