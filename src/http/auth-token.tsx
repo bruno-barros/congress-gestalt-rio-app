@@ -3,8 +3,8 @@ import Cookie from "js-cookie";
 import Router from "next/router";
 import {redirectToLogin} from "../helpers";
 
-const TOKEN_STORAGE_KEY = "nextapp.authToken";
-const REFRESH_TOKEN_STORAGE_KEY = "nextapp.refreshToken";
+const TOKEN_STORAGE_KEY = "gestalt.authToken";
+const REFRESH_TOKEN_STORAGE_KEY = "gestalt.refreshToken";
 
 export type DecodedToken = {
   readonly id: null | number;

@@ -3,16 +3,13 @@ import useTrans from "../../components/hooks/useTrans";
 import useEvent from "../../components/hooks/useEvent";
 import {useRouter} from "next/router";
 import useCurrentUser from "../../components/hooks/useCurrentUser";
-import {useQuery} from "react-query";
-import WpUser from "../../src/http/wp-user";
-import {errorNotification} from "../../src/resources/responses";
 import ProfileForm from "../../components/user/profile-form";
-import {User} from "../../src/resources/user";
 import UsersListSidebar from "../../components/user/users-list-sidebar";
 import privateRoute from "../../components/hoc/private-route";
 import Loading from "../../components/ui/loading";
 import useUserDocuments from "../../components/hooks/useUserDocuments";
 import { DocumentContexts } from "../../src/resources/document";
+import useUser from "../../components/hooks/useUser";
 
 
 const UserEditing = () => {
@@ -21,31 +18,17 @@ const UserEditing = () => {
   const router = useRouter()
   const t = useTrans()
   const {data: event, isLoading} = useEvent()
-  const {data: user, error, isLoading: loadingUser} = useQuery(['user', router.query.id], queryUser, {
-    enabled: true
-  })
+
+  const { data: user, error, isLoading: loadingUser } = useUser(Number(router.query.id))
   const {data: documents, isLoading: docLoading} = useUserDocuments(Number(router.query.id))
   let editingMode: 'user'|'admin' = auth.canManageAbstracts() ? 'admin' : 'user'
-
-  function queryUser(): Promise<any>{
-    return new Promise((resolve, reject)=>{
-      WpUser.fetchUser(Number(router.query.id))
-        .then(resp => {
-          if(resp.data?.data?.user) resolve(User.make(resp.data.data.user))
-          else reject(null)
-        }, err => {
-          errorNotification({error: err})
-        })
-    })
-  }
-
 
   if (isLoading || loadingUser) {
     return <MainLayout><Loading vspace={80}/></MainLayout>;
   }
 
 
-  if (user.databaseId !== auth.getId() && !auth.canManageAbstracts()) {
+  if (user?.getId() !== auth.getId() && !auth.canManageAbstracts()) {
     return <MainLayout>
       <div className="container">
         <div className="row">

@@ -14,9 +14,7 @@ import LoadingButton from "../components/ui/loading-button";
 import Loading from "../components/ui/loading";
 import useSettings from "../components/hooks/useSettings";
 import Attachments from "../components/ui/form/formik/attachments";
-import WpUser from "../src/http/wp-user";
 import WpSubscription from "../src/http/wp-subscription";
-import { divide } from "lodash";
 import * as Yup from 'yup';
 
 const Register3 = () => {
@@ -51,6 +49,9 @@ const Register3 = () => {
         attachments: values.attachments
     })
     const resp = axios.data;
+
+    queryClient.resetQueries('auth');
+    queryClient.resetQueries('user-documents');
     
     setLoading(false);
     router.push(`/register3?success=${resp.success ? '1' : '0'}`);   

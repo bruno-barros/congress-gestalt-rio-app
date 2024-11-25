@@ -70,7 +70,7 @@ export default function ProfileForm(props: ProfileFormProps) {
     neighborhood: Yup.string().required('validacao.obrigatorio'),
     address: Yup.string().required('validacao.obrigatorio'),
     number: Yup.string().required('validacao.obrigatorio'),
-    allow_newsletter: Yup.bool()
+    allow_newsletter: Yup.bool().notRequired(),
     // complemento: Yup.string().notRequired(),
   });
 
@@ -145,7 +145,6 @@ export default function ProfileForm(props: ProfileFormProps) {
       abg_member: user.getUserData().abg_member || '0',
       is_affirmative_action: user.getUserData()?.is_affirmative_action || '0',
       affirmative_action: user.getUserData()?.affirmative_action || '',
-      apply_affirmative_action: user.getUserData()?.apply_affirmative_action || '0',
     }}
     onSubmit={submit}
     validationSchema={FormSchema}
@@ -156,7 +155,7 @@ export default function ProfileForm(props: ProfileFormProps) {
         <legend>{t('dados-pessoais')}</legend>
 
       <Ac requires={[REQUIREMENTS.user.editSensitive]}>
-        <div className="row border pt-3 pb-2 mb-3">
+        <div className="row border bg-light pt-3 pb-2 mb-3">
           <Select name="fn_add_role" label={`Perfil`} containerClass="col-12 col-md" multi required={isRequired}>
             {MapRoles.map(r => (<option key={r.name} value={r.name}>{r.label}</option>))}
           </Select>
@@ -214,7 +213,7 @@ export default function ProfileForm(props: ProfileFormProps) {
               <option value="0">{t('nao')}</option>
               <option value="1">{t('sim')}</option>
             </Select>          
-            <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
+            <Text name="pdc_needs" label="Necessita de alguma assistência ou recurso para acessar o congresso? Qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
             
           </div>
           <div className="row">
@@ -243,24 +242,16 @@ export default function ProfileForm(props: ProfileFormProps) {
           </Select>
 
           <Select name="affirmative_action" label="Que tipo de Ação Afirmativa?" containerClass="col-12 col-md" disabled={values.is_affirmative_action === '0'}>
-            <option value="">Nenhuma</option>
-            <option value="Sou pessoa negra">Sou pessoa negra</option>
-            <option value="Sou indígena">Sou indígena</option>
-            <option value="Sou mulher/homem trans">Sou mulher/homem trans</option>
-            <option value="Sou travesti">Sou travesti</option>
-            <option value="Sou não-binário">Sou não-binário</option>
+              <option value="" disabled>Selecione</option>
+              <option value="Pessoa negra (pretos e pardos)">Pessoa negra (pretos e pardos)</option>
+              <option value="Indígena">Indígena</option>
+              <option value="Trans">Trans</option>
+              <option value="Travesti">Travesti</option>
+              <option value="Pessoa com deficiência">Pessoa com deficiência</option>
           </Select>
-        </div>
-        {values.is_affirmative_action === '1' &&
-        <div className="row">
-          <Select name="apply_affirmative_action" label="Deseja participar do edital para concorrer às vagas das ações afirmativas?" containerClass="col-12">
-            <option value="0">{t('nao')}</option>
-            <option value="1">{t('sim')}</option>
-          </Select>
-          {values.apply_affirmative_action == '1' && 
+          {values.is_affirmative_action == '1' && 
           <div className="col-12"><div className="badge text-danger">É obrigatório o envio de documentos e/ou autodeclaração que comprove sua identidade.</div></div>}
-          
-        </div>}
+        </div>
 
         {/* {dump(values)} */}
 

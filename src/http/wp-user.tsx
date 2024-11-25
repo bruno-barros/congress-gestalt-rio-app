@@ -156,7 +156,7 @@ export default class WpUser {
   /**
    * @param id
    */
-  static fetchUser(id: any): Promise<AxiosResponse<any>> {
+  static fetchUser(id: any, appendQuery?: string): Promise<AxiosResponse<any>> {
 
     let type = isFinite(Number(id)) ? 'DATABASE_ID' : 'ID'
 
@@ -194,6 +194,9 @@ export default class WpUser {
           is_pdc
           pdc_needs
           is_child_care
+          is_affirmative_action
+          affirmative_action
+          ${appendQuery || ''}
           roles {
             nodes {
               name
@@ -251,6 +254,8 @@ export default class WpUser {
           is_pdc
           pdc_needs
           is_child_care
+          is_affirmative_action
+          affirmative_action
           roles {
             nodes {
               name

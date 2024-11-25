@@ -38,6 +38,7 @@ const Register1 = () => {
   // const {data: event} = useEvent()
   // const edition = event && event.currentEdition()
   const {data: event, currentEdition: edition} = useSettings()
+  const namingType: 'fullname'|'first-last'|string = 'fullname'; 
   
   const lang = router.locale
 // console.log(edition)
@@ -59,8 +60,23 @@ const Register1 = () => {
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
-    firstName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
-    lastName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+    fullName: Yup.string().when('country', {
+      is: (v) => namingType === 'fullname',
+      then: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+      otherwise: Yup.string().notRequired()
+    }),
+    firstName: Yup.string().when('country', {
+      is: (v) => namingType === 'first-last',
+      then: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+      otherwise: Yup.string().notRequired()
+    }),
+    lastName: Yup.string().when('country', {
+      is: (v) => namingType === 'first-last',
+      then: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+      otherwise: Yup.string().notRequired()
+    }),
+    // firstName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
+    // lastName: Yup.string().min(2, 'validacao.curto').required('validacao.obrigatorio'),
     badge_name: Yup.string().min(5, 'validacao.curto').required('validacao.obrigatorio'),
     cellphone: Yup.string().min(15, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     // phone: Yup.string().min(14, 'validacao.formato-invalido').required('validacao.obrigatorio'),
@@ -78,13 +94,20 @@ const Register1 = () => {
     values.databaseId = user.getId()
     values.email = user.getUserData().email
     values._context = 'register1'
+    if(namingType === 'fullname'){
+      // break the name by space, and set the first word as first name and the rest as last name
+      const name = values.fullName.split(' ')
+      values.firstName = name[0]
+      values.lastName = name.slice(1).join(' ')
+      delete values.fullName
+    }
     // console.log({values});
     setLoading(true)
     try {
       const resp = await WpUser.update(values)
       const success = resp.data.success
       const data = resp.data?.data
-      const isAffirmative = values.apply_affirmative_action === '1'
+      const isAffirmative = values.is_affirmative_action === '1'
       setLoading(false)
       setResponse({success, msg: data.msg})
       success === false && dismissAlert()
@@ -128,6 +151,7 @@ const Register1 = () => {
             country: user.getUserData().country || 'BR',
             cpf: user.getUserData().cpf || '',
             passport: user.getUserData().passport || '',
+            fullName: user.getFullName() || '',
             firstName: user.getUserData().firstName || '',
             lastName: user.getUserData().lastName || '',
             email: user.getUserData().email || '',
@@ -158,7 +182,7 @@ const Register1 = () => {
             child_care_needs: user.getUserData()?.child_care_needs || '',
             is_affirmative_action: user.getUserData()?.is_affirmative_action || '0',
             affirmative_action: user.getUserData()?.affirmative_action || '',
-            apply_affirmative_action: user.getUserData()?.apply_affirmative_action || '0',
+            // apply_affirmative_action: user.getUserData()?.apply_affirmative_action || '0',
             is_artist: user.getUserData()?.is_artist || '0',
             is_artist_volunteer: user.getUserData()?.is_artist_volunteer || '0',
             artistic_skill: user.getUserData()?.artistic_skill || '',
@@ -184,10 +208,16 @@ const Register1 = () => {
                 </div>
                 {/*row*/}
 
+                {namingType === 'fullname' && 
+                <div className="row">
+                  <Text name="fullName" label={t('cadastro.nome-completo')} required containerClass="col-12 col-md"/>
+                </div>}
+                {namingType === 'first-last' && 
                 <div className="row">
                   <Text name="firstName" label={t('cadastro.nome')} required containerClass="col-12 col-md"/>
                   <Text name="lastName" label={t('cadastro.sobrenome')} required containerClass="col-12 col-md"/>
-                </div>
+                </div>}
+                
 
                 <div className="row">
                 <Text name="email" label={`E-mail`} disabled containerClass="col-12 col-md"/>
@@ -222,30 +252,30 @@ const Register1 = () => {
                 <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Ações Afirmativas</strong></legend>
                   <div className="row">
-                    <Select name="is_affirmative_action" label="Você se identifica como Ação Afirmativa?" containerClass="col-12 col-md-6">
+                    <Select name="is_affirmative_action" label="Deseja participar do edital das vagas de Ações afirmativas?" containerClass="col-12 col-md-6">
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
                     </Select>
 
                     <Select name="affirmative_action" label="Que tipo de Ação Afirmativa?" containerClass="col-12 col-md" disabled={values.is_affirmative_action === '0'}>
-                      <option value="">Nenhuma</option>
-                      <option value="Sou pessoa negra">Sou pessoa negra</option>
-                      <option value="Sou indígena">Sou indígena</option>
-                      <option value="Sou mulher/homem trans">Sou mulher/homem trans</option>
-                      <option value="Sou travesti">Sou travesti</option>
-                      <option value="Sou não-binário">Sou não-binário</option>
+                      <option value="" disabled>Selecione</option>
+                      <option value="Pessoa negra (pretos e pardos)">Pessoa negra (pretos e pardos)</option>
+                      <option value="Indígena">Indígena</option>
+                      <option value="Trans">Trans</option>
+                      <option value="Travesti">Travesti</option>
+                      <option value="Pessoa com deficiência">Pessoa com deficiência</option>
                     </Select>
                   </div>
-                  {values.is_affirmative_action === '1' &&
+                  
                   <div className="row">
-                    <Select name="apply_affirmative_action" label="Deseja participar do edital para concorrer às vagas das ações afirmativas?" containerClass="col-12">
+                    {/* <Select name="apply_affirmative_action" label="Deseja participar do edital para concorrer às vagas das ações afirmativas?" containerClass="col-12">
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
-                    </Select>
-                    {values.apply_affirmative_action == '1' && 
+                    </Select> */}
+                    {values.is_affirmative_action == '1' && 
                     <div className="col-12"><div className="badge text-danger">É obrigatório o envio de documentos e/ou autodeclaração que comprove sua identidade.</div></div>}
                     
-                  </div>}
+                  </div>
 
                   {/* {dump(values)} */}
 
@@ -258,7 +288,7 @@ const Register1 = () => {
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
                     </Select>          
-                    <Text name="pdc_needs" label="Necessita de alguma técnica assistiva (recursos específicos) para acessar o congresso? Se sim, qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
+                    <Text name="pdc_needs" label="Necessita de alguma assistência ou recurso para acessar o congresso? Qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
                     
                   </div>
                   <div className="row">
@@ -276,7 +306,7 @@ const Register1 = () => {
                   </div>
                 </fieldset>
                 
-                <fieldset className="border p-3 mb-3 bg-light">
+                {/* <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Habilidades artísticas</strong></legend>
                   <div className="row">
                     <Select name="is_artist" label="Você tem habilidades artísticas?" containerClass="col-12 col-md-3">
@@ -290,15 +320,15 @@ const Register1 = () => {
                     </Select>                                     
                     <Text name="artistic_skill" label="Tenho habilidade artística na seguinte área:" containerClass="col-12 col-md" disabled={values.is_artist === '0'}/>                    
                   </div>
-                </fieldset>
+                </fieldset> */}
 
                 <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Linguagem</strong></legend>
                   <div className="row_">
                     <Checkboxes name="languages" label="" options={[
-                      {value: 'Espanhol e posso traduzir para português', label: 'Tenho fluência da língua espanhola e posso voluntariamente traduzir o expositor para o português.'},
-                      {value: 'Português e posso traduzir para espanhol', label: 'Tenho fluência da língua portuguesa e posso traduzir o expositor para o espanhol.'},
-                      {value: 'Libras e posso traduzir', label: 'Tenho domínio da linguagem de libras e posso voluntariamente traduzir o expositor.'}
+                      {value: 'Fluência em espanhol e posso traduzir exposição', label: 'Tenho fluência em espanhol e posso voluntariamente traduzir uma exposição para o português.'},
+                      {value: 'Fluência em português e posso traduzir exposição', label: 'Tenho fluência em português e posso traduzir uma exposição para o espanhol.'},
+                      {value: 'LIBRAS e posso traduzir', label: 'Tenho domínio da Língua Brasileira de Sinais (LIBRAS) e posso voluntariamente interpretar uma exposição.'}
                     ]} />       
                   </div>
                 </fieldset>
@@ -310,11 +340,13 @@ const Register1 = () => {
 
                 <Select name="education" label={t('cadastro.escolaridade')} required>
                   <option value="" selected disabled>Selecione uma opção</option>
-                  <option value="estudante">Estudante</option>
+                  <option value="estudante graduacao">Estudante de graduação</option>
+                  <option value="estudante pos-graduacao">Estudante de pós-graduação</option>
+                  <option value="estudante especializacao">Estudante de especialização</option>
                   <option value="profissional">Profissional</option>
                 </Select>
 
-                <Switch name="abg_member" label={lang==='pt' ? 'Sou associada/o/e à ABG e me encontro adimplente com todas as minhas anuidades.' : 'Soy miembro de ABG y cumplo con todas mis cuotas anuales.'} disabled={values.education !== 'profissional'}/>
+                <Switch name="abg_member" label={lang==='pt' ? 'Sou associada/o/e à ABG e me encontro adimplente com todas as minhas anuidades.' : 'Soy miembro de ABG y cumplo con todas mis cuotas anuales.'}/>
 
                 <Switch name="has_institution" label={t('cadastro.tem_instituicao')} />
                 
@@ -322,10 +354,11 @@ const Register1 = () => {
                   <Text name="institution_name" label={t('cadastro.instituicao.nome')} containerClass="col-12 col-md" disabled={!values.has_institution}/>
                   <Select name="institution_occupation" label={t('cadastro.ocupacao')} containerClass="col-12 col-md" disabled={!values.has_institution}>
                     <option value="" selected disabled>Selecione uma opção</option>
-                    <option value="Aluna/o/e em formação">Aluna/o/e em formação</option>
                     <option value="Docente">Docente</option>
-                    <option value="Administrador/a/e">Administrador/a/e</option>
                     <option value="Colaborador/a/e">Colaborador/a/e</option>
+                    <option value="Estudante de graduação">Estudante de graduação</option>
+                    <option value="Estudante de pós-graduação">Estudante de pós-graduação</option>
+                    <option value="Estudante de especializacao">Estudante de especialização</option>
                   </Select>
                 </div>
                 
