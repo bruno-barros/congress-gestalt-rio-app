@@ -188,6 +188,7 @@ export function getRaces() {
     { value: "Indigena", name: "indigena" },
     { value: "Amarela", name: "amarela" },
     { value: "Branca", name: "branca" },
+    { value: "Prefiro não responder", name: "prefiro-nao-responder" },
   ];
 }
 
