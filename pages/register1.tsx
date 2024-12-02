@@ -291,7 +291,7 @@ const Register1 = () => {
                     <Text name="pdc_needs" label="Necessita de alguma assistência ou recurso para acessar o congresso? Qual?" containerClass="col-12 col-md" disabled={values.is_pdc === '0'}/>
                     
                   </div>
-                  <div className="row">
+                  {/* <div className="row">
                     <Select name="is_child_care" label="Necessita de apoio para criança menor?" containerClass="col-12 col-md-4">
                       <option value="0">{t('nao')}</option>
                       <option value="1">{t('sim')}</option>
@@ -303,7 +303,7 @@ const Register1 = () => {
                       <option value="De seis a sete anos">De seis a sete anos</option>
                       <option value="Acima de oito anos">Acima de oito anos</option>
                       </Select>
-                  </div>
+                  </div> */}
                 </fieldset>
                 
                 {/* <fieldset className="border p-3 mb-3 bg-light">
