@@ -479,7 +479,7 @@ export function SubscriptionsGroupActions<T extends object>({
             STATUS: item.order_status,
             PDC: usermeta(item, "is_pdc") === "1" ? "Sim" : "Não",
             NECESSIDADES: usermeta(item, "pdc_needs"),
-            CRIANÇA: usermeta(item, "is_child_care") === "1" ? "Sim" : "Não",
+            // CRIANÇA: usermeta(item, "is_child_care") === "1" ? "Sim" : "Não",
             USO_EMAIL: usermeta(item, "allow_newsletter") === "1" ? "Sim" : "Não",
             ACAO_AFIRMATIVA: usermeta(item, "apply_affirmative_action") === "1" ? "Sim" : "Não",
             TIPO_ACAO: usermeta(item, "affirmative_action"),
