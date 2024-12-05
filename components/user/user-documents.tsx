@@ -11,6 +11,8 @@ import { useState } from "react";
 import { DocumentSchema } from "../../src/types/document";
 import WpDocument from "../../src/http/wp-document";
 import { toast } from "react-toastify";
+import Ac from "../access-control";
+import { REQUIREMENTS } from "../access-control/requirements";
 
 
 interface UserDocumentsProps {
@@ -65,13 +67,15 @@ export default function UserDocuments(props: UserDocumentsProps) {
             <div className="d-flex align-items-center" style={{gap: 30}}>
                 <div className="badge badge-primary badge-pill">{DocumentContexts(doc.context)?.[0]?.name || '—'}</div>
                 <div className=" text-sm">{doc.created_at}</div>
-                <div>
-                  <PopOver text={<YesOrNo doc={doc} />} trigger="click" position="left">
-                  <Button variant="outline-danger" size="sm">
-                    {loading ? <Loading size="sm" variant="danger" /> : <Icon name="trash" />}
-                  </Button>
-                  </PopOver>
-                </div>
+                <Ac requires={[REQUIREMENTS.user.deleteDocuments]}>
+                  <div>
+                    <PopOver text={<YesOrNo doc={doc} />} trigger="click" position="left">
+                    <Button variant="outline-danger" size="sm">
+                      {loading ? <Loading size="sm" variant="danger" /> : <Icon name="trash" />}
+                    </Button>
+                    </PopOver>
+                  </div>
+                </Ac>
             </div>
         </div>
     })}
