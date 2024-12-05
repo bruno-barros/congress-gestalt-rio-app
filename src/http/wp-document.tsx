@@ -10,9 +10,10 @@ export default class WpDocument {
     return restApi.get(`${this.namespace}/documents/${args.userId}` );
   }
 
-  static delete(data: any): Promise<AxiosResponse> {
-    return httpApi.post("/wp-admin/admin-ajax.php?action=ev_document_delete", {
-      ...data,
-    });
+  static delete(id: number): Promise<AxiosResponse<WpRestResponse<any>>> {
+    return restApi.delete(`${this.namespace}/documents/${id}`)
+    // return httpApi.post("/wp-admin/admin-ajax.php?action=ev_document_delete", {
+    //   ...data,
+    // });
   }
 }
