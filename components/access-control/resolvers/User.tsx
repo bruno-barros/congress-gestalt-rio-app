@@ -5,6 +5,7 @@ export const RESOLVERS = {
   edit: "UserProfile:edit",
   readSensitive: "UserProfile:readSensitive",
   editSensitive: "UserProfile:editSensitive",
+  deleteDocuments: "UserProfile:deleteDocuments",
 };
 
 export default class UserProfile {
@@ -27,6 +28,10 @@ export default class UserProfile {
   }
 
   editSensitive(user: User) {
+    return user.isAdmin();
+  }
+
+  deleteDocuments(user: User) {
     return user.isAdmin();
   }
 }
