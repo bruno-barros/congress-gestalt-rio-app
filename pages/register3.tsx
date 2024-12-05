@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useQueryClient } from "react-query";
 import { useRouter } from "next/router";
 import useCurrentUser from "../components/hooks/useCurrentUser";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Card from "react-bootstrap/cjs/Card";
 import useTrans from "../components/hooks/useTrans";
 import { Form, Formik, FormikProps } from "formik";
@@ -16,6 +16,8 @@ import useSettings from "../components/hooks/useSettings";
 import Attachments from "../components/ui/form/formik/attachments";
 import WpSubscription from "../src/http/wp-subscription";
 import * as Yup from 'yup';
+import Button from "react-bootstrap/Button";
+import Curtain from "../components/ui/curtain";
 
 const Register3 = () => {
   const t = useTrans();
@@ -27,6 +29,7 @@ const Register3 = () => {
   const { data: event, currentEdition: edition, isLoading } = useSettings();
   const lang = router.locale;
   const [loading, setLoading] = useState(false);
+  const [agreed, setAgreed] = useState(false);
 
   const formInstance = useRef<FormikProps<any> | any>(
     null
@@ -57,6 +60,12 @@ const Register3 = () => {
     router.push(`/register3?success=${resp.success ? '1' : '0'}`);   
   }
 
+  useEffect(()=>{
+    if(edition && !edition.isSubscriptionAllowed()){
+      router.push('/dashboard');
+    }
+  }, [edition])
+
   if (isLoading) {
     return (
       <ClearLayout>
@@ -75,7 +84,6 @@ const Register3 = () => {
       })} */}
       <div className="row">
 
-        {edition.isSubscriptionAllowed() && (
           <div className="col-12 col-lg-8 offset-lg-2">
             <Card>
               <Card.Body>
@@ -89,6 +97,19 @@ const Register3 = () => {
                   <p>É obrigatório o envio de documentos e/ou autodeclaração que comprove sua identidade para efetivar a sua inscrição.</p>
                   <p>Para informações detalhadas sobre os documentos e vagas, você deve acessar o <strong>Edital de Ações Afirmativas</strong>: em <a href="https://cbl2025.gestalt.com.br/editalacoesafirmativasport/" target="_blank">português</a> ou <a href="https://cbl2025.gestalt.com.br/es/edictodeaccionesafirmativas/" target="_blank">espanhol</a>.</p>
                   </>}
+
+                {agreed === false && 
+                  <div className="border-left border-3 p-3 " style={{backgroundColor: '#f3f3d4'}}>
+                    <div>
+                      {lang === 'es' ? <p><b>¡ATENCIÓN!</b> Antes de enviar los documentos, comprueba que has adjuntado todos los documentos necesarios. Después del envío, no será posible editarlo.</p> : <p><b>ATENÇÃO!</b> Antes de enviar os documentos confira se anexou todos os documentos necessários. Após o envio não será possível a edição.</p>}
+                    </div>
+                    <div className="d-flex gap-2">
+                    <Button variant="warning" size="sm" onClick={()=>setAgreed(true)}>{lang === 'es' ? 'Está bien, lo entiendo' : 'Ok, entendi'}</Button>
+                    <Link href="/dashboard" passHref>
+                    <a className="btn btn-outline-dark btn-sm">{lang === 'es' ? 'Hacerlo más tarde' : 'Fazer depois'}</a>
+                    </Link>
+                    </div>
+                  </div>}
                 
                 <hr />
 
@@ -105,23 +126,26 @@ const Register3 = () => {
                 
                 </div>}
 
-                {!success && <Formik
-                    innerRef={formInstance}
-                    initialValues={initValues}
-                    validationSchema={validationSchema}
-                    onSubmit={handleSubmit}
-                >{({values, errors, isValid}) => <Form>
-                    
-                    <h4 style={{fontSize: '.95em'}}>{lang==='es' ? 'Cargar el documento de prueba': 'Faça o upload do documento de comprovação'}</h4>
-                    <Attachments name="attachments" label={t('anexos')} maxFiles={2} metas={{
-                        context: 'affirmative_action',
-                        user_id: user.getId(),
-                        }} />
-                    {/* {dump({
-                        valid: isValid,
-                        valid2: formInstance.current?.isValid,
-                    })} */}
-                </Form>}</Formik>}
+
+                {(agreed && !success) && <Curtain isOpened={agreed && !success} duration={.5}>
+                  <Formik
+                      innerRef={formInstance}
+                      initialValues={initValues}
+                      validationSchema={validationSchema}
+                      onSubmit={handleSubmit}
+                    >{({values, errors, isValid}) => <Form>
+                      
+                      <h4 style={{fontSize: '.95em'}}>{lang==='es' ? 'Cargar el documento de prueba': 'Faça o upload do documento de comprovação'}</h4>
+                      <Attachments name="attachments" label={t('anexos')} maxFiles={2} metas={{
+                          context: 'affirmative_action',
+                          user_id: user.getId(),
+                          }} />
+                      {/* {dump({
+                          valid: isValid,
+                          valid2: formInstance.current?.isValid,
+                      })} */}
+                  </Form>}</Formik>
+                </Curtain>}
 
                 
               </Card.Body>
@@ -155,7 +179,6 @@ const Register3 = () => {
               </Card.Footer>
             </Card>
           </div>
-        )}
       </div>
     </ClearLayout>
   );

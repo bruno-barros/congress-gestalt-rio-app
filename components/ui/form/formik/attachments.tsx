@@ -15,6 +15,7 @@ import ButtonDeleteConfirmation from "../../button-delete-confirmation";
 import useEvent from "../../../hooks/useEvent";
 import moment from "moment";
 import useCurrentUser from "../../../hooks/useCurrentUser";
+import useSettings from "../../../hooks/useSettings";
 
 interface AttachmentsProps {
   label: string
@@ -27,7 +28,7 @@ interface AttachmentsProps {
 export default function Attachments({label, metas, containerClass, maxFiles: mf, disabled, ...props}: AttachmentsProps & any) {
 
   // @ts-ignore
-  const {data: event} = useEvent()
+  const { data: event, currentEdition} = useSettings()
   const router = useRouter()
   const disp = useDispatch()
   const t = useTrans()

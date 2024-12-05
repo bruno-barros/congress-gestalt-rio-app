@@ -4,7 +4,7 @@ import Popover from "react-bootstrap/cjs/Popover";
 
 interface PopOverProps {
   title?: string
-  text: string
+  text: string|JSX.Element
   children: any
   trigger: 'hover' | 'click' |'focus' | Array<'hover' | 'click' |'focus'>
   position?: 'top' | 'bottom' | 'left' | 'right'
@@ -26,6 +26,7 @@ export default function PopOver(props: PopOverProps) {
 
 
   return (<OverlayTrigger
+  rootClose
     placement={pos}
     trigger={trigger}
     overlay={Pop}
