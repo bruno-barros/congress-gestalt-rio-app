@@ -13,6 +13,7 @@ import WpDocument from "../../src/http/wp-document";
 import { toast } from "react-toastify";
 import Ac from "../access-control";
 import { REQUIREMENTS } from "../access-control/requirements";
+import DeleteButton from "../document/delete-button";
 
 
 interface UserDocumentsProps {
@@ -24,33 +25,6 @@ export default function UserDocuments(props: UserDocumentsProps) {
   const router = useRouter();
   const lang = router.locale;
   const { data, isLoading, refetch } = useUserDocuments(user.getId());
-  const [loading, setLoading] = useState(false);
-
-
-  function YesOrNo({doc}: {doc: DocumentSchema}){
-    return <div className="d-flex align-items-center gap-2">
-      <button className="badge badge-primary badge-pill border-0" onClick={() => handleDeletion(doc)}>Apagar</button>
-      <button className="badge badge-danger badge-pill border-0" onClick={handleCancelDeletion}>Cancelar</button>
-    </div>
-  }
-  function handleDeletion(doc: DocumentSchema){
-    setLoading(true)
-    WpDocument.delete(doc.id)
-    .then(axios => {
-      const resp = axios.data
-      if(resp.success) toast.success('Documento apagado com sucesso')
-      else toast.error(resp.data.msg)
-    })
-    .finally(() => {
-      setLoading(false)
-      refetch()
-    })
-    // console.log(doc)
-  }
-  function handleCancelDeletion(e: any){
-    e.preventDefault();
-    document.querySelector('body').click()
-  }
 
 
   if (isLoading) {
@@ -68,13 +42,7 @@ export default function UserDocuments(props: UserDocumentsProps) {
                 <div className="badge badge-primary badge-pill">{DocumentContexts(doc.context)?.[0]?.name || '—'}</div>
                 <div className=" text-sm">{doc.created_at}</div>
                 <Ac requires={[REQUIREMENTS.user.deleteDocuments]}>
-                  <div>
-                    <PopOver text={<YesOrNo doc={doc} />} trigger="click" position="left">
-                    <Button variant="outline-danger" size="sm">
-                      {loading ? <Loading size="sm" variant="danger" /> : <Icon name="trash" />}
-                    </Button>
-                    </PopOver>
-                  </div>
+                  <DeleteButton doc={doc} onDeleted={refetch}/>
                 </Ac>
             </div>
         </div>
