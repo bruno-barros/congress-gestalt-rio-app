@@ -10,6 +10,9 @@ import Loading from "../../components/ui/loading";
 import useUserDocuments from "../../components/hooks/useUserDocuments";
 import { DocumentContexts } from "../../src/resources/document";
 import useUser from "../../components/hooks/useUser";
+import Ac from "../../components/access-control";
+import { REQUIREMENTS } from "../../components/access-control/requirements";
+import DeleteButton from "../../components/document/delete-button";
 
 
 const UserEditing = () => {
@@ -20,7 +23,7 @@ const UserEditing = () => {
   const {data: event, isLoading} = useEvent()
 
   const { data: user, error, isLoading: loadingUser } = useUser(Number(router.query.id))
-  const {data: documents, isLoading: docLoading} = useUserDocuments(Number(router.query.id))
+  const {data: documents, isLoading: docLoading, refetch} = useUserDocuments(Number(router.query.id))
   let editingMode: 'user'|'admin' = auth.canManageAbstracts() ? 'admin' : 'user'
 
   if (isLoading || loadingUser) {
@@ -58,9 +61,14 @@ const UserEditing = () => {
         {docLoading && <Loading />}
         {(!docLoading && documents.length === 0) && <div className="alert alert-light border">Nenhum documento enviado.</div>}
         {(documents && documents.length > 0) && <ul className="list-group">{documents.map(doc => {
-          return <li key={doc.id} className="list-group-item text-sm">
-            <a href={doc.url} target="_blank" className="d-block">{doc.name}</a>
-            <span className="badge badge-primary badge-pill">{DocumentContexts(doc.context)?.[0]?.name}</span>
+          return <li key={doc.id} className="list-group-item text-sm d-flex justify-content-between gap-3">
+            <div>
+              <a href={doc.url} target="_blank" className="d-block">{doc.name}</a>
+              <span className="badge badge-primary badge-pill">{DocumentContexts(doc.context)?.[0]?.name}</span>
+            </div>
+            <Ac requires={[REQUIREMENTS.user.deleteDocuments]}>
+              <DeleteButton doc={doc} onDeleted={refetch}/>
+            </Ac>
           </li>
         })}</ul>}
       </div>
