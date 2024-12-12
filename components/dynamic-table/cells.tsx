@@ -16,11 +16,13 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'evaluations_count') return <Evaluations cell={cell}/>
   if (cell.props.cell.column.id === 'attachments_count') return <Attachments cell={cell}/>
   if (['date', 'ev_last_update'].indexOf(cell.props.cell.column.id) !== -1) return <DateTime cell={cell}/>
-  if (cell.props.cell.column.id === 'roles') return <Roles cell={cell}/>
+  // if (cell.props.cell.column.id === 'roles') return <Roles cell={cell}/>
+  if (cell.props.cell.column.id === 'rolesString') return <Roles cell={cell}/>
   if (cell.props.cell.column.id === 'order_status') return <OrderStatus cell={cell}/>
   if (cell.props.cell.column.id === 'title') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'total') return <Html cell={cell}/>
+  if (cell.props.cell.column.id === 'aa') return <Boolean cell={cell}/>
   return cell
 }
 
@@ -30,12 +32,21 @@ export function Html({cell}) {
 }
 
 export function Roles({cell}) {
+  // console.log(cell.props.cell.value)
   const roles = cell.props.cell.value?.split(',')
 
   return roles ? roles.map(role => {
     const maped = MapRoles.find(r => r.label === role)
     return <span key={role} className="badge badge-secondary" style={{backgroundColor: maped?.color}}>{role}</span>
   }) : null
+}
+
+
+export function Boolean({cell}) {
+  // console.log(cell.props.cell.value)
+  const trufy = !!cell.props.cell.value
+
+  return trufy ? <>Sim</> : <>Não</>
 }
 
 export function OrderStatus({cell}) {

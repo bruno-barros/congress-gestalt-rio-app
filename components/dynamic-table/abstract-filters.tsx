@@ -92,13 +92,19 @@ export function getUSerFilterableFields() {
   const locales = [
     {value: 'BR', label: 'Portugues'},
     {value: 'US', label: 'Inglês'},
+    {value: 'ES', label: 'Espanhol'},
+  ]
+  const yesNo = [
+    {value: true, label: 'Sim'},
+    {value: false, label: 'Não'},
   ]
   return [
     {id: 'name', label: 'Nome', options: null},
     {id: 'email', label: 'E-mail', options: null},
     {id: 'cellphone', label: 'Telefone', options: null},
-    {id: 'roles', label: 'Perfil', options: rolesOpts},
+    {id: 'rolesString', label: 'Perfil', options: rolesOpts},
     {id: 'locale', label: 'Idioma', options: locales},
+    {id: 'aa', label: 'Ação Afir.', options: yesNo},
   ]
 }
 
