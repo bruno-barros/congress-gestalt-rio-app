@@ -2,12 +2,15 @@ import {useQuery} from "react-query";
 import WpUser from "../../src/http/wp-user";
 import {errorNotification} from "../../src/resources/responses";
 import useCurrentUser from "./useCurrentUser";
+import { UserGraphQl } from "../../src/types/users";
+
+
 
 export default function useAllUsers() {
 
   const {user} = useCurrentUser()
 
-  function queryUsers(): Promise<any[]> {
+  function queryUsers(): Promise<UserGraphQl[]> {
     return new Promise((resolve, reject) => {
       WpUser.all().then(resp => {
         if (resp.data.data?.users?.nodes) {
@@ -23,7 +26,7 @@ export default function useAllUsers() {
     })
   }
 
-  const query = useQuery<any[], any>(['users', 'admin'], queryUsers, {
+  const query = useQuery<UserGraphQl[], any>(['users', 'admin'], queryUsers, {
     enabled: user.canManageAbstracts(),
     staleTime: Infinity
   })
