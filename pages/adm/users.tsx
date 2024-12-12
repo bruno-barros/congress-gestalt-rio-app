@@ -4,14 +4,20 @@ import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {useCallback, useMemo} from "react";
 import MainLayout from "../../components/layout";
 import {DynamicTable} from "../../components/dynamic-table";
-import {MapRoles} from "../../src/resources/user";
+import { MapRoles, User } from '../../src/resources/user';
 import useAllUsers from "../../components/hooks/useAllUsers";
 import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 import Loading from "../../components/ui/loading";
+import { UserGraphQl } from '../../src/types/users';
 
+interface UserTable extends UserGraphQl {
+  rolesString?: string
+  date?: string
+  aa?: boolean
+}
 
 const AdmUsers = () => {
 
@@ -37,7 +43,10 @@ const AdmUsers = () => {
         accessor: 'cellphone',
       }, {
         Header: 'Perfil',
-        accessor: 'roles',
+        accessor: 'rolesString',
+      }, {
+        Header: 'AA',
+        accessor: 'aa',
       }, {
         Header: 'Idioma',
         accessor: 'locale',
@@ -55,19 +64,21 @@ const AdmUsers = () => {
       }
     ]
   }, [])
-  const data = useMemo(() => {
+  const data = useMemo((): UserTable[] => {
     if (!users || users.length === 0) return []
     return users.map(row => {
-      if (row?.roles?.nodes) {
-        let rolesStr = row?.roles?.nodes?.map(role => role.name).join(',')
-        row.roles = rolesStr?.split(',').map(role => {
+      const newUser: UserTable = {...row}
+      if (newUser?.roles?.nodes) {
+        let rolesStr = newUser?.roles?.nodes?.map(role => role.name).join(',')
+        newUser.rolesString = rolesStr?.split(',').map(role => {
           return MapRoles.find(r => role === r.name)?.label
         }).join(',')
       }
-      row.date = row.registeredDate
-      row.locale = row.locale.substr(-2)
+      newUser.date = newUser.registeredDate
+      newUser.locale = newUser.locale.substr(-2)
+      newUser.aa = newUser.is_affirmative_action === '1'
 
-      return row
+      return newUser
     })
   }, [users])
 

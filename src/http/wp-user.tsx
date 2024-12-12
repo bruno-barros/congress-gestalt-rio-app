@@ -312,6 +312,8 @@ export default class WpUser {
       email
       cellphone
       registeredDate
+      is_affirmative_action
+      affirmative_action
       roles {
         nodes {
           name
