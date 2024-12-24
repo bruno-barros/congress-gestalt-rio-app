@@ -6,7 +6,7 @@ import CardDeck from "react-bootstrap/cjs/CardDeck";
 import Card from "react-bootstrap/cjs/Card";
 import Link from "next/link";
 import useCurrentUser from "../components/hooks/useCurrentUser";
-import {Edition} from "../src/resources/event";
+import Edition from "../src/resources/edition";
 import useUserOrders from "../components/hooks/useUserOrders";
 import BadgeSubscribed from "../components/ui/badge-subscribed";
 import privateRoute from "../components/hoc/private-route";
@@ -18,6 +18,7 @@ import Loading from "../components/ui/loading";
 import useSettings from "../components/hooks/useSettings";
 import useEditions from "../components/hooks/useEditions";
 import EditionCard from "../components/edition/edition-card";
+import useProducts, { filterByCountry } from "../components/hooks/useProducts";
 
 interface DashboardProps {
 
@@ -58,6 +59,8 @@ const Dashboard = (props: DashboardProps) => {
     <div className="row">
       <div className="col-12 p-4">
         <h1 className="page-title">{t(user.canManageAbstracts() ? 'eventos' : 'meus-eventos')}</h1>
+
+        {/* {dump(prods)} */}
 
         <CardDeck>
         {(editions && editions.length > 0) && editions.map(edition => {

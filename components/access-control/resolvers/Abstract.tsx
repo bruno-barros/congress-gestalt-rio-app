@@ -1,4 +1,4 @@
-import { Edition } from "../../../src/resources/event";
+import  Edition  from "../../../src/resources/edition";
 import { User } from "../../../src/resources/user";
 import { AbstractType } from "../../abstract/abstract.d";
 

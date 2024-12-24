@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import { EditionsResponse } from "../../src/types/settings";
 import { WpSettings } from "../../src/http/wp-settings";
-import { Edition } from "../../src/resources/event";
+import Edition from "../../src/resources/edition";
 
 export default function useEditions() {
   async function fetch(): Promise<Edition[]> {

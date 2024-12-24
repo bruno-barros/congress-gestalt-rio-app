@@ -1,4 +1,4 @@
-import {Edition} from "../../src/resources/event";
+import Edition from "../../src/resources/edition";
 import React, {useRef, useState} from "react";
 import {Field, Form, Formik, FormikProps} from "formik";
 import * as Yup from 'yup'

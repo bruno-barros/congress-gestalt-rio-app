@@ -1,5 +1,5 @@
 import { OrderStatusEnum } from '../types/ecommerce.d';
-import { Edition } from './event';
+import  Edition  from './edition';
 export const OrderStatuses: OrderStatusEnum[] = [
   OrderStatusEnum.CANCELLED,
   OrderStatusEnum.COMPLETED,
@@ -102,7 +102,7 @@ export class OrderCollection {
 
   hasValidSubscription(edition: Edition) {
     // console.log({edition});
-    const categoryId = edition?.Subscription().getCategoryId()
+    const categoryId = edition?.Subscription()?.getCategoryId()
 
     const completed = this.getCompleted();
 

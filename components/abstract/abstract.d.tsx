@@ -1,3 +1,6 @@
+/**
+ * Mover estes tipos para: "src/types/abstracts.d.ts"
+ */
 export type Status = 'pending' | 'synopsis_revision' | 'synopsis_evaluating' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
   'synopsis_approved' | 'final_revision' | 'evaluating' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
 

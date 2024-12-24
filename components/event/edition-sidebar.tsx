@@ -1,4 +1,4 @@
-import { Edition } from "../../src/resources/event";
+import  Edition from "../../src/resources/edition";
 import Image from "next/image";
 import moment from "moment";
 import useTrans from "../hooks/useTrans";

@@ -24,6 +24,7 @@ import LoadingButton from "../../components/ui/loading-button";
 import DateRange from "../../components/ui/form/formik/date-range";
 import Loading from "../../components/ui/loading";
 import Topics from "../../components/settings/fields/topics";
+import LangIndicator from "../../components/settings/lang-indicator";
 
 export default function Context() {
   return (
@@ -46,8 +47,12 @@ function Abstracts() {
     start_at: evt?.abstract.start_at,
     end_at: evt?.abstract.end_at,
     limit_per_user: evt?.abstract.limit_per_user || 1,
-    fn_fields: evt?.abstract.fields || [],
+    fn_fields: evt?.abstract.fields || {},
     topics: evt?.abstract.topics || [],
+    modalities: evt?.abstract.modalities || [],
+    rules_pt: evt?.abstract.rules_pt || "",
+    rules_en: evt?.abstract.rules_en || "",
+    rules_es: evt?.abstract.rules_es || "",
   };
   const validationSchema = Yup.object({
     // name: Yup.string().required("Obrigatório"),
@@ -127,6 +132,9 @@ function Abstracts() {
                 min={1}
                 />
             </Field>
+            <Field infos="Endereço da página com regras de submissão de trabalhos.">
+                <Text name={`rules_${lang}`} label={<LangIndicator lang={lang}>Link das regras de submissão</LangIndicator>} />
+            </Field>
             {/* 
             //region Campos dos trabalhos
             */}
@@ -160,6 +168,13 @@ function Abstracts() {
                 <Text name="fn_fields.topic.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.topic?.allowed} />
                 <Text name="fn_fields.topic.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.topic?.allowed} />
                 </div> */}
+              </Field>
+              <Field infos="Lista de modalidades." noLabel>
+                <Switch
+                  name="fn_fields.modalities.allowed"
+                  // value="1"
+                  label={<b>Modalidades</b>}
+                />
               </Field>
               <Field infos="Palavras-chave." noLabel>
                 <Switch
@@ -216,26 +231,47 @@ function Abstracts() {
                 <Text name="fn_fields.attachments.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.attachments?.allowed} />
                 </div>
               </Field>
-              <Field infos="Quantidade de co-autores." noLabel>
+              <Field infos="Quantidade de co-autores sem restrição. O autor poderá inserir os dados dos co-autores livremente." noLabel>
                 <Switch
                   name="fn_fields.authors.allowed"
                   // value="1"
-                  label={<b>Co-autores</b>}
+                  label={<b>Co-autores sem inscrição</b>}
                 />
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.authors.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.authors?.allowed} />
                 <Text name="fn_fields.authors.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.authors?.allowed} />
                 </div>
               </Field>
+              <Field infos="Quantidade de co-autores com validação se o autor está inscrito." noLabel>
+                <Switch
+                  name="fn_fields.authors2.allowed"
+                  // value="1"
+                  label={<b>Co-autores com inscrição</b>}
+                />
+                <div className="d-flex gap-2">
+                <Text name="fn_fields.authors2.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
+                <Text name="fn_fields.authors2.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
+                </div>
+              </Field>
             </fieldset>
-{/* 
-//region Tópicos
-*/}
+            {/* 
+            //region Tópicos
+            */}
             <fieldset>
-              <legend>Tópicos</legend>
+              <legend>Tópicos / Eixos temáticos</legend>
               {values.fn_fields?.topic?.allowed 
-                ? <Topics name="topics" /> 
+                ? <Topics name="topics" customId /> 
                 : <div className="badge badge-secondary">Tópicos desativados</div>}
+              
+            </fieldset>
+            {/* 
+            //region Modalidades
+            */}
+            <fieldset>
+              <legend>Modalidades</legend>
+              {values.fn_fields?.modalities?.allowed 
+                ? <Topics name="modalities" customId /> 
+                : <div className="badge badge-secondary">Modalidades desativadas</div>}
               
             </fieldset>
 

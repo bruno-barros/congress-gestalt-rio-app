@@ -25,6 +25,10 @@ import Topics from "../../components/settings/fields/topics";
 import useProductCategories from "../../components/hooks/useProductCategories";
 import LangIndicator from "../../components/settings/lang-indicator";
 import Wysiwyg from "../../components/ui/form/formik/wysiwyg";
+import ProgressBar from "../../components/ui/progressbar";
+import Checkboxes from "../../components/ui/form/formik/checkboxes";
+import useProducts from "../../components/hooks/useProducts";
+import { camelToWords } from '../../src/resources/objects';
 
 export default function Context() {
   return (
@@ -48,7 +52,8 @@ function Subscription() {
     category_id: evt?.subscription.category_id || '',
     plans_description_pt: evt?.subscription.plans_description_pt || '',
     plans_description_en: evt?.subscription.plans_description_en || '',
-    plans_description_es: evt?.subscription.plans_description_es
+    plans_description_es: evt?.subscription.plans_description_es,
+    produts_excluded_for_foreign: evt?.subscription.produts_excluded_for_foreign || [],
   };
   const validationSchema = Yup.object({
     // name: Yup.string().required("Obrigatório"),
@@ -112,13 +117,20 @@ function Subscription() {
               />
             </Field>
           
-            <Field infos="Identificação da categoria no módulo de vendas. Isso permite separar as inscrições deste evento.">            
+            <Field infos="Identificação da categoria no módulo de vendas. Isso permite separar as inscrições deste evento."> 
+                {catLoading && <ProgressBar />}
                 <Select label="Categoria de produtos" name="category_id">
                   <option value="">Selecione</option>
                   {(categories && categories.length > 0) && categories.map(cat => {
                     return <option key={cat.databaseId} value={cat.databaseId}>{cat.name}</option>
                   })}
                 </Select>
+            </Field>
+
+            
+            <Field infos="."> 
+                {catLoading && <ProgressBar />}
+                <ProductsExcluded category={values.category_id} />
             </Field>
 
             <Field infos="Texto que será exibido na tela de seleção do plano (pacote).">
@@ -141,4 +153,20 @@ function Subscription() {
       </Formik>
     </Layout>
   );
+}
+
+function ProductsExcluded({category}: {category: number|string}){
+  const { data: products, isLoading } = useProducts(Number(category));
+  const options = (products && products.length) ? products?.map(prod => {
+    return {value: `${prod.databaseId}`, label: prod.name}
+  }) : [];
+  return <div>
+    {isLoading && <ProgressBar />}
+    {(!isLoading && options.length === 0) && <p>Nenhum produto cadastrado para esta categoria</p>}
+    {(options.length > 0) && <Checkboxes 
+      label="Produtos excluídos para estrangeiros" 
+      name="produts_excluded_for_foreign"
+      options={options} />}
+    
+  </div>
 }
