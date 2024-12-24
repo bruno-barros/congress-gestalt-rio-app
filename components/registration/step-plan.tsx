@@ -8,7 +8,7 @@ import {useDispatch} from "react-redux";
 import {useRouter} from "next/router";
 import Form from "react-bootstrap/cjs/Form";
 import {saveCart} from "../../src/store/user.actions";
-import useProducts from "../hooks/useProducts";
+import useProducts, { filterByCountry } from "../hooks/useProducts";
 import { dump } from "../../src/helpers";
 import Loading from "../ui/loading";
 import Product from "../../src/resources/product";
@@ -21,7 +21,7 @@ export default function StepPlan(props: StepProps) {
   const {step, user, event, edition, onLoading, goPrev, goNext, formInstance} = props
   const t = useTrans()
   const router = useRouter()
-  const {data: prods, isLoading, isFetching} = useProducts(edition?.Subscription().getCategoryId())
+  const {data: prods, isLoading, isFetching} = useProducts(edition?.Subscription()?.getCategoryId() || undefined, filterByCountry(user?.getCountry()))
   const [response, setResponse] = useState({success: null, msg: ''})
   const form = useRef(null)
   const lang = router.locale
