@@ -33,7 +33,6 @@ const Dashboard = (props: DashboardProps) => {
   const {user} = useCurrentUser()
   const {data: orders, isLoading: ordersLoading} = useUserOrders(user?.getId())
   const {data: editions} = useEditions()
-  const { data: prods } = useProducts(current?.Subscription()?.getCategoryId(), filterByCountry(user.getCountry()))
   /**
    * -----------------------------
    * Redirect to client: ABRISCO
@@ -61,7 +60,7 @@ const Dashboard = (props: DashboardProps) => {
       <div className="col-12 p-4">
         <h1 className="page-title">{t(user.canManageAbstracts() ? 'eventos' : 'meus-eventos')}</h1>
 
-        {dump(prods)}
+        {/* {dump(prods)} */}
 
         <CardDeck>
         {(editions && editions.length > 0) && editions.map(edition => {
