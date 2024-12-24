@@ -102,7 +102,7 @@ export class OrderCollection {
 
   hasValidSubscription(edition: Edition) {
     // console.log({edition});
-    const categoryId = edition?.Subscription().getCategoryId()
+    const categoryId = edition?.Subscription()?.getCategoryId()
 
     const completed = this.getCompleted();
 
