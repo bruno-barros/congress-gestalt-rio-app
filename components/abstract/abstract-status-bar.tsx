@@ -1,4 +1,4 @@
-import {Edition} from "../../src/resources/event";
+import Edition from "../../src/resources/edition";
 import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import React, {useState} from "react";

@@ -1,5 +1,5 @@
 import Card from "react-bootstrap/Card";
-import { Edition } from "../../src/resources/event";
+import Edition from "../../src/resources/edition";
 import { OrderCollection } from "../../src/resources/order";
 import BadgeSubscribed from "../ui/badge-subscribed";
 import Link from "next/link";

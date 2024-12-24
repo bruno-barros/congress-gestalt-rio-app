@@ -1,5 +1,5 @@
 import { OrderStatusEnum } from '../types/ecommerce.d';
-import { Edition } from './event';
+import  Edition  from './edition';
 export const OrderStatuses: OrderStatusEnum[] = [
   OrderStatusEnum.CANCELLED,
   OrderStatusEnum.COMPLETED,

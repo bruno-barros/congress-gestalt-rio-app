@@ -96,6 +96,10 @@ export class User {
     return this.user.avatar?.url || null;
   }
 
+  getCountry(){
+    return this.user.country || 'BR';
+  }
+
   get registeredDate() {
     return (
       (this.user.registeredDate &&

@@ -2,8 +2,9 @@ import { ServerResponse } from "http";
 import Router, { useRouter } from "next/router";
 import trimStart from "lodash/trimStart";
 import { QueryClient } from "react-query";
-import Event, { Edition } from "./resources/event";
+import Event from "./resources/event";
 import { DocumentSchema } from "./types/document";
+import Edition from "./resources/edition";
 
 /**
  * Used to load files from '/public' folder

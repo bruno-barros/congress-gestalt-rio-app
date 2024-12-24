@@ -11,7 +11,7 @@ export default function AffirmativeActionAlert(){
     const {user} = useCurrentUser()
     const { data: docs, isLoading } = useUserDocuments(user?.getId())
     const isAffirmative = user?.applyToAffirmativeAction()
-    const hasDocs = (docs && !isLoading) 
+    const hasDocs = (docs && docs.length > 0 && !isLoading) 
         ? docs.find(doc => doc.context === 'affirmative_action') 
         : false
 

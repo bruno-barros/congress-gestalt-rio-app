@@ -1,6 +1,7 @@
 import {QueryClient, useQuery, useQueryClient} from "react-query";
-import Event, { Edition } from "../../src/resources/event";
+import Event from "../../src/resources/event";
 import { WpSettings } from "../../src/http/wp-settings";
+import Edition from "../../src/resources/edition";
 /**
  * Retorna as configurações globais com a edição atual
  * @param edition 

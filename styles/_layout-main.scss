@@ -105,9 +105,9 @@
       .navbar-nav .nav-link {
           padding-left: $spacer;
           padding-right: $spacer;
-        line-height: 2.5em;
-        margin-top: -.5rem;
-        margin-bottom: -.5rem;
+        // line-height: 2.5em;
+        // margin-top: -.5rem;
+        // margin-bottom: -.5rem;
         &.admin {
           position: relative;
           color: #fff;
@@ -123,6 +123,12 @@
           }
           &.active {
             color: #000;
+          }
+          &.first {
+            border-radius: 10px 0 0 10px;
+          }
+          &.last {
+            border-radius: 0 10px 10px 0;
           }
         }
         &.active {

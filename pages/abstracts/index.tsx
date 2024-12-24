@@ -10,7 +10,7 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
-import {AbstractCollection, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
+import {AbstractCollection, Statuses, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
 import {dump, siteTitle} from "../../src/helpers";
@@ -42,8 +42,8 @@ const Abstracts = () => {
   const edition = editions?.find(ed => ed.id === selectedEditionKey)
 
   const [phase, setPhase] = useState(String(router.query?.status))
-  const isCurrent = currentEdition?.id === edition?.getId()
-  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.getId(), phase], queryAbstracts, {
+  const isCurrent = currentEdition?.getId() === edition?.getId()
+  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.getId()], queryAbstracts, {
     enabled: !!edition?.getId() && user.getId() > 0
   })
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
@@ -63,7 +63,8 @@ const Abstracts = () => {
       WpAbstract.collection({
         edition: edition?.getId(),
         authorId: user.getId(),
-        statuses: phase === 'abstract' ? StatusesPhaseAbstract() : (phase === 'synopsis' ? StatusesPhaseSynopsis() : null)
+        // statuses: phase === 'abstract' ?  : (phase === 'synopsis' ? StatusesPhaseSynopsis() : null)
+        statuses: [...StatusesPhaseAbstract(), ...StatusesPhaseSynopsis()]
       }).then(resp => {
         if (resp.data.data?.abstractFilters?.nodes) {
           resolve(AbstractCollection.make(resp.data.data.abstractFilters.nodes))
@@ -99,7 +100,7 @@ const Abstracts = () => {
               Antes de submeter seu trabalho confira as
                 <1>regras de submissão de trabalhos</1>.`}
                  components={[<p>Olá, congressista.</p>,
-                   <a href={edition?.abstract?.rules[lang]} target="_blank">regras de submissão de trabalhos</a>]}
+                   <a href={edition?.abstract?.[`rules_${lang}`]} target="_blank">regras de submissão de trabalhos</a>]}
           />
           <div className="my-3 d-flex align-items-center">
             <Link href={`/abstracts/new`} passHref><a
@@ -169,7 +170,7 @@ const Abstracts = () => {
       <div className="col-12 p-4">
 
         {!isSubscribed && <SubscriptionNotAllowed/>}
-        {(phase !== 'abstract' && isSubscribed) && <SynopsisIntro/>}
+        {(isSubscribed) && <SynopsisIntro/>}
 
         {(abstracts && isSubscribed) && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
@@ -181,7 +182,12 @@ const Abstracts = () => {
 
       </div>
     </div>
-    {dump({ isOpenToAbstracts: edition?.isOpenToAbstracts()})}
+    {dump({ 
+      isCurrent,
+      phase,
+      isSubscribed,
+      isOpenToAbstracts: edition?.isOpenToAbstracts()
+      })}
   </MainLayout>)
 }
 

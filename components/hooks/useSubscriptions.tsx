@@ -4,7 +4,7 @@ import useCurrentUser from "./useCurrentUser";
 import WpOrder from "../../src/http/wp-order";
 import {OrderCollection} from "../../src/resources/order";
 import useEvent from "./useEvent";
-import {Edition} from "../../src/resources/event";
+import Edition from "../../src/resources/edition";
 import moment from "moment";
 import { REQUIREMENTS } from "../access-control/requirements";
 import { ac } from "../access-control";
