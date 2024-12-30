@@ -1,6 +1,19 @@
 import axios, { AxiosRequestConfig } from "axios";
 import AuthToken from "../../src/http/auth-token";
 
+export class RESTVersion {
+
+  static default(){
+    return this.v1();
+  }
+
+  static v1(){
+    return {
+      namespace: '/event/v1'
+    }
+  }
+}
+
 /**
  * API legada do WordPress
  */

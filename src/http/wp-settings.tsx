@@ -1,21 +1,20 @@
 import { AxiosResponse } from "axios";
-import { restApi } from "./axios";
+import { restApi, RESTVersion } from "./axios";
 import { WpRestResponse } from "../types/restapi";
 import { EditionsResponse } from "../types/settings";
 
 export class WpSettings {
-  static namespace = "/event/v1";
 
   static all(args?: {
     edition: string;
   }): Promise<AxiosResponse<WpRestResponse<any>>> {
     const params = [];
     if (args?.edition) params.push(`edition=${args.edition}`);
-    return restApi.get(`${WpSettings.namespace}/settings?${params.join("&")}`);
+    return restApi.get(`${RESTVersion.default().namespace}/settings?${params.join("&")}`);
   }
 
   static editions(): Promise<AxiosResponse<WpRestResponse<EditionsResponse>>> {
-    return restApi.get(`${WpSettings.namespace}/editions`);
+    return restApi.get(`${RESTVersion.default().namespace}/editions`);
   }
 
   static save(args: {
@@ -23,6 +22,6 @@ export class WpSettings {
     fields: object;
     edition?: string;
   }): Promise<AxiosResponse<WpRestResponse<any>>> {
-    return restApi.post(`${WpSettings.namespace}/settings`, args);
+    return restApi.post(`${RESTVersion.default().namespace}/settings`, args);
   }
 }

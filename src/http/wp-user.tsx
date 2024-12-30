@@ -1,5 +1,5 @@
 import {AxiosResponse} from "axios";
-import {httpApi, restApi} from "./axios";
+import {httpApi, restApi, RESTVersion} from "./axios";
 import {LoginInputs} from "../store/store.d";
 import isFinite from 'lodash/isFinite'
 import {Providers} from '../../components/social-login/social-buttons.d'
@@ -7,7 +7,6 @@ import {NotificationTypes} from "../resources/notification";
 import { WpRestResponse } from "../types/restapi";
 import { UserInterface } from "../resources/user";
 export default class WpUser {
-  static namespace = "/event/v1";
   static FILLABLE = [
     'clientMutationId',
     'id',
@@ -39,16 +38,16 @@ export default class WpUser {
 
   static saveRemoteSession(userId: number, token: string){
 
-    return restApi.post(`${WpUser.namespace}/users/${userId}/remote_session`, {token});
+    return restApi.post(`${RESTVersion.default().namespace}/users/${userId}/remote_session`, {token});
   }
 
-  static signUpWithEmail(args: {username: string, password: string, locale?:string}): Promise<AxiosResponse<WpRestResponse<{
+  static signUpWithEmail(args: {display_name: string, username: string, password: string, locale?:string}): Promise<AxiosResponse<WpRestResponse<{
     next_action: string;
     provider: string;
     login: {authToken: string, refreshToken: string}
     current_user: any
   }>>> {
-    return restApi.post(`${WpUser.namespace}/auth/signup_with_email`, {...args});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/signup_with_email`, {...args});
   }
 
   static socialLogin(profile: any, provider: Providers, locale: string): Promise<AxiosResponse<WpRestResponse<{
@@ -57,16 +56,16 @@ export default class WpUser {
     login: {authToken: string, refreshToken: string}
     current_user: any
   }>>> {
-    return restApi.post(`${WpUser.namespace}/auth/social_login`, {...profile, provider, locale});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/social_login`, {...profile, provider, locale});
   }
 
   static mergeProfiles(profile: any, provider: Providers, locale: string){
     let merging_url = `${window.location.protocol}//${window.location.host}/merging`;
-    return restApi.post(`${WpUser.namespace}/auth/merge_profiles`, {...profile, provider, merging_url, locale});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/merge_profiles`, {...profile, provider, merging_url, locale});
   }
 
   static mergeApproved(uuid: any): Promise<AxiosResponse<WpRestResponse<any>>>{
-    return restApi.post(`${WpUser.namespace}/auth/merge_approved`, {uuid});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/merge_approved`, {uuid});
   }
 
   /**
@@ -245,6 +244,7 @@ export default class WpUser {
           registeredDate
           user_status
           badge_name
+          social_name
           passport
           locale
           consents
@@ -345,7 +345,7 @@ export default class WpUser {
     email: string;
     [key: string]: any;
   }) {
-    return restApi.put(`${WpUser.namespace}/users/${args.databaseId}`, {...args});
+    return restApi.put(`${RESTVersion.default().namespace}/users/${args.databaseId}`, {...args});
   }
 
   static export(args: {ids: number[]}): Promise<AxiosResponse> {
@@ -354,22 +354,22 @@ export default class WpUser {
 
 
   static rememberPassword(email: string, locale: string): Promise<AxiosResponse<WpRestResponse<null>>> {
-    return restApi.post(`${WpUser.namespace}/auth/remember_password`, {email, locale});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/remember_password`, {email, locale});
   }
   static accountRecover(args: {name: string, email: string, phone: string, message: string, locale: string}): Promise<AxiosResponse<WpRestResponse<null>>> {
-    return restApi.post(`${WpUser.namespace}/auth/account_recover`, {...args});
+    return restApi.post(`${RESTVersion.default().namespace}/auth/account_recover`, {...args});
   }
   static updatePassword(id: number, password: string): Promise<AxiosResponse<WpRestResponse<null>>> {
-    return restApi.post(`${WpUser.namespace}/users/${id}/password_update`, {password});
+    return restApi.post(`${RESTVersion.default().namespace}/users/${id}/password_update`, {password});
   }
 
   static consent(args: {userId: number; consents:any[]}) {
-    return restApi.post(`${WpUser.namespace}/users/${args.userId}/consents`, {consents: args.consents});
+    return restApi.post(`${RESTVersion.default().namespace}/users/${args.userId}/consents`, {consents: args.consents});
   }
 
   static notify(args: {context: NotificationTypes; ids: number[]; coauthors?:boolean; subject: string;
     message: string; merge: boolean; template: string}) {
-      return restApi.post(`${WpUser.namespace}/notification/send`, {
+      return restApi.post(`${RESTVersion.default().namespace}/notification/send`, {
         context: args.context,
         ids: args.ids,
         coauthors: args.coauthors || false,

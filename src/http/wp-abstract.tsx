@@ -1,11 +1,13 @@
 import {AxiosResponse} from "axios";
-import {httpApi} from "./axios";
+import {httpApi, restApi, RESTVersion} from "./axios";
 import isFinite from 'lodash/isFinite'
-import {GraphQlStatuses, Status} from "../../components/abstract/abstract.d";
+import {GraphQlStatuses} from "../../components/abstract/abstract.d";
+import { StatusType } from "../types/abstracts";
 
 export class WpAbstract {
+  static namespace = "/event/v1";
 
-  static updateStatus(args: { abstracts: number[], status: Status, notify: boolean }): Promise<AxiosResponse> {
+  static updateStatus(args: { abstracts: number[], status: StatusType, notify: boolean }): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_set_status', {
       abstracts: args.abstracts,
       status: args.status,
@@ -14,15 +16,20 @@ export class WpAbstract {
   }
 
   static update(data: any): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_update', {...data});
+    return restApi.post(`${RESTVersion.default().namespace}/abstracts`, data);
   }
 
   static addAuthor(data: any): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_add', {...data});
+    return restApi.post(`${RESTVersion.default().namespace}/authors`, data);
   }
 
+  /**
+   * @deprecated WpAuthor.update()
+   * @param data 
+   * @returns 
+   */
   static editAuthor(data: any): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_edit', {...data});
+    return restApi.post(`${RESTVersion.default().namespace}/authors`, data);
   }
 
   static setSpeaker(args: {id: number; locale?: string}): Promise<AxiosResponse> {
@@ -31,6 +38,11 @@ export class WpAbstract {
     });
   }
 
+  /**
+   * @deprecated WpAuthor.delete()
+   * @param data 
+   * @returns 
+   */
   static deleteAuthor(data: any): Promise<AxiosResponse> {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_delete', {...data});
   }
@@ -133,16 +145,18 @@ export class WpAbstract {
     date
     excerpt
     abstract_tags
+    abstract_tags_es
     bibliography
     subtitle
     status
     title
+    title_es
     topic
     type
     content
     ev_last_update
-    jlp
     consents
+    authorDatabaseId
     author {
       node {
         avatar {
@@ -198,10 +212,12 @@ export class WpAbstract {
   abstractFilters(where: {${filters.join(', ')}}, first: ${lmt}) {
     nodes {
       databaseId
+      main_language
       title
+      title_es
       subtitle
       topic
-      
+      type
       status
       date
       edition_id
@@ -210,7 +226,6 @@ export class WpAbstract {
       attachments_count
       authorDatabaseId
       ev_last_update
-      jlp
       author {
         node {
           email
