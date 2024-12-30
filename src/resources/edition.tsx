@@ -1,6 +1,6 @@
 import moment from "moment";
-import { Status } from "../../components/abstract/abstract.d";
 import { StringBoolean } from "../types/general";
+import { AbstractStatusModelEnum, StatusType } from "../types/abstracts";
 
 //region Edition
 export default class Edition {
@@ -19,6 +19,7 @@ export default class Edition {
     id: string;
     name: string;
     logo: string;
+    logo_sm: string;
     start_at: string;
     end_at: string;
     lgpd_url_pt: string;
@@ -59,10 +60,10 @@ export default class Edition {
     abstract_allowed: StringBoolean;
     only_subscribed: StringBoolean;
     rules: { pt: string; en: string };
-    statuses: Status[];
+    statuses: StatusType[];
     attachments: number;
     topics: { id: string; pt: string; en: string; es: string }[];
-    types: { id: string; pt: string; en: string }[];
+    modalities: { id: string; pt: string; en: string; es: string }[];
     start_at: string;
     end_at: string;
     count_method: "char" | "word";
@@ -114,6 +115,11 @@ export default class Edition {
   //region Subscription factory
   Subscription(): Edition_Subscription {
     return Edition_Subscription.make(this.subscription);
+  }
+
+  //region Abstract factory
+  Abstract(): Edition_Abstract {
+    return Edition_Abstract.make(this.abstract);
   }
 
   getId() {
@@ -338,14 +344,95 @@ export class Edition_Subscription {
   }
 }
 
+//region Edition_Abstract
+export class Edition_Abstract {
+  abstract_allowed: StringBoolean;
+  only_subscribed: StringBoolean;
+  rules: { pt: string; en: string };
+  statuses: StatusType[];
+  attachments: number;
+  topics: { id: string; pt: string; en: string; es: string }[];
+  modalities: { id: string; pt: string; en: string; es: string }[];
+  start_at: string;
+  end_at: string;
+  count_method: "char" | "word";
+  required_fields:
+    | {
+        topic?: boolean;
+        type?: boolean;
+        title?: boolean;
+        subtitle?: boolean;
+        tags?: boolean | { min: number; max: number };
+        resume?: boolean | { min: number; max: number };
+        content?: boolean | { min: number; max: number };
+        bibliography?: boolean | { min: number; max: number };
+        attachments?: boolean | { min: number; max: number };
+        authors?: boolean | { min: number; max: number };
+      }
+    | any;
+  fields: AField[];
+  status_model: AbstractStatusModelEnum;
+  limit_per_user: number;
+  authors: {
+    max: number;
+  };
+  tags: {
+    min: number;
+    max: number;
+  };
+  consent?: Consent;
+  per_abstract_consent?: Consent;
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
+
+  static make(data: any) {
+    return new Edition_Abstract(data);
+  }
+
+  getTopics() {
+    return this.topics || [];
+  }
+
+  getModalities() {
+    return this.modalities || [];
+  }
+
+  getField(key: string): Edition_Abstract_Field {
+    return this.fields[key] 
+        ? Edition_Abstract_Field.make(this.fields[key]) 
+        : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
+  }
+
+  
+}
+
+class Edition_Abstract_Field {
+  allowed: boolean;
+  min: number;
+  max: number;
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
+  static make(data: any) {
+    return new Edition_Abstract_Field(data);
+  }
+}
 
 interface Consent {
-    text: { pt: string; en: string };
-    consents: {
-      id: string;
-      pt: string;
-      en: string;
-      required: boolean;
-    }[];
-  }
-  
+  text: { pt: string; en: string };
+  consents: {
+    id: string;
+    pt: string;
+    en: string;
+    required: boolean;
+  }[];
+}
+
+interface AField {
+  allowed: boolean;
+  min: number;
+  max: number;
+}

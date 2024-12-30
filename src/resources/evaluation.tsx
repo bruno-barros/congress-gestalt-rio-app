@@ -1,6 +1,7 @@
-import {Status, Statuses} from "../../components/abstract/abstract.d";
 import { average } from "../helpers";
+import { StatusType } from "../types/abstracts";
 import Abstract from "./abstract";
+import { STATUSES_SINOPSIS_ABSTRACT_MODEL } from "./abstract-statuses";
 import { Order } from './order';
 
 export class Evaluation {
@@ -17,7 +18,7 @@ export class Evaluation {
   quality: number
   clarity: number
   contributions: number
-  status: Status
+  status: StatusType
   is_public: boolean
   evaluator?: {
     databaseId: number
@@ -33,7 +34,7 @@ export class Evaluation {
     abstract_tags: string[]
     bibliography: string
     subtitle: string
-    status: Status
+    status: StatusType
     synopsis: string
     title: string
     topic: string
@@ -76,9 +77,9 @@ export class Evaluation {
     return ['synopsis_evaluating', 'evaluating'].indexOf(this.status) !== -1
   }
 
-  statusPassed(desiredStatus: string){
-    const desiredPosition: number = Statuses.indexOf(desiredStatus)
-    const currentPosition: number = Statuses.indexOf(this.status)
+  statusPassed(desiredStatus: StatusType){
+    const desiredPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(desiredStatus)
+    const currentPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(this.status)
     return currentPosition > desiredPosition
   }
 
