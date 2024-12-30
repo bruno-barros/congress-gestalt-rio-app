@@ -4,8 +4,9 @@ import WpEvaluation from "../../src/http/wp-evaluation";
 import useTrans from "../hooks/useTrans";
 import moment from "moment";
 import {statusColorName} from "../../src/helpers";
-import {Status} from "./abstract.d";
+
 import Loading from "../ui/loading";
+import { StatusType } from "../../src/types/abstracts";
 
 interface AbstractCommentsProps {
   abstract: Abstract
@@ -34,7 +35,7 @@ export default function AbstractComments(props: AbstractCommentsProps) {
     })
   }
 
-  function statusForAuthor(status: Status){
+  function statusForAuthor(status: StatusType){
     if(status.indexOf('rejected') !== -1) return t('trabalho.avaliacao-negativa')
     if(status.indexOf('approved') !== -1) return t('trabalho.avaliacao-positiva')
     return t(`status.${status}`)

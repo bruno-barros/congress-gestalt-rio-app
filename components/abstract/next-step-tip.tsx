@@ -1,10 +1,10 @@
-import {Status} from "./abstract.d";
+import { StatusType } from "../../src/types/abstracts";
 import useTrans from "../hooks/useTrans";
 import {useRouter} from "next/router";
 
 interface NextStepProps {
 
-  status: Status
+  status: StatusType
 }
 
 export default function NextStepTip(props: NextStepProps) {
