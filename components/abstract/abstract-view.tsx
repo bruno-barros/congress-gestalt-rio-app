@@ -1,5 +1,6 @@
 import Abstract from "../../src/resources/abstract";
 import useEvent from "../hooks/useEvent";
+import useSettings from "../hooks/useSettings";
 import useTrans from "../hooks/useTrans";
 import Icon from "../ui/ionicon";
 
@@ -11,8 +12,9 @@ export default function AbstractView(props: AbstractViewProps) {
 
   const {abstract} = props
   const t = useTrans()
-  const {data: event} = useEvent()
+  const {data: event} = useSettings()
   const edition = abstract.edition_id && event.getEdition(abstract.edition_id) || event && event.currentEdition()
+  const AbstractConf = edition?.Abstract()
 
   return (<div className="">
 
@@ -28,12 +30,12 @@ export default function AbstractView(props: AbstractViewProps) {
 
     <div className="form-group">
       <strong>TÓPICO</strong>
-      <div className="border-bottom py-3">{edition.abstract.topics?.find(t => t.id === abstract.topic)['pt']}</div>
+      <div className="border-bottom py-3">{AbstractConf.getTopics()?.find(t => t.id === abstract.topic)['pt']}</div>
     </div>
 
     {abstract?.type && <div className="form-group">
       <strong>MODALIDADE</strong>
-      <div className="border-bottom py-3">{edition.abstract.types?.find(t => t.id === abstract.type)['pt']}</div>
+      <div className="border-bottom py-3">{AbstractConf.getModalities()?.find(t => t.id === abstract.type)['pt']}</div>
     </div>}
 
     {abstract?.abstract_tags?.length > 0 &&

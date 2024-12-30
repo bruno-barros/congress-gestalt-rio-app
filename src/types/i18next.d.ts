@@ -12,3 +12,5 @@ declare module 'i18next' {
     returnNull: false;
   }
 }
+
+export type Locale = 'en' | 'pt' | 'es';

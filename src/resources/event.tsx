@@ -49,6 +49,7 @@ export default class Event {
     id: string;
     name: string;
     logo: string;
+    logo_sm: string;
     start_at: string;
     end_at: string;
     lgpd_url_pt: string;
@@ -109,10 +110,10 @@ export default class Event {
   }
 
   /**
-   * @deprecated
+   * Logo reduzida
    */
   get logoSecondary() {
-    return this.edition?.logo;
+    return this.edition?.logo_sm || this.edition?.logo;
   }
 
   getEdition(editionId: string) {

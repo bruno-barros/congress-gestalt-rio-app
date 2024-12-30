@@ -10,7 +10,6 @@ import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import useTrans from "../../components/hooks/useTrans";
 import {useRouter} from "next/router";
-import {AbstractCollection, Statuses, StatusesPhaseAbstract, StatusesPhaseSynopsis} from "../../components/abstract/abstract.d";
 import {Trans} from "react-i18next";
 import privateRoute from "../../components/hoc/private-route";
 import {dump, siteTitle} from "../../src/helpers";
@@ -20,8 +19,8 @@ import useUserOrders from "../../components/hooks/useUserOrders";
 import Button from "react-bootstrap/Button";
 import Loading from "../../components/ui/loading";
 import useSettings from "../../components/hooks/useSettings";
-import { event } from '../../src/gtag';
 import useEditions from "../../components/hooks/useEditions";
+import useAbstracts from "../../components/hooks/useAbstracts";
 
 
 
@@ -43,9 +42,7 @@ const Abstracts = () => {
 
   const [phase, setPhase] = useState(String(router.query?.status))
   const isCurrent = currentEdition?.getId() === edition?.getId()
-  const {data: abstracts, error, isLoading} = useQuery<AbstractCollection, any>(['abstracts', user.getId(), edition?.getId()], queryAbstracts, {
-    enabled: !!edition?.getId() && user.getId() > 0
-  })
+  const {data: abstracts, error, isLoading} = useAbstracts(user.getId(), edition?.getId())
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
     user?.getId()
   );
@@ -58,26 +55,7 @@ const Abstracts = () => {
     if (router.query?.status) setPhase(String(router.query?.status))
   }, [router.query?.status])
 
-  function queryAbstracts(): Promise<AbstractCollection> {
-    return new Promise((resolve, reject) => {
-      WpAbstract.collection({
-        edition: edition?.getId(),
-        authorId: user.getId(),
-        // statuses: phase === 'abstract' ?  : (phase === 'synopsis' ? StatusesPhaseSynopsis() : null)
-        statuses: [...StatusesPhaseAbstract(), ...StatusesPhaseSynopsis()]
-      }).then(resp => {
-        if (resp.data.data?.abstractFilters?.nodes) {
-          resolve(AbstractCollection.make(resp.data.data.abstractFilters.nodes))
-        } else {
-          resolve(AbstractCollection.make([]))
-          errorNotification({error: resp.data.errors})
-        }
-      }, err => {
-        resolve(AbstractCollection.make([]))
-        errorNotification({error: err})
-      })
-    })
-  }
+
 
   if (!event || isLoading) {
     return (<MainLayout>
@@ -123,7 +101,10 @@ const Abstracts = () => {
       </Card>}
 
 
-      {(edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
+      {/**
+       //region Limite atingido
+       */      
+      (edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
       <div className="alert alert-warning">
         {t('trabalho.limite-atingido')}
       </div>}
@@ -172,7 +153,10 @@ const Abstracts = () => {
         {!isSubscribed && <SubscriptionNotAllowed/>}
         {(isSubscribed) && <SynopsisIntro/>}
 
-        {(abstracts && isSubscribed) && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
+        {/**
+         //region Lista de trabalhos
+         */
+        (abstracts && isSubscribed) && abstracts.all().map(abstract => (<AbstractCard key={abstract.databaseId} abstract={abstract}/>))}
 
         {(abstracts && abstracts?.count() === 0 && phase === 'abstract') &&
         <div className="alert alert-light border">

@@ -55,6 +55,7 @@ export class Order {
     databaseId: number;
     email: string;
     displayName: string;
+    metaData: {key: string, value: string|null}[];
   };
   lineItems: {
     nodes: { product: Product }[];
@@ -78,6 +79,18 @@ export class Order {
 
   isCompleted(){
     return this.status === OrderStatusEnum.COMPLETED;
+  }
+
+  getCustomerName(){
+    return this.getMeta('social_name') || this.customer?.displayName || '-';
+  }
+
+  getMetas(){
+    return this.customer?.metaData || [];
+  }
+
+  getMeta(key: string){
+    return this.getMetas().find(meta => meta.key === key)?.value || null;
   }
 }
 

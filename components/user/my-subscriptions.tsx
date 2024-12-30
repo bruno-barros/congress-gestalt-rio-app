@@ -17,6 +17,8 @@ export default function MySubscriptions({user}: { user: User }) {
   // const edition = event && event.currentEdition()
   const { data: event, currentEdition: edition } = useSettings()
   const isSubscribed = data?.hasValidSubscription(edition)
+  const isSubscriptionOpened = edition?.isOpenToSubscribe()
+  const completedProfile = user.hasMinimumRegisteredFields()
 
   if (isLoading) {
     return <Loading vspace={80}/>
@@ -25,13 +27,19 @@ export default function MySubscriptions({user}: { user: User }) {
   return (<div className="">
 
 
-    {<div className="px-5 py-3">
-      {edition?.isOpenToSubscribe()
+    <div className="px-5 py-3">
+      {!completedProfile && 
+        <div className="alert alert-warning">Você só poderá se inscrever após <Link href={`/profile?tab=personal`}>completar seu perfil</Link>.</div>}
+      {(isSubscriptionOpened && completedProfile && !isSubscribed) && 
+        <Link href="/register2" passHref><a className="btn btn-primary" >{t('fazer-inscricao')}</a></Link>}
+      {!isSubscriptionOpened && 
+        <div className="alert alert-warning">As inscrições ainda não estão abertas</div>}
+      {/* {isSubscriptionOpened
         ? (<>{!isSubscribed
-          && <Link href="/register2" passHref><a className="btn btn-primary">{t('fazer-inscricao')}</a></Link>}</>)
-        : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)}
+          && <Link href="/register2" passHref><a className="btn btn-primary" >{t('fazer-inscricao')}</a></Link>}</>)
+        : (<div className="alert alert-warning">As inscrições ainda não estão abertas</div>)} */}
 
-    </div>}
+    </div>
 
     {(collection && collection.length > 0) ? collection.map(order => {
       return (<OrderLine key={order.getId()} order={order}/>)

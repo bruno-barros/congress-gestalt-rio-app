@@ -24,7 +24,7 @@ const Profile = () => {
   const [tab, setTab] = useState<string>('personal')
 
   useEffect(() => {
-    setTab(String(router.query?.tab) || 'personal')
+    setTab(router.query?.tab ? String(router.query?.tab) : 'personal')
   }, [router])
 
   return (<MainLayout pageHeader={{title: t('cadastro.meu-cadastro')}}>
@@ -58,7 +58,7 @@ const Profile = () => {
       </div>
       <div className="col-12 col-md-9">
         {tab === 'personal' &&
-        <div className=" py-3 px-md-3"><ProfileForm user={user} editingMode={user.isSuperAdmin()?'admin':undefined}/></div>}
+        <div className=" py-3 px-md-3"><ProfileForm user={user} editingMode={user.isSuperAdmin()?'admin':'user'}/></div>}
         {tab === 'subscriptions' && <MySubscriptions user={user}/>}
         {tab === 'documents' && <UserDocuments user={user}/>}
         {tab === 'password' && <div className=" py-3 px-md-3"><PasswordUpdateForm user={user}/></div>}

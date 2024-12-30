@@ -9,17 +9,19 @@ import Icon from "../../ionicon";
 interface TagsProps {
   label: string
   containerClass?: string
+  minTags?: number
   maxTags?: number
   disabled?: boolean
 }
 
-export default function Tags({label, containerClass, maxTags: ma, disabled, ...props}: TagsProps & any) {
+export default function Tags({label, containerClass, minTags: min, maxTags: ma, disabled, ...props}: TagsProps & any) {
 
   const t = useTrans()
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
   const err = meta?.error
   const [newTag, setNewTag] = useState('');
+  const minTags = min || 0
   const maxTags = ma || 20
   const tagInput = useRef(null)
 
@@ -39,8 +41,21 @@ export default function Tags({label, containerClass, maxTags: ma, disabled, ...p
     tagInput.current.focus()
   }
 
-  return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
-    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxTags})</small></div>
+  function LabelMinMax(){
+    if(minTags > 0 && maxTags > 0){
+      return <small>({t('trabalho.minimo-de')} {minTags}, {t('trabalho.maximo-de')} {maxTags})</small>
+    }
+    if(minTags > 0){
+      return <small>({t('trabalho.minimo-de')} {minTags})</small>
+    }
+    if(maxTags > 0){
+      return <small>({t('trabalho.maximo-de')} {maxTags})</small>
+    }
+    return null
+  }
+
+  return (<div className={`form-panel bg-light px-3 py-2 mb-3 ${err && 'has-error'} ${props?.disabled ? 'text-muted' : ''}`}>
+    <div className="">{label} <LabelMinMax /></div>
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       return (<div className="tags-container">
@@ -59,7 +74,7 @@ export default function Tags({label, containerClass, maxTags: ma, disabled, ...p
         ))}
 
         {!disabled && (maxTags > field.value.length)
-        && <div className="mt-3">
+        && <div className="mt-0">
           <div className="input-group">
             <input ref={tagInput} type="text" name="new_tag" value={newTag}
                    className="form-control" onChange={(e) => {

@@ -35,6 +35,7 @@ export default function SignUp(props: SignUpProps) {
 
 
   const LoginSchema = Yup.object().shape({
+    display_name: Yup.string().min(5).required('validacao.obrigatorio'),
     username: Yup.string().email('validacao.email').required('validacao.obrigatorio'),
     password: Yup.string().min(8, 'validacao.curto').required('validacao.obrigatorio'),
   });
@@ -50,6 +51,7 @@ export default function SignUp(props: SignUpProps) {
     let data: any = {}
     try {
       const axios = await WpUser.signUpWithEmail({
+        display_name: values.display_name,
         username: values.username,
         password: values.password,
         locale: router.locale
@@ -111,13 +113,14 @@ export default function SignUp(props: SignUpProps) {
     <Modal.Body className="p-4 px-md-5">
       <Formik
         initialValues={{
-          username: '', password: ''
+          username: '', password: '', display_name: ''
         }}
         validationSchema={LoginSchema}
         onSubmit={submit}
       >
         {({errors, touched, values, isValid}) => (
           <Form>
+            <Text name="display_name" label={t('seu-nome')} floatLabel/>
             <Text name="username" label={t('seu-email')} floatLabel/>
             <Password
               name="password" label={t('senha')} floatLabel autoComplete="new-password"

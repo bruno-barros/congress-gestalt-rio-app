@@ -195,7 +195,7 @@ export function getRaces() {
 
 export const MapLocales = [
   { app: "pt", site: "pt_BR", label: "Português" },
-  { app: "en", site: "en_US", label: "Inglês" },
+  // { app: "en", site: "en_US", label: "Inglês" },
   { app: "es", site: "es_ES", label: "Espanhol" },
 ];
 
@@ -411,7 +411,7 @@ export function dump(args: any) {
 
   if (process.env.NODE_ENV === "development" || !!params.get("debug")) {
     return (
-      <pre className="pre-scrollable">{JSON.stringify(args, null, 2)}</pre>
+      <pre className="pre-scrollable" style={{maxWidth: 800}}>{JSON.stringify(args, null, 2)}</pre>
     );
   }
 }

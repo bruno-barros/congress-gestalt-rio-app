@@ -1,12 +1,11 @@
 import {AxiosResponse} from "axios";
-import { httpApi, restApi } from './axios';
+import { httpApi, restApi, RESTVersion } from './axios';
 import { WpRestResponse } from "../types/restapi";
 
 export default class WpConfig {
-  static namespace = "/event/v1";
 
   static load(): Promise<AxiosResponse<WpRestResponse<any>>> {
-    return restApi.get(`${WpConfig.namespace}/settings`);
+    return restApi.get(`${RESTVersion.default().namespace}/settings`);
   }
 
   static pushNotificationSend(data: any){

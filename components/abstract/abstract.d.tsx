@@ -1,14 +1,7 @@
+import { StatusType } from "../../src/types/abstracts";
 /**
- * Mover estes tipos para: "src/types/abstracts.d.ts"
+ * Mover de "components/abstract/abstract.d.tsx" estes tipos para: "src/types/abstracts.d.ts"
  */
-export type Status = 'pending' | 'synopsis_revision' | 'synopsis_evaluating' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
-  'synopsis_approved' | 'final_revision' | 'evaluating' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
-
-export const Statuses = [
-  'pending', 'synopsis_revision', 'synopsis_evaluating', 'synopsis_rejected', 'synopsis_waiting_upd',
-  'synopsis_approved', 'final_revision', 'evaluating', 'rejected', 'waiting_update', 'pre_approved', 'approved'
-]
-
 export type GraphQlStatuses = 'PENDING' | 'SYNOPSIS_REVISION' | 'SYNOPSIS_EVALUATING' | 'SYNOPSIS_REJECTED' | 'SYNOPSIS_WAITING_UPD' |  'SYNOPSIS_APPROVED' | 'FINAL_REVISION' | 'EVALUATING' | 'REJECTED' | 'WAITING_UPDATE' | 'PRE_APPROVED' | 'APPROVED';
 
 export function StatusesPhaseSynopsis():GraphQlStatuses[]{
@@ -23,7 +16,7 @@ export interface AbstractType {
   title: string
   subtitle: string
   topic: string
-  status: Status
+  status: StatusType
   date: string
   edition_id: string
   authors_count: number

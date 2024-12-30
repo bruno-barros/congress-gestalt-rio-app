@@ -1,14 +1,18 @@
-import {Status, Statuses} from "../../components/abstract/abstract.d";
 import {statusColorName} from "../helpers";
+import { StatusType } from "../types/abstracts";
+import { Locale } from "../types/i18next";
+import { STATUSES_SINOPSIS_ABSTRACT_MODEL } from "./abstract-statuses";
 import {Author} from "./user";
 
 export default class Abstract {
   databaseId: number
+  main_language: Locale
   title: string
+  title_es: string
   subtitle: string
   topic: string
   type: string
-  status: Status
+  status: StatusType
   date: string
   edition_id?: string
   authors_count?: number
@@ -18,6 +22,7 @@ export default class Abstract {
 
   excerpt?: string
   abstract_tags?: string[]
+  abstract_tags_es?: string[]
   bibliography?: string
   synopsis?: string
   content?: string
@@ -70,9 +75,9 @@ export default class Abstract {
     return false
   }
 
-  statusPassed(desiredStatus: string){
-    const desiredPosition: number = Statuses.indexOf(desiredStatus)
-    const currentPosition: number = Statuses.indexOf(this.status)
+  statusPassed(desiredStatus: StatusType){
+    const desiredPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(desiredStatus)
+    const currentPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(this.status)
     return currentPosition > desiredPosition
   }
 
@@ -98,4 +103,7 @@ export default class Abstract {
     }).length === 0
   }
 
+  getMainLanguage(){
+    return this.main_language || 'pt'
+  }
 }

@@ -1,12 +1,11 @@
 import {AxiosResponse} from "axios";
-import {httpApi, restApi} from "./axios";
+import {httpApi, restApi, RESTVersion} from "./axios";
 import {Notification, NotificationTypes} from "../resources/notification";
 
 export default class WpNotification {
-  static namespace = "/event/v1";
 
   static setAsRead(notifications: Notification[]){
-    return restApi.post(`${WpNotification.namespace}/notifications/read`, {notifications});
+    return restApi.post(`${RESTVersion.default().namespace}/notifications/read`, {notifications});
   }
 
   static get(args: { context: NotificationTypes, recipient_id?: number, read?:boolean; limit?: number }): Promise<AxiosResponse> {

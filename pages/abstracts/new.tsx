@@ -12,6 +12,8 @@ import {useQueryClient} from "react-query";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import useCurrentUser from '../../components/hooks/useCurrentUser';
+import useSettings from "../../components/hooks/useSettings";
+import ProgressBar from "../../components/ui/progressbar";
 
 
 interface NewAbstractProps {
@@ -23,12 +25,12 @@ const NewAbstract = (props: NewAbstractProps) => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
-  const {data: event, isLoading} = useEvent()
-  const edition: Edition = event?.currentEdition()
+  const { data: event, currentEdition: edition, isLoading} = useSettings()  
   const lang = router.locale
 
+
   if (isLoading) {
-    return null;
+    return <ProgressBar/>;
   }
 
   return (<MainLayout sidebar={{title: edition.name, component: <EditionSidebar edition={edition}/>}}>

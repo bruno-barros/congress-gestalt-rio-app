@@ -9,10 +9,11 @@ interface TextProps {
   containerClass?: string
   inputClass?: string
   floatLabel?: boolean
+  description?: string
   cepCallback?: (data: CEP | null) => void
 }
 
-export default function Text({label, containerClass, inputClass, cepCallback, floatLabel: fl, ...props}: TextProps & any) {
+export default function Text({label, containerClass, inputClass, cepCallback, floatLabel: fl, description, ...props}: TextProps & any) {
 
   // @ts-ignore
   const [field, meta, helpers] = useField(props);
@@ -42,6 +43,8 @@ export default function Text({label, containerClass, inputClass, cepCallback, fl
     <input {...field} {...props} id={`fld_${field.name}`} className={`form-control ${inputClass || ''} ${err && 'is-invalid'} ${field?.value?.length ? 'filled' : ''}`}/>
 
     {(label && floatLabel) && <label htmlFor={`fld_${field.name}`}>{label}</label>}
+
+    {description && <small className="d-block text-muted">{description}</small>}
 
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
   </div>)
