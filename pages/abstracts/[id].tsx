@@ -1,7 +1,5 @@
 import MainLayout from "../../components/layout";
 import useTrans from "../../components/hooks/useTrans";
-import useEvent from "../../components/hooks/useEvent";
-import  Edition  from "../../src/resources/edition";
 import { useRouter } from "next/router";
 import EditionSidebar from "../../components/event/edition-sidebar";
 import AbstractForm from "../../components/abstract/abstract-form";
@@ -18,15 +16,18 @@ import { useQueryClient } from "react-query";
 import { siteTitle } from "../../src/helpers";
 import Head from "next/head";
 import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
+import { ac } from "../../components/access-control";
+import { REQUIREMENTS } from "../../components/access-control/requirements";
 
 const AbstractEditing = () => {
   const queryClient = useQueryClient();
   const { user } = useCurrentUser();
   const router = useRouter();
   const t = useTrans();
-  const { data: event, isLoading } = useEvent();
-  const edition: Edition = event?.currentEdition();
+  const { data: event, isLoading, currentEdition: edition } = useSettings();
   const lang = router.locale;
+  const canManage = ac(user, [REQUIREMENTS.abstract.manage])
   const {
     data: abstract,
     error,
@@ -69,7 +70,7 @@ const AbstractEditing = () => {
 
   if (
     abstract?.getResponsible().databaseId !== user.getId() &&
-    !user.canManageAbstracts()
+    !canManage
   ) {
     return (
       <MainLayout>
@@ -102,7 +103,7 @@ const AbstractEditing = () => {
         </div>
         <div className="col-12 col-md-4">
           <AbstractStatusBar
-            editable={user.canManageAbstracts()}
+            editable={canManage}
             edition={edition}
             abstract={abstract}
             className="my-4"
