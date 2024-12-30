@@ -7,7 +7,7 @@ import useTrans from "../hooks/useTrans";
 import Select from "../ui/form/formik/select";
 import Attachments from "../ui/form/formik/attachments";
 import Authors from "../ui/form/formik/authors";
-import {generate_tmp_id, rand, specialValidationRules} from "../../src/helpers";
+import { dump, generate_tmp_id, MapLocales, rand, specialValidationRules } from '../../src/helpers';
 import useCurrentUser from "../hooks/useCurrentUser";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {useDispatch} from "react-redux";
@@ -24,6 +24,10 @@ import Switch from '../ui/form/formik/switch';
 import Button from "react-bootstrap/cjs/Button";
 import AbstractConsentTerms from './abstract-consent-terms';
 import LoadingButton from "../ui/loading-button";
+import { ac } from "../access-control";
+import { REQUIREMENTS } from "../access-control/requirements";
+import AuthorsPanel from "./authors/authors-panel";
+
 
 
 interface AbstractFormProps {
@@ -41,10 +45,20 @@ export default function AbstractForm(props: AbstractFormProps) {
   const {edition, abstract} = props
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
-  const isEditable1 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
-  const isEditable2 = user.canManageAbstracts() || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
+  const canManage = ac(user, [REQUIREMENTS.abstract.manage])
+  const isEditable1 = canManage || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
+  const isEditable2 = canManage || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
   const [consentModal, setConsentModal] = useState(false)
   const form = useRef<FormikProps<any>>(null)
+  const AbstractCnf = edition?.Abstract()
+  const FieldTitle = AbstractCnf.getField('title')
+  const FieldTag = AbstractCnf.getField('tags')
+  const FieldResume = AbstractCnf.getField('resume')
+  const FieldContent = AbstractCnf.getField('content')
+  const FieldBibliography = AbstractCnf.getField('bibliography')
+  const FieldAttachments = AbstractCnf.getField('attachments')
+  const FieldAuthors = AbstractCnf.getField('authors')
+  const FieldAuthors2 = AbstractCnf.getField('authors2')
 
   const initialAuthor = isEditing ? {} : {
     id: null,
@@ -54,16 +68,19 @@ export default function AbstractForm(props: AbstractFormProps) {
     company: user.getUserData().institution_name || '',
     uuid: null
   }
-
+//region initialValues
   const initialValues = {
     _intent: 'update',// update | review
     id: !abstract ? null : abstract.databaseId,
     tmp_id: !abstract ? generate_tmp_id(user.getId()) : null,
+    main_language: abstract?.getMainLanguage() || 'pt',
     topic: abstract?.topic || '',
-    type: abstract?.type || '',
+    type: abstract?.type || '', // modality
     title: abstract?.title || '',
+    title_es: abstract?.title_es || '',
     subtitle: abstract?.subtitle || '',
     tags: abstract?.abstract_tags || [],
+    tags_es: abstract?.abstract_tags_es || [],
     resume: abstract?.excerpt || '',
     content: abstract?.content || '',
     bibliography: abstract?.bibliography || '',
@@ -71,15 +88,19 @@ export default function AbstractForm(props: AbstractFormProps) {
     authors: abstract?.authors || [initialAuthor],
     jlp: abstract?.jlp || false,
   }
+  //region Validation
   const Validation = Yup.object().shape({
+    main_language: Yup.string().required('validacao.obrigatorio'),
     topic: Yup.string().required('validacao.obrigatorio'),
     type: Yup.string().required('validacao.obrigatorio'),
-    title: Yup.string().required('validacao.obrigatorio'),
+    title: Yup.string().max(FieldTitle.max).required('validacao.obrigatorio'),
     // subtitle: Yup.string().required('validacao.obrigatorio'),
-    tags: Yup.array().min(edition.getFieldMin('tags'), 'validacao.obrigatorio')
-      .max(edition.getFieldMax('tags')).required('validacao.obrigatorio'),
+    tags: Yup.array().min(FieldTag.min, 'validacao.obrigatorio')
+      .max(FieldTag.max).required('validacao.obrigatorio'),
+    tags_es: Yup.array().min(FieldTag.min, 'validacao.obrigatorio')
+      .max(FieldTag.max).required('validacao.obrigatorio'),
     resume:  Yup.string().when('type', {
-      is: (val) => !!edition.abstract.required_fields?.resume?.min && !user.byPassSynopsis(),
+      is: (val) => FieldResume.allowed && !user.byPassSynopsis(),
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
@@ -90,7 +111,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     }),
     // bibliography: Yup.string().required('validacao.obrigatorio'),
     attachments: Yup.array().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.attachments?.min,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && FieldAttachments.min > 0,
       then: Yup.array().required('validacao.obrigatorio'),
       otherwise: Yup.array().notRequired()
     }),
@@ -100,12 +121,11 @@ export default function AbstractForm(props: AbstractFormProps) {
       otherwise: Yup.array().notRequired()
     }),
   })
-
+//region Submit
   async function handleSubmit(values) {
     values.locale = router.locale
     if (!isEditing) {
       values.edition_id = edition.id
-      values.author_id = user.getId()
     }
 
     disp(blockUi(true))
@@ -138,6 +158,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     setAuthorModal({show: false, author: null, metadata: null})
   }
 
+  //region Formik
   return (<Formik
     innerRef={form}
     initialValues={initialValues}
@@ -159,48 +180,64 @@ export default function AbstractForm(props: AbstractFormProps) {
         Seu trabalho não passará pela validação da sinopse. Após registrar os dados básicos, você poderá anexar o trabalho final.
       </div>}
 
+      {/* {dump(Abstract.getTopics())} */}
+
       <fieldset disabled={!isEditable1}>
-        {/*<code style={{maxWidth: 700}}>{JSON.stringify(values, null, 2)}</code>*/}
+        
+        <Select name="main_language" label={t('trabalho.idioma_principal')}>
+          <option value="" disabled></option>
+          {MapLocales.map(top => <option key={top.app} value={top.app}>{top.label}</option>)}
+        </Select>
+
+        {(AbstractCnf.getTopics().length > 0) && 
         <Select name="topic" label={t('trabalho.topico')}>
           <option value="" disabled></option>
-          {edition?.abstract?.topics
-          && edition.abstract.topics.map(top => <option key={top.id} value={top.id}>{top[router.locale]}</option>)}
-        </Select>
+          {AbstractCnf.getTopics().map(top => <option key={top.id} value={top.id}>{top[router.locale]}</option>)}
+        </Select>}
+        
+        {(AbstractCnf.getModalities().length > 0) &&
         <Select name="type" label={t('trabalho.tipo')}>
           <option value="" disabled></option>
-          {edition?.abstract?.types
-          && edition.abstract.types.map(t => <option key={t.id} value={t.id}>{t[router.locale]}</option>)}
-        </Select>
-        <Text name="title" label={t('trabalho.titulo')}/>
+          {AbstractCnf.getModalities().map(t => <option key={t.id} value={t.id}>{t[router.locale]}</option>)}
+        </Select>}
+        
+        <Text name="title" label={`${t('trabalho.titulo')} (em português)`} description={`Entre ${FieldTitle.min} e ${FieldTitle.max} caracteres`}/>
+        <Text name="title_es" label={`${t('trabalho.titulo')} (en español)`} description={`Entre ${FieldTitle.min} y ${FieldTitle.max} caracteres`}/>
+
         {edition.getFieldMax('subtitle') > 0 &&
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
-        {edition.getFieldMax('tags') > 0 &&
-        <Tags name="tags" label={t('trabalho.tags')} maxTags={edition.getFieldMax('tags')} disabled={!isEditable1}/>}
+  
+        {FieldTag.allowed &&
+        <Tags name="tags" label={`${t('trabalho.tags')} (em português)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable1}/>}
+        {FieldTag.allowed &&
+        <Tags name="tags_es" label={`${t('trabalho.tags')} (en español)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable1}/>}
 
-        {!user.byPassSynopsis() &&
+        {(!user.byPassSynopsis() && FieldResume.allowed) &&
         <Wysiwyg name="resume" label={t('trabalho.sinopse')}
         maxHeight="md" disabled={!isEditable1}
-                 charsMin={specialValidationRules('resume', 'min', edition, values)}
-                 charsMax={specialValidationRules('resume', 'max', edition, values)}
-                 countMethod={edition.abstract.count_method}/>}
+                 charsMin={FieldResume.min}
+                 charsMax={FieldResume.max}
+                 countMethod={`char`}/>}
 
 
       </fieldset>
       <fieldset disabled={!isEditable2}>
-        {(abstract?.statusPassed('synopsis_waiting_upd') && edition.getFieldMin('content') > 0) &&
+        {(abstract?.statusPassed('synopsis_waiting_upd') && FieldContent.allowed) &&
         <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
-                 charsMin={edition.getFieldMin('content')} charsMax={edition.getFieldMax('content')}
-                 countMethod={edition.abstract.count_method}/>}
-
+                 charsMin={FieldContent.min} charsMax={FieldContent.max}
+                 countMethod={`char`}/>}
+        
+        {FieldBibliography.allowed && 
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')}
         maxHeight="md" disabled={!isEditable1}
-                 charsMin={edition.getFieldMin('bibliography')}
-                 charsMax={edition.getFieldMax('bibliography')}
-                 countMethod={edition.abstract.count_method}/>
+                 charsMin={FieldBibliography.min}
+                 charsMax={FieldBibliography.max}
+                 countMethod={`char`}/>}
+        
 
-        {(edition.getFieldMin('attachments') > 0 && abstract?.statusPassed('synopsis_waiting_upd')) && (<>{abstract.hasConsentsAgreement() ? (
-          <Attachments name="attachments" label={t('anexos')}
-                     maxFiles={edition.getFieldMax('attachments')}
+        {(FieldAttachments.allowed && abstract?.statusPassed('synopsis_waiting_upd')) && (<>{abstract.hasConsentsAgreement() 
+          ? (<Attachments name="attachments" label={t('anexos')}
+                     maxFiles={FieldAttachments.max}
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
                      disabled={!isEditable2}/>
           ) : (
@@ -225,16 +262,35 @@ export default function AbstractForm(props: AbstractFormProps) {
       <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
 
       <fieldset disabled={!isEditable1 && !isEditable2}>
-        <Authors name="authors" label={t('autores')} maxAuthors={edition.getFieldMax('authors')}
-                 metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                 mainAuthor={abstract?.author?.node || user.getUserData()}
-                 disabled={!isEditable1 && !isEditable2}
-                 creating={!isEditing}
-                 onEdit={(author, metadata) => {
-                   setAuthorModal({show: true, author, metadata})
-                 }}/>
+        {
+          //region Autores 1
+        }
+        {(FieldAuthors.allowed && !FieldAuthors2.allowed) && 
+          <Authors name="authors" label={t('autores')} maxAuthors={FieldAuthors.max}
+            metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+            mainAuthor={abstract?.author?.node || user.getUserData()}
+            disabled={!isEditable1 && !isEditable2}
+            creating={!isEditing}
+            onEdit={(author, metadata) => {
+              setAuthorModal({show: true, author, metadata})
+            }}/>}
+        {
+          //region Autores 2
+        }
+        {(FieldAuthors2.allowed && !FieldAuthors.allowed) && 
+          <></>}
+          <AuthorsPanel 
+            abstractId={abstract?.databaseId} 
+            tempId={values.tmp_id}
+            data={values.authors}
+            mainAuthorId={abstract?.authorDatabaseId}
+            maxAuthors={FieldAuthors2.max}
+            disabled={!isEditable1 && !isEditable2}/>
+        
       </fieldset>
       <Field name="_intent" type="hidden"/>
+      {dump(errors)}
+      {dump(values)}
 
       {(isEditable1 || isEditable2) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>

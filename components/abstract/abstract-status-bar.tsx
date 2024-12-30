@@ -1,5 +1,4 @@
 import Edition from "../../src/resources/edition";
-import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import React, {useState} from "react";
 import Abstract from "../../src/resources/abstract";
@@ -9,6 +8,8 @@ import Form from "react-bootstrap/cjs/Form";
 import {useRouter} from "next/router";
 import useAbstract from "../hooks/useAbstract";
 import LoadingButton from "../ui/loading-button";
+import { AbstractStatusModelEnum } from "../../src/types/abstracts.d";
+import { STATUSES_ABSTRACT_MODEL, STATUSES_SINOPSIS_ABSTRACT_MODEL } from "../../src/resources/abstract-statuses";
 
 interface AbstractStatusBarProps {
   edition: Edition
@@ -22,9 +23,12 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
   const router = useRouter()
   const t = useTrans()
   const {refetch} = useAbstract(Number(router.query?.id))
-  const {data: event} = useEvent()
   const {edition, abstract, className, editable} = props
-  const statuses = edition.abstract.statuses?.filter(s => s !== 'pre_approved')
+  const AbstractCnf = edition?.Abstract()
+  const _statuses = AbstractCnf?.status_model === AbstractStatusModelEnum.ABSTRACT 
+    ? STATUSES_ABSTRACT_MODEL 
+    : STATUSES_SINOPSIS_ABSTRACT_MODEL
+  const statuses = _statuses.filter(s => s !== 'pre_approved')
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
   const [notify, setNotify] = useState(true)
@@ -34,7 +38,7 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
     e.preventDefault()
     if (!editable) return;
     const status = e.target.id.substr(7)
-    if (status === abstract.status) return;
+    if (status === abstract?.status) return;
 
     setSelected(status)
   }
@@ -66,7 +70,7 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
     <p className="mb-1"><strong>Status</strong></p>
     <div className="status-container">
       {statuses.map((stats, i) => {
-        let active = stats === abstract.status || (abstract.status === 'pre_approved' && stats === 'synopsis_evaluating')
+        let active = stats === abstract?.status || (abstract?.status === 'pre_approved' && stats === 'synopsis_evaluating')
         let sel = stats === selected
         if (active && isPast) {
           isPast = false
