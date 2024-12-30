@@ -1,0 +1,33 @@
+@import "../../../styles/mixins";
+
+.header {
+    padding: 1rem;
+    border-bottom: $gray-300 1px solid;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+.list {
+    
+}
+
+.list_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem 1rem;
+    border-bottom: $gray-300 1px solid;
+    font-size: .9em;
+}
+.list_item:hover {
+    background-color: rgba(0,0,0, .05);
+}
+.list_item_deleted {
+    opacity: .4;
+    pointer-events: none;
+}
+.search {
+    padding: 1rem;
+}
