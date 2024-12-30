@@ -25,27 +25,27 @@ export default function Header(props: HeaderProps) {
   const {data: pending} = usePendingReview()
   const {user, event} = props
   const { currentEdition: edition} = useSettings()
-  const [stupid, setStupid] = useState(false)//[*abrisco]
 
   useEffect(()=>{
-    // setStupid(router.query?.tab && router.query.tab === 'subscriptions')
   }, [router.query])
 
   return (<header className="mainHeader">
-    {stupid ? <style jsx global>{`
-        .navbar-nav {
-          display: none;
-        }
-      `}</style>: <style jsx global>{`
+    <style jsx global>{`
       .navbar-nav {
         display: flex;
       }
-    `}</style>}
+        .brand .img-fluid {
+          border-radius: 5px;
+          max-height: 40px;
+        }
+    `}</style>
 
     <Navbar expand="lg">
       <div className="d-flex justify-content-between flex-grow-1 flex-lg-grow-0">
         <div className="header-start d-flex align-items-center">
-          <div className="brand mr-3">{event.name}</div>
+          <div className="brand mr-3">
+          {event.logoSecondary && <img src={event.logoSecondary} alt={event.eventName} className="img-fluid" />}            
+          </div>
           <div className="menus navbar-light">
             <Navbar.Toggle aria-controls="basic-navbar-nav"/>
           </div>
