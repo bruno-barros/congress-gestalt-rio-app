@@ -115,6 +115,7 @@ export default function ProfileForm(props: ProfileFormProps) {
       cpf: user.getUserData().cpf || '',
       passport: user.getUserData().passport || '',
       badge_name: user.getUserData().badge_name || '',
+      social_name: user.getUserData().social_name || '',
       cellphone: user.getUserData().cellphone || '',
       cellphone_country: user.getUserData().cellphone_country || '55',
       phone: user.getUserData().phone || '',
@@ -175,7 +176,10 @@ export default function ProfileForm(props: ProfileFormProps) {
           <Text name="firstName" label={t('cadastro.nome')} required={isRequired} containerClass="col-12 col-md"/>
           <Text name="lastName" label={t('cadastro.sobrenome')} required={isRequired} containerClass="col-12 col-md"/>
         </div>
-        <Text name="badge_name" label={t('cadastro.nome-cracha')} required={editingMode === 'user'}/>
+        <div className="row">
+          <Text name="badge_name" label={t('cadastro.nome-cracha')} containerClass="col-12 col-md" required={editingMode === 'user'} />
+          <Text name="social_name" label={t('cadastro.social_name')} containerClass="col-12 col-md"/>
+        </div>
         <div className="row">
           <Select name="country" label={t('cadastro.nacionalidade')} containerClass="col-12 col-md" required={isRequired}>
             {countries.map(c => (<option key={c.code} value={c.code}>{c.name}</option>))}
