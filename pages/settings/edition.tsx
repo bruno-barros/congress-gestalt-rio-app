@@ -45,6 +45,7 @@ function Settings() {
   const initialValues = {
     name: evt?.edition?.name || "",
     logo: evt?.edition?.logo || "",
+    logo_sm: evt?.edition?.logo_sm || "",
     start_at: evt?.edition?.start_at,
     end_at: evt?.edition?.end_at,
     lgpd_url_pt: evt?.edition?.lgpd_url_pt || "",
@@ -100,6 +101,9 @@ function Settings() {
             </Field>
             <Field infos="Tamanho recomendado: 300 px de largura.">
                 <Image name="logo" label="Logo do evento" imgStyle={{maxHeight: 120}} />
+            </Field>
+            <Field infos="Tamanho recomendado: 200x60 px.">
+                <Image name="logo_sm" label="Logo reduzida do evento" imgStyle={{maxHeight: 90}} />
             </Field>
             <DateRange
               label="Período da edição"
