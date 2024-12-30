@@ -69,7 +69,7 @@ const AdmSubscriptions = () => {
     return subscriptions.getOrders().map((order: Order) => {
       let row: any = {...order}
       row.package = order.getItems()[0]?.product?.name || 'desconhecido'
-      row.customer_name = order.customer.displayName
+      row.customer_name = order.getCustomerName()
       row.customer_email = order.customer.email
       row.order_status = t(`status.${order.status.toLowerCase()}`)
       row.status_woo = order.status
