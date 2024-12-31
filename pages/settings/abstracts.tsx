@@ -252,6 +252,13 @@ function Abstracts() {
                 <Text name="fn_fields.authors2.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
                 <Text name="fn_fields.authors2.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
                 </div>
+                {values.fn_fields?.authors2?.allowed && 
+                <div className="border-left pl-3" style={{maxWidth: 422}}>
+                <Text name="fn_fields.authors2.bio_max" label="Mini bio: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
+                <Text name="fn_fields.authors2.bio2_max" label="Formação profissisonal: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
+                <Text name="fn_fields.authors2.bio3_max" label="Formação Gestalt-terapia: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
+                </div>}
+                
               </Field>
             </fieldset>
             {/* 

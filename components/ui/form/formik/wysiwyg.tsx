@@ -28,7 +28,7 @@ export default function Wysiwyg({label, containerClass, maxHeight: mh, disabled,
   const maxHeight = mh || 'md'
   const [editorLength, setEditorLength] = useState(0)
   const [editorValid, setEditorValid] = useState(false)
-  const charsMin = !cm && charsMax ? 1 : cm
+  const charsMin = typeof cm === 'undefined' && charsMax ? 1 : cm
   const method = countMethod || 'char'
 
   const checkValidity = useCallback(throttle((editorLength) => {

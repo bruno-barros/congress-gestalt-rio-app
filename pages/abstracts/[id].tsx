@@ -19,6 +19,8 @@ import Loading from "../../components/ui/loading";
 import useSettings from "../../components/hooks/useSettings";
 import { ac } from "../../components/access-control";
 import { REQUIREMENTS } from "../../components/access-control/requirements";
+import AuthorsProvider from "../../components/abstract/authors/authors-context";
+import ModalEditAuthor from "../../components/abstract/authors/modal-edit-author";
 
 const AbstractEditing = () => {
   const queryClient = useQueryClient();
@@ -99,7 +101,10 @@ const AbstractEditing = () => {
       </Head>
       <div className="row my-5">
         <div className="col-12 col-md-8 pl-lg-4 pl-xl-5">
-          <AbstractForm edition={edition} abstract={abstract} />
+          <AuthorsProvider>
+            <AbstractForm edition={edition} abstract={abstract} />
+            <ModalEditAuthor />
+          </AuthorsProvider>
         </div>
         <div className="col-12 col-md-4">
           <AbstractStatusBar

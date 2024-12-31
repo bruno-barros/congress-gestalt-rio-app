@@ -412,6 +412,7 @@ class Edition_Abstract_Field {
   allowed: boolean;
   min: number;
   max: number;
+  [key: string]: any;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -435,4 +436,5 @@ interface AField {
   allowed: boolean;
   min: number;
   max: number;
+  [key: string]: any;
 }

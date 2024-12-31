@@ -1,3 +1,4 @@
+import SearchAuthor from '../../components/abstract/authors/search-author';
 export interface AuthorSchema {
   id: number;
   uuid?: string
@@ -9,5 +10,18 @@ export interface AuthorSchema {
   email: string;
   company: string;
   bio: string;
+  bio2: string;
+  bio3: string;
   url?: string;
+  _active?: boolean|undefined;
+  _main?: boolean|undefined;
+}
+
+
+export interface SearchAuthorSchema {
+    id: number;
+    name: string
+    email: string
+    isSubscribed: boolean
+    obs: string
 }

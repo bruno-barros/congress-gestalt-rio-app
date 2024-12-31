@@ -6,6 +6,7 @@ import AuthorProvider, { useAuthorsContext } from "./authors-context"
 import s from "./authors-panel.module.scss"
 import SearchAuthor from "./search-author"
 import { dump } from "../../../src/helpers"
+
 interface AuthorsPanelProps {
     abstractId: number|null|undefined
     tempId: string|null|undefined
@@ -14,41 +15,49 @@ interface AuthorsPanelProps {
     disabled?: boolean
     maxAuthors?: number
 }
-
-export default function MainWithContext(props: AuthorsPanelProps){
+/**
+ * O contexto subiu para 'pages\abstracts\[id].tsx'
+ * @param props 
+ * @returns 
+ */
+export function MainWithContext(props: AuthorsPanelProps){
 
     return <AuthorProvider>
         <AuthorsPanel {...props} />
     </AuthorProvider>
 }
 
-export function AuthorsPanel(props: AuthorsPanelProps){
+export default function AuthorsPanel(props: AuthorsPanelProps){
 
     const t = useTrans()
     const {abstractId, tempId, data: originalData, disabled, maxAuthors, mainAuthorId} = props
-    const {data, setData} = useAuthorsContext()
-    const count = data.length
+    const {data, setData, setAbstractId} = useAuthorsContext()
+    const count = data.filter(a => a._active !== false).length
     const isOnLimit = maxAuthors ? count >= maxAuthors : false
-console.log({data, originalData})
+// console.log({data, originalData})
     useEffect(()=>{
-        setData([...originalData])
-    }, [originalData])
+        const data = originalData.map((author) => {
+            return {...author, _main: author.wp_user_id == mainAuthorId}
+        })
+        setData([...data])
+        setAbstractId(abstractId)
+    }, [originalData, abstractId])
 
     return <div className="bg-light mb-3">
         <div className={`${s.header}`}>
-            <div className="label">Autores</div>
+            <div className="label">{t('autores')}</div>
             {maxAuthors && <small>({t('trabalho.maximo-de')} {maxAuthors})</small>}
         </div>
         <div className={s.list}>
             {/* {dump(data)} */}
             {(data.length > 0 && data.map((author) => {
-                return <AuthorListItem abstractId={abstractId} tempId={tempId} author={author} isMainAuthor={mainAuthorId == author.wp_user_id} />
+                return <AuthorListItem key={author.id} abstractId={abstractId} tempId={tempId} author={author} isMainAuthor={mainAuthorId == author.wp_user_id} />
             })) }
         </div>
+        {!isOnLimit && 
         <div className={s.search}>
             <SearchAuthor abstractId={abstractId} onAdded={()=>{}} />
-        </div>
-        <div className="authors__search__result"></div>
+        </div>}
 
     </div>
 }

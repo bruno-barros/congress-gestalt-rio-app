@@ -187,6 +187,8 @@ export class WpAbstract {
       email
       active
       bio
+      bio2
+      bio3
       id
       wp_user_id
       is_speaker

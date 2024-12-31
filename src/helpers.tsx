@@ -411,7 +411,9 @@ export function dump(args: any) {
 
   if (process.env.NODE_ENV === "development" || !!params.get("debug")) {
     return (
-      <pre className="pre-scrollable" style={{maxWidth: 800}}>{JSON.stringify(args, null, 2)}</pre>
+      <pre className="pre-scrollable" style={{ maxWidth: 800 }}>
+        {JSON.stringify(args, null, 2)}
+      </pre>
     );
   }
 }
@@ -424,3 +426,7 @@ export function moneyFormat(value: number | string, locale: string = "pt-BR") {
   }).format(Number(value));
 }
 
+export function isEmailValid(str: string) {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/;
+  return re.test(str);
+}
