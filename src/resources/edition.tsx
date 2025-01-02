@@ -403,9 +403,7 @@ export class Edition_Abstract {
     return this.fields[key] 
         ? Edition_Abstract_Field.make(this.fields[key]) 
         : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
-  }
-
-  
+  }  
 }
 
 class Edition_Abstract_Field {

@@ -15,5 +15,18 @@ export enum AbstractStatusModelEnum {
   ABSTRACT = "abstract",
 }
 
-export type StatusType = 'pending' | 'synopsis_revision' | 'synopsis_evaluating' | 'synopsis_rejected' | 'synopsis_waiting_upd' |
-  'synopsis_approved' | 'final_revision' | 'evaluating' | 'rejected' | 'waiting_update' | 'pre_approved' | 'approved';
+export type StatusType =
+  | "pending"
+  | "synopsis_revision"
+  | "synopsis_evaluating"
+  | "synopsis_rejected"
+  | "synopsis_waiting_upd"
+  | "synopsis_approved"
+  | "final_revision"
+  | "evaluating"
+  | "rejected"
+  | "waiting_update"
+  | "pre_approved"
+  | "approved";
+
+

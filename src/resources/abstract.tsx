@@ -1,7 +1,9 @@
 import {statusColorName} from "../helpers";
-import { StatusType } from "../types/abstracts";
+import { AbstractStatusModelEnum, StatusType } from "../types/abstracts.d";
+import { AttachmentSchema } from "../types/files";
 import { Locale } from "../types/i18next";
 import { STATUSES_SINOPSIS_ABSTRACT_MODEL } from "./abstract-statuses";
+import Edition from "./edition";
 import {Author} from "./user";
 
 export default class Abstract {
@@ -39,20 +41,11 @@ export default class Abstract {
       name: string
     }
   }
-  attachments?: {
-    abstract_id: number
-    context: string
-    created_at: string
-    id: number
-    name: string
-    mimetype: string
-    note: string
-    size: number
-    url: string
-    user_id: number
-  }[]
+  attachments?: AttachmentSchema[]
+  professional_proof?: AttachmentSchema[]
   authors?: Author[]
   jlp?: boolean
+  edition?: Edition
 
   constructor(data: any) {
     Object.assign(this, data)
@@ -61,6 +54,11 @@ export default class Abstract {
   static make(data: any) {
     return new Abstract(data)
   }
+
+  setEdition(edition: Edition){
+    this.edition = edition
+  }
+  getEdition(){ return this.edition }
 
   statusColorName(): 'warning' | 'success' | 'danger' | 'secondary'|'info' {
     return  statusColorName(this.status)
@@ -79,6 +77,19 @@ export default class Abstract {
     const desiredPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(desiredStatus)
     const currentPosition: number = STATUSES_SINOPSIS_ABSTRACT_MODEL.indexOf(this.status)
     return currentPosition > desiredPosition
+  }
+
+  /**
+   * Se o trabalho permite anexos
+   */
+  isAbleToAttach(){
+    if(!!this.getEdition() === false) return false;
+    const model = this.getEdition().Abstract().status_model
+    if(model === AbstractStatusModelEnum.ABSTRACT){
+      return true
+    }
+    // no modo completo com sinopse, é necessário aprovar a sinopse para anexar
+    return this.statusPassed('synopsis_waiting_upd')
   }
 
   getResponsible(){
