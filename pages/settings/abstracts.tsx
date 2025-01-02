@@ -25,6 +25,7 @@ import DateRange from "../../components/ui/form/formik/date-range";
 import Loading from "../../components/ui/loading";
 import Topics from "../../components/settings/fields/topics";
 import LangIndicator from "../../components/settings/lang-indicator";
+import { AbstractStatusModelEnum } from "../../src/types/abstracts.d";
 
 export default function Context() {
   return (
@@ -43,7 +44,7 @@ function Abstracts() {
   const initialValues = {
     abstract_allowed: evt?.abstract.abstract_allowed === "1",
     only_subscribed: evt?.abstract.only_subscribed === "1",
-    status_model: evt?.abstract.status_model || "sinopse_abstract",
+    status_model: evt?.abstract.status_model || AbstractStatusModelEnum.SINOPSE_ABSTRACT,
     start_at: evt?.abstract.start_at,
     end_at: evt?.abstract.end_at,
     limit_per_user: evt?.abstract.limit_per_user || 1,
@@ -120,8 +121,8 @@ function Abstracts() {
             />
             <Field infos="Se o sistema de avaliação for somente por trabalho, a sinopse será ignorada.">
               <Select name="status_model" label="Sistema de avaliação">
-                <option value="sinopse_abstract">Sinopse e Trabalho</option>
-                <option value="abstract">Somente trabalho</option>
+                <option value={AbstractStatusModelEnum.SINOPSE_ABSTRACT}>Sinopse e Trabalho</option>
+                <option value={AbstractStatusModelEnum.ABSTRACT}>Somente trabalho</option>
               </Select>
             </Field>
             <Field infos="Quantidade máxima de trabalhos enviados por autor.">
@@ -153,10 +154,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Subtítulo</b>}
                 />
-                <div className="d-flex gap-2">
-                <Text name="fn_fields.subtitle.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.subtitle?.allowed} />
-                <Text name="fn_fields.subtitle.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.subtitle?.allowed} />
-                </div>
+                {values.fn_fields?.subtitle?.allowed && <>
+                  <div className="d-flex gap-2">
+                  <Text name="fn_fields.subtitle.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.subtitle?.allowed} />
+                  <Text name="fn_fields.subtitle.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.subtitle?.allowed} />
+                  </div>                
+                </>}
               </Field>
               <Field infos="Lista de tópicos ou categorias." noLabel>
                 <Switch
@@ -164,10 +167,6 @@ function Abstracts() {
                   // value="1"
                   label={<b>Tópicos</b>}
                 />
-                {/* <div className="d-flex gap-2">
-                <Text name="fn_fields.topic.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.topic?.allowed} />
-                <Text name="fn_fields.topic.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.topic?.allowed} />
-                </div> */}
               </Field>
               <Field infos="Lista de modalidades." noLabel>
                 <Switch
@@ -182,10 +181,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Palavras-chave</b>}
                 />
+                {values.fn_fields?.tags?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.tags.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.tags?.allowed} />
                 <Text name="fn_fields.tags.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.tags?.allowed} />
-                </div>
+                </div>                
+                </>}
               </Field>
               <Field infos="Campo de resumo ou sinópse." noLabel>
                 <Switch
@@ -193,10 +194,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Resumo</b>}
                 />
+                {values.fn_fields?.resume?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.resume.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.resume?.allowed} />
                 <Text name="fn_fields.resume.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.resume?.allowed} />
-                </div>
+                </div>                
+                </>}
               </Field>
               <Field infos="Campo de conteúdo." noLabel>
                 <Switch
@@ -204,10 +207,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Conteúdo</b>}
                 />
+                {values.fn_fields?.content?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.content.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.content?.allowed} />
                 <Text name="fn_fields.content.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.content?.allowed} />
-                </div>
+                </div>                
+                </>}
               </Field>
               <Field infos="Campo de bibliografia." noLabel>
                 <Switch
@@ -215,10 +220,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Bibliografia</b>}
                 />
+                {values.fn_fields?.bibliography?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.bibliography.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.bibliography?.allowed} />
                 <Text name="fn_fields.bibliography.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.bibliography?.allowed} />
                 </div>
+                </>}
               </Field>
               <Field infos="Possibilidade de anexar documentos ao trabalho." noLabel>
                 <Switch
@@ -226,10 +233,15 @@ function Abstracts() {
                   // value="1"
                   label={<b>Anexos</b>}
                 />
+                {values.fn_fields?.attachments?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.attachments.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.attachments?.allowed} />
                 <Text name="fn_fields.attachments.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.attachments?.allowed} />
                 </div>
+                <div className="border-left px-3">
+                <Text name={`fn_fields.attachments.info_${lang}`} label={<LangIndicator lang={lang}>Orientações para autor</LangIndicator>} disabled={!values.fn_fields?.attachments?.allowed} />
+                </div>
+                </>}
               </Field>
               <Field infos="Quantidade de co-autores sem restrição. O autor poderá inserir os dados dos co-autores livremente." noLabel>
                 <Switch
@@ -237,10 +249,12 @@ function Abstracts() {
                   // value="1"
                   label={<b>Co-autores sem inscrição</b>}
                 />
+                {values.fn_fields?.authors?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.authors.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.authors?.allowed} />
                 <Text name="fn_fields.authors.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.authors?.allowed} />
                 </div>
+                </>}
               </Field>
               <Field infos="Quantidade de co-autores com validação se o autor está inscrito." noLabel>
                 <Switch
@@ -248,17 +262,17 @@ function Abstracts() {
                   // value="1"
                   label={<b>Co-autores com inscrição</b>}
                 />
+                {values.fn_fields?.authors2?.allowed && <>
                 <div className="d-flex gap-2">
                 <Text name="fn_fields.authors2.min" label="Mínimo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
                 <Text name="fn_fields.authors2.max" label="Máximo" min={0} type="number" disabled={!values.fn_fields?.authors2?.allowed} />
                 </div>
-                {values.fn_fields?.authors2?.allowed && 
                 <div className="border-left pl-3" style={{maxWidth: 422}}>
                 <Text name="fn_fields.authors2.bio_max" label="Mini bio: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
                 <Text name="fn_fields.authors2.bio2_max" label="Formação profissisonal: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
                 <Text name="fn_fields.authors2.bio3_max" label="Formação Gestalt-terapia: limite caracteres" min={0} type="number" inputClass="form-control-sm" disabled={!values.fn_fields?.authors2?.allowed} />
-                </div>}
-                
+                </div>
+                </>}
               </Field>
             </fieldset>
             {/* 
@@ -282,7 +296,7 @@ function Abstracts() {
               
             </fieldset>
 
-            <div className={s.limit_field}>
+            <div className={s.action_field}>
               <LoadingButton loading={loading} disable={!isValid} block>
                 Salvar
               </LoadingButton>

@@ -181,7 +181,7 @@ function Settings() {
               </FieldArray> */}
             </fieldset>
 
-            <div className={s.limit_field}>
+            <div className={s.action_field}>
               <LoadingButton loading={loading} disable={!isValid} block>
                 Salvar
               </LoadingButton>
