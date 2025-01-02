@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Ac from "../access-control";
 import { REQUIREMENTS } from "../access-control/requirements";
 import useSettings from "../hooks/useSettings";
+import LangSelector from "../ui/lang-selector";
 
 interface HeaderProps {
   event: Event
@@ -111,6 +112,7 @@ export default function Header(props: HeaderProps) {
       </Navbar.Collapse>
       <div className="d-none d-lg-flex align-items-center">
         <NotificationPanel/>
+        <LangSelector size={24} compact/>
         <UserMenu user={user}/>
       </div>
     </Navbar>
