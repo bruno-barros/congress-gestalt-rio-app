@@ -25,7 +25,7 @@ export default function StepAddress(props: StepProps) {
   const [response, setResponse] = useState({success: null, msg: ''})
   const form = useRef<FormikProps<any>>(null)
   const FormSchema = Yup.object().shape({
-    postcode: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
+    postcode: Yup.string().required('validacao.obrigatorio'),
     state: Yup.string().required('validacao.obrigatorio'),
     city: Yup.string().required('validacao.obrigatorio'),
     neighborhood: Yup.string().required('validacao.obrigatorio'),

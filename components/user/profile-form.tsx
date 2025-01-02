@@ -64,7 +64,7 @@ export default function ProfileForm(props: ProfileFormProps) {
     birthdate: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
     gender: Yup.string().required('validacao.obrigatorio'),
     description: Yup.string().notRequired(),
-    postcode: Yup.string().min(8, 'validacao.formato-invalido').required('validacao.obrigatorio'),
+    postcode: Yup.string().required('validacao.obrigatorio'),
     state: Yup.string().required('validacao.obrigatorio'),
     city: Yup.string().required('validacao.obrigatorio'),
     neighborhood: Yup.string().required('validacao.obrigatorio'),
