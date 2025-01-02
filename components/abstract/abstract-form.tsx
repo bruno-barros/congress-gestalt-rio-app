@@ -41,8 +41,10 @@ export default function AbstractForm(props: AbstractFormProps) {
   const disp = useDispatch()
   const queryClient = useQueryClient()
   const router = useRouter()
+  const lang = router.locale
   const {user} = useCurrentUser()
   const {edition, abstract} = props
+  abstract?.setEdition(edition)
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
   const canManage = ac(user, [REQUIREMENTS.abstract.manage])
@@ -85,6 +87,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     content: abstract?.content || '',
     bibliography: abstract?.bibliography || '',
     attachments: abstract?.attachments || [],
+    professional_proof: abstract?.professional_proof || [],
     authors: abstract?.authors || [initialAuthor],
     jlp: abstract?.jlp || false,
   }
@@ -115,6 +118,11 @@ export default function AbstractForm(props: AbstractFormProps) {
       then: Yup.array().required('validacao.obrigatorio'),
       otherwise: Yup.array().notRequired()
     }),
+    professional_proof: Yup.array().when('type', {
+      is: (val) => val === 'WS',
+      then: Yup.array().required('validacao.obrigatorio'),
+      otherwise: Yup.array().notRequired()
+    }),
     authors:  Yup.array().when('topic', {
       is: (val) => !!edition.abstract.required_fields?.authors?.min,
       then: Yup.array().required('validacao.obrigatorio'),
@@ -125,7 +133,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   async function handleSubmit(values) {
     values.locale = router.locale
     if (!isEditing) {
-      values.edition_id = edition.id
+      values.edition_id = edition.getId()
     }
 
     disp(blockUi(true))
@@ -147,7 +155,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         if(isEditing) queryClient.invalidateQueries(['abstract', abstract?.databaseId])
         if (isEditing && data._intent === 'review') router.reload()
       } else {
-        errorNotification({message: data.msg})
+        errorNotification({message: resp.data?.message || data.msg})
       }
     } catch (err) {
       exceptionNotification(err, disp)
@@ -180,7 +188,10 @@ export default function AbstractForm(props: AbstractFormProps) {
         Seu trabalho não passará pela validação da sinopse. Após registrar os dados básicos, você poderá anexar o trabalho final.
       </div>}
 
-      {/* {dump(Abstract.getTopics())} */}
+      {/* {dump({
+        isEditing,
+        edition_id: edition.getId(),
+      })} */}
 
       <fieldset disabled={!isEditable1}>
         
@@ -200,6 +211,18 @@ export default function AbstractForm(props: AbstractFormProps) {
           <option value="" disabled></option>
           {AbstractCnf.getModalities().map(t => <option key={t.id} value={t.id}>{t[router.locale]}</option>)}
         </Select>}
+
+        {/* {dump({
+          modalidade: values.type,
+        })} */}
+        {values.type === 'WS' && <div className="">
+          <Attachments name="professional_proof" label={lang == 'pt' ? 'Comprovante Profissional' : 'Comprobante Profesional'}
+            maxFiles={1}
+            metas={{context: 'professional_proof', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
+            disabled={!isEditable2}
+            info={lang === 'pt' ? 'Envie um comprovante de que possui, no mínimo, 5 anos de formação como Gestalt-terapeuta.' : 'Enviar prueba de que tienes al menos 5 años de formación como terapeuta Gestalt.'}
+            />
+          </div>}
         
         <Text name="title" label={`${t('trabalho.titulo')} (em português)`} description={`Entre ${FieldTitle.min} e ${FieldTitle.max} caracteres`}/>
         <Text name="title_es" label={`${t('trabalho.titulo')} (en español)`} description={`Entre ${FieldTitle.min} y ${FieldTitle.max} caracteres`}/>
@@ -234,12 +257,19 @@ export default function AbstractForm(props: AbstractFormProps) {
                  charsMax={FieldBibliography.max}
                  countMethod={`char`}/>}
         
+        {/* {dump({
+          status: abstract?.status,
+          passouSinopsis: abstract?.statusPassed('synopsis_waiting_upd'),
+          ableAttach: abstract?.isAbleToAttach() || 'NAO'
+        })} */}
 
-        {(FieldAttachments.allowed && abstract?.statusPassed('synopsis_waiting_upd')) && (<>{abstract.hasConsentsAgreement() 
+        {(FieldAttachments.allowed && abstract?.isAbleToAttach()) && (<>{abstract?.hasConsentsAgreement() 
           ? (<Attachments name="attachments" label={t('anexos')}
                      maxFiles={FieldAttachments.max}
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                     disabled={!isEditable2}/>
+                     disabled={!isEditable2}
+                     info={FieldAttachments[`info_${lang}`]}
+                     />
           ) : (
           <div className="bg-light p-3 mb-3">
             <div className="mb-2">{t('anexos')}</div>

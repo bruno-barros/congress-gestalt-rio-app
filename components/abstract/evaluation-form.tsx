@@ -9,7 +9,6 @@ import useEvent from "../hooks/useEvent";
 import useTrans from "../hooks/useTrans";
 import FieldError from "../ui/form/field-error";
 import React, {useState} from "react";
-import {Status} from "./abstract.d";
 import Switch from "../ui/form/formik/switch";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useCurrentUser from "../hooks/useCurrentUser";
@@ -17,6 +16,7 @@ import WpEvaluation from "../../src/http/wp-evaluation";
 import usePendingReview from "../hooks/usePendingReview";
 import LoadingButton from "../ui/loading-button";
 import Loading from "../ui/loading";
+import { StatusType } from "../../src/types/abstracts";
 
 
 interface EvaluationFormProps {
@@ -119,7 +119,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
   }
 
   function filterAvailableStatuses() {
-    const current: Status = evaluation.status
+    const current: StatusType = evaluation.status
     if (current === 'evaluating') {
       return edition.abstract.statuses.filter(stats => ['rejected', 'waiting_update', 'pre_approved'].indexOf(stats) !== -1)
     }

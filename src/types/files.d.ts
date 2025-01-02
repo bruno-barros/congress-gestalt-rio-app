@@ -12,3 +12,19 @@ export interface UploadedFileSchema<M extends Object = never> {
   metadata: M;
   is_image: boolean;
 }
+
+export interface AttachmentSchema {
+  id: number
+  user_id: number
+  owner_id?: number
+  abstract_id: number
+  name: string
+  note: string
+  mimetype: string
+  size: number
+  url: string
+  context: string
+  uuid?: string
+  version?: number
+  created_at: string
+}

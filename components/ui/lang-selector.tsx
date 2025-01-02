@@ -10,11 +10,12 @@ interface LangSelectorProps {
   size?: number
   context?: string
   className?: string
+  compact?: boolean
 }
 
 export default function LangSelector(props: LangSelectorProps) {
 
-  const {size, context, label, className} = props
+  const {size, context, label, className, compact} = props
   const router = useRouter()
   const [base, setBase] = useState('/')
 
@@ -26,7 +27,7 @@ export default function LangSelector(props: LangSelectorProps) {
 
   let s = size || 30
 
-  return (<div className={`lang-selector ${className || ''}`}>
+  return (<div className={`lang-selector ${className || ''} ${compact ? 'compact' : ''}`}>
     {/* {dump(router)} */}
     {label && <div className="lang-selector-label">{label}</div>}
     {router.locales.map(lng => (

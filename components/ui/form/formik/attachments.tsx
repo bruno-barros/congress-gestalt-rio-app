@@ -23,9 +23,10 @@ interface AttachmentsProps {
   containerClass?: string
   maxFiles?: number
   disabled?: boolean
+  info?: string
 }
 
-export default function Attachments({label, metas, containerClass, maxFiles: mf, disabled, ...props}: AttachmentsProps & any) {
+export default function Attachments({label, metas, containerClass, maxFiles: mf, disabled, info, ...props}: AttachmentsProps & any) {
 
   // @ts-ignore
   const { data: event, currentEdition} = useSettings()
@@ -52,9 +53,13 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   async function handleDeletion(removeFn, file, index) {
     disp(blockUi(true))
     try {
-      const resp = await WpDocument.delete({...file, locale: router.locale})
-      const success = resp.data.success
-      const data = resp.data?.data
+      let success = true
+      let data = {msg: 'ok'}
+      if(file?.id){
+        const resp = await WpDocument.delete(file.id)
+        success = resp.data.success
+        data = resp.data?.data
+      } 
       disp(blockUi(false))
       if(success) {
         removeFn(index)
@@ -69,7 +74,8 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
   }
 
   return (<div className={`form-panel bg-light p-4 mb-3 ${err && 'has-error'}`}>
-    <div className="header">{label} <small>({t('trabalho.maximo-de')} {maxFiles} / {`${event?.abstract?.attachments_max_size}Mb ${t('cada')}`})</small></div>
+    <div className="label">{label} <small>({t('trabalho.maximo-de')} {maxFiles} / {`${event?.abstract?.attachments_max_size}Mb ${t('cada')}`})</small></div>
+    {info && <div className="border-left p-2 text-muted text-sm" dangerouslySetInnerHTML={{__html: info}}></div>}
     <FieldArray name={field.name}>{({insert, remove, push}) => {
 
       uppy.on('upload-success', (file, resp) => {
