@@ -10,6 +10,7 @@ import useSettings from "../../components/hooks/useSettings";
 import Form from "react-bootstrap/Form";
 import useSettingsContext from "../../components/settings/settings-context";
 import Loading from "../../components/ui/loading";
+import LangSelector from "./lang-selector";
 
 interface LayoutProps {}
 export default function SettingsLayout(props: PropsWithChildren<LayoutProps>) {
@@ -42,6 +43,9 @@ export default function SettingsLayout(props: PropsWithChildren<LayoutProps>) {
         <div className={`col ${s.menucol}`}>
           <div className={s.inner_menu}>
             <div className={s.menucol__title}>Configurações</div>
+            <div className="my-3">
+              <LangSelector />
+            </div>
             <Nav className="flex-column" variant="pills">
               <NavLink label="Geral" path="" />
               <Form className="mt-4">
