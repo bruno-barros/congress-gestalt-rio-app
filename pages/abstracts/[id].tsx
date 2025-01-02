@@ -21,6 +21,7 @@ import { ac } from "../../components/access-control";
 import { REQUIREMENTS } from "../../components/access-control/requirements";
 import AuthorsProvider from "../../components/abstract/authors/authors-context";
 import ModalEditAuthor from "../../components/abstract/authors/modal-edit-author";
+import ProgressBar from "../../components/ui/progressbar";
 
 const AbstractEditing = () => {
   const queryClient = useQueryClient();
@@ -65,7 +66,7 @@ const AbstractEditing = () => {
   if (isLoading || loadingAbstract) {
     return (
       <MainLayout>
-        <Loading vspace={80} />
+        <ProgressBar />
       </MainLayout>
     );
   }
