@@ -1,6 +1,7 @@
 import { StringBoolean } from "../types/general";
 import { KeyValueItem } from "../types/abstracts";
 import Edition from "./edition";
+import { ItemLanguageWithId } from "../types/settings";
 
 export default class Event {
   name: string;
@@ -34,7 +35,7 @@ export default class Event {
         en: string;
       };
     };
-  };
+  };// global
   page: {
     checkout: {
       pt: string; // url=[PRODUCT_ID]
@@ -59,10 +60,11 @@ export default class Event {
     welcome_email_content_pt: string;
     welcome_email_content_en: string;
     welcome_email_content_es: string
-  };
+  };// edition
   abstract: {
     abstract_allowed: StringBoolean;
     only_subscribed: StringBoolean;
+    test_mode: StringBoolean;
     status_model: "sinopse_abstract" | "abstract";
     statuses: any[];
     limit_per_user: number;
@@ -77,7 +79,7 @@ export default class Event {
     rules_pt: string;
     rules_en: string;
     rules_es: string;
-  };
+  };// abstract
   subscription?: {
     allowed: StringBoolean;
     start_at: string;
@@ -87,8 +89,16 @@ export default class Event {
     plans_description_en: string;
     plans_description_es: string;
     produts_excluded_for_foreign: string[];
-  };
-  review?: any;
+  };// subscription
+  review?: {
+    evaluators_final_approvement: StringBoolean;
+    days_to_evaluate: number;
+    days_for_corrections: number;
+    questions: ItemLanguageWithId[];
+    evaluators_text_pt: string;
+    evaluators_text_en: string;
+    evaluators_text_es: string;
+  };// review
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -117,11 +127,12 @@ export default class Event {
   }
 
   getEdition(editionId: string) {
-    return this.getEditions().find((edition) => edition.id === editionId);
+    return this.getEditions().find((edition) => edition.getId() === editionId);
   }
 
   getEditions() {
     let keys = this.getEditionsKeys();
+    // debugger;
     return keys.map((k) => {
       // debugger;
       if (typeof this.global.editions[k] === "undefined") return null;
