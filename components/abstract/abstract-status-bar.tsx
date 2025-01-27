@@ -53,9 +53,9 @@ export default function AbstractStatusBar(props: AbstractStatusBarProps) {
       .then(resp => {
         if (resp.data.success) {
           refetch()
-          successNotification({message: resp.data.data.msg})
+          successNotification({message: resp.data.message})
         } else {
-          errorNotification({message: resp.data.data.msg})
+          errorNotification({message: resp.data.message})
         }
       }, err => {
         errorNotification({error: err})
