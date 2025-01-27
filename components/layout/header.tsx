@@ -25,7 +25,9 @@ export default function Header(props: HeaderProps) {
   const router = useRouter()
   const {data: pending} = usePendingReview()
   const {user, event} = props
-  const { currentEdition: edition} = useSettings()
+  const { currentEdition: edition} = useSettings(router.query.edition as string)
+
+
 
   useEffect(()=>{
   }, [router.query])
@@ -66,23 +68,23 @@ export default function Header(props: HeaderProps) {
           <Link href="/profile?tab=subscriptions" passHref>
            <Nav.Link>{t('inscricao')}</Nav.Link>
           </Link>
-          <Ac requires={[REQUIREMENTS.abstract.submit]}>
+          <Ac requires={[REQUIREMENTS.abstract.read]} args={{edition}}>
             <Link href={`/abstracts?edition=${edition?.getId()}`} passHref><Nav.Link
               active={router.pathname === '/abstracts'}>{t('trabalhos')}</Nav.Link>
             </Link>
-            {/* <Link href={`/abstracts?edition=${edition.id}&status=synopsis`} passHref><Nav.Link
+            {/* <Link href={`/abstracts?edition=${edition.getId()}&status=synopsis`} passHref><Nav.Link
               active={router.pathname === '/abstracts' && router.query?.status!=='synopsis'}>{t('trabalho.sinopses')}</Nav.Link>
             </Link> */}
-            {/* <Link href={`/abstracts?edition=${edition.id}&status=abstract`} passHref><Nav.Link
+            {/* <Link href={`/abstracts?edition=${edition.getId()}&status=abstract`} passHref><Nav.Link
               active={router.pathname === '/abstracts' && router.query?.status==='abstract'}>{t('trabalhos')}</Nav.Link>
             </Link> */}
           </Ac>
           <Ac requires={[REQUIREMENTS.abstract.manage]}>
-            <Link href={`/adm/subscriptions?edition=${edition?.id}`} passHref><Nav.Link className="admin first"
+            <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref><Nav.Link className="admin first"
               active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
-            <Link href={`/adm/abstracts?edition=${edition?.id}`} passHref><Nav.Link className="admin"
+            <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref><Nav.Link className="admin"
               active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-            <Link href={`/adm/evaluations?edition=${edition?.id}`} passHref><Nav.Link className="admin"
+            <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref><Nav.Link className="admin"
               active={router.pathname === '/adm/evaluations'}>Avaliações</Nav.Link></Link>
             <Link href={`/adm/users`} passHref><Nav.Link className="admin last"
               active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
@@ -90,7 +92,7 @@ export default function Header(props: HeaderProps) {
           
           
           {user.canEvaluateAbstracts() && <>
-            <Link href={`/evaluations?edition=${edition?.id}`} passHref><Nav.Link
+            <Link href={`/evaluations?edition=${edition?.getId()}`} passHref><Nav.Link
               title={`${pending} aguardando revisão`}
               active={router.pathname === '/evaluations'}>Minhas avaliações
               {pending > 0 && <div className="badge badge-warning ml-1">{pending}</div>}

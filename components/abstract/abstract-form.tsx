@@ -48,8 +48,8 @@ export default function AbstractForm(props: AbstractFormProps) {
   const [authorModal, setAuthorModal] = useState({show: false, author: null, metadata: null})
   const isEditing = !!abstract
   const canManage = ac(user, [REQUIREMENTS.abstract.manage])
-  const isEditable1 = canManage || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
-  const isEditable2 = canManage || (!isFormDisabled(abstract?.status) && abstract?.statusPassed('synopsis_rejected'))
+  // const isEditable1 = canManage || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
+  const isEditable = canManage || abstract?.isAbleToEdit()
   const [consentModal, setConsentModal] = useState(false)
   const form = useRef<FormikProps<any>>(null)
   const AbstractCnf = edition?.Abstract()
@@ -108,7 +108,7 @@ export default function AbstractForm(props: AbstractFormProps) {
       otherwise: Yup.string().notRequired()
     }),
     content: Yup.string().when('topic', {
-      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && !!edition.abstract.required_fields?.content?.min,
+      is: (val) => abstract?.statusPassed('synopsis_waiting_upd') && FieldContent.allowed,
       then: Yup.string().required('validacao.obrigatorio'),
       otherwise: Yup.string().notRequired()
     }),
@@ -179,7 +179,7 @@ export default function AbstractForm(props: AbstractFormProps) {
       // console.log('form changed', form.current?.)
     }}>
       {abstract && <h2>#{abstract.databaseId}</h2>}
-      {(!isEditable1 && !isEditable2)
+      {(!isEditable)
       && <div className="alert alert-warning">
         {t('trabalho.nao-pode-editar')}
       </div>}
@@ -193,7 +193,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         edition_id: edition.getId(),
       })} */}
 
-      <fieldset disabled={!isEditable1}>
+      <fieldset disabled={!isEditable}>
         
         <Select name="main_language" label={t('trabalho.idioma_principal')}>
           <option value="" disabled></option>
@@ -212,14 +212,12 @@ export default function AbstractForm(props: AbstractFormProps) {
           {AbstractCnf.getModalities().map(t => <option key={t.id} value={t.id}>{t[router.locale]}</option>)}
         </Select>}
 
-        {/* {dump({
-          modalidade: values.type,
-        })} */}
+        {/* {dump({context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id, isEditable2: !isEditable2})} */}
         {values.type === 'WS' && <div className="">
           <Attachments name="professional_proof" label={lang == 'pt' ? 'Comprovante Profissional' : 'Comprobante Profesional'}
             maxFiles={1}
-            metas={{context: 'professional_proof', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-            disabled={!isEditable2}
+            metas={{context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id}}
+            disabled={!isEditable}
             info={lang === 'pt' ? 'Envie um comprovante de que possui, no mínimo, 5 anos de formação como Gestalt-terapeuta.' : 'Enviar prueba de que tienes al menos 5 años de formación como terapeuta Gestalt.'}
             />
           </div>}
@@ -231,43 +229,44 @@ export default function AbstractForm(props: AbstractFormProps) {
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
   
         {FieldTag.allowed &&
-        <Tags name="tags" label={`${t('trabalho.tags')} (em português)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable1}/>}
+        <Tags name="tags" label={`${t('trabalho.tags')} (em português)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable}/>}
         {FieldTag.allowed &&
-        <Tags name="tags_es" label={`${t('trabalho.tags')} (en español)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable1}/>}
+        <Tags name="tags_es" label={`${t('trabalho.tags')} (en español)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable}/>}
 
         {(!user.byPassSynopsis() && FieldResume.allowed) &&
         <Wysiwyg name="resume" label={t('trabalho.sinopse')}
-        maxHeight="md" disabled={!isEditable1}
+        maxHeight="md" disabled={!isEditable}
                  charsMin={FieldResume.min}
                  charsMax={FieldResume.max}
                  countMethod={`char`}/>}
 
 
       </fieldset>
-      <fieldset disabled={!isEditable2}>
+      <fieldset disabled={!isEditable}>
         {(abstract?.statusPassed('synopsis_waiting_upd') && FieldContent.allowed) &&
-        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable2}
+        <Wysiwyg name="content" label={t('trabalho.conteudo')} maxHeight="lg" disabled={!isEditable}
                  charsMin={FieldContent.min} charsMax={FieldContent.max}
                  countMethod={`char`}/>}
         
         {FieldBibliography.allowed && 
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')}
-        maxHeight="md" disabled={!isEditable1}
+        maxHeight="md" disabled={!isEditable}
                  charsMin={FieldBibliography.min}
                  charsMax={FieldBibliography.max}
                  countMethod={`char`}/>}
         
-        {/* {dump({
+        {dump({
           status: abstract?.status,
           passouSinopsis: abstract?.statusPassed('synopsis_waiting_upd'),
-          ableAttach: abstract?.isAbleToAttach() || 'NAO'
-        })} */}
+          ableAttach: abstract?.isAbleToAttach() || 'NAO',
+           isEditable: isEditable, able_to_edit: abstract?.isAbleToEdit() || 'NAO'
+        })}
 
         {(FieldAttachments.allowed && abstract?.isAbleToAttach()) && (<>{abstract?.hasConsentsAgreement() 
           ? (<Attachments name="attachments" label={t('anexos')}
                      maxFiles={FieldAttachments.max}
                      metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
-                     disabled={!isEditable2}
+                     disabled={!isEditable}
                      info={FieldAttachments[`info_${lang}`]}
                      />
           ) : (
@@ -291,7 +290,7 @@ export default function AbstractForm(props: AbstractFormProps) {
       {(false && abstract?.statusPassed('synopsis_waiting_upd')) &&
       <Switch name="jlp" label={<span>Gostaria que seu trabalho fosse considerado no <a href="https://www.journals.elsevier.com/journal-of-loss-prevention-in-the-process-industries" target="_blank">Journal of Loss Prevention in the Process Industries (JLP)</a></span>} />}
 
-      <fieldset disabled={!isEditable1 && !isEditable2}>
+      <fieldset disabled={!isEditable}>
         {
           //region Autores 1
         }
@@ -299,7 +298,7 @@ export default function AbstractForm(props: AbstractFormProps) {
           <Authors name="authors" label={t('autores')} maxAuthors={FieldAuthors.max}
             metas={{context: 'abstract', abstract_id: abstract?.databaseId, tmp_id: values.tmp_id}}
             mainAuthor={abstract?.author?.node || user.getUserData()}
-            disabled={!isEditable1 && !isEditable2}
+            disabled={!isEditable}
             creating={!isEditing}
             onEdit={(author, metadata) => {
               setAuthorModal({show: true, author, metadata})
@@ -315,17 +314,21 @@ export default function AbstractForm(props: AbstractFormProps) {
             data={values.authors}
             mainAuthorId={abstract?.authorDatabaseId}
             maxAuthors={FieldAuthors2.max}
-            disabled={!isEditable1 && !isEditable2}/>
+            disabled={!isEditable}/>
         
       </fieldset>
       <Field name="_intent" type="hidden"/>
       {dump(errors)}
       {dump(values)}
 
-      {(isEditable1 || isEditable2) && <div className="row">
+      {(isEditable) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
           <LoadingButton variant="secondary" size="lg" block loading={false}
-                         disable={!isValid}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>
+                         disable={!isValid}  
+                         onClick={() => {
+                          setFieldValue('_intent', 'update')
+                          submitForm()
+                        }}>{t(abstract ? 'trabalho.atualizar' : 'trabalho.submeter')}</LoadingButton>
         </div>
         {(isEditing && abstract.status !== 'approved')
         && <div className="col-12 col-md">

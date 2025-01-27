@@ -8,15 +8,14 @@ import {MapRoles} from "../../src/resources/user";
 import {OrderStatuses} from "../../src/resources/order";
 import useEvaluators from "../hooks/useEvaluators";
 import Icon from "../ui/ionicon";
+import useSettings from "../hooks/useSettings";
+import Edition from '../../src/resources/edition';
 
 
 export function getEvaluationsFilterableFields() {
   const router = useRouter()
   const t = useTrans()
-  const {data: event} = useEvent()
-  let edition = event && event.currentEdition()
-  const editionId = String(router.query.edition) || edition?.id
-  if (editionId !== edition.id) edition = event.getEdition(editionId)
+  const {data: event, currentEdition: edition} = useSettings(router.query.edition ? String(router.query.edition) : undefined)
   const {data: evaluators, isLoading, error} = useEvaluators({enabled: !!event})
 
   const lang = router.locale
@@ -39,10 +38,7 @@ export function getEvaluationsFilterableFields() {
 export function getAbstractFilterableFields() {
   const router = useRouter()
   const t = useTrans()
-  const {data: event} = useEvent()
-  let edition = event && event.currentEdition()
-  const editionId = String(router.query.edition) || edition?.id
-  if (editionId !== edition.id) edition = event.getEdition(editionId)
+  const {data: event, currentEdition: edition} = useSettings(router.query?.edition ? String(router.query.edition) : undefined)
   const lang = router.locale
   if (!event) return null
 
@@ -63,16 +59,7 @@ export function getAbstractFilterableFields() {
 export function getOrderFilterableFields() {
   // const router = useRouter()
   const t = useTrans()
-  // const {data: event} = useEvent()
-  // let edition = event && event.currentEdition()
-  // const editionId = String(router.query.edition) || edition?.id
-  // if (editionId !== edition.id) edition = event.getEdition(editionId)
-  // const lang = router.locale
-  // if (!event) return null
 
-  // const topics = edition?.abstract?.topics.map(top => {
-  //   return {value: top[lang], label: top[lang]}
-  // })
 
   const statuses = OrderStatuses.map(s => {
     return {value: s, label: t(`status.${s.toLowerCase()}`)}
@@ -123,10 +110,7 @@ export default function AbstractFilters<T extends object>({filterableFields, ins
   const [filterOpen, setFilterOpen] = useState(false)
   const [isFiltering, setIsFiltering] = useState(false)
   const [globalState, setGlobalState] = useState<'' | 'focused'>('')
-  const {data: event} = useEvent()
-  let edition = event && event.currentEdition()
-  const editionId = String(router.query.edition) || edition?.id
-  if (editionId !== edition.id) edition = event.getEdition(editionId)
+  const {data: event, currentEdition: edition} = useSettings(router.query?.edition ? String(router.query.edition) : undefined)
   const lang = router.locale
 
   useMemo(() => {

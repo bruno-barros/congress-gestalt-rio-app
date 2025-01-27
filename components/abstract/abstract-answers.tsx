@@ -1,6 +1,8 @@
 import useEvent from "../hooks/useEvent";
 import React from "react";
 import Icon from "../ui/ionicon";
+import useSettings from "../hooks/useSettings";
+import { useRouter } from "next/router";
 
 interface AbstractAnswersProps {
   answers: any[]
@@ -11,9 +13,14 @@ interface AbstractAnswersProps {
 export default function AbstractAnswers(props: AbstractAnswersProps) {
 
   const {answers, edition_id, className} = props
-  const {data: event, isLoading} = useEvent()
-  const edition = event && !edition_id && event.currentEdition() || event.getEdition(edition_id)
+  const router = useRouter()
+  const lang = router.locale
+  const {data: event, isLoading, currentEdition: edition} = useSettings(edition_id)  
   const questions = edition?.getReviewQuestions()
+
+  function findQuestion(key: string) {
+    return questions.find(q => q.id === key)
+  }
 
   if(!event || !edition || !questions || !answers){
     return null
@@ -22,10 +29,12 @@ export default function AbstractAnswers(props: AbstractAnswersProps) {
   return (<table className={`table table-sm ${className || ''}`}>
     {/*<code>{JSON.stringify(answers)}</code>*/}
     <tbody>
-    {questions && Object.keys(answers).map(key => {
+    {questions.length > 0 && Object.keys(answers).map(key => {
+      const resp = Boolean(answers[key])
       return <tr key={key}>
-        <td><Icon name={answers[key] ? 'checkmark-circle-outline' : 'close-outline'} style={{fontSize: 25, lineHeight: 0}}/></td>
-        <td>{questions[key]}</td>
+        <td style={{verticalAlign: 'middle'}}>
+          <Icon name={resp ? 'checkmark-circle-outline' : 'close-outline'} style={{fontSize: 25, lineHeight: 0, color: resp? 'green':'red'}}/></td>
+        <td style={{verticalAlign: 'middle'}}>{findQuestion(key)?.[lang]}</td>
       </tr>
     })}
     </tbody>

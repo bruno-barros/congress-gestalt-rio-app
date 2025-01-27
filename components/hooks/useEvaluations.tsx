@@ -1,16 +1,17 @@
 import {useQuery} from "react-query";
 import useCurrentUser from "./useCurrentUser";
 import WpEvaluation from "../../src/http/wp-evaluation";
-import {Evaluation} from "../../src/resources/evaluation";
 import {errorNotification} from "../../src/resources/responses";
-import useEvent from "./useEvent";
+import { EvaluationSchema } from "../../src/types/review";
+import { REQUIREMENTS } from "../access-control/requirements";
+import { ac } from "../access-control";
 
 
 export default function useEvaluations(editionId: string|null) {
 
   const {user} = useCurrentUser()
 
-  function queryEvaluations(): Promise<any[]> {
+  function queryEvaluations(): Promise<EvaluationSchema[]> {
     return new Promise((resolve, reject) => {
       WpEvaluation.get({
         edition_id: editionId,
@@ -29,8 +30,8 @@ export default function useEvaluations(editionId: string|null) {
     })
   }
 
-  return useQuery<any[], any>(['evaluations', 'adm', editionId], queryEvaluations, {
-    enabled: !!editionId && user.canManageAbstracts(),
+  return useQuery(['evaluations', 'adm', editionId], queryEvaluations, {
+    enabled: !!editionId && ac(user, [REQUIREMENTS.abstract.manage]),
   })
 
 

@@ -8,9 +8,10 @@ import {MapRoles} from "../../src/resources/user";
 import Link from "next/link";
 import AbstractEvaluationsModal from "../abstract/abstract-evaluations-modal";
 import Icon from "../ui/ionicon";
+import EvaluationDetailsModal from "../abstract/evaluation-details-modal";
 
 export function RenderCell({cell}) {
-  // console.log(cell.props.cell.value);
+  console.log(cell.props);
   if (cell.props.cell.column.id === 'status') return <Status cell={cell}/>
   if (cell.props.cell.column.id === 'authors_count') return <Authors cell={cell}/>
   if (cell.props.cell.column.id === 'evaluations_count') return <Evaluations cell={cell}/>
@@ -23,6 +24,7 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'total') return <Html cell={cell}/>
   if (cell.props.cell.column.id === 'aa') return <Boolean cell={cell}/>
+  if (cell.props.name === 'evaluations-adm' && cell.props.cell.column.id === 'abs_title') return <EvaluationDetails cell={cell}/>
   return cell
 }
 
@@ -94,4 +96,14 @@ export function Status({cell, count}:{cell?:any, count?:number}) {
   const color = statusColorName(cell.props.cell.value)
   const t = useTrans()
   return <div className={`text-${color}`}>{t(`status.${cell.props.cell.value}`)}</div>
+}
+
+function EvaluationDetails({cell}) {
+  const title = cell.props.cell.value
+  const [show, setShow] = useState(false)
+  return <>
+    <div className="btn-link" style={{cursor: 'pointer'}} onClick={()=> setShow(true)} >{title}</div>
+    <EvaluationDetailsModal show={show} evaluation={cell.props.cell.row.original} onDismiss={()=>setShow(false)}/>
+  </>
+
 }

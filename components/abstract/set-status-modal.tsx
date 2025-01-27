@@ -6,10 +6,10 @@ import {Form, Formik} from "formik";
 import Select from "../ui/form/formik/select";
 import Switch from "../ui/form/formik/switch";
 import {errorNotification, successNotification} from "../../src/resources/responses";
-import useEvent from "../hooks/useEvent";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import LoadingButton from "../ui/loading-button";
 import Loading from "../ui/loading";
+import useSettings from "../hooks/useSettings";
 
 interface SetStatusModalProps {
   abstract_ids: number[]
@@ -25,8 +25,7 @@ export default function SetStatusModal(props: SetStatusModalProps) {
   const t = useTrans()
   const {onDismiss, abstract_ids, onUpdate} = props
   const [show, setShow] = useState(props.show)
-  const {data: event, isLoading} = useEvent()
-  const edition = event && event.currentEdition()
+  const {data: event, isLoading, currentEdition: edition} = useSettings()
   const [loading, setLoading] = useState(false)
 
 
@@ -53,9 +52,9 @@ export default function SetStatusModal(props: SetStatusModalProps) {
       .then(resp => {
         if(resp.data.success){
           onUpdate && onUpdate()
-          successNotification({message: resp.data.data.msg})
+          successNotification({message: resp.data.message})
         } else {
-          errorNotification({message: resp.data.data.msg})
+          errorNotification({message: resp.data.message})
         }
         handleClose()
 

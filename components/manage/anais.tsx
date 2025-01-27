@@ -6,10 +6,11 @@ import {useCallback, useRef, useState} from "react";
 import {WpAbstract} from "../../src/http/wp-abstract";
 import {errorNotification} from "../../src/resources/responses";
 import isNaN from 'lodash/isNaN'
+import useSettings from "../hooks/useSettings";
 
 export default function Anais() {
 
-  const {data: event} = useEvent()
+  const {data: event, currentEdition: edition} = useSettings()
   const editions = event.getEditions()
 
 
@@ -60,11 +61,11 @@ export default function Anais() {
     }
 
     async function process(): Promise<any> {
-      const resp: any = await WpAbstract.anais({exportEdition: edition.id})
+      const resp: any = await WpAbstract.anais({exportEdition: edition.getId()})
       return resp.data
     }
     async function processCancellation(): Promise<any> {
-      const resp: any = await WpAbstract.anais({exportEdition: edition.id, cancel: true})
+      const resp: any = await WpAbstract.anais({exportEdition: edition.getId(), cancel: true})
       return resp.data
     }
 
@@ -102,7 +103,7 @@ export default function Anais() {
       className="badge badge-success">Aprovado</span> serão salvos em PDF.</p>
 
     {editions && editions.map(edition => {
-      return (<Card key={edition.id} className="mb-3">
+      return (<Card key={edition.getId()} className="mb-3">
         <Card.Body>
           <Card.Title className="d-flex justify-content-between">
             <span>{edition.name}</span>
