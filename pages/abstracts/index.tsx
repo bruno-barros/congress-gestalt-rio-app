@@ -49,8 +49,10 @@ const Abstracts = () => {
     user?.getId()
   );
 
-  const isSubscribed = orders?.hasValidSubscription(edition);
   const testMode = edition?.abstract?.test_mode == '1'
+  const isSubscribed = testMode 
+      ? ac(user, [REQUIREMENTS.abstract.submit], {edition, isSubscribed: true}) 
+      : orders?.hasValidSubscription(edition);
 
   const isOpenToSubmit = testMode 
     ? ac(user, [REQUIREMENTS.abstract.submit], {edition, isSubscribed}) 
