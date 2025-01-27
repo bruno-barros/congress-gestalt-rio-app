@@ -23,6 +23,8 @@
     }
     .navbar-nav .nav-link.active {
       background-color: $gray-200;
+      border-radius: 5px;
+      font-weight: 600;
     }
   }
 
