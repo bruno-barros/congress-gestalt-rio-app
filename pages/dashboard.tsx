@@ -18,7 +18,6 @@ import Loading from "../components/ui/loading";
 import useSettings from "../components/hooks/useSettings";
 import useEditions from "../components/hooks/useEditions";
 import EditionCard from "../components/edition/edition-card";
-import useProducts, { filterByCountry } from "../components/hooks/useProducts";
 
 interface DashboardProps {
 

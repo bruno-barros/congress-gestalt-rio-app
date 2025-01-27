@@ -1,6 +1,8 @@
 import moment from "moment";
 import { StringBoolean } from "../types/general";
 import { AbstractStatusModelEnum, StatusType } from "../types/abstracts";
+import { ItemLanguageWithId } from "../types/settings";
+import { CRITERIAS, CriteriaSchema } from "../types/review.d";
 
 //region Edition
 export default class Edition {
@@ -29,7 +31,7 @@ export default class Edition {
     welcome_email_content_pt: string;
     welcome_email_content_en: string;
     welcome_email_content_es: string;
-  };
+  }; // edition
   subscription: {
     allowed: StringBoolean;
     start_at: string;
@@ -45,8 +47,8 @@ export default class Edition {
       slug: string;
     };
     products: {
-      pt: { id: number; name: string; price: number; desc: string }[];
-      en: { id: number; name: string; price: number; desc: string }[];
+      pt: ItemLanguageWithId[];
+      en: ItemLanguageWithId[];
     };
     // steps after basic data (register1)
     steps: {
@@ -55,20 +57,21 @@ export default class Edition {
       institution: { pt: string; en: string };
       payment: { pt: string; en: string };
     };
-  };
+  }; // subscription
   abstract: {
     abstract_allowed: StringBoolean;
     only_subscribed: StringBoolean;
+    test_mode: StringBoolean;
     rules: { pt: string; en: string };
     statuses: StatusType[];
     attachments: number;
-    topics: { id: string; pt: string; en: string; es: string }[];
-    modalities: { id: string; pt: string; en: string; es: string }[];
+    topics: ItemLanguageWithId[];
+    modalities: ItemLanguageWithId[];
     start_at: string;
     end_at: string;
     count_method: "char" | "word";
-    required_fields:
-      | {
+    required_fields: // @deprecated atribute
+    | {
           topic?: boolean;
           type?: boolean;
           title?: boolean;
@@ -92,14 +95,16 @@ export default class Edition {
     };
     consent?: Consent;
     per_abstract_consent?: Consent;
-  };
+  }; // abstract
   review: {
-    assessment?: {
-      quantitative: boolean;
-      qualitative: boolean;
-    };
-    questions?: object;
-  };
+    evaluators_final_approvement: StringBoolean;
+    days_to_evaluate: number;
+    days_for_corrections: number;
+    questions: ItemLanguageWithId[];
+    evaluators_text_pt: string;
+    evaluators_text_en: string;
+    evaluators_text_es: string;
+  }; // review
 
   constructor(data: any, def: any) {
     Object.assign(this, data);
@@ -120,6 +125,10 @@ export default class Edition {
   //region Abstract factory
   Abstract(): Edition_Abstract {
     return Edition_Abstract.make(this.abstract);
+  }
+
+  Review(): Edition_Review {
+    return new Edition_Review(this.review);
   }
 
   getId() {
@@ -217,8 +226,8 @@ export default class Edition {
     return this.subscription.products[lang] || [];
   }
 
-  getReviewQuestions(): object {
-    return this.review?.questions || null;
+  getReviewQuestions(): ItemLanguageWithId[] {
+    return this.review?.questions || [];
   }
 
   getFieldMin(
@@ -348,6 +357,7 @@ export class Edition_Subscription {
 export class Edition_Abstract {
   abstract_allowed: StringBoolean;
   only_subscribed: StringBoolean;
+  test_mode: StringBoolean;
   rules: { pt: string; en: string };
   statuses: StatusType[];
   attachments: number;
@@ -400,10 +410,10 @@ export class Edition_Abstract {
   }
 
   getField(key: string): Edition_Abstract_Field {
-    return this.fields[key] 
-        ? Edition_Abstract_Field.make(this.fields[key]) 
-        : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
-  }  
+    return this.fields[key]
+      ? Edition_Abstract_Field.make(this.fields[key])
+      : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
+  }
 }
 
 class Edition_Abstract_Field {
@@ -435,4 +445,48 @@ interface AField {
   min: number;
   max: number;
   [key: string]: any;
+}
+
+
+//region Edition_Review
+export class Edition_Review {
+  evaluators_final_approvement: StringBoolean;
+  days_to_evaluate: number;
+  days_for_corrections: number;
+  questions: ItemLanguageWithId[];
+  evaluators_text_pt: string;
+  evaluators_text_en: string;
+  evaluators_text_es: string;
+
+  criteria: {
+    
+  }
+
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
+
+  getDaysToEvaluate() {
+    return Number(this.days_to_evaluate || 0);
+  }
+
+  getCriterias(){
+    return CRITERIAS
+  }
+
+  getCriteriasArray(): CriteriaSchema[]{
+    return Object.keys(this.getCriterias()).map(key => {
+      return { id: key, ...this.getCriterias()[key] }
+    })
+  }
+
+  hasCriteria(id: string){
+    const keys = Object.keys(this.getCriterias())
+    return keys.includes(id)
+  }
+
+  getQuestions(){
+    return this.questions || []
+  }
 }

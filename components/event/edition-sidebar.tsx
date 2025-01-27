@@ -8,6 +8,7 @@ import useEvent from "../hooks/useEvent";
 import BadgeSubscribed from "../ui/badge-subscribed";
 import Link from "next/link";
 import useConsent from "../../components/hooks/useConsent";
+import useSettings from "../hooks/useSettings";
 
 interface EditionSidebarProps {
   edition: Edition;
@@ -18,11 +19,11 @@ export default function EditionSidebar(props: EditionSidebarProps) {
   const edition = Edition.make(ed, {});
   const t = useTrans();
   const { user } = useCurrentUser();
-  const { data: event, isLoading } = useEvent();
+  const { data: event, isLoading, currentEdition } = useSettings();
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
     user?.getId()
   );
-  const isCurrent = event?.currentEdition()?.id === edition.id;
+  const isCurrent = currentEdition?.getId() === edition.getId();
   const isSubscribed = orders?.hasValidSubscription(edition);
   const consent = useConsent();
 

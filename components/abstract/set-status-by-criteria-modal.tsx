@@ -14,6 +14,8 @@ import { WpAbstract } from "../../src/http/wp-abstract";
 import { Spinner } from "react-bootstrap/cjs";
 import LoadingButton from "../ui/loading-button";
 import Loading from "../ui/loading";
+import useSettings from "../hooks/useSettings";
+import Edition from '../../src/resources/edition';
 
 interface SetStatusModalProps {
   abstract_ids: number[];
@@ -28,8 +30,7 @@ export default function SetStatusByCriteriaModal(props: SetStatusModalProps) {
   const t = useTrans();
   const { onDismiss, abstract_ids, onUpdate } = props;
   const [show, setShow] = useState(props.show);
-  const { data: event, isLoading } = useEvent();
-  const edition = event && event.currentEdition();
+  const { data: event, isLoading, currentEdition: edition } = useSettings();
   const [loading, setLoading] = useState(false);
   const [loadingCriteria, setLoadingCriteria] = useState(false);
   const [criteria, setCriteria] = useState("");
@@ -57,10 +58,11 @@ export default function SetStatusByCriteriaModal(props: SetStatusModalProps) {
   function findByCriteria(criteria, status, quantity) {
     setLoadingCriteria(true)
     WpAbstract.findByCriteria({
-      criteria, status, quantity
-    }).then((resp) => {
-      if(resp.data.success){
-        setSelectedIds(resp.data.data)
+      criteria, status, quantity, edition_id: edition.getId()
+    }).then((axios) => {
+      const resp = axios.data
+      if(resp.success){
+        setSelectedIds(resp.data)
       }
     })
     .finally(()=>{
@@ -76,12 +78,13 @@ export default function SetStatusByCriteriaModal(props: SetStatusModalProps) {
       abstracts: selectedIds,
       notify: values.notify,
     }).then(
-      (resp) => {
-        if (resp.data.success) {
+      (axios) => {
+        const resp =axios.data 
+        if (resp.success) {
           onUpdate && onUpdate();
-          successNotification({ message: resp.data.data.msg });
+          successNotification({ message: resp.message });
         } else {
-          errorNotification({ message: resp.data.data.msg });
+          errorNotification({ message: resp.message });
         }
         handleClose();
       },

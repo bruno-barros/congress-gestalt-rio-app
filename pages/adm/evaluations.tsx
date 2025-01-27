@@ -2,13 +2,9 @@ import MainLayout from "../../components/layout";
 import {useCallback, useMemo} from "react";
 import {DynamicTable} from "../../components/dynamic-table";
 import useTrans from "../../components/hooks/useTrans";
-import useCurrentUser from "../../components/hooks/useCurrentUser";
-import useEvent from "../../components/hooks/useEvent";
-import {useQuery, useQueryClient} from "react-query";
-
+import {useQueryClient} from "react-query";
 import {useRouter} from "next/router";
 import privateRoute from "../../components/hoc/private-route";
-import WpEvaluation from "../../src/http/wp-evaluation";
 import { siteTitle, average } from '../../src/helpers';
 import Head from "next/head";
 import useEvaluations from "../../components/hooks/useEvaluations";
@@ -20,8 +16,6 @@ const AdmEvaluations = () => {
   const queryClient = useQueryClient()
   const router = useRouter()
   const t = useTrans()
-  // const {data: event} = useEvent()
-  // const edition = event && event.currentEdition()
   const { data: event, currentEdition: edition } = useSettings()
   const editionId = router.query.edition || edition?.id
   const {data: evaluations, error, isLoading} = useEvaluations(String(editionId))
@@ -70,21 +64,19 @@ const AdmEvaluations = () => {
 
   const data = useMemo(() => {
     if(!evaluations || !edition) return []
-    return evaluations.map(row => {
-
+    return evaluations.map(evaluation => {
+      let row: any = {...evaluation}
       let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract?.topic)
       row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
       row.abs_title = `(${row.abstract?.databaseId}) ${row.abstract?.title}`
       row.status_pt = t(`status.${row.status}`)
       row.id = row.databaseId
       row.is_public = row.is_public ? 'SIM' : 'NÃO'
-
-
       row.evaluator_id = row.evaluator?.databaseId
       row.evaluator_name = row.evaluator?.name
       row.email = row.evaluator?.email
       row.cellphone = row.evaluator?.cellphone
-      row.average = average([row.relevance, row.quality, row.clarity, row.contributions], 1)
+      row.average = average([row.relevance, row.quality, row.clarity, row.contributions, row.bibliography, row.research, row.methodology], 1)
 
       row.date = row.created_at
       return row

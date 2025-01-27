@@ -351,7 +351,7 @@ export function dispatchOnENTER(event, callback) {
 }
 
 export function average(numbers: any[], round: number = 1) {
-  const divby = numbers.length;
+  const divby = numbers.filter(v => Number(v) >= 0).length;
   const sum = numbers.reduce((prev, curr) => {
     const val = curr > 0 ? parseInt(String(curr)) : 0;
     return prev + val;

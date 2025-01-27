@@ -8,6 +8,7 @@ import AbstractAuthorLine from "./abstract-author-line";
 import Accordion from "react-bootstrap/cjs/Accordion";
 import {Author} from "../../src/resources/user";
 import Loading from "../ui/loading";
+import ProgressBar from "../ui/progressbar";
 
 interface AbstractAuthorsModalProps {
   show: boolean
@@ -62,15 +63,15 @@ export default function AbstractAuthorsModal(props: AbstractAuthorsModalProps) {
       <Modal.Title>Autores trabalho #{abstract_id}</Modal.Title>
     </Modal.Header>
     <Modal.Body className="p-0" style={{minHeight: 100}}>
-      {(isLoading || isFetching) && <Loading vspace={15}/>}
+      
+      {(isLoading || isFetching) && <ProgressBar seconds={3}  />}
+
       {(data?.authors && data.authors.length > 0)
-      && <CurtainDelayed delay={1}>
-        <Accordion>
-          {data.authors.map((author, i) => {
-            return (<AbstractAuthorLine key={author.id} i={i} author={author} mainAuthorId={data.author.node.databaseId}/>)
-          })}
-        </Accordion>
-      </CurtainDelayed>}
+      && <Accordion>
+      {data.authors.map((author, i) => {
+        return (<AbstractAuthorLine key={author.id} i={i} author={author} mainAuthorId={data.author.node.databaseId}/>)
+      })}
+    </Accordion>}
       {(!data?.authors && !isFetching) && <div className="alert alert-info">Não há autores cadastrados</div>}
     </Modal.Body>
   </Modal>)

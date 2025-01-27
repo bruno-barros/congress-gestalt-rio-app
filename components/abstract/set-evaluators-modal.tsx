@@ -1,28 +1,24 @@
 import useTrans from "../hooks/useTrans";
-import React, {useEffect, useRef, useState} from "react";
-import {useQuery, useQueryClient} from "react-query";
+import React, {useEffect, useState} from "react";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import Modal from "react-bootstrap/cjs/Modal";
 import CurtainDelayed from "../ui/curtain-delayed";
-import {Form, Formik, FormikProps, FormikState} from "formik";
+import {Form, Formik} from "formik";
 import Select from "../ui/form/formik/select";
 import * as Yup from 'yup'
 import Switch from "../ui/form/formik/switch";
-import WpUser from "../../src/http/wp-user";
-import select from "../ui/form/formik/select";
 import {plural} from "../../src/helpers";
 import {errorNotification, successNotification} from "../../src/resources/responses";
 import useEvent from "../hooks/useEvent";
 import useEvaluators from "../hooks/useEvaluators";
 import LoadingButton from "../ui/loading-button";
 import Loading from "../ui/loading";
+import useSettings from "../hooks/useSettings";
 
 interface SetEvaluatorsModalProps {
   abstract_ids: number[]
   show: boolean
-
   onDismiss(): void
-
   onUpdate?(): void
 }
 
@@ -31,8 +27,7 @@ export default function SetEvaluatorsModal(props: SetEvaluatorsModalProps) {
   const t = useTrans()
   const {onDismiss, abstract_ids, onUpdate} = props
   const [show, setShow] = useState(props.show)
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
+  const {data: event, currentEdition: edition} = useSettings()
   const [evaluator, setEvaluator] = useState(null)
   const [loading, setLoading] = useState(false)
   const {data, isLoading, isFetching, error} = useEvaluators({enabled: !!abstract_ids && show})
@@ -59,14 +54,14 @@ export default function SetEvaluatorsModal(props: SetEvaluatorsModalProps) {
       user_id: parseInt(values.evaluator),
       abstracts: abstract_ids,
       notify: values.notify,
-      edition_id: edition.id
+      edition_id: edition.getId()
     })
       .then(resp => {
         if(resp.data.success){
           onUpdate && onUpdate()
-          successNotification({message: resp.data.data.msg})
+          successNotification({message: resp.data.message})
         } else {
-          errorNotification({message: resp.data.data.msg})
+          errorNotification({message: resp.data.message})
         }
         handleClose()
 

@@ -8,6 +8,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import { dump } from "../../src/helpers";
 import Ac, { ac } from "../access-control";
 import { REQUIREMENTS } from "../access-control/requirements";
+import useSettings from "../hooks/useSettings";
 
 interface EditionCardProps {
   edition: Edition;
@@ -18,10 +19,12 @@ export default function EditionCard(props: EditionCardProps) {
   const { user } = useCurrentUser();
 
 //   const isSubscribed = false
+const AbstractCnf = edition?.Abstract()
   const isCurrent = false
+  const isUserAllowedToAbstracts = ac(user, [REQUIREMENTS.abstract.read], { edition })
   const isSubscribed = orders?.hasValidSubscription(edition)
   const isOpenSubscribe = edition.isOpenToSubscribe()
-  const isOpenAbstract = edition.isOpenToAbstracts()
+  const isOpenAbstract = edition.isOpenToAbstracts() && isUserAllowedToAbstracts
   const linkAbstracts = ac(user, [REQUIREMENTS.abstract.submit], {
     edition,
     isSubscribed,
@@ -29,7 +32,7 @@ export default function EditionCard(props: EditionCardProps) {
 
   return (
     <Card style={{ maxWidth: 400 }}>
-      {/* {dump({ linkAbstracts, isOpenAbstract, isSubscribed })} */}
+      {/* {dump({ linkAbstracts, isOpenAbstract, isSubscribed, isUserAllowedToAbstracts })} */}
       {edition.getLogo() && (
         <div className="p-5 border-bottom card-edition-logo">
           <Card.Img variant="top" src={edition.getLogo()} />
@@ -93,7 +96,7 @@ export default function EditionCard(props: EditionCardProps) {
             </Ac>
 
           {/*{!isCurrent && user.canManageAbstracts() && (<>*/}
-          {/*  <Link href={`/adm/subscriptions?edition=${edition.id}`} passHref>*/}
+          {/*  <Link href={`/adm/subscriptions?edition=${edition.getID()}`} passHref>*/}
           {/*    <a className={`btn ${isCurrent ? 'btn-outline-primary' : 'btn-outline-secondary'}`}>{t('inscricoes')}</a>*/}
           {/*  </Link>*/}
           {/*</>)}*/}

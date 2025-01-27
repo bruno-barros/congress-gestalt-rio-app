@@ -18,6 +18,9 @@ export class Evaluation {
   quality: number
   clarity: number
   contributions: number
+  bibliography: number
+  research: number
+  methodology: number
   status: StatusType
   is_public: boolean
   evaluator?: {
@@ -70,7 +73,16 @@ export class Evaluation {
   }
 
   getAverage(){
-    return average([this.relevance, this.quality, this.clarity, this.contributions], 1)
+    const values = []
+    if(this.relevance >= 0) values.push(this.relevance)
+    if(this.quality >= 0) values.push(this.quality)
+    if(this.clarity >= 0) values.push(this.clarity)
+    if(this.contributions >= 0) values.push(this.contributions)
+    if(this.bibliography >= 0) values.push(this.bibliography)
+    if(this.research >= 0) values.push(this.research)
+    if(this.methodology >= 0) values.push(this.methodology)
+
+    return average(values, 1)
   }
 
   isEditable(){

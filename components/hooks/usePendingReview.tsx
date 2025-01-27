@@ -1,4 +1,4 @@
-import {useQuery} from "react-query";
+import {Query, QueryClient, useQuery} from "react-query";
 import WpEvaluation from "../../src/http/wp-evaluation";
 import useCurrentUser from "./useCurrentUser";
 
@@ -23,6 +23,10 @@ export default function usePendingReview() {
   }
 
   return useQuery(['pending_review', user.getId()], queryCount, {
-    staleTime: Infinity
+    // staleTime: Infinity
   })
+}
+
+export function invalidatePendingReview(client: QueryClient, userId: number) {
+  client.refetchQueries(['pending_review', userId])
 }

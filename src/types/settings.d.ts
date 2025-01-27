@@ -4,3 +4,10 @@ export interface EditionsResponse {
   editions: {[key: string]: object};
         // edition_key: {options...}
 }
+
+export interface ItemLanguageWithId {
+  id: string;
+  pt: string;
+  en: string;
+  es: string;
+}

@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
 import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
 import { formatCPF } from "../../src/helpers";
+import useSettings from "../hooks/useSettings";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -44,10 +45,9 @@ export function AbstractsGroupActions<T extends object>({
   const [activeModal, setActiveModal] = useState<
     "designar" | "status" | "status_criteria" | "evaluation_visibility" | string
   >("");
-  const { data: event } = useEvent();
+  const { data: event , currentEdition: edition} = useSettings();
   const [exportData, setExportData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const edition = event && event.currentEdition();
 
   function openModal(id: string) {
     setActiveModal(id);
@@ -74,7 +74,7 @@ export function AbstractsGroupActions<T extends object>({
   }
 
   function refreshAbstracts() {
-    queryClient.refetchQueries(["abstracts", edition?.id]);
+    queryClient.refetchQueries(["abstracts"]);
     queryClient.refetchQueries(["abstract"]);
   }
 
@@ -152,7 +152,7 @@ export function AbstractsGroupActions<T extends object>({
       </DropdownButton>
       <DownloadCsv
         data={exportData}
-        fileBaseName={`trabalhos_${edition.id}`}
+        fileBaseName={`trabalhos_${edition.getId()}`}
         loading={loading}
       />
       <SetEvaluatorsModal
@@ -240,9 +240,9 @@ export function AdmEvaluatorsGroupActions<T extends object>({
       .then(
         (resp) => {
           if (resp.data.success) {
-            successNotification({ message: resp.data.data.msg });
+            successNotification({ message: resp.data.message });
             refreshEvaluations();
-          } else errorNotification({ message: resp.data.data.msg });
+          } else errorNotification({ message: resp.data.message });
         },
         (err) => {
           errorNotification({ error: err });
@@ -252,7 +252,7 @@ export function AdmEvaluatorsGroupActions<T extends object>({
   }
 
   function refreshEvaluations() {
-    queryClient.refetchQueries(["evaluations", "adm", edition?.id]);
+    queryClient.refetchQueries(["evaluations", "adm"]);
   }
 
   return (
@@ -323,7 +323,7 @@ export function EvaluationsGroupActions<T extends object>({
         if (resp.data.success) {
           Swal.update({
             icon: "success",
-            title: resp.data.data.msg,
+            title: resp.data.message,
             confirmButtonText: "OK",
             didClose(): void {
               router.reload();
@@ -333,7 +333,7 @@ export function EvaluationsGroupActions<T extends object>({
           Swal.update({
             icon: "error",
             title: "",
-            text: resp.data.data.msg,
+            text: resp.data.message,
             confirmButtonText: "OK",
           });
         }

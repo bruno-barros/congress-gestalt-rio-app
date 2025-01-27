@@ -52,12 +52,13 @@ export default function SetEvaluationVisibilityModal(props: SetStatusModalProps)
       abstract_ids: abstract_ids,
       is_public: values.is_public,
     }).then(
-      (resp) => {
-        if (resp.data.success) {
+      (axios) => {
+        const resp = axios.data;
+        if (resp.success) {
           onUpdate && onUpdate();
-          successNotification({ message: resp.data.data.msg });
+          successNotification({ message: resp.message });
         } else {
-          errorNotification({ message: resp.data.data.msg });
+          errorNotification({ message: resp.message });
         }
         handleClose();
       },
