@@ -11,7 +11,7 @@ export const RESOLVERS = {
 
 export default class Abstract {
   read(user: User, args?: { edition?: Edition; }) {
-    if(args?.edition && args.edition.abstract.test_mode == "1") {
+    if(args?.edition && args.edition?.abstract?.test_mode == "1") {
       return user.isAdmin() || user.isSupervisor() || user.isEvaluator();
     }
     return (
