@@ -49,7 +49,7 @@ function Abstracts() {
     start_at: evt?.abstract?.start_at,
     end_at: evt?.abstract?.end_at,
     limit_per_user: evt?.abstract?.limit_per_user || 1,
-    fn_fields: evt?.abstract?.fields || {},
+    fn_fields: evt?.abstract?.fields || {title:{}, subtitle:{}, topic:{}, modalities:{}, tags:{}, resume:{}, content:{}, bibliography:{}, attachments:{}, authors:{}, authors2:{}},
     topics: evt?.abstract?.topics || [],
     modalities: evt?.abstract?.modalities || [],
     rules_pt: evt?.abstract?.rules_pt || "",

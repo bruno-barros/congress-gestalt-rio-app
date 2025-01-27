@@ -54,9 +54,12 @@ export default function AuthorsPanel(props: AuthorsPanelProps){
                 return <AuthorListItem key={author.id} abstractId={abstractId} tempId={tempId} author={author} isMainAuthor={mainAuthorId == author.wp_user_id} />
             })) }
         </div>
-        {!isOnLimit && 
+        {(!isOnLimit && abstractId) && 
         <div className={s.search}>
             <SearchAuthor abstractId={abstractId} onAdded={()=>{}} />
+        </div>}
+        {!abstractId && <div className="alert alert-warning">
+            Salve o trabalho antes de adicionar autores.
         </div>}
 
     </div>
