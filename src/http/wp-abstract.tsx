@@ -3,16 +3,13 @@ import {httpApi, restApi, RESTVersion} from "./axios";
 import isFinite from 'lodash/isFinite'
 import {GraphQlStatuses} from "../../components/abstract/abstract.d";
 import { StatusType } from "../types/abstracts";
+import { WpRestResponse } from "../types/restapi";
 
 export class WpAbstract {
   static namespace = "/event/v1";
 
-  static updateStatus(args: { abstracts: number[], status: StatusType, notify: boolean }): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_set_status', {
-      abstracts: args.abstracts,
-      status: args.status,
-      notify: args.notify
-    });
+  static updateStatus(args: { abstracts: number[], status: StatusType, notify: boolean }): Promise<AxiosResponse<WpRestResponse<null>>> {
+    return restApi.put(`${RESTVersion.default().namespace}/abstracts/status`, args);
   }
 
   static update(data: any): Promise<AxiosResponse> {
@@ -47,12 +44,14 @@ export class WpAbstract {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_author_delete', {...data});
   }
 
-  static export(args: {abstracts: number[]}): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_export', {abstracts: args.abstracts});
+  static export(args: {abstracts: number[]}): Promise<AxiosResponse<WpRestResponse<any>>> {
+    return restApi.post(`${RESTVersion.default().namespace}/abstracts/export`, {abstracts: args.abstracts});
   }
 
   static delete(args: {abstracts: number[]}): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_delete', {abstracts: args.abstracts});
+    const qs = [];
+    qs.push(`ids=${args.abstracts.join(',')}`);
+    return restApi.delete(`${RESTVersion.default().namespace}/abstracts?${qs.join('&')}`);
   }
 
   static anais(args: {exportEdition: string, cancel?: boolean}): Promise<AxiosResponse> {
@@ -73,9 +72,9 @@ export class WpAbstract {
     quantity?: number,
     status?: string,
     return?: 'ids' | 'object' | 'array'| 'minimum',
-    editionId?: string
+    edition_id?: string
   }): Promise<AxiosResponse> {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_abstract_find_criteria', args);
+    return restApi.post(`${RESTVersion.default().namespace}/abstracts/find_by_criteria`, args);
   }
 
   static authors(id: number): Promise<AxiosResponse> {

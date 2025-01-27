@@ -1,18 +1,27 @@
 import {AxiosResponse} from "axios";
-import {httpApi} from "./axios";
+import {httpApi, restApi, RESTVersion} from "./axios";
+import { WpRestResponse } from '../types/restapi';
+import { EvaluationSchema } from "../types/review";
 
 export default class WpEvaluation {
 
-  static setEvaluators(args: {user_id: number, abstracts: number[], notify:boolean, edition_id: string}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_set', {user_id: args.user_id, abstracts: args.abstracts, notify: args.notify, edition_id: args.edition_id});
+  static setEvaluators(args: {user_id: number, abstracts: number[], notify:boolean, edition_id: string}): Promise<AxiosResponse<WpRestResponse<string>>> {
+    return restApi.post(`${RESTVersion.default().namespace}/abstracts/set_evaluator`, args);
+    // return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_set', {user_id: args.user_id, abstracts: args.abstracts, notify: args.notify, edition_id: args.edition_id});
   }
 
-  static setPublic(args: {evaluation_id: number}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_public', {evaluation_id: args.evaluation_id});
+  /**
+   * Altera a visibilidade de uma avaliação
+   * @param args 
+   * @returns 
+   */
+  static setPublic(args: {evaluation_id: number, public?: boolean}): Promise<AxiosResponse<WpRestResponse<string>>> {
+    const is_public = args?.public === false ? 0 : 1;
+    return restApi.put(`${RESTVersion.default().namespace}/evaluations/${args.evaluation_id}/visibility`, {is_public});
   }
 
 
-  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number; appendEvaluator?: boolean }): Promise<AxiosResponse> {
+  static get(args: { edition_id?: string; user_id?: number; abstract_id?: number, limit?: number; appendEvaluator?: boolean }): Promise<AxiosResponse<{ data: { evEvaluations: { nodes: EvaluationSchema[] } } }> | any> {
 
     let filters = []
     if (args?.edition_id) filters.push(`edition_id: "${args.edition_id}"`)
@@ -44,6 +53,9 @@ export default class WpEvaluation {
       relevance
       clarity
       contributions
+      bibliography
+      research
+      methodology
       created_at
       abstract_id
       user_id
@@ -81,6 +93,9 @@ export default class WpEvaluation {
     quality
     clarity
     contributions
+    bibliography
+    research
+    methodology
     status
     user_id
     is_public
@@ -90,6 +105,7 @@ export default class WpEvaluation {
       date
       excerpt
       abstract_tags
+      abstract_tags_es
       bibliography
       subtitle
       status
@@ -116,16 +132,28 @@ export default class WpEvaluation {
     });
   }
 
+  static update(id: number | string, data: any): Promise<AxiosResponse<WpRestResponse<EvaluationSchema>>> {
+    return restApi.put(`${RESTVersion.default().namespace}/evaluations/${id}`, data);
+  }
+
+  /**
+   * @deprecated usar update()
+   * @param data 
+   * @returns 
+   */
   static save(data: any) {
     return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_save', {...data});
   }
 
-  static delete(id: number|number[]) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_delete', {id});
+  static delete(id: number|number[]): Promise<AxiosResponse<WpRestResponse<string>>> {
+    
+    let idStr = Array.isArray(id) ? id.join(',') : id.toString();
+    
+    return restApi.delete(`${RESTVersion.default().namespace}/evaluations/${idStr}`);
   }
 
-  static visibility(args: {abstract_ids:number[], is_public: boolean, criteria: string}) {
-    return httpApi.post('/wp-admin/admin-ajax.php?action=ev_evaluation_visibility', args);
+  static visibility(args: {abstract_ids:number[], is_public: boolean, criteria: string|'approved_only'|'rejected_only'|'all'}):Promise<AxiosResponse<WpRestResponse<string>>> {
+    return restApi.post(`${RESTVersion.default().namespace}/abstracts/evaluations_visibility`, args);
   }
 
 
@@ -172,6 +200,9 @@ export default class WpEvaluation {
       relevance
       clarity
       contributions
+      bibliography
+      research
+      methodology
       status
       edition_id
       is_public
