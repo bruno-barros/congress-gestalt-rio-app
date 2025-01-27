@@ -23,7 +23,7 @@ export default function Topics(props: TopicsProps) {
   const { name, customId } = props;
 
   const [field, meta, helpers] = useField(name);
-  const values = field.value;
+  const values = Array.isArray(field.value) ? field.value : [];
 
   function handleAddEdition(helpers) {
     helpers.push({ id: generateId(), pt: "", en: "", es: "" });
@@ -36,7 +36,7 @@ export default function Topics(props: TopicsProps) {
         render={(helpers) => {
           return (
             <div className={s.form_ctrl}>
-              {values && values.length > 0 ? (
+              {(values && values.length > 0) ? (
                 values.map((item, idx) => {
                   return (
                     <div key={idx} className={s.wrapper}>
