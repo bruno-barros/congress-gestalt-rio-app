@@ -12,6 +12,10 @@ import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
+import ProgressBar from "../../components/ui/progressbar";
+import { ac } from "../../components/access-control";
+import { REQUIREMENTS } from "../../components/access-control/requirements";
 
 
 const EvaluationEditing = () => {
@@ -20,17 +24,17 @@ const EvaluationEditing = () => {
   const {user} = useCurrentUser()
   const router = useRouter()
   const t = useTrans()
-  const {data: event, isLoading} = useEvent()
-  const edition: Edition = event?.currentEdition()
+  const {data: event, isLoading, currentEdition: edition} = useSettings()
+  const ReviewCnf = edition?.Review()
   const {data: evaluation, error, isLoading: loadingEval, refetch} = useEvaluation(Number(router.query?.id))
 
 
   if (isLoading || loadingEval) {
-    return <MainLayout><Loading vspace={80}/></MainLayout>;
+    return <MainLayout><ProgressBar /></MainLayout>;
   }
 
 
-  if (evaluation.user_id !== user.getId() && !user.canManageAbstracts()) {
+  if (evaluation.user_id !== user.getId() && !ac(user, [REQUIREMENTS.abstract.manage])) {
     return <MainLayout>
       <div className="container">
         <div className="row">

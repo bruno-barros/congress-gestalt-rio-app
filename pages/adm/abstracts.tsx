@@ -22,7 +22,7 @@ const AdmAbstracts = () => {
   // const {data: event} = useEvent()
   // const edition = event && event.currentEdition()
   const { data: event, currentEdition: edition } = useSettings()
-  const editionId = router.query.edition || edition?.id
+  const editionId = router.query.edition || edition?.getId()
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', editionId], queryAbstracts, {
     enabled: !!editionId && user.canManageAbstracts(),
   })

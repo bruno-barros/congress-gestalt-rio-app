@@ -12,6 +12,8 @@ import privateRoute from "../../components/hoc/private-route";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import Loading from "../../components/ui/loading";
+import useSettings from "../../components/hooks/useSettings";
+import moment from "moment";
 
 const Evaluations = () => {
 
@@ -19,9 +21,10 @@ const Evaluations = () => {
   const router = useRouter()
   const t = useTrans()
   const {user} = useCurrentUser()
-  const {data: event} = useEvent()
-  const edition = event && event.currentEdition()
-  const editionId = router.query.edition || edition?.id
+  const {data: event, currentEdition: edition} = useSettings()
+  const editionId = router.query.edition || edition?.getId()
+  const AbstractCnf = edition?.Abstract()
+  const ReviewCnf = edition?.Review()
   const {data: evaluations, error, isLoading} = useQuery<any[], any>(['evaluations', editionId, user.getId()], queryEvaluations, {
     enabled: !!editionId && user.canEvaluateAbstracts(),
     refetchOnMount: true
@@ -70,18 +73,23 @@ const Evaluations = () => {
       },{
         Header: 'Designado em',
         accessor: 'date',
+      },{
+        Header: 'Data limite',
+        accessor: 'date_limit',
       }
     ]}, [])
   const data = useMemo(() => {
     if(!evaluations || !edition) return []
     return evaluations.map(row => {
-      let topic = edition?.abstract?.topics?.find(top => top.id === row.abstract?.topic)
-      row.topic = topic && topic.hasOwnProperty('pt') && topic[router.locale]
+      let topic = AbstractCnf?.getTopics()?.find(top => top.id === row.abstract?.topic)
+      row.topic = topic && topic[router.locale]
       row.title = row.abstract?.title
       row.status_pt = t(`status.${row.status}`)
       row.id = row.abstract?.databaseId
       row.is_public = row.is_public ? 'SIM' : 'NÃO'
       row.date = row.created_at
+      const d = moment(row.created_at).add(edition?.Review().getDaysToEvaluate(), 'days')
+      row.date_limit = edition?.Review().getDaysToEvaluate() === 0 ? '-' : d.format('DD/MM/YYYY')
       return row
     })
   }, [evaluations, event])

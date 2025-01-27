@@ -42,18 +42,19 @@ function Abstracts() {
   const queryClient = useQueryClient();
 
   const initialValues = {
-    abstract_allowed: evt?.abstract.abstract_allowed === "1",
-    only_subscribed: evt?.abstract.only_subscribed === "1",
-    status_model: evt?.abstract.status_model || AbstractStatusModelEnum.SINOPSE_ABSTRACT,
-    start_at: evt?.abstract.start_at,
-    end_at: evt?.abstract.end_at,
-    limit_per_user: evt?.abstract.limit_per_user || 1,
-    fn_fields: evt?.abstract.fields || {},
-    topics: evt?.abstract.topics || [],
-    modalities: evt?.abstract.modalities || [],
-    rules_pt: evt?.abstract.rules_pt || "",
-    rules_en: evt?.abstract.rules_en || "",
-    rules_es: evt?.abstract.rules_es || "",
+    abstract_allowed: evt?.abstract?.abstract_allowed === "1",
+    only_subscribed: evt?.abstract?.only_subscribed === "1",
+    test_mode: evt?.abstract?.test_mode === "1",
+    status_model: evt?.abstract?.status_model || AbstractStatusModelEnum.SINOPSE_ABSTRACT,
+    start_at: evt?.abstract?.start_at,
+    end_at: evt?.abstract?.end_at,
+    limit_per_user: evt?.abstract?.limit_per_user || 1,
+    fn_fields: evt?.abstract?.fields || {},
+    topics: evt?.abstract?.topics || [],
+    modalities: evt?.abstract?.modalities || [],
+    rules_pt: evt?.abstract?.rules_pt || "",
+    rules_en: evt?.abstract?.rules_en || "",
+    rules_es: evt?.abstract?.rules_es || "",
   };
   const validationSchema = Yup.object({
     // name: Yup.string().required("Obrigatório"),
@@ -71,7 +72,11 @@ function Abstracts() {
     })
       .then((axios) => {
         const resp = axios.data;
-        toast.success("Configurações salvas com sucesso");
+        if(resp.success){
+          toast.success("Configurações salvas com sucesso");
+        } else {
+          toast.error(resp.message || 'Erro ao salvar configurações');
+        }
       })
       .catch(() => {})
       .finally(() => {
@@ -110,6 +115,11 @@ function Abstracts() {
             <Switch
               name="only_subscribed"
               label="Apenas inscritos podem submeter trabalhos"
+            />
+            
+            <Switch
+              name="test_mode"
+              label="Habilitado APENAS para admins e pareceristas (modo de teste)"
             />
 
             <DateRange

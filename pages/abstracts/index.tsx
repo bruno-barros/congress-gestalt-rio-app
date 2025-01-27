@@ -21,6 +21,8 @@ import Loading from "../../components/ui/loading";
 import useSettings from "../../components/hooks/useSettings";
 import useEditions from "../../components/hooks/useEditions";
 import useAbstracts from "../../components/hooks/useAbstracts";
+import { ac } from "../../components/access-control";
+import { REQUIREMENTS } from "../../components/access-control/requirements";
 
 
 
@@ -46,7 +48,13 @@ const Abstracts = () => {
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
     user?.getId()
   );
+
   const isSubscribed = orders?.hasValidSubscription(edition);
+  const testMode = edition?.abstract?.test_mode == '1'
+
+  const isOpenToSubmit = testMode 
+    ? ac(user, [REQUIREMENTS.abstract.submit], {edition, isSubscribed}) 
+    : edition?.isOpenToAbstracts();
 
   const lang = router.locale || 'pt'
 
@@ -68,7 +76,7 @@ const Abstracts = () => {
       {(
         (abstracts?.count() === 0)
         && isCurrent
-        && edition?.isOpenToAbstracts()
+        && isOpenToSubmit
       ) && <Card style={{maxWidth: 600}}>
         <Card.Body className="p-5">
           <Trans as="div"
@@ -151,7 +159,7 @@ const Abstracts = () => {
       <div className="col-12 p-4">
 
         {!isSubscribed && <SubscriptionNotAllowed/>}
-        {(isSubscribed) && <SynopsisIntro/>}
+        {(isSubscribed && isOpenToSubmit) && <SynopsisIntro/>}
 
         {/**
          //region Lista de trabalhos
@@ -169,7 +177,9 @@ const Abstracts = () => {
     {dump({ 
       isCurrent,
       phase,
+      testMode,
       isSubscribed,
+      isOpenToSubmit,
       isOpenToAbstracts: edition?.isOpenToAbstracts()
       })}
   </MainLayout>)
