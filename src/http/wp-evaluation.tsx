@@ -113,7 +113,21 @@ export default class WpEvaluation {
       topic
       type
       content
+      workshop_participants
       attachments {
+        abstract_id
+        context
+        created_at
+        id
+        name
+        mimetype
+        note
+        size
+        url
+        user_id
+        version
+      }
+      professional_proof {
         abstract_id
         context
         created_at
