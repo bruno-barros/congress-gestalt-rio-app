@@ -80,7 +80,7 @@ const Abstracts = () => {
         && isCurrent
         && isOpenToSubmit
       ) && <Card style={{maxWidth: 600}}>
-        <Card.Body className="p-5">
+        <Card.Body className="p-3 p-md-5">
           <Trans as="div"
                  i18nKey="trabalho.boas-vindas"
                  values={{limit: edition?.abstract?.limit_per_user}}
@@ -90,19 +90,23 @@ const Abstracts = () => {
                  components={[<p>Olá, congressista.</p>,
                    <a href={edition?.abstract?.[`rules_${lang}`]} target="_blank">regras de submissão de trabalhos</a>]}
           />
-          <div className="my-3 d-flex align-items-center">
+          <div className="my-3 d-md-flex align-items-center">
             <Link href={`/abstracts/new`} passHref><a
-              className="btn btn-primary">{t('trabalho.novo-trabalho')}</a>
+              className="btn btn-primary text-nowrap">{t('trabalho.novo-trabalho')}</a>
             </Link>
             {/* <Link href={`/abstracts?edition=${edition.id}&status=abstract`}><a
           className="btn btn-outline-primary ml-3">{t('trabalho.meus-trabalhos')}</a></Link> */}
 
-            {edition.abstract.limit_per_user > 0 &&
-            <div className="ml-3">
+            {edition?.abstract?.limit_per_user > 0 &&
+            <div className="ml-md-3 mt-3">
               <Trans i18nKey="trabalho.voce-pode-enviar-ate"
                      values={{limit: edition.abstract.limit_per_user}}
                      defaults={`Você pode enviar até {{limit}} trabalhos.`}
               />
+              <div className="border-left mt-2 pl-2 text-muted text-sm">
+                {lang === 'pt' ? <>Atenção! Somente 01 trabalho entre as modalidades Mesa redonda, Rodas de conversa, Workshop, Minicurso e Pôster; e os demais como Apresentação Artístico-cultural e Práticas Corporais Integrativas ou Lançamento de Livros.</> : <>¡Atención! Sólo 01 obra entre las modalidades Mesa redonda, Círculos de conversación, Taller, Minicurso y Póster; y los demás como Presentación Artístico-cultural y Prácticas Corporales Integradoras o Lanzamiento de Libro.</>}
+              
+              </div>
             </div>}
 
 
