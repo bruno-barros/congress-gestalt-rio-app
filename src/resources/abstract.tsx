@@ -46,6 +46,7 @@ export default class Abstract {
   authors?: Author[];
   jlp?: boolean;
   edition?: Edition;
+  workshop_participants?: string|number;
 
   constructor(data: any) {
     Object.assign(this, data);
