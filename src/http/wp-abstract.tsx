@@ -156,6 +156,7 @@ export class WpAbstract {
     ev_last_update
     consents
     authorDatabaseId
+    workshop_participants
     author {
       node {
         avatar {
@@ -169,6 +170,19 @@ export class WpAbstract {
       }
     }
     attachments {
+      abstract_id
+      context
+      created_at
+      id
+      name
+      mimetype
+      note
+      size
+      url
+      user_id
+      version
+    }
+    professional_proof {
       abstract_id
       context
       created_at

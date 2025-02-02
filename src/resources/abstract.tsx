@@ -46,6 +46,7 @@ export default class Abstract {
   authors?: Author[];
   jlp?: boolean;
   edition?: Edition;
+  workshop_participants?: string|number;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -116,9 +117,7 @@ export default class Abstract {
       !!this.getEdition() === false
         ? AbstractStatusModelEnum.SINOPSE_ABSTRACT
         : this.getEdition().Abstract().status_model;
-
-    const passou = this.statusPassed(statusModel === AbstractStatusModelEnum.ABSTRACT ? "waiting_update" : "synopsis_waiting_upd");
-
+        const passou = this.statusPassed(statusModel === AbstractStatusModelEnum.ABSTRACT ? "evaluating" : "synopsis_evaluating");
     return !protectedStatuses.includes(this.status) && passou;
   }
 

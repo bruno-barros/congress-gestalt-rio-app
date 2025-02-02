@@ -52,7 +52,15 @@ export default function AbstractView(props: AbstractViewProps) {
     {ModalitiesField.allowed && 
     <div className="form-group">
       <strong>MODALIDADE</strong>
-      <div className="border-bottom py-3">{AbstractConf.getModalities()?.find(t => t.id === abstract.type)?.[lang] || '-'}</div>
+      <div className="border-bottom py-3">
+        {AbstractConf.getModalities()?.find(t => t.id === abstract.type)?.[lang] || '-'}
+        {abstract?.type === 'WS' && <div className="text-muted">
+          <div>Qnt. participantes: {Number(abstract?.workshop_participants)}</div>
+          {(abstract?.professional_proof && abstract?.professional_proof.length > 0) && <div>Prova profissional: {abstract?.professional_proof.map(d => {
+            return <a href={d.url} target="_blank" key={d.id} className="text-info">{d.name}</a>
+          })}</div>}
+        </div>}
+      </div>
     </div>}
 
     {TagsField.allowed &&
@@ -90,7 +98,7 @@ export default function AbstractView(props: AbstractViewProps) {
         <strong>ANEXOS</strong>
         <div className="border-bottom py-3">
           {abstract.attachments?.length > 0 ? abstract.attachments.map(file => (
-            <a key={file.id} href={file.url} target="_blank" className="btn btn-light btn-block"><Icon
+            <a key={file.id} href={file.url} target="_blank" className="btn btn-outline-info btn-block"><Icon
               name={`download-outline`}/> {file.name}</a>
           )) : 'Nenhum anexo enviado'}
         </div>

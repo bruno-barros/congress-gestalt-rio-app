@@ -42,7 +42,20 @@ export class Evaluation {
     title: string
     topic: string
     content: string
+    workshop_participants?: string | number
     attachments?: {
+      abstract_id: number
+      context: string
+      created_at: string
+      id: number
+      name: string
+      mimetype: string
+      note: string
+      size: number
+      url: string
+      user_id: number
+    }
+    professional_proof?: {
       abstract_id: number
       context: string
       created_at: string

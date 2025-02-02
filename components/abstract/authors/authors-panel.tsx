@@ -6,6 +6,7 @@ import AuthorProvider, { useAuthorsContext } from "./authors-context"
 import s from "./authors-panel.module.scss"
 import SearchAuthor from "./search-author"
 import { dump } from "../../../src/helpers"
+import { useRouter } from "next/router"
 
 interface AuthorsPanelProps {
     abstractId: number|null|undefined
@@ -29,6 +30,8 @@ export function MainWithContext(props: AuthorsPanelProps){
 
 export default function AuthorsPanel(props: AuthorsPanelProps){
 
+    const router = useRouter()
+    const lang = router.locale
     const t = useTrans()
     const {abstractId, tempId, data: originalData, disabled, maxAuthors, mainAuthorId} = props
     const {data, setData, setAbstractId} = useAuthorsContext()
@@ -59,7 +62,9 @@ export default function AuthorsPanel(props: AuthorsPanelProps){
             <SearchAuthor abstractId={abstractId} onAdded={()=>{}} />
         </div>}
         {!abstractId && <div className="alert alert-warning">
-            Salve o trabalho antes de adicionar autores.
+            {lang == 'pt' 
+                ? 'Salve o trabalho antes de adicionar autores.' 
+                : 'Guarde su trabajo antes de agregar autores.'}
         </div>}
 
     </div>

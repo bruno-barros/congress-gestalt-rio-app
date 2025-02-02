@@ -49,7 +49,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   const isEditing = !!abstract
   const canManage = ac(user, [REQUIREMENTS.abstract.manage])
   // const isEditable1 = canManage || (!isFormDisabled(abstract?.status) && !abstract?.statusPassed('synopsis_approved'))
-  const isEditable = canManage || abstract?.isAbleToEdit()
+  const isEditable = canManage || !!abstract === false || abstract?.isAbleToEdit()
   const [consentModal, setConsentModal] = useState(false)
   const form = useRef<FormikProps<any>>(null)
   const AbstractCnf = edition?.Abstract()
@@ -90,6 +90,7 @@ export default function AbstractForm(props: AbstractFormProps) {
     professional_proof: abstract?.professional_proof || [],
     authors: abstract?.authors || [initialAuthor],
     jlp: abstract?.jlp || false,
+    workshop_participants: String(abstract?.workshop_participants || '')
   }
   //region Validation
   const Validation = Yup.object().shape({
@@ -190,6 +191,10 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       {/* {dump({
         isEditing,
+        isEditable,
+        canManage,
+        '!!abstract': !!abstract,
+        isAbleToEdit: abstract?.isAbleToEdit(),
         edition_id: edition.getId(),
       })} */}
 
@@ -213,7 +218,10 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>}
 
         {/* {dump({context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id, isEditable2: !isEditable2})} */}
-        {values.type === 'WS' && <div className="">
+        {values.type === 'WS' && <div className="bg-light">
+          <div className="px-4 pt-3">
+          <Text name="workshop_participants" label="Quantidade de participantes" type="number" placeholder="0"/>
+          </div>
           <Attachments name="professional_proof" label={lang == 'pt' ? 'Comprovante Profissional' : 'Comprobante Profesional'}
             maxFiles={1}
             metas={{context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id}}
@@ -323,7 +331,7 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       {(isEditable) && <div className="row">
         <div className={`pb-3 pb-md-0 ${isEditing ? 'col-12 col-md-auto col-lg-5' : 'col-12'}`}>
-          <LoadingButton variant="secondary" size="lg" block loading={false}
+          <LoadingButton type="button" variant="secondary" size="lg" block loading={false}
                          disable={!isValid}  
                          onClick={() => {
                           setFieldValue('_intent', 'update')

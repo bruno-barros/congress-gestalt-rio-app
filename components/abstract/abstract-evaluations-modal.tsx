@@ -18,6 +18,8 @@ import LoadingButton from "../ui/loading-button";
 import ProgressBar from "../ui/progressbar";
 import useSettings from "../hooks/useSettings";
 import { useRouter } from "next/router";
+import Ac from "../access-control";
+import { REQUIREMENTS } from "../access-control/requirements";
 
 
 interface AbstractEvaluationsModalProps {
@@ -123,15 +125,16 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                 <div className={`text-${statusColorName(eva.status)}`}>{t(`status.${eva.status}`)}</div>
                 <div className={`ml-2 bullet bg-${statusColorName(eva.status)}`}/>
               </div>
-              <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY')}</div>
+              <div className="mx-2 text-sm">{moment(eva.created_at || eva.updated_at).format('DD/MM/YYYY HH:mm')}</div>
               <div className="my-2 text-sm">{eva.is_public
                 ? (<><ToolTip text="O autor tem acesso ao comentário"><span>(público)</span></ToolTip></>)
                 : (<><ToolTip text="O autor NÃO tem acesso ao comentário"><span>(privado)</span></ToolTip></>)
               }</div>
-              {user.canManageAbstracts() &&
-              <ButtonDeleteConfirmation loading={loading} onDelete={() => {
-                handleDeleteEvaluation(eva.databaseId)
-              }}/>}
+              <Ac requires={[REQUIREMENTS.abstract.manage]}>
+                <ButtonDeleteConfirmation loading={loading} onDelete={() => {
+                  handleDeleteEvaluation(eva.databaseId)
+                }}/>
+              </Ac>
 
             </div>
           </Card.Header>
