@@ -98,7 +98,7 @@ export default function Attachments({label, metas, containerClass, maxFiles: mf,
               <div className="mr-2 text-nowrap">{moment(file.created_at).format('DD/MM/YYYY')}</div>
               <a href={file.url} target="_blank" className="text-truncate">{file.name}</a>
             </div>
-            {(!disabled && user.canManageAbstracts())
+            {(!disabled)
             && <ButtonDeleteConfirmation onDelete={()=>{
                 handleDeletion(remove, file, idx)
             }}/>}
