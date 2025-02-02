@@ -191,6 +191,10 @@ export default function AbstractForm(props: AbstractFormProps) {
 
       {/* {dump({
         isEditing,
+        isEditable,
+        canManage,
+        '!!abstract': !!abstract,
+        isAbleToEdit: abstract?.isAbleToEdit(),
         edition_id: edition.getId(),
       })} */}
 
