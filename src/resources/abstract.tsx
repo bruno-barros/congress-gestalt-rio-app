@@ -117,9 +117,7 @@ export default class Abstract {
       !!this.getEdition() === false
         ? AbstractStatusModelEnum.SINOPSE_ABSTRACT
         : this.getEdition().Abstract().status_model;
-
-    const passou = this.statusPassed(statusModel === AbstractStatusModelEnum.ABSTRACT ? "waiting_update" : "synopsis_waiting_upd");
-
+        const passou = this.statusPassed(statusModel === AbstractStatusModelEnum.ABSTRACT ? "evaluating" : "synopsis_evaluating");
     return !protectedStatuses.includes(this.status) && passou;
   }
 
