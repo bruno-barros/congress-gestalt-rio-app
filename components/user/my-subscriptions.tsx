@@ -6,6 +6,7 @@ import useTrans from "../hooks/useTrans";
 import useEvent from "../hooks/useEvent";
 import Loading from "../ui/loading";
 import useSettings from "../hooks/useSettings";
+import { dump } from "../../src/helpers";
 
 
 export default function MySubscriptions({user}: { user: User }) {
@@ -25,7 +26,7 @@ export default function MySubscriptions({user}: { user: User }) {
   }
 
   return (<div className="">
-
+    {/* {dump({...data})} */}
 
     <div className="px-5 py-3">
       {!completedProfile && 

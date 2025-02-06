@@ -39,6 +39,7 @@ export interface Product {
       databaseId: number;
       name: string;
       slug: string;
+      translation?: { databaseId: number; slug: string}
     }[];
   };
 }
@@ -125,7 +126,8 @@ export class OrderCollection {
     completed.map((order) => {
       order.lineItems?.nodes?.map((line) => {
         line.product?.productCategories?.nodes?.map(cat => {
-          if(cat.databaseId === categoryId){
+          const ptCatId = cat?.translation?.databaseId || cat.databaseId;
+          if(ptCatId === categoryId){
             hasValid = true;
           }
         })
