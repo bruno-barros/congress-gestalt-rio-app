@@ -33,7 +33,7 @@ export default function useSubscriptions(edition?: Edition) {
         }
       }).then(resp => {
         if (resp.data.data?.orders?.nodes) {
-          queryClient.setQueryData('payment_methods', resp.data.data.paymentGateways.nodes)
+          queryClient.setQueryData('payment_methods', resp.data.data?.paymentGateways?.nodes)
           // queryMethods(resp.data.data.paymentGateways.nodes)
           resolve(OrderCollection.make(resp.data.data.orders.nodes))
         } else {
