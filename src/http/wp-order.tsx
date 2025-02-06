@@ -25,6 +25,10 @@ export default class WpOrder {
                 databaseId
                 name
                 slug
+                translation(language: PT) {
+                  databaseId
+                  slug
+                }
               }
             }
           }
@@ -82,6 +86,10 @@ export default class WpOrder {
                 databaseId
                 name
                 slug
+                translation(language: PT) {
+                  databaseId
+                  slug
+                }
               }
             }
           }
