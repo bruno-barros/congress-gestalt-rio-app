@@ -380,5 +380,21 @@ export default class WpUser {
       });
   }
 
+  static switchTo(args: {
+    user_id: number
+  }): Promise<
+    AxiosResponse<
+      WpRestResponse<{
+        authToken?: string,
+        refreshToken?: string,
+        msg?: string
+      }>
+    >
+  > {
+    return restApi.post(`${RESTVersion.default().namespace}/users/switch`, {
+      switch_to: args.user_id
+    })
+  }
+
 
 }
