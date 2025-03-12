@@ -16,35 +16,43 @@ export default function NextStepTip(props: NextStepProps) {
   function messages() {
     const pending = {
       pt: 'O autor deve submeter a sinopse para avaliação.',
-      en: 'The author must submit the resume for evaluation.'
+      en: 'The author must submit the resume for evaluation.',
+      es: 'El autor deberá entregar la sinopsis para su evaluación.'
     }
     const revision = {
       pt: 'Sinopse (ou trabalho) enviada para revisão (Quando começar a avaliação o autor não poderá editá-la).',
-      en: 'Resume (or abstract) sent to revision (When the evaluation begins, the author will not be able to edit it).'
+      en: 'Resume (or abstract) sent to revision (When the evaluation begins, the author will not be able to edit it).',
+      es: 'Sinopsis (o trabajo) enviado para revisión (Una vez iniciada la revisión, el autor no podrá editarlo).'
     }
     const evaluating = {
       pt: 'Sinopse (ou trabalho) está sendo avaliado.',
-      en: 'The resume (or abstract) is being evaluated.'
+      en: 'The resume (or abstract) is being evaluated.',
+      es: 'Se está evaluando la sinopsis (o trabajo).'
     }
     const rejected = {
       pt: 'Sinopse (ou trabalho) rejeitado, por tanto não é possível editá-la.',
-      en: 'Resume (or abstract) rejected, so it is not possible to edit it.'
+      en: 'Resume (or abstract) rejected, so it is not possible to edit it.',
+      es: 'Sinopsis (o obra) rechazada, por lo tanto no es posible editarla.'
     }
     const waiting = {
       pt: 'O autor deve fazer as correções solicitadas e submetê-lo a avaliação.',
-      en: 'The author must make the requested corrections and submit it for evaluation.'
+      en: 'The author must make the requested corrections and submit it for evaluation.',
+      es: 'El autor deberá realizar las correcciones solicitadas y enviarlo para su evaluación.'
     }
     const synopsis_approved = {
       pt: 'Sinopse aprovada! O autor deve submeter o trabalho para avaliação.',
-      en: 'Synopsis approved! The author must submit the abstract for evaluation.'
+      en: 'Synopsis approved! The author must submit the abstract for evaluation.',
+      es: '¡Sinopsis aprobada! El autor deberá enviar el trabajo para su evaluación.'
     }
     const pre_approved = {
       pt: 'Trabalho aprovado! Aguardando confirmação da organização.',
-      en: 'Approved abstract! Awaiting confirmation from the organization.'
+      en: 'Approved abstract! Awaiting confirmation from the organization.',
+      es: '¡Trabajo aprobado! Esperando confirmación por parte de la organización.'
     }
     const approved = {
       pt: 'Parabéns! Trabalho aprovado para apresentação.',
-      en: 'Congratulations! Approved abstract for presentation.'
+      en: 'Congratulations! Approved abstract for presentation.',
+      es: '¡Felicidades! Trabajo aprobado para presentación.'
     }
 
     return {
