@@ -48,6 +48,7 @@ export default class WpEvaluation {
       databaseId
       answers
       comment
+      private_comment
       status
       quality
       relevance
@@ -86,6 +87,7 @@ export default class WpEvaluation {
     abstract_id
     answers
     comment
+    private_comment
     created_at
     databaseId
     id
@@ -210,6 +212,7 @@ export default class WpEvaluation {
       created_at
       updated_at
       comment
+      private_comment
       quality
       relevance
       clarity
