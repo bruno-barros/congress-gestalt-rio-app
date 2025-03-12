@@ -46,6 +46,7 @@ function Settings() {
     phone_country: evt?.global?.phone_country || "55",
     email_general: evt?.global?.email_general || "",
     email_financial: evt?.global?.email_financial || "",
+    email_abstracts: evt?.global?.email_abstracts || "",
 
     rate_send_now: evt?.global?.rate_send_now || 1,
     rate_limit_per_minute: evt?.global?.rate_limit_per_minute || 1,
@@ -118,6 +119,9 @@ function Settings() {
               </Field>
               <Field infos="Email de contato para dúvidas gerais ou suporte.">
                 <Text name="email_general" label="Email para suporte" />
+              </Field>
+              <Field infos="Email para receber notificações de trabalhos e avaliações.">
+                <Text name="email_abstracts" label="Email para notificações de trabalhos" />
               </Field>
               <Field infos="Email para receber notificações de pagamento e inscrição.">
                 <Text name="email_financial" label="Email do financeiro" />
