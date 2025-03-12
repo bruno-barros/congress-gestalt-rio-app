@@ -64,6 +64,9 @@ const AdmAbstracts = () => {
         Header: 'Tópico',
         accessor: 'topic',
       },{
+        Header: 'Modalidade',
+        accessor: 'modality',
+      },{
         Header: 'Status',
         accessor: 'status',
       },{
@@ -111,6 +114,8 @@ const AdmAbstracts = () => {
         row.topic = topic.hasOwnProperty('pt') && topic[router.locale]
         }
       }
+
+      row.modality = row.type    
       row.author_name = row.author?.node?.name
       row.author_email = row.author?.node?.email
       row.status_pt = t(`status.${row.status}`)
