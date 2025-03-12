@@ -6,6 +6,7 @@ export const RESOLVERS = {
   readSensitive: "UserProfile:readSensitive",
   editSensitive: "UserProfile:editSensitive",
   deleteDocuments: "UserProfile:deleteDocuments",
+  switch: "UserProfile:switch",
 };
 
 export default class UserProfile {
@@ -33,5 +34,9 @@ export default class UserProfile {
 
   deleteDocuments(user: User) {
     return user.isAdmin();
+  }
+  
+  switch(user: User) {
+    return user.isSuperAdmin();
   }
 }

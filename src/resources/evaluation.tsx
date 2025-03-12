@@ -11,6 +11,7 @@ export class Evaluation {
   user_id: number
   answers: any
   comment: string
+  private_comment: string
   edition_id: string
   created_at: string
   updated_at: string

@@ -158,8 +158,12 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
               <AbstractAnswers className="mt-3 text-sm" answers={eva.getAnswers()} edition_id={eva?.edition_id}/>
 
               <div className="border mb-3 pr-2 pb-2 pl-2 pt-0">
-                <small className="d-block text-muted">comentários</small>
+                <small className="d-block text-muted">comentários aos autores</small>
                 {eva.comment}
+              </div>
+              <div className="border mb-3 pr-2 pb-2 pl-2 pt-0">
+                <small className="d-block text-muted">comentários aos pareceristas</small>
+                {eva.private_comment}
               </div>
 
               

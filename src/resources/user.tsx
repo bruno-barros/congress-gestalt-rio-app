@@ -133,7 +133,7 @@ export class User {
     if (process.env.NODE_ENV === "development" && this.isAdmin()) {
       return true;
     }
-    const superIds = [1, 3];
+    const superIds = process.env.super_users_ids.split(",").map((id) => parseInt(id));
     return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1;
   }
 

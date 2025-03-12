@@ -118,6 +118,7 @@ export interface EvaluationSchema {
   methodology: number;
   research: number;
   comment: string;
+  private_comment: string;
   answers: object;
   is_public: number;
   created_at: string;

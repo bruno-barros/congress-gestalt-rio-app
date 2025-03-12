@@ -358,7 +358,10 @@ export class Edition_Abstract {
   abstract_allowed: StringBoolean;
   only_subscribed: StringBoolean;
   test_mode: StringBoolean;
-  rules: { pt: string; en: string };
+  // rules: { pt: string; en: string };
+  rules_pt: string;
+  rules_en: string;
+  rules_es: string;
   statuses: StatusType[];
   attachments: number;
   topics: { id: string; pt: string; en: string; es: string }[];
@@ -413,6 +416,10 @@ export class Edition_Abstract {
     return this.fields[key]
       ? Edition_Abstract_Field.make(this.fields[key])
       : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
+  }
+
+  getRulesUrl(lang: string){
+    return this[`rules_${lang}`] || "";
   }
 }
 

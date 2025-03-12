@@ -82,7 +82,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
       otherwise: Yup.number().notRequired()
     }),
     status: Yup.string().required('validacao.obrigatorio'),
-    comment: Yup.string().required('validacao.obrigatorio'),
+    private_comment: Yup.string().required('validacao.obrigatorio'),
   })
 
   if (isLoading) {
@@ -99,6 +99,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
     methodology: evaluation.methodology || -2,
     status: evaluation.status || '',
     comment: evaluation.comment || '',
+    private_comment: evaluation.private_comment || '',
     answers: evaluation.getAnswers() || {},
   }
 
@@ -229,7 +230,8 @@ export default function EvaluationForm(props: EvaluationFormProps) {
             {filterAvailableStatuses().map(status => (
               <option key={status} value={status}>{t(`status.${status}`)}</option>))}
           </Select>
-          <Textarea name="comment" label="Seu comentário"/>
+          <Textarea name="comment" label="Comentários para autorias (público)"/>
+          <Textarea name="private_comment" label="Comentários aos pareceristas (privado e obrigatório)"/>
           {evaluation.isEditable() &&
           <div className="form-group">
             <LoadingButton loading={loading} disable={!isValid} block>Submeter avaliação</LoadingButton>

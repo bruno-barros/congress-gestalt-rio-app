@@ -9,6 +9,15 @@ import Link from "next/link";
 import AbstractEvaluationsModal from "../abstract/abstract-evaluations-modal";
 import Icon from "../ui/ionicon";
 import EvaluationDetailsModal from "../abstract/evaluation-details-modal";
+import useCurrentUser from "../hooks/useCurrentUser";
+import { REQUIREMENTS } from "../access-control/requirements";
+import { ac } from "../access-control";
+import { set } from 'lodash';
+import WpUser from "../../src/http/wp-user";
+import AuthToken from "../../src/http/auth-token";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import Loading from "../ui/loading";
 
 export function RenderCell({cell}) {
   console.log(cell.props);
@@ -24,6 +33,7 @@ export function RenderCell({cell}) {
   if (cell.props.cell.column.id === 'name') return <AddLink cell={cell}/>
   if (cell.props.cell.column.id === 'total') return <Html cell={cell}/>
   if (cell.props.cell.column.id === 'aa') return <Boolean cell={cell}/>
+  if (cell.props.name === 'users' && cell.props.cell.column.id === 'databaseId') return <SwitchUser cell={cell}/>
   if (cell.props.name === 'evaluations-adm' && cell.props.cell.column.id === 'abs_title') return <EvaluationDetails cell={cell}/>
   return cell
 }
@@ -106,4 +116,30 @@ function EvaluationDetails({cell}) {
     <EvaluationDetailsModal show={show} evaluation={cell.props.cell.row.original} onDismiss={()=>setShow(false)}/>
   </>
 
+}
+
+export function SwitchUser({cell}) {
+  // console.log(cell.props.cell.value)
+  const { user } = useCurrentUser()
+  const router = useRouter()
+  const able = ac(user, [REQUIREMENTS.user.switch])
+  const id = cell.props.cell.value
+  const [loading, setLoading] = useState(false)
+
+  async function handleSwitch(){
+    setLoading(true)
+    const axios = await WpUser.switchTo({ user_id: id })
+    const resp = axios.data
+    if(resp.success){
+      AuthToken.storeToken(resp.data.authToken, null);
+      AuthToken.storeRefreshToken(resp.data.refreshToken);
+      router.push('/dashboard')
+    } else {
+      toast.error('Erro ao trocar de usuário.')
+    }
+  }
+
+  return able 
+    ? (loading ? <Loading size="sm" /> : <button onClick={handleSwitch} className="btn btn-link p-0">{id}</button>)
+    : <>{id}</>
 }

@@ -19,6 +19,7 @@ export default class Event {
     phone_country: "55";
     email_general: string;
     email_financial: string;
+    email_abstracts: string;
     editions: string[];
     rate_send_now: number | string;
     rate_limit_per_minute: number | string;

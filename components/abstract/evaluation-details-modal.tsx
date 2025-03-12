@@ -48,8 +48,8 @@ export default function EvaluationDetailsModal(
           <div>{evaluation?.abstract?.title}</div>
         </div>
         <div className="form-group border-bottom pb-2">
-          <label className="text-uppercase mb-0">Comentário</label>
-          <div>{evaluation?.comment}</div>
+          <label className="text-uppercase mb-0">Comentário aos pareceristas</label>
+          <div>{evaluation?.private_comment}</div>
         </div>
         <div className="form-group border-bottom_ pb-2">
           <label className="text-uppercase mb-0">Avaliações por critério</label>
