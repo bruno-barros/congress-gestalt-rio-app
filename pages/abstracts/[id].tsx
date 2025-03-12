@@ -29,6 +29,7 @@ const AbstractEditing = () => {
   const router = useRouter();
   const t = useTrans();
   const { data: event, isLoading, currentEdition: edition } = useSettings();
+  const AbstractCnf = edition?.Abstract();
   const lang = router.locale;
   const canManage = ac(user, [REQUIREMENTS.abstract.manage])
   const {
@@ -126,7 +127,7 @@ const AbstractEditing = () => {
               defaults={`Confira 2 as <1>regras de submissão de trabalhos</1>.`}
               components={([
                 "Confira 3 as ",
-                <a href={edition.abstract.rules[lang]} target="_blank">
+                <a href={AbstractCnf?.getRulesUrl(lang)} target="_blank">
                   regras de submissão de trabalhos
                 </a>,
                 ".",
