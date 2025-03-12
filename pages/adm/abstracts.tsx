@@ -12,6 +12,7 @@ import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
 import Loading from "../../components/ui/loading";
 import useSettings from "../../components/hooks/useSettings";
+import { access } from "fs";
 
 const AdmAbstracts = () => {
 
@@ -53,6 +54,9 @@ const AdmAbstracts = () => {
       {
         Header: '#',
         accessor: 'databaseId',
+      },{
+        Header: 'Lang',
+        accessor: 'main_language',
       },{
         Header: 'Título',
         accessor: 'title',
@@ -114,7 +118,7 @@ const AdmAbstracts = () => {
         row.topic = topic.hasOwnProperty('pt') && topic[router.locale]
         }
       }
-
+      row.main_language = row.main_language.toUpperCase()
       row.modality = row.type    
       row.author_name = row.author?.node?.name
       row.author_email = row.author?.node?.email
