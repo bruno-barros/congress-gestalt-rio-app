@@ -45,6 +45,9 @@ export function getAbstractFilterableFields() {
   const topics = edition?.abstract?.topics.map(top => {
     return {value: top[lang], label: top[lang]}
   })
+  const modalities = edition?.abstract?.modalities.map(mod => {
+    return {value: mod.id, label: mod[lang]}
+  })
   const statuses = edition?.abstract?.statuses.map(s => {
     return {value: String(t(`status.${s}`)), label: t(`status.${s}`)}
   })
@@ -52,6 +55,7 @@ export function getAbstractFilterableFields() {
   return [
     {id: 'title', label: 'Título', options: null},
     {id: 'topic', label: 'Tópico', options: topics},
+    {id: 'modality', label: 'Modalidade', options: modalities},
     {id: 'status_pt', label: 'Status', options: statuses},
   ]
 }
