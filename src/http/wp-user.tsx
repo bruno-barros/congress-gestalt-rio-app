@@ -368,8 +368,8 @@ export default class WpUser {
   }
 
   static notify(args: {context: NotificationTypes; ids: number[]; coauthors?:boolean; subject: string;
-    message: string; merge: boolean; template: string}) {
-      return restApi.post(`${RESTVersion.default().namespace}/notification/send`, {
+    message: string; merge: boolean; template: string}): Promise<AxiosResponse<WpRestResponse<null>>> {
+      return restApi.post(`${RESTVersion.default().namespace}/notifications/send`, {
         context: args.context,
         ids: args.ids,
         coauthors: args.coauthors || false,

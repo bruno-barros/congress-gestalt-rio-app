@@ -14,7 +14,7 @@ import Textarea from "../../components/ui/form/formik/textarea";
 import Image from "../../components/ui/form/formik/image";
 import Layout from "../../components/settings/settings-layout";
 import s from "../../components/settings/settings.module.scss";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import * as Yup from "yup";
 import { WpSettings } from "../../src/http/wp-settings";
 import { toast } from "react-toastify";
@@ -29,20 +29,24 @@ import LangIndicator from "../../components/settings/lang-indicator";
 import { AbstractStatusModelEnum } from "../../src/types/abstracts.d";
 import Wysiwyg from "../../components/ui/form/formik/wysiwyg";
 import ButtonVariables from "../../components/settings/button-variables";
+import Button from "react-bootstrap/Button";
+import CustomSidePane from "../../components/side-pane/side-pane";
+import ListAcivities from "../../components/settings/activities/list-activities";
 
 export default function Context() {
   return (
     <SettingsContextProvider>
-      <CertificatePage />
+      <ActivitiesPage />
     </SettingsContextProvider>
   );
 }
 
-function CertificatePage() {
+function ActivitiesPage() {
   const { lang, setLang, currentEdition } = useSettingsContext();
   const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const [sidePanelOpen, dispatchOpen] = useReducer((p) => !p, false);
 
   //region Initial Values
   const initialValues = {
@@ -97,7 +101,7 @@ function CertificatePage() {
   return (
     <Layout>
       <h2 className={s.title}>
-        Certificado
+        Atividades
         <LangSelector />
         {(isLoading || isFetching) && <Loading />}
       </h2>
@@ -114,70 +118,70 @@ function CertificatePage() {
         onSubmit={handleSubmit}
         validationSchema={validationSchema}
       >
-        {({ values, errors, isValid }) => (            
+        {({ values, errors, isValid }) => (
           <Form>
             {/*
             //region Form
             */}
-            <Field infos="Imagem padrão do certificado. Atenção: a imagem deve ter a proporção A4 (2138x1512 px), em pé ou deitada, em JPEG.">
-                <Image name="default_image" label="Arte do certicado padrão" imgStyle={{maxHeight: 300}} />
-            </Field>
-            <p>Orientação: {values.default_orientation}</p>
-
-            <Field infos="Se habilitado, libera certificado para os inscritos que confirmaram a presença no evento." 
-                style={{marginBottom: 0, border: 'none'}}>
-                <br />
-                <Switch name="participation_allowed" label="Habilita certificado por participação" />
-            </Field>
-            <fieldset disabled={values.participation_allowed === false} className="border-primary pl-3 mb-4" style={{borderLeft: "solid 2px"}}>
-                <legend className="text-sm text-uppercase pt-2 text-primary">Por participação</legend>
-                <Field infos={<div>Texto do certificado. Use os <ButtonVariables>dados variáveis</ButtonVariables>.</div>}>
-                    <Wysiwyg
-                        name={`participation_text_${lang}`}
-                        label={<LangIndicator lang={lang}>Texto do certificado</LangIndicator>}
-                        charsMin={0}
-                        charsMax={500}
-                        disabled={values.participation_allowed === false}
-                    />
-                </Field>
-            </fieldset>
-
-            <Field infos="Se habilitado, libera certificado para os trabalhos aprovados." 
-                style={{marginBottom: 0, border: 'none'}}>
-                <br />
-                <Switch name="abstract_allowed" label="Habilita certificado para os trabalhos" />
-            </Field>
-            <fieldset disabled={values.abstract_allowed === false} className="border-primary pl-3 mb-4" style={{borderLeft: "solid 2px"}}>
-                <legend className="text-sm text-uppercase pt-2 text-primary">Por trabalho</legend>
-                <Field infos={<div>Texto do certificado. Use os <ButtonVariables>dados variáveis</ButtonVariables>.</div>}>
-                    <Wysiwyg
-                        name={`abstract_text_${lang}`}
-                        label={<LangIndicator lang={lang}>Texto do certificado</LangIndicator>}
-                        charsMin={0}
-                        charsMax={500}
-                        disabled={values.abstract_allowed === false}
-                    />
-                </Field>
-            </fieldset>
+            <Switch
+                name="activities_allowed"
+                label="Permitir inscrição nas atividades"
+            />
             
-            <Field infos="Se habilitado, libera certificado para as atividades com presença confirmada." 
-                style={{marginBottom: 0, border: 'none'}}>
-                <br />
-                <Switch name="activity_allowed" label="Habilita certificado para as atividades" />
+            <Switch
+                name="test_mode"
+                label="Habilitado APENAS para admins e pareceristas (modo de teste)"
+            />
+
+            <DateRange
+                label="Período de inscrição"
+                startDateName="start_at"
+                endDateName="end_at"
+                dateFormat="YYYY-MM-DD"
+                defaultValue={[values.start_at, values.end_at]}
+            />
+
+            <Field infos="Número máximo de atividades que um participante pode se inscrever.">
+                <Text
+                    name="activities_text_pt"
+                    label="Limite de atividades por participante"
+                    placeholder="deixe vazio para ilimitado"
+                />
             </Field>
-            <fieldset disabled={values.activity_allowed === false} className="border-primary pl-3 mb-4" style={{borderLeft: "solid 2px"}}>
-                <legend className="text-sm text-uppercase pt-2 text-primary">Por atividade</legend>
-                <Field infos={<div>Texto do certificado. Use os <ButtonVariables>dados variáveis</ButtonVariables>.</div>}>
-                    <Wysiwyg
-                        name={`activity_text_${lang}`}
-                        label={<LangIndicator lang={lang}>Texto do certificado</LangIndicator>}
-                        charsMin={0}
-                        charsMax={500}
-                        disabled={values.activity_allowed === false}
-                    />
-                </Field>
+
+            <hr />
+            <fieldset>
+                <legend>Grupos de atividades</legend>
+                <p className="text-sm text-muted">Permite agrupar atividades sob um mesmo nome.</p>
             </fieldset>
-            
+
+            <hr />
+            <fieldset>
+                <legend>Local da atividade</legend>
+                <p className="text-sm text-muted">Endereço físico da atividade.</p>
+            </fieldset>
+
+            <hr />
+            <fieldset>
+                <legend>Sala da atividade</legend>
+                <p className="text-sm text-muted">Espaço físico (sala) da atividade.</p>
+            </fieldset>
+
+            <hr />
+            <fieldset>
+                <legend>Palestrantes</legend>
+                <p className="text-sm text-muted">Pessoas responsáveis por cada atividade.</p>
+            </fieldset>
+
+            <hr />
+            <fieldset>
+                <legend>Atividades</legend>
+                <p className="text-sm text-muted">Cada atividade que permite inscrição pelos usuários.</p>
+                <Button type="button" onClick={dispatchOpen}>Gerenciar atividades</Button>
+            </fieldset>
+
+
+
             <div className={s.action_field}>
               <LoadingButton loading={loading} disable={!isValid} block>
                 Salvar
@@ -187,6 +191,10 @@ function CertificatePage() {
           </Form>
         )}
       </Formik>
+
+      <CustomSidePane open={sidePanelOpen} onClose={dispatchOpen}>{(props) => {
+        return <ListAcivities {...props} />;
+      }}</CustomSidePane>
     </Layout>
   );
 }

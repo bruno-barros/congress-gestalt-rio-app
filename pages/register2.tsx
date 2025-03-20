@@ -8,8 +8,6 @@ import {useEffect, useState} from "react";
 import Card from "react-bootstrap/cjs/Card";
 import useTrans from "../components/hooks/useTrans";
 import {MultiStepForm, Step} from 'react-multi-form'
-import useEvent from "../components/hooks/useEvent";
-import Edition from "../src/resources/edition";
 import StepPlan from "../components/registration/step-plan";
 import StepAddress from "../components/registration/step-address";
 import StepInstitution from "../components/registration/step-institution";
