@@ -13,6 +13,7 @@ import WpUser from "../src/http/wp-user";
 import Select from "./ui/form/formik/select";
 import LoadingButton from "./ui/loading-button";
 import Loading from "./ui/loading";
+import { dump } from "../src/helpers";
 
 interface NotificationModalProps {
   context: MessageTypes
@@ -60,12 +61,13 @@ export default function NotificationModal(props: NotificationModalProps) {
       merge: values.merge,
       template: values.template
     })
-      .then(resp => {
-        if (resp.data.success) {
+      .then(axios => {
+        const resp = axios.data
+        if (resp.success) {
           onUpdate && onUpdate()
-          successNotification({heroTitle: resp.data.data.msg})
+          successNotification({heroTitle: resp.message})
         } else {
-          errorNotification({message: resp.data.data.msg})
+          errorNotification({message: resp.message})
         }
         handleClose()
 
@@ -104,12 +106,12 @@ export default function NotificationModal(props: NotificationModalProps) {
             </div></div>} maxHeight="md"/>
 
             <div className="form-row">
-              <div className="col-12 col-md-3">
+              {/* <div className="col-12 col-md-3">
               <Select name="template" label="Modelo de e-mail">
                 <option value="default">Padrão</option>
                 <option value="logos">Com marcas de patrocínio</option>
               </Select>
-              </div>
+              </div> */}
               <div className="col-12 col-md-9">
                 <label htmlFor="">&nbsp;</label>
                 <Switch name="merge" label="Evitar envidos duplicados *"/>
@@ -125,6 +127,7 @@ export default function NotificationModal(props: NotificationModalProps) {
                 <button type="button" className="btn btn-outline-secondary" onClick={handleClose}>Cancelar</button>
               </div>
             </div>
+            {dump(values)}
 
           </Form>
         )}</Formik>
