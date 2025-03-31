@@ -1,0 +1,80 @@
+import { AxiosResponse } from "axios";
+import { WpRestResponse } from "../types/restapi";
+import { restApi, RESTVersion } from "./axios";
+import { ActivitySchema } from "../types/activity.type";
+
+export default class WpActivity {
+  static find(
+    id: number
+  ): Promise<AxiosResponse<WpRestResponse<ActivitySchema>>> {
+    return restApi.get(`${RESTVersion.default().namespace}/activities/${id}`);
+  }
+
+  static list(args: {
+    edition?: string;
+    active?: 0 | 1;
+  }): Promise<AxiosResponse<WpRestResponse<ActivitySchema[]>>> {
+    const qs = [];
+    if (args?.edition) qs.push(`edition=${args.edition}`);
+    if (args?.active) qs.push(`active=${args.active}`);
+    return restApi.get(
+      `${RESTVersion.default().namespace}/activities/?${qs.join("&")}`
+    );
+  }
+
+  static create(args: {
+    edition: string;
+    group_id?: number;
+    title_pt: string;
+    title_es?: string;
+    title_en?: string;
+    start_at: string;
+    end_at: string;
+    description_pt?: string;
+    description_es?: string;
+    description_en?: string;
+    workload: number;
+    vacancies: number;
+    certificate?: 0 | 1;
+    venue_id?: number;
+    room_id?: number;
+    type_id?: string;
+    topic_id?: string;
+    active?: 0 | 1;
+    tax_speakers?: string | number[] | string[];
+    tax_plans?: string | number[] | string[];
+    tax_group?: string;
+  }): Promise<AxiosResponse<WpRestResponse<ActivitySchema>>> {
+    return restApi.post(`${RESTVersion.default().namespace}/activities/`, args);
+  }
+
+  static update(id:number, args: {
+    group_id?: number;
+    title_pt?: string;
+    title_es?: string;
+    title_en?: string;
+    start_at?: string;
+    end_at?: string;
+    description_pt?: string;
+    description_es?: string;
+    description_en?: string;
+    workload?: number;
+    vacancies?: number;
+    certificate?: 0 | 1;
+    venue_id?: number;
+    room_id?: number;
+    type_id?: string;
+    topic_id?: string;
+    active?: 0 | 1;
+    tax_speakers?: string | number[] | string[];
+    tax_plans?: string | number[] | string[];
+    tax_group?: string;
+  }): Promise<AxiosResponse<WpRestResponse<ActivitySchema>>> {
+    return restApi.put(`${RESTVersion.default().namespace}/activities/${id}`, args);
+  }
+
+
+  static delete(id:number): Promise<AxiosResponse<WpRestResponse<null>>> {
+    return restApi.delete(`${RESTVersion.default().namespace}/activities/${id}`);
+  }
+}

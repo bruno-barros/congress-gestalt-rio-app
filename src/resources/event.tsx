@@ -100,6 +100,8 @@ export default class Event {
     evaluators_text_en: string;
     evaluators_text_es: string;
   };// review
+  certificate?: any;
+  activity?: any;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -157,6 +159,8 @@ export default class Event {
       abstract: this.abstract,
       subscription: this.subscription,
       review: this.review,
+      certificate: this.certificate,
+      activity: this.activity,
     };
     return Edition.make(data, {});
   }

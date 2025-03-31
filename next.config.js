@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
   env: {
-    version: '1.6.2',
+    version: '1.6.3',
     apiUrl: process.env.API_BASEURL,
     GOOGLE_OAUTH_ID: process.env.GOOGLE_OAUTH_ID,
     FACEBOOK_OAUTH_ID: process.env.FACEBOOK_OAUTH_ID,
@@ -16,6 +16,7 @@ module.exports = {
     GA_ID: process.env.GA_ID,
     production: isProd,
     super_users_ids: process.env.SUPER_USERS_IDS,
+    supportedLngs: 'pt,es',// 'en',
   },
   // configuração de integração do i18n com Nextjs: router.locales
   // https://nextjs.org/docs/pages/building-your-application/routing/internationalization

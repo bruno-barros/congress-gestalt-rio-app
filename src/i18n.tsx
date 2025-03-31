@@ -3,6 +3,13 @@ import { initReactI18next } from "react-i18next";
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+const langs = String(process.env.supportedLngs).split(',');
+
+export function availableLanguages(): string[]{
+  return langs.filter((lang) => lang !== 'cimode');
+}
+
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -10,7 +17,7 @@ i18n
   .init({
     // resources,
     fallbackLng: "pt",
-    supportedLngs: ['pt', 'es', 'en'],// @see next.config.js
+    supportedLngs: availableLanguages(),// @see next.config.js
     debug: false,
     keySeparator: '.', // we do not use keys in form messages.welcome
     interpolation: {

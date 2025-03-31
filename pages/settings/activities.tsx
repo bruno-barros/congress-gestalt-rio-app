@@ -32,6 +32,7 @@ import ButtonVariables from "../../components/settings/button-variables";
 import Button from "react-bootstrap/Button";
 import CustomSidePane from "../../components/side-pane/side-pane";
 import ListAcivities from "../../components/settings/activities/list-activities";
+import { ActivityContextProvider } from "../../components/settings/activities/activities-context";
 
 export default function Context() {
   return (
@@ -50,27 +51,11 @@ function ActivitiesPage() {
 
   //region Initial Values
   const initialValues = {
-    default_image: "",
-    default_orientation: "h",
-    participation_allowed: "1" == "1",
-    participation_text_pt: "",
-    participation_text_en: "",
-    participation_text_es: "",
-    abstract_allowed: "1" == "1",
-    abstract_text_pt: "",
-    abstract_text_en: "",
-    abstract_text_es: "",
-    activity_allowed: "1" == "1",
-    activity_text_pt: "",
-    activity_text_en: "",
-    activity_text_es: "",
-
-    // days_to_evaluate: evt?.review?.days_to_evaluate || 15,
-    // days_for_corrections: evt?.review?.days_for_corrections || 15,
-    // questions: evt?.review?.questions || [],
-    // evaluators_text_pt: evt?.review?.evaluators_text_pt || "",
-    // evaluators_text_en: evt?.review?.evaluators_text_en || "",
-    // evaluators_text_es: evt?.review?.evaluators_text_es || "",
+    activities_allowed: evt?.activity?.activities_allowed === "1",
+    test_mode: evt?.activity?.test_mode === "1",
+    start_at: evt?.activity?.start_at,
+    end_at: evt?.activity?.end_at,
+    limit_per_participant: evt?.activity?.limit_per_participant,
   };
   //region Validation Schema
   const validationSchema = Yup.object({
@@ -83,7 +68,7 @@ function ActivitiesPage() {
     // console.log(values);
     setLoading(true);
     WpSettings.save({
-      group: "certificate",
+      group: "activity",
       edition: currentEdition,
       fields: values,
     })
@@ -134,7 +119,7 @@ function ActivitiesPage() {
             />
 
             <DateRange
-                label="Período de inscrição"
+                label="Período de inscrição nas atividades"
                 startDateName="start_at"
                 endDateName="end_at"
                 dateFormat="YYYY-MM-DD"
@@ -143,7 +128,7 @@ function ActivitiesPage() {
 
             <Field infos="Número máximo de atividades que um participante pode se inscrever.">
                 <Text
-                    name="activities_text_pt"
+                    name="limit_per_participant"
                     label="Limite de atividades por participante"
                     placeholder="deixe vazio para ilimitado"
                 />
@@ -192,9 +177,11 @@ function ActivitiesPage() {
         )}
       </Formik>
 
-      <CustomSidePane open={sidePanelOpen} onClose={dispatchOpen}>{(props) => {
-        return <ListAcivities {...props} />;
-      }}</CustomSidePane>
+        <ActivityContextProvider>
+          <CustomSidePane open={sidePanelOpen} onClose={dispatchOpen}>{(props) => {
+            return <ListAcivities {...props} />;
+          }}</CustomSidePane>
+        </ActivityContextProvider>
     </Layout>
   );
 }

@@ -26,7 +26,8 @@ class MyDocument extends Document {
           />
         </>}
         <Head/>
-        <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script>
+        {/* <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script> */}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons.min.js"></script>
         {/* (un)comment to allow OneSignal */}
         {/* <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script> */}
         <body>
