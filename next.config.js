@@ -16,6 +16,7 @@ module.exports = {
     GA_ID: process.env.GA_ID,
     production: isProd,
     super_users_ids: process.env.SUPER_USERS_IDS,
+    supportedLngs: 'pt,es',// 'en',
   },
   // configuração de integração do i18n com Nextjs: router.locales
   // https://nextjs.org/docs/pages/building-your-application/routing/internationalization
