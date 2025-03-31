@@ -13,6 +13,8 @@ import Head from "next/head";
 import Loading from "../../components/ui/loading";
 import useSettings from "../../components/hooks/useSettings";
 import { access } from "fs";
+import { ac } from "../../components/access-control";
+import { REQUIREMENTS } from "../../components/access-control/requirements";
 
 const AdmAbstracts = () => {
 
@@ -25,8 +27,10 @@ const AdmAbstracts = () => {
   const { data: event, currentEdition: edition } = useSettings()
   const editionId = router.query.edition || edition?.getId()
   const {data: abstracts, error, isLoading} = useQuery<any[], any>(['abstracts', editionId], queryAbstracts, {
-    enabled: !!editionId && user.canManageAbstracts(),
+    enabled: !!editionId && ac(user, [REQUIREMENTS.abstract.manage]),
   })
+
+  
 
   function queryAbstracts(): Promise<any[]> {
     return new Promise((resolve, reject) => {

@@ -25,7 +25,7 @@ export default function CustomSidePane(props: PropsWithChildren<CustomSidePanePr
             width={width || 70}
             offset={offset || 5}
             onClose={onClose}
-            disableBackdropClick={false}
+            disableBackdropClick={true}
             disableEscapeKeyDown={false}
             >{({onActive, ...props}) => {
                 return <div className="h-100 w-100 position-absolute d-flex flex-column"> 

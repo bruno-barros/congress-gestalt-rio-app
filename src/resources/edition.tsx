@@ -105,6 +105,8 @@ export default class Edition {
     evaluators_text_en: string;
     evaluators_text_es: string;
   }; // review
+  certificate: any;
+  activity: any;
 
   constructor(data: any, def: any) {
     Object.assign(this, data);
@@ -129,6 +131,10 @@ export default class Edition {
 
   Review(): Edition_Review {
     return new Edition_Review(this.review);
+  }
+
+  Activity(): Edition_Activity {
+    return new Edition_Activity(this.activity);
   }
 
   getId() {
@@ -495,5 +501,18 @@ export class Edition_Review {
 
   getQuestions(){
     return this.questions || []
+  }
+}
+
+
+export class Edition_Activity {
+  activities_allowed: "0";
+  test_mode: "0";
+  start_at: "";
+  end_at: "";
+  limit_per_participant: "";
+
+  constructor(data: any) {
+    Object.assign(this, data);
   }
 }
