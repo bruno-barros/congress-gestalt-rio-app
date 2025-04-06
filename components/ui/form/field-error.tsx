@@ -13,7 +13,7 @@ export default function FieldError({message, fieldId, className}: FieldErrorProp
 
   return (<>
     {fieldId
-      ? <label className={`${className} text-sm text-danger`} htmlFor={fieldId}>{t(message)}</label>
-      : <div className={`${className} text-sm text-danger`}>{t(message)}</div>}
+      ? <label className={`${className || ''} text-sm text-danger`} htmlFor={fieldId}>{t(message)}</label>
+      : <div className={`${className || ''} text-sm text-danger`}>{t(message)}</div>}
   </>)
 }

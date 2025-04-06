@@ -18,6 +18,7 @@ import Loading from "../components/ui/loading";
 import useSettings from "../components/hooks/useSettings";
 import useEditions from "../components/hooks/useEditions";
 import EditionCard from "../components/edition/edition-card";
+import Ac from "../components/access-control";
 
 interface DashboardProps {
 
@@ -32,6 +33,7 @@ const Dashboard = (props: DashboardProps) => {
   const {user} = useCurrentUser()
   const {data: orders, isLoading: ordersLoading} = useUserOrders(user?.getId())
   const {data: editions} = useEditions()
+  const ActvCnf = current?.Activity()
   /**
    * -----------------------------
    * Redirect to client: ABRISCO
@@ -50,7 +52,7 @@ const Dashboard = (props: DashboardProps) => {
   }
 
   return (<MainLayout>
-    {/* {dump(current)} */}
+    {/* {dump({isOpenToApply: ActvCnf.isOpenToApply(user)})} */}
     {/* {dump(current?.abstract?.topics)} */}
     <Head>
       <title>{siteTitle('Dashboard', queryClient)}</title>

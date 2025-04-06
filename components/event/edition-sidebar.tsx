@@ -15,39 +15,31 @@ interface EditionSidebarProps {
 }
 
 export default function EditionSidebar(props: EditionSidebarProps) {
-  const { edition: ed } = props;
-  const edition = Edition.make(ed, {});
+  const { edition } = props;
+  // const edition = Edition.make(ed, {});
   const t = useTrans();
   const { user } = useCurrentUser();
   const { data: event, isLoading, currentEdition } = useSettings();
   const { data: orders, isLoading: ordersLoading } = useUserOrders(
     user?.getId()
   );
-  const isCurrent = currentEdition?.getId() === edition.getId();
+  const isCurrent = currentEdition?.getId() === edition?.getId();
   const isSubscribed = orders?.hasValidSubscription(edition);
   const consent = useConsent();
 
   return (
     <div className="p-4">
       <figure className="figure-img bg-white p-3">
-        {edition?.logoPrimary && (
-          <Image
-            src={edition?.logoPrimary}
-            objectFit="contain"
-            width={300}
-            height={250}
-            className="img-fluid"
-          />
-        )}
+        {edition?.getLogo() && (<img src={edition?.getLogo()} className="img-fluid" />)}
       </figure>
       <div className="">
         {isSubscribed && <BadgeSubscribed />}
-        <p>{edition.name}</p>
+        <p>{edition?.name}</p>
         <p>
-          {moment(edition.start_at).format("DD/MM/YYYY")} —{" "}
-          {moment(edition.end_at).format("DD/MM/YYYY")}
+          {moment(edition?.start_at).format("DD/MM/YYYY")} —{" "}
+          {moment(edition?.end_at).format("DD/MM/YYYY")}
         </p>
-        {edition.isOpenToSubscribe() ? (
+        {edition?.isOpenToSubscribe() ? (
           <>
             {isCurrent && user.canPublishAbstracts() && !isSubscribed && (
               <p>
@@ -67,7 +59,7 @@ export default function EditionSidebar(props: EditionSidebarProps) {
             <a className="text-sm">{t("gerenciar-inscricoes")}</a>
           </Link>
         </p>
-        {edition.hasConsent() &&
+        {edition?.hasConsent() &&
         <p>
             <a href="#" onClick={(e)=>{
               e.preventDefault()

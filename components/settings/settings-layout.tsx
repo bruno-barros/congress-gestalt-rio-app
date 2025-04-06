@@ -77,8 +77,8 @@ export default function SettingsLayout(props: PropsWithChildren<LayoutProps>) {
                   <NavLink label="Inscrições" path="/subscriptions" />
                   <NavLink label="Trabalhos" path="/abstracts" />
                   <NavLink label="Revisão" path="/reviews" />
-                  <NavLink label="Certificado" path="/certificates" />
                   <NavLink label="Atividades" path="/activities" />
+                  <NavLink label="Certificado" path="/certificates" />
                 </div>
               )}
             </Nav>

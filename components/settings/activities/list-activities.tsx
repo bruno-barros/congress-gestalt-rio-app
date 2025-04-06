@@ -13,8 +13,7 @@ import { dump } from "../../../src/helpers";
 import ActivityForm from "./activity-form";
 
 export default function ListAcivities({ onActive, ...props }) {
-  const { lang, setLang, currentEdition } = useSettingsContext();
-  const [open, onClose] = useReducer((p) => !p, false);
+  const { lang, setLang, currentEdition } = useSettingsContext();  
   const { data: activities, isFetching, isLoading, refetch } = useActivities(currentEdition);
   const [filtered, setFiltered] = useState<ActivitySchema[]>([]);
   const { selected, setSelected } = useActivityContext();

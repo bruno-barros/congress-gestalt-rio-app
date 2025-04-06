@@ -77,4 +77,17 @@ export default class WpActivity {
   static delete(id:number): Promise<AxiosResponse<WpRestResponse<null>>> {
     return restApi.delete(`${RESTVersion.default().namespace}/activities/${id}`);
   }
+
+  /**
+   * Inscreve usuário na atividade
+   * @param args 
+   * @returns 
+   */
+  static subscribe(args: {
+    activity_id: number;
+    user_id: number;
+  }): Promise<AxiosResponse<WpRestResponse<null>>> {
+
+    return restApi.post(`${RESTVersion.default().namespace}/activities/${args.activity_id}/subscribe`, args);
+  }
 }

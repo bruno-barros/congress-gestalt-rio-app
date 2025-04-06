@@ -33,21 +33,40 @@ import Button from "react-bootstrap/Button";
 import CustomSidePane from "../../components/side-pane/side-pane";
 import ListAcivities from "../../components/settings/activities/list-activities";
 import { ActivityContextProvider } from "../../components/settings/activities/activities-context";
+import useTaxonomyContext, { TaxonomyContextProvider } from "../../components/settings/taxonomies/taxonomies-context";
+import ListTaxonomies from "../../components/settings/taxonomies/list-taxonomies";
+import { TaxonomyType } from "../../src/types/taxonomy.type";
+import useTaxonomies from "../../components/hooks/activities/useTaxonomies";
+import useActivities from "../../components/hooks/activities/useActivities";
 
 export default function Context() {
   return (
     <SettingsContextProvider>
-      <ActivitiesPage />
+      <ActivityContextProvider>
+        <TaxonomyContextProvider>
+          <ActivitiesPage />
+        </TaxonomyContextProvider>
+      </ActivityContextProvider>
     </SettingsContextProvider>
   );
 }
 
 function ActivitiesPage() {
   const { lang, setLang, currentEdition } = useSettingsContext();
+  const { setTaxonmy } = useTaxonomyContext();
   const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
+  const { data: taxes, filterTax, isLoading: taxloading } = useTaxonomies(currentEdition)
+  const { data: activities } = useActivities(currentEdition);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
-  const [sidePanelOpen, dispatchOpen] = useReducer((p) => !p, false);
+  const [sidePanelOpenActivities, dispatchOpenActivities] = useReducer((p) => !p, false);
+  const [sidePanelTaxonomy, dispatchTaxonomy] = useReducer((p) => !p, false);
+
+  const speakersCount = filterTax(TaxonomyType.SPEAKER).length
+  const groupsCount = filterTax(TaxonomyType.GROUP).length
+  const venuesCount = filterTax(TaxonomyType.VENUE).length
+  const roomsCount = filterTax(TaxonomyType.ROOM).length
+  const acvtCount = activities?.length || 0
 
   //region Initial Values
   const initialValues = {
@@ -88,7 +107,7 @@ function ActivitiesPage() {
       <h2 className={s.title}>
         Atividades
         <LangSelector />
-        {(isLoading || isFetching) && <Loading />}
+        {(isLoading || isFetching || taxloading) && <Loading />}
       </h2>
       {/* {dump({
         lang,
@@ -134,54 +153,94 @@ function ActivitiesPage() {
                 />
             </Field>
 
-            <hr />
-            <fieldset>
-                <legend>Grupos de atividades</legend>
-                <p className="text-sm text-muted">Permite agrupar atividades sob um mesmo nome.</p>
-            </fieldset>
-
-            <hr />
-            <fieldset>
-                <legend>Local da atividade</legend>
-                <p className="text-sm text-muted">Endereço físico da atividade.</p>
-            </fieldset>
-
-            <hr />
-            <fieldset>
-                <legend>Sala da atividade</legend>
-                <p className="text-sm text-muted">Espaço físico (sala) da atividade.</p>
-            </fieldset>
-
-            <hr />
-            <fieldset>
-                <legend>Palestrantes</legend>
-                <p className="text-sm text-muted">Pessoas responsáveis por cada atividade.</p>
-            </fieldset>
-
-            <hr />
-            <fieldset>
-                <legend>Atividades</legend>
-                <p className="text-sm text-muted">Cada atividade que permite inscrição pelos usuários.</p>
-                <Button type="button" onClick={dispatchOpen}>Gerenciar atividades</Button>
-            </fieldset>
-
-
-
             <div className={s.action_field}>
               <LoadingButton loading={loading} disable={!isValid} block>
                 Salvar
               </LoadingButton>
             </div>
-            {dump({ values, errors, isValid })}
+            {/* {dump({ values, errors, isValid })} */}
+
+{/*
+ //region Atividades
+ */}
+            <hr />
+            <fieldset className="d-flex gap-5 align-items-center justify-content-between">
+              <div>
+                <legend>Atividades ({acvtCount})</legend>
+                <p className="text-sm text-muted">Cada atividade que permite inscrição pelos usuários.</p>
+              </div>
+                <Button type="button" variant="outline-primary" className="text-nowrap" onClick={dispatchOpenActivities} style={{minWidth: 180}}>Gerenciar atividades</Button>
+            </fieldset>
+{/*
+ //region Palestrantes
+ */}
+            <hr />
+            <fieldset className="d-flex gap-5 align-items-center justify-content-between">
+              <div>
+                <legend>Palestrantes ({speakersCount})</legend>
+                <p className="text-sm text-muted">Pessoas responsáveis por cada atividade.</p>
+              </div>
+              <Button type="button" variant="outline-primary" className="text-nowrap" onClick={() => {
+                setTaxonmy(TaxonomyType.SPEAKER);
+                dispatchTaxonomy();
+              }} style={{minWidth: 180}}>Gerenciar palestrantes</Button>
+            </fieldset>
+{/*
+ //region Grupos
+ */}
+            <hr />
+            <fieldset className="d-flex gap-5 align-items-center justify-content-between">
+              <div>
+                <legend>Grupos de atividades ({groupsCount})</legend>
+                <p className="text-sm text-muted">Permite agrupar atividades sob um mesmo nome.</p>
+              </div>
+              <Button type="button" variant="outline-primary" className="text-nowrap" onClick={() => {
+                setTaxonmy(TaxonomyType.GROUP);
+                dispatchTaxonomy();
+              }} style={{minWidth: 180}}>Gerenciar grupos</Button>
+            </fieldset>
+{/*
+ //region Local
+ */}
+            <hr />
+            <fieldset className="d-flex gap-5 align-items-center justify-content-between">
+              <div>
+                <legend>Local da atividade ({venuesCount})</legend>
+                <p className="text-sm text-muted">Endereço físico da atividade.</p>
+              </div>
+              <Button type="button" variant="outline-primary" className="text-nowrap" onClick={() => {
+                setTaxonmy(TaxonomyType.VENUE);
+                dispatchTaxonomy();
+              }} style={{minWidth: 180}}>Gerenciar locais</Button>
+            </fieldset>
+{/*
+ //region Sala
+ */}
+            <hr />
+            <fieldset className="d-flex gap-5 align-items-center justify-content-between">
+              <div>
+                <legend>Sala da atividade ({roomsCount})</legend>
+                <p className="text-sm text-muted">Localização da sala (ambiente) onde ocorre as atividades.</p>
+              </div>
+              <Button type="button" variant="outline-primary" className="text-nowrap" onClick={() => {
+                setTaxonmy(TaxonomyType.ROOM);
+                dispatchTaxonomy();
+              }} style={{minWidth: 180}}>Gerenciar salas</Button>
+            </fieldset>
+
+            
           </Form>
         )}
       </Formik>
 
-        <ActivityContextProvider>
-          <CustomSidePane open={sidePanelOpen} onClose={dispatchOpen}>{(props) => {
+        
+          <CustomSidePane open={sidePanelOpenActivities} onClose={dispatchOpenActivities}>{(props) => {
             return <ListAcivities {...props} />;
           }}</CustomSidePane>
-        </ActivityContextProvider>
+        
+          <CustomSidePane open={sidePanelTaxonomy} onClose={dispatchTaxonomy}>{(props) => {
+              return <ListTaxonomies {...props} />;
+            }}</CustomSidePane>
     </Layout>
   );
 }

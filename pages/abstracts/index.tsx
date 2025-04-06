@@ -99,15 +99,16 @@ const Abstracts = () => {
 
             {edition?.abstract?.limit_per_user > 0 &&
             <div className="ml-md-3 mt-3">
-              <Trans i18nKey="trabalho.voce-pode-enviar-ate"
-                     values={{limit: edition.abstract.limit_per_user}}
-                     defaults={`Você pode enviar até {{limit}} trabalhos.`}
-              />
-              <div className="border-left mt-2 pl-2 text-muted text-sm">
-                {lang === 'pt' ? <>Atenção! Somente 01 trabalho entre as modalidades Mesa redonda, Rodas de conversa, Workshop, Minicurso e Pôster; e os demais como Apresentação Artístico-cultural e Práticas Corporais Integrativas ou Lançamento de Livros.</> : <>¡Atención! Sólo 01 obra entre las modalidades Mesa redonda, Círculos de conversación, Taller, Minicurso y Póster; y los demás como Presentación Artístico-cultural y Prácticas Corporales Integradoras o Lanzamiento de Libro.</>}
-              
-              </div>
-            </div>}
+            {/* <Trans i18nKey="trabalho.voce-pode-enviar-ate"
+                   values={{limit: edition.abstract.limit_per_user}}
+                   defaults={`Você pode enviar até {{limit}} trabalhos.`}
+            /> */}
+            <div className="border-left mt-2 pl-2 text-muted text-sm">
+              {lang === 'pt' ? <>Somente 1 trabalho como autor/a e 1 como co-autor/a será possivel enviar nas modalidades Mesa Redonda, Roda de Conversa, Workshop, Mini curso e Poster.
+                Ja as modalidades Lançamento de Livro, Apresentação artistico- cultural e Práticas meditativas ou corporais integrativas podem ser propostas até um maximo de 3.</> : <>Sólo se podrá presentar 1 trabajo como autor y 1 como coautor en las modalidades de Mesa Redonda, Círculo de Conversación, Taller, Mini Curso y Póster.
+                Las modalidades de Lanzamiento de Libro, Presentación Artístico-Cultural y Prácticas Corporales Meditativas o Integrativas podrán ser propuestas hasta un máximo de 3.</>}            
+            </div>
+          </div>}
 
 
           </div>
@@ -166,6 +167,7 @@ const Abstracts = () => {
 
         {!isSubscribed && <SubscriptionNotAllowed/>}
         {(isSubscribed && isOpenToSubmit) && <SynopsisIntro/>}
+        
 
         {/**
          //region Lista de trabalhos
