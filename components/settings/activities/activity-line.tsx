@@ -1,4 +1,3 @@
-import Button from "react-bootstrap/Button";
 import { ActivitySchema } from "../../../src/types/activity.type";
 import moment from "moment";
 import useActivityContext from "./activities-context";
@@ -28,12 +27,21 @@ export default function ActivityLine(props: ActivityLineProps) {
         <div className="border-top_ text-xs d-flex flex-wrap overflow-hidden" style={{columnGap: '1rem'}}>
             <div>{sd.format('DD/MM/YYYY')}</div>
             <div className="text-nowrap">{sd.format('HH:mm')} — {ed.format('HH:mm')}</div>
+            {activity?.speakers && 
+            <div className="d-flex gap-1">{activity.speakers.length} palestrante(s)</div>}
+            {activity?.group && 
             <div className="d-flex gap-1">Grupo: 
-                <div className="text-truncate" style={{maxWidth: 200}}>jh kjhkj hkjh khkj</div></div>
+                <div className="text-truncate" style={{maxWidth: 200}}>{activity.group.label}</div>
+            </div>}
+            {activity?.venue && 
             <div className="d-flex gap-1">Local: 
-                <div className="text-truncate" style={{maxWidth: 200}}>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div>
+              <div className="text-truncate" style={{maxWidth: 200}}>{activity.venue.label}</div>
+            </div>}
+            {activity?.room && 
             <div className="d-flex gap-1">Sala: 
-                <div className="text-truncate" style={{maxWidth: 200}}>XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div></div>
+              <div className="text-truncate" style={{maxWidth: 200}}>{activity.room.label}</div>
+            </div>}
+            
 
         </div>
     </div>
