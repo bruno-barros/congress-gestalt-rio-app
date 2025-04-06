@@ -44,6 +44,7 @@ function ReviewsPage() {
 
   const initialValues = {
     evaluators_final_approvement: evt?.review?.evaluators_final_approvement === "1",
+    notify_on_update: evt?.review?.notify_on_update === "1",
     days_to_evaluate: evt?.review?.days_to_evaluate || 15,
     days_for_corrections: evt?.review?.days_for_corrections || 15,
     questions: evt?.review?.questions || [],
@@ -104,6 +105,13 @@ function ReviewsPage() {
                 <Switch
                 name="evaluators_final_approvement"
                 label="Pareceristas podem aprovar trabalhos"
+                />
+            </Field>
+            <Field infos="Se habilitado, os autores receberão um email sempre que uma avaliação for enviada como 'aprovada'.">
+                <br />
+                <Switch
+                name="notify_on_update"
+                label="Notificar pareceristas quando o trabalho for atualizado"
                 />
             </Field>
             <Field infos="Após este prazo, a avaliação será arquivada.">

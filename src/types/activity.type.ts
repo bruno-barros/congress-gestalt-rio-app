@@ -1,3 +1,4 @@
+import { ItemLanguageWithId } from "./settings";
 import { TaxonomySchema } from "./taxonomy.type";
 
 export interface ActivitySchema {
@@ -19,12 +20,17 @@ export interface ActivitySchema {
     certificate: boolean;
     venue_id: null | number;
     room_id: null | number;
-    type_id: null | string;
+    type_id: null | string;// modalidade
     topic_id: null | string;
     active: boolean;
     created_at: string;
     updated_at: string;
     group?: TaxonomySchema;
+    venue?: TaxonomySchema;
+    room?: TaxonomySchema;
+    speakers?: TaxonomySchema[];
+    topic?: ItemLanguageWithId
+    type?: ItemLanguageWithId// modalidade
   }
   
   

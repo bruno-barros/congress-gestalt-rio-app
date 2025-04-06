@@ -257,6 +257,17 @@ body, html {
   gap: 1.5rem;
 }
 
+.img-ratio-1by1 {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center;
+}
+.img-ratio-16by9 {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
 .card-edition-logo {
   img {
     // outline: solid 1px red;

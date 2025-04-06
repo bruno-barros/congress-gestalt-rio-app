@@ -93,6 +93,7 @@ export default class Event {
   };// subscription
   review?: {
     evaluators_final_approvement: StringBoolean;
+    notify_on_update: StringBoolean;
     days_to_evaluate: number;
     days_for_corrections: number;
     questions: ItemLanguageWithId[];

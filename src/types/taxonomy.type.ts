@@ -20,3 +20,13 @@ export interface TaxonomySchema {
   img: string;
   active: boolean;
 }
+
+export interface TaxonomyTypeSchema {
+  id: TaxonomyType;
+  label_pt: string;
+  label_en: string;
+  label_es: string;
+  plural_pt?: string;
+  plural_en?: string;
+  plural_es?: string;
+}

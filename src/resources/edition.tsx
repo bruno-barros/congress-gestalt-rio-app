@@ -3,6 +3,7 @@ import { StringBoolean } from "../types/general";
 import { AbstractStatusModelEnum, StatusType } from "../types/abstracts";
 import { ItemLanguageWithId } from "../types/settings";
 import { CRITERIAS, CriteriaSchema } from "../types/review.d";
+import { User, UserInterface } from "./user";
 
 //region Edition
 export default class Edition {
@@ -428,7 +429,7 @@ export class Edition_Abstract {
     return this[`rules_${lang}`] || "";
   }
 }
-
+//region Edition_Abstract_Field
 class Edition_Abstract_Field {
   allowed: boolean;
   min: number;
@@ -464,6 +465,7 @@ interface AField {
 //region Edition_Review
 export class Edition_Review {
   evaluators_final_approvement: StringBoolean;
+  notify_on_update: StringBoolean;
   days_to_evaluate: number;
   days_for_corrections: number;
   questions: ItemLanguageWithId[];
@@ -504,15 +506,46 @@ export class Edition_Review {
   }
 }
 
-
+//region Edition_Activity
 export class Edition_Activity {
-  activities_allowed: "0";
-  test_mode: "0";
-  start_at: "";
-  end_at: "";
-  limit_per_participant: "";
+  activities_allowed: StringBoolean;
+  test_mode: StringBoolean;
+  start_at: string;
+  end_at: string;
+  limit_per_participant: number;
 
   constructor(data: any) {
     Object.assign(this, data);
+  }
+
+  isTestMode(){
+    return this.test_mode === '1'
+  }
+  
+ /**
+  * 
+   * Está aberto para inscrição em atividades.
+   * Se passar o usuário, valida mode de teste
+   * @param user 
+   * @returns boolean
+   */
+  isOpenToApply(user?: User) {
+    if(user && this.isTestMode()){
+      return user.isAdmin() || user.isSupervisor() || user.isEvaluator();
+    }
+    if (this.activities_allowed !== '1') {
+      return false;
+    }
+    const today = moment();
+    const start = this?.start_at
+      ? moment(this.start_at)
+      : null;
+    const end = this?.end_at
+      ? moment(this.end_at)
+      : null;
+    // console.log({ after: today.isSameOrAfter(start), before: today.isSameOrBefore(end) });
+    if (!start || !end) return false;
+    if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
+    return false;
   }
 }
