@@ -26,7 +26,8 @@ export default function Header(props: HeaderProps) {
   const {data: pending} = usePendingReview()
   const {user, event} = props
   const { currentEdition: edition} = useSettings(router.query.edition as string)
-
+  const ActivityCnf = edition?.Activity()
+  const isActivityAllowed = ActivityCnf?.isOpenToApply(user)
 
 
   useEffect(()=>{
@@ -79,6 +80,10 @@ export default function Header(props: HeaderProps) {
               active={router.pathname === '/abstracts' && router.query?.status==='abstract'}>{t('trabalhos')}</Nav.Link>
             </Link> */}
           </Ac>
+          {isActivityAllowed && 
+          <Link href={`/activities?edition=${edition?.getId()}`} passHref>
+           <Nav.Link>{t('atividades.plural')}</Nav.Link>
+          </Link>}
           <Ac requires={[REQUIREMENTS.abstract.manage]}>
             <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref><Nav.Link className="admin first"
               active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
