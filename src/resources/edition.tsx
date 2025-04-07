@@ -530,7 +530,7 @@ export class Edition_Activity {
    * @returns boolean
    */
   isOpenToApply(user?: User) {
-    if(user && this.isTestMode()){
+    if(user && this.isTestMode() && this.activities_allowed !== '1'){
       return user.isAdmin() || user.isSupervisor() || user.isEvaluator();
     }
     if (this.activities_allowed !== '1') {

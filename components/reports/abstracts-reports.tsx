@@ -8,6 +8,7 @@ import useStats from "../hooks/useStats";
 import { getDataFromKey } from "./reports-helpers";
 import LoadingData from "./pieces/loading-data";
 import { useEffect, useState } from "react";
+import BarPercentual from "./pieces/bar-percentual";
 
 export default function AbstractsReports() {
  
@@ -15,6 +16,8 @@ export default function AbstractsReports() {
     const { data, isLoading, isFetching } = useStats(edition)
     const [total, setTotal] = useState(0)
     const statuses = getDataFromKey('abstracts_status', data)
+    const modalities = getDataFromKey('abstracts_modalities', data)
+    const languages = getDataFromKey('abstracts_languages', data)
     
 
     useEffect(()=>{
@@ -32,39 +35,25 @@ export default function AbstractsReports() {
                     {total}
                     </CardNumber>
                 </div>
+                {/*
+              //region Por Status
+              */}
                 <div className="col">
-                <ResponsiveContainer width="100%" height={400}>
-                    <BarChart
-                    width={500}
-                    height={500}
-                    data={statuses}
-                    margin={{
-                        top: 20,
-                        // right: 30,
-                        // left: 20,
-                        // bottom: 5,
-                    }}
-                    >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis  
-                    // domain={[0, 100]} 
-                    tickFormatter={(value, i) => {
-                        const percent = (value / total) * 100
-                        // console.log({value, total, percent})
-                        // return `${value}%`
-                        return `${percent.toFixed(0)}%`
-                    }} type="number"  />
-                    <Tooltip />
-                    {/* <Legend /> */}
-                    <Bar dataKey="value" label={{ position: 'top' }}>
-                    {statuses.map((entry, i) => {
-                        return <Cell key={i} fill={colors[i]}/>
-                    })}
-                    </Bar>            
-                    </BarChart>
-                </ResponsiveContainer>
+                <BarPercentual data={statuses} total={total} height={400}/>
                 </div>
+            </div>
+            {/*
+            //region Modalidade e linguagem
+            */}
+            <div className="row">
+              <div className="col-12 col-lg-9">
+                <TitleDivisor className="mb-3" level={2}>Modalidades</TitleDivisor>
+                <BarPercentual data={modalities} total={total}/>
+              </div>
+              <div className="col-12 col-lg-3">
+                <TitleDivisor className="mb-3" level={2}>Linguagem</TitleDivisor>
+                <BarPercentual data={languages} total={total}/>
+              </div>
             </div>
         </>}
         

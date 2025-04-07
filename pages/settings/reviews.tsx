@@ -111,7 +111,7 @@ function ReviewsPage() {
                 <br />
                 <Switch
                 name="notify_on_update"
-                label="Notificar pareceristas quando o trabalho for atualizado"
+                label="Notificar autores quando o trabalho for atualizado"
                 />
             </Field>
             <Field infos="Após este prazo, a avaliação será arquivada.">
