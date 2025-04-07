@@ -19,6 +19,7 @@ import useStats from "../hooks/useStats";
 import { useEffect, useState } from "react";
 import { getDataFromKey } from "./reports-helpers";
 import LoadingData from "./pieces/loading-data";
+import BarPercentual from "./pieces/bar-percentual";
 
 export default function SubscriptionsReports() {
 
@@ -27,6 +28,7 @@ export default function SubscriptionsReports() {
     const [total, setTotal] = useState(0)
     const byStates = getDataFromKey('subscriptions_states', data)
     const byProduct = getDataFromKey('subscriptions_products', data)
+    const byCountries = getDataFromKey('subscriptions_countries', data)
 
      useEffect(()=>{
         if(data) setTotal(getDataFromKey('users_subscribers', data))
@@ -63,81 +65,37 @@ export default function SubscriptionsReports() {
             </CardNumber>
           </div>
         </div>
+        {/*
+        //region Por estado
+        */}
         <div className="row">
           <div className="col-12">
             <TitleDivisor level={2} className="mb-2">
               Por estado
             </TitleDivisor>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                width={500}
-                height={500}
-                data={byStates}
-                margin={{
-                  top: 20,
-                  // right: 30,
-                  // left: 20,
-                  // bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis
-                //   domain={[0, 100]}
-                  tickFormatter={(value, i) => {
-                    const percent = (value / total) * 100;
-                    return `${percent.toFixed(0)}%`;
-                  }}
-                  type="number"
-                />
-                <Tooltip />
-                {/* <Legend /> */}
-                <Bar dataKey="value" label={{ position: "top" }}>
-                  {byStates.map((entry, i) => {
-                    return <Cell key={i} fill={colors[i % colors.length]} />;
-                  })}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <BarPercentual data={byStates} total={total} height={300}/>
           </div>
         </div>
+        {/*
+        //region Por pais
+        */}
+        <div className="row">
+          <div className="col-12">
+            <TitleDivisor level={2} className="mb-2">
+              Por país
+            </TitleDivisor>
+            <BarPercentual data={byCountries} total={total} height={300}/>
+          </div>
+        </div>
+        {/*
+        //region Por Plano
+        */}
         <div className="row">
           <div className="col-12">
             <TitleDivisor level={2} className="mb-2">
               Por Plano
             </TitleDivisor>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart
-                width={500}
-                height={500}
-                data={byProduct}
-                margin={{
-                  top: 20,
-                  // right: 30,
-                  // left: 20,
-                  // bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis
-                //   domain={[0, 100]}
-                  tickFormatter={(value, i) => {
-                    const percent = (value / total) * 100;
-                    // return `${value}%`;
-                    return `${percent.toFixed(0)}%`;
-                  }}
-                  type="number"
-                />
-                <Tooltip />
-                {/* <Legend /> */}
-                <Bar dataKey="value" label={{ position: "top" }}>
-                  {byProduct.map((entry, i) => {
-                    return <Cell key={i} fill={colors[i % colors.length]} />;
-                  })}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+            <BarPercentual data={byProduct} total={total} height={300}/>
           </div>
         </div>
         </>}
