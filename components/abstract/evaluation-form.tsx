@@ -219,6 +219,7 @@ export default function EvaluationForm(props: EvaluationFormProps) {
           {ReviewCnf.getCriteriasArray().map(criteria => {
             return <Select key={criteria.id} name={criteria.id} label={criteria.title?.[lang]} containerClass="evaluation-select">
             <option value="-2">...</option>
+            {criteria.optional && <option value="-1">Não se aplica</option>}
             {Array.from(Array(criteria.max + 1).keys()).map(num => (
               <option key={num} value={num}>{num}</option>))}
           </Select>

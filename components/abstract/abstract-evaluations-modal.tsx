@@ -145,9 +145,9 @@ export default function AbstractEvaluationsModal(props: AbstractEvaluationsModal
                 {allowQuantitative &&
                 <div className="d-flex align-items-center gap-1">
                   {ReviewCnf.getCriteriasArray().map(criteria => {
+                    const v = eva?.[criteria.id] >= 0 ? eva?.[criteria.id] : 'N/A'
                     return <>
-                      {/* <div className="mb-1 mr-1 text-sm">{criteria.title?.[lang]}</div> */}
-                      <div className="badge badge-secondary">{criteria.title?.[lang]}: {eva?.[criteria.id]}</div>
+                      <div className="badge badge-secondary">{criteria.title?.[lang]}: {v}</div>
                     </>
                   })}
                   <div className="ml-2 mr-1 badge badge-primary">{eva.getAverage()}</div>

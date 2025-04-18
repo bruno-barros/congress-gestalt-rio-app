@@ -9,6 +9,7 @@ export const CRITERIAS = {
       en: "How relevant the content is to the proposed theme",
       es: "Cuán relevante es el contenido para el tema propuesto",
     },
+    optional: false,
     weight: 1,
     min: 0,
     max: 5,
@@ -21,6 +22,7 @@ export const CRITERIAS = {
       en: "How clear and understandable the content is",
       es: "Cuán claro y comprensible es el contenido",
     },
+    optional: false,
     weight: 1,
     min: 0,
     max: 5,
@@ -33,6 +35,7 @@ export const CRITERIAS = {
       en: "Adequacy and quality of the bibliography",
       es: "Adecuación y calidad de la bibliografía",
     },
+    optional: false,
     weight: 1,
     min: 0,
     max: 5,
@@ -45,6 +48,7 @@ export const CRITERIAS = {
       en: "Adequacy and quality of the methodology",
       es: "Adecuación y calidad de la metodología",
     },
+    optional: false,
     weight: 1,
     min: 0,
     max: 5,
@@ -61,6 +65,7 @@ export const CRITERIAS = {
       en: "Adequacy and quality of the research",
       es: "Adecuación y calidad de la investigación",
     },
+    optional: true,
     weight: 1,
     min: 0,
     max: 5,
@@ -73,6 +78,7 @@ export const CRITERIAS = {
   //       en: "The quality of the content presented",
   //       es: "La calidad del contenido presentado",
   //     },
+  //     optional: false,
   //     weight: 1,
   //     min: 0,
   //     max: 5,
@@ -85,6 +91,7 @@ export const CRITERIAS = {
   //       en: "The originality and contributions of the work",
   //       es: "La originalidad y contribuciones del trabajo",
   //     },
+  //     optional: false,
   //     weight: 1,
   //     min: 0,
   //     max: 5,
@@ -96,6 +103,7 @@ export interface CriteriaSchema {
   id: string;
   title: { pt: string; en: string; es: string };
   description: { pt: string; en: string; es: string };
+  optional: boolean;
   weight: number;
   max: number;
   min: number;
