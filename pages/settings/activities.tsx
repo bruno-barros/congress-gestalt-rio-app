@@ -38,6 +38,8 @@ import ListTaxonomies from "../../components/settings/taxonomies/list-taxonomies
 import { TaxonomyType } from "../../src/types/taxonomy.type";
 import useTaxonomies from "../../components/hooks/activities/useTaxonomies";
 import useActivities from "../../components/hooks/activities/useActivities";
+import DatePicker from "../../components/ui/form/formik/date-picker";
+
 
 export default function Context() {
   return (
@@ -75,6 +77,7 @@ function ActivitiesPage() {
     start_at: evt?.activity?.start_at,
     end_at: evt?.activity?.end_at,
     limit_per_participant: evt?.activity?.limit_per_participant,
+    cancel_limit_at: evt?.activity?.cancel_limit_at,
   };
   //region Validation Schema
   const validationSchema = Yup.object({
@@ -144,6 +147,15 @@ function ActivitiesPage() {
                 dateFormat="YYYY-MM-DD"
                 defaultValue={[values.start_at, values.end_at]}
             />
+
+            <Field infos="Data limite para que os participantes possam de desisncrever de uma atividade.">
+              <DatePicker
+              name="cancel_limit_at"
+              label="Prazo para cancelamento de atividades"
+              dateFormat="YYYY-MM-DD"
+              defaultValue={values.cancel_limit_at}
+              />
+            </Field>
 
             <Field infos="Número máximo de atividades que um participante pode se inscrever.">
                 <Text

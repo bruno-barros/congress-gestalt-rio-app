@@ -16,24 +16,35 @@ import s from './activities.module.scss';
 import WpActivity from "../../src/http/wp-activity";
 import useCurrentUser from "../hooks/useCurrentUser";
 import { toast } from "react-toastify";
+import { useQueryClient } from "react-query";
+import Icon from "../ui/ionicon";
+import useSettings from "../hooks/useSettings";
+import ActivityAddCalendar from "./line/activity-add-calendar";
 
 
 interface AvailableActivitiesLineProps {
   activity: ActivitySchema;
+  context: 'subscribe' | 'my-activities';
+  userActivities?: ActivitySchema[];
 }
 
 export default function AvailableActivitiesLine(
   props: AvailableActivitiesLineProps
 ) {
-  const { activity } = props;
+  const { activity, context, userActivities } = props;
+  const queryClient = useQueryClient();
   const { user } = useCurrentUser()
-  const { loading, setLoading } = useMyActivitiesContext();
+  const { loading, setLoading, edition } = useMyActivitiesContext();
+  const { data: event, currentEdition } = useSettings(String(edition));
+  const ActivityCnf = currentEdition?.Activity()
+
   const Activity = Model.make(activity);
   const Venue = Taxonomy.make(activity.venue);
   const Room = Taxonomy.make(activity.room);
   const router = useRouter();
   const t = useTrans();
   const lang = router.locale || "pt";
+  const ds = moment(activity.start_at).format("DD/MM/YYYY");
   const hs = moment(activity.start_at).format("HH:mm");
   const he = moment(activity.end_at).format("HH:mm");
   const tag =
@@ -42,6 +53,10 @@ export default function AvailableActivitiesLine(
     activity.group?.label ||
     "";
   const [show, setShow] = useState(false);
+  const seats = Number(activity.vacancies) - Number(activity.occupation);
+  const subscribed = userActivities?.some((a) => a.id === activity.id);
+  const clickDisabled = seats === 0 && context === 'subscribe';
+
 
   function handleClick(e) {
     e.preventDefault();
@@ -61,40 +76,89 @@ export default function AvailableActivitiesLine(
     setLoading(false);
 
     if(resp.success){
+      queryClient.invalidateQueries('activities')
+      queryClient.invalidateQueries('user_activities')
         toast.success(t('atividades.inscricao-realizada'));
     } else {
-        toast.error(t('atividades.inscricao-falhou'));
+        toast.error(<><b>{t('atividades.inscricao-falhou')}</b><p>{resp.message}</p></>);
     }
 
+  }
+
+  async function handleCancelation(){
+    setLoading(true);
+    const axios = await WpActivity.unsubscribe({
+        activity_id: activity.id,
+        user_id: user.getId(),
+    })
+    const resp = axios.data
+    setLoading(false);
+
+    if(resp.success){
+      queryClient.invalidateQueries('activities')
+      queryClient.invalidateQueries('user_activities')
+        toast.success(t('atividades.inscricao-cancelada'));
+    } else {
+        toast.error(<><b>{t('atividades.inscricao-falhou')}</b><p>{resp.message}</p></>);
+    }
   }
 
   return (
     <>
       <button
-        className="list-group-item list-group-item-action d-md-flex align-items-center gap-3 justify-content-between"
+      className={`${s.line} ${subscribed ? s.line_subscribed : ''} list-group-item list-group-item-action d-flex align-items-center gap-3 justify-content-between ${clickDisabled ? 'disabled bg-light' : ''}`}
         onClick={handleClick}
+        disabled={subscribed}
       >
-        <div className="d-md-flex align-items-center gap-3">
-          <div>{`${hs} - ${he}`}</div>
-          <div>{Activity.getTitle(lang)}</div>
+        <div className="d-md-flex align-items-center gap-3 justify-content-between w-100">
+          <div className={`${context === 'subscribe' ? 'd-md-flex' : ''} align-items-center gap-3`}>
+            <div className="text-nowrap">{context === 'my-activities' && <><b>{ds}</b> às </>}{`${hs} - ${he}`}</div>
+            <div>{Activity.getTitle(lang)}</div>
+          </div>
+          <div className="d-flex align-items-center gap-2 my-2">
+            {context === 'subscribe' && 
+            <div className={`text-nowrap text-xs text-lowercase ${seats===0?'text-danger':''}`}>{seats} {t('atividades.vagas')}</div>}
+            
+            <div className={`badge  ${(seats === 0 && context === 'subscribe') ? 'badge-secondary' : 'badge-primary'}`}>{tag}</div>
+          </div>
         </div>
-        <div>
-          <div className="badge badge-primary">{tag}</div>
-        </div>
+        {(subscribed && context === 'subscribe')
+          ? <div className={`d-flex ${s.checked}`}><Icon name="checkmark-circle-outline" /></div> 
+          : <div className={`d-flex ${s.chevron}`}>{(seats > 0 || context === 'my-activities') && <Icon name="chevron-forward-outline" />}</div>}
+        
+        
       </button>
+      {/* ------------------------------------------------------- */}
       <Modal show={show} onHide={() => setShow(false)} centered>
         <Modal.Header closeButton className="modal-header--sticky">
           <Modal.Title>{Activity.getTitle(lang)}</Modal.Title>
         </Modal.Header>
-        <div className="bg-light d-flex py-3">
+        <div className="bg-light -d-flex py-3">
+          <div className="row px-3 mb-2">
+            <div className="col-auto">
+              <div className={`${context==='subscribe' ? 'd-flex' : ''}  align-items-center gap-2 mb-2`}>
+                {/* <div className="text-xs text-uppercase">{t('tempo.dia')}</div> */}
+                <div className="font-weight-bold" style={{fontSize: '1.4em', lineHeight: '1em'}}>{ds}</div>
+                {/* <div className="text-xs text-uppercase">{t('tempo.hora')}</div> */}
+                <div className="font-weight-bold" style={{fontSize: '1.2em', lineHeight: '1em'}}>{hs} - {he}</div>
+              </div>
+            </div>
+            {context === 'my-activities' && 
+            <div className="col-auto mb-2">
+                <ActivityAddCalendar activity={activity} />
+            </div>}
+            
+          </div>
+          <div className="row px-3">
             <div className="col-auto">
                 <div className="text-xs text-uppercase">{t('atividades.vagas-disponiveis')}</div>
-                <div className="font-weight-bold" style={{fontSize: '2em', lineHeight: '1em'}}>{Activity.vacancies} ???</div>
+                <div className="font-weight-bold" style={{fontSize: '2em', lineHeight: '1em'}}>{seats}</div>
             </div>
             <div className="col-auto">
                 <div className="text-xs text-uppercase">{t('atividades.carga-horaria')}</div>
                 <div className="font-weight-bold" style={{fontSize: '2em', lineHeight: '1em'}}>{Activity.workload} <small style={{fontSize:'60%', lineHeight: '1em'}}>{t('tempo.minutos').toLowerCase()}</small></div>
             </div>
+          </div>
         </div>
         <Modal.Body>
             <div dangerouslySetInnerHTML={{__html: Activity.getDescription(lang)}}></div>
@@ -125,7 +189,12 @@ export default function AvailableActivitiesLine(
         </Modal.Body>
         <Modal.Footer className="modal-footer--sticky">
             <Button variant="secondary" disabled={loading} onClick={()=> setShow(false)} type="button">{t('fechar')}</Button>
-            <LoadingButton loading={loading} onClick={handleApply} type="button">{t('atividades.btn-inscrever')}</LoadingButton>
+            {context === 'subscribe' && 
+            <LoadingButton loading={loading} onClick={handleApply} type="button">{t('atividades.btn-inscrever')}</LoadingButton>}
+
+            {(context === 'my-activities' && ActivityCnf?.isCancelationAllowed()) &&
+            <LoadingButton loading={loading} onClick={handleCancelation} type="button" variant="danger">{t('atividades.btn-cancelar')}</LoadingButton>}
+            
             
         </Modal.Footer>
       </Modal>

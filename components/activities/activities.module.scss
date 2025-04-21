@@ -35,3 +35,43 @@
     height: 1px;
     background-color: $gray-400;
 }
+
+.chevron {
+    color: $primary;
+}
+.checked {
+    background-color: $success;
+    color: $white;
+    border-radius: 100px;
+    font-size: 1.4em;
+}
+
+.line {
+    line-height: 1em;
+}
+.line:hover {
+    outline:solid 2px rgba($primary, 0.5);
+    outline-offset: -2px;
+    position: relative;
+}
+
+.line_subscribed {
+    background-color: rgba($success, 0.1) !important;
+}
+
+.my_card {
+    background-color: rgba($success, 0.2);
+
+    :global {
+        .list-group-item {
+            background-color: transparent !important;
+        }
+    }
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}

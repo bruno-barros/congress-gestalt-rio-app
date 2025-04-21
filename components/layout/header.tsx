@@ -1,7 +1,8 @@
 import {User} from "../../src/resources/user";
 import Event from '../../src/resources/event'
-import Navbar from 'react-bootstrap/cjs/Navbar'
-import Nav from "react-bootstrap/cjs/Nav";
+import Navbar from 'react-bootstrap/Navbar'
+import NavDropdown from "react-bootstrap/NavDropdown";
+import Nav from "react-bootstrap/Nav";
 import UserMenu from "./user-menu";
 import Link from "next/link";
 import useTrans from "../hooks/useTrans";
@@ -84,18 +85,7 @@ export default function Header(props: HeaderProps) {
           <Link href={`/activities?edition=${edition?.getId()}`} passHref>
            <Nav.Link>{t('atividades.plural')}</Nav.Link>
           </Link>}
-          <Ac requires={[REQUIREMENTS.abstract.manage]}>
-            <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref><Nav.Link className="admin first"
-              active={router.pathname === '/adm/subscriptions'}>Inscrições</Nav.Link></Link>
-            <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref><Nav.Link className="admin"
-              active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</Nav.Link></Link>
-            <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref><Nav.Link className="admin"
-              active={router.pathname === '/adm/evaluations'}>Avaliações</Nav.Link></Link>
-            <Link href={`/adm/users`} passHref><Nav.Link className="admin last"
-              active={router.pathname === '/adm/users'}>Usuários</Nav.Link></Link>
-          </Ac>
-          
-          
+
           {user.canEvaluateAbstracts() && <>
             <Link href={`/evaluations?edition=${edition?.getId()}`} passHref><Nav.Link
               title={`${pending} aguardando revisão`}
@@ -103,6 +93,24 @@ export default function Header(props: HeaderProps) {
               {pending > 0 && <div className="badge badge-warning ml-1">{pending}</div>}
             </Nav.Link></Link>
           </>}
+          
+          <Ac requires={[REQUIREMENTS.abstract.manage]}>
+            <NavDropdown title="Gestão" id="basic-nav-dropdown" className="admin">
+              <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/subscriptions'}>Inscrições</NavDropdown.Item></Link>              
+              <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</NavDropdown.Item></Link>
+              <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/evaluations'}>Avaliações</NavDropdown.Item></Link>
+              <Link href={`/adm/activities?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/activities'}>Atividades</NavDropdown.Item></Link>
+              <Link href={`/adm/users`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
+            </NavDropdown>
+          </Ac>
+          
+          
+          
           {/* [*abrisco] {user.canPublishAbstracts() && <>
             <Link href={`/profile?tab=subscriptions`} passHref>
               <Nav.Link>{t('minhas-inscricoes')}
