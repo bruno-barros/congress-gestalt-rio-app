@@ -397,4 +397,13 @@ export default class WpUser {
   }
 
 
+  
+  static activities(args: {user_id: number, edition: string}): Promise<AxiosResponse<WpRestResponse<any>>>{
+    const qs = [];
+    if (args.edition) {
+      qs.push(`edition=${args.edition}`);
+    }
+    return restApi.get(`${RESTVersion.default().namespace}/users/${args.user_id}/activities?${qs.join("&")}`);
+  }
+
 }
