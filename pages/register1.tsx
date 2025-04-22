@@ -248,8 +248,8 @@ const Register1 = () => {
                     {getRaces().map(g => (<option key={g.value} value={g.value}>{t(`raca.${g.name}`)}</option>))}
                   </Select>
                 </div>
-
-                <fieldset className="border p-3 mb-3 bg-light">
+                
+                {false && <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Ações Afirmativas</strong></legend>
                   <div className="row">
                     <Select name="is_affirmative_action" label="Deseja participar do edital das vagas de Ações afirmativas?" containerClass="col-12 col-md-6">
@@ -279,7 +279,8 @@ const Register1 = () => {
 
                   {/* {dump(values)} */}
 
-                </fieldset>
+                </fieldset>}
+                
                 
                 <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Acessibilidade</strong></legend>
