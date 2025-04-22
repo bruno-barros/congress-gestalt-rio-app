@@ -62,7 +62,16 @@ const AdmSubscriptions = () => {
       {
         Header: 'Data',
         accessor: 'date',
+      },
+      {
+        Header: 'PcD',
+        accessor: 'is_pdc',
+      },
+      {
+        Header: 'AA',
+        accessor: 'is_affirmative_action',
       }
+
     ]}, [])
   const data = useMemo(() => {
     if(!subscriptions || subscriptions.getOrders().length === 0) return []
@@ -73,10 +82,19 @@ const AdmSubscriptions = () => {
       row.customer_email = order.customer.email
       row.order_status = t(`status.${order.status.toLowerCase()}`)
       row.status_woo = order.status
+      row.is_pdc = fndMd(order.customer, 'is_pdc', false) ? 'Sim' : 'Não'
+      row.is_affirmative_action = fndMd(order.customer, 'affirmative_action', false) ? 'Sim' : 'Não'
 
       return row
     })
   }, [subscriptions])
+
+  function fndMd(customer, key, def: any = null){
+    const metas = customer?.metaData || []
+    const meta = metas.find(m => m.key === key)
+    if(meta) return meta.value
+    return def
+  }
 
   const dummy = useCallback(() => () => null, [])
 
