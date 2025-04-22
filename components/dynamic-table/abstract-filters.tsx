@@ -68,11 +68,17 @@ export function getOrderFilterableFields() {
   const statuses = OrderStatuses.map(s => {
     return {value: s, label: t(`status.${s.toLowerCase()}`)}
   })
+  const pcdOptions = [
+    {value: 'Sim', label: 'Sim'},
+    {value: 'Não', label: 'Não'},
+  ]
 
   return [
     // {id: 'customer_name', label: 'Participante', options: null},
     // {id: 'customer_email', label: 'E-mail', options: null},
     {id: 'status_woo', label: 'Status', options: statuses},
+    {id: 'is_pdc', label: 'PcD', options: pcdOptions},
+    {id: 'is_affirmative_action', label: 'Ações Afirmativas', options: pcdOptions},
   ]
 }
 

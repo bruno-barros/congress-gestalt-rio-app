@@ -32,7 +32,7 @@ export default class Abstract {
     const testMode = args?.edition?.abstract?.test_mode === "1";
     const onlySubscribed = args?.edition?.abstract?.only_subscribed === "1";
     const isSubscribed = typeof args?.isSubscribed === 'boolean' ? args?.isSubscribed : false;
-    console.log({ onlySubscribed, isSubscribed, abs:  args?.edition?.abstract });
+    // console.log({ onlySubscribed, isSubscribed, abs:  args?.edition?.abstract });
     if(testMode) {
       return user.isAdmin() || user.isSupervisor() || user.isEvaluator();
     }

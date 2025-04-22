@@ -35,7 +35,7 @@ export default function GlobalUsers() {
                     {getDataFromKey('users_colaborators', data)}
                 </CardNumber>
             </div>
-            <div className="col-auto">
+            {/* <div className="col-auto">
                 <div className="d-flex align-items-center" style={{gap: 10}}>
                 <PieChart width={150} height={150}>
                 <Pie data={locales} dataKey="value" nameKey="name" outerRadius={'100%'} fill="#8884d8" labelLine={false} label={CenteredLabel}>{
@@ -53,7 +53,7 @@ export default function GlobalUsers() {
                     })}
                 </div>
                 </div>
-            </div>
+            </div> */}
         </div>
         </>}
         

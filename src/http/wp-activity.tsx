@@ -90,4 +90,12 @@ export default class WpActivity {
 
     return restApi.post(`${RESTVersion.default().namespace}/activities/${args.activity_id}/subscribe`, args);
   }
+  
+  static unsubscribe(args: {
+    activity_id: number;
+    user_id: number;
+  }): Promise<AxiosResponse<WpRestResponse<null>>> {
+
+    return restApi.post(`${RESTVersion.default().namespace}/activities/${args.activity_id}/unsubscribe`, args);
+  }
 }

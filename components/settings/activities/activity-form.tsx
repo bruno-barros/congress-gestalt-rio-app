@@ -53,6 +53,7 @@ export default function ActivityForm(props: ActivityFormProps) {
     workload: Yup.number().required("Obrigatório"),
     vacancies: Yup.number().required("Obrigatório"),
   });
+  const validSubcriptionsCount = data?.valid_subscriptions ? data.valid_subscriptions.length : 0;
   useEffect(()=>{
     if(!data || !data?.start_at || !data.end_at) return;
     const start = moment(data.start_at);
@@ -207,6 +208,12 @@ export default function ActivityForm(props: ActivityFormProps) {
                 </div>
                 <div className="col-auto" style={{width: 160}}>
                     <Text name="vacancies" label="Vagas disponíveis" type="number" min={0} />
+                </div>
+                <div className="col-auto">
+                  <div className="form-group">
+                    <label className="d-block mt-1">Ocupação</label>
+                    <div className="bg-warning d-inline-block form-control w-auto font-weight-bold">{validSubcriptionsCount}</div>                    
+                  </div>
                 </div>
                 <div className="col-auto">
                     <div className="mt-4">

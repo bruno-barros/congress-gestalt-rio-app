@@ -1,4 +1,4 @@
-import { createContext, Dispatch, SetStateAction, useContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useState } from "react";
 import { ActivitySchema } from '../../src/types/activity.type';
 import useActivities from "../hooks/activities/useActivities";
 import useSettings from "../hooks/useSettings";
@@ -28,9 +28,19 @@ export function useMyActivitiesContext() {
 export default function MyActivitiesContextProvider({children}) {
     const router = useRouter()
     const {data: event, currentEdition} = useSettings(String(router.query?.edition))
-    const { data: activities } = useActivities(currentEdition?.getId())
+    const { data: activities, isLoading: actLoading, isFetching: actFetching } = useActivities(currentEdition?.getId())
     const [loading, setLoading] = useState(false)
-    const validActivities = activities?.filter(act => act.active) || []
+    const validActivities = Array.isArray(activities) ? activities?.filter(act => act.active) : []
+
+    useEffect(()=>{
+        if(actFetching || actLoading){
+            setLoading(true)
+        } else {
+            setLoading(false)
+        }
+    }, [
+        actFetching, actLoading
+    ])
 
     const values = {
         activities: validActivities || [],

@@ -513,6 +513,7 @@ export class Edition_Activity {
   start_at: string;
   end_at: string;
   limit_per_participant: number;
+  cancel_limit_at: string;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -530,10 +531,11 @@ export class Edition_Activity {
    * @returns boolean
    */
   isOpenToApply(user?: User) {
-    if(user && this.isTestMode() && this.activities_allowed !== '1'){
-      return user.isAdmin() || user.isSupervisor() || user.isEvaluator();
+    if(user && this.isTestMode()){
+      // console.log({testmode: this.isTestMode(), evaluator: user.isEvaluator(), superv: user.isSupervisor()})
+      return (user.isAdmin() || user.isSupervisor() || user.isEvaluator()) ? true : false;
     }
-    if (this.activities_allowed !== '1') {
+    if (this.activities_allowed != '1') {
       return false;
     }
     const today = moment();
@@ -547,5 +549,13 @@ export class Edition_Activity {
     if (!start || !end) return false;
     if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
     return false;
+  }
+
+  isCancelationAllowed() {
+    if (!this.cancel_limit_at) return true;
+    const today = moment().hours(0).minutes(0).seconds(0).milliseconds(0);
+    const limit = moment(this.cancel_limit_at).hours(0).minutes(0).seconds(0).milliseconds(0);
+    
+    return today.valueOf() <= limit.valueOf();
   }
 }

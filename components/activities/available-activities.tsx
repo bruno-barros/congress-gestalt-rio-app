@@ -5,18 +5,32 @@ import ProgressBar from '../ui/progressbar';
 import { useMyActivitiesContext } from './my-actvities-context';
 import AvailableActivitiesLine from './available-activity-line';
 import moment from 'moment';
+import useUserActivities from '../hooks/activities/useUserActivities';
+import useCurrentUser from '../hooks/useCurrentUser';
+import useTrans from '../hooks/useTrans';
+import { set } from 'lodash';
+import { useEffect, useState } from 'react';
+import ActivitiesFilters from './activities-filters';
+import { dump } from '../../src/helpers';
 
 export default function AvailableActivities() {
-    const { activities, loading, setLoading } = useMyActivitiesContext()
+    const { user } = useCurrentUser()
+    const t = useTrans();
+    const { activities, loading, setLoading, edition } = useMyActivitiesContext()
+    const { data: userActivities } = useUserActivities(user?.getId(), edition);
+    const [filtered, setFiltered] = useState(activities)
     let lastDate = '';
+    useEffect(()=>{
+        setFiltered(activities)
+    }, [activities])
   return <div>
-    {/* <h3 className={s.section_title}>Atividades disponíveis</h3> */}
+    {/* {dump(filtered)} */}
     <Card>
-        <Card.Header className={s.section_title}>Atividades disponíveis</Card.Header>
+        <Card.Header className={s.section_title}>{t('atividades.atividades-disponiveis')}</Card.Header>
         {loading && <ProgressBar />}
-        <div className="alert alert-warning m-0">filtros</div>
+        <ActivitiesFilters activities={activities} filtered={setFiltered} />
         <div className="list-group list-group-flush">
-            {activities.map(a => {
+            {filtered.map((a, idx) => {
                 const ds = moment(a.start_at).format('DD/MM/YYYY')
                 let showDiv = false;
                 if(ds !== lastDate){
@@ -24,11 +38,12 @@ export default function AvailableActivities() {
                     lastDate = ds;
                 }
                 
-                return <>
+                return <div key={idx}>
                     {showDiv && (<div className={`list-group-item ${s.item_div}`}>{ds}</div>)}
-                    <AvailableActivitiesLine key={a.id} activity={a} />
-                </>
+                    <AvailableActivitiesLine context='subscribe' activity={a} userActivities={userActivities} />
+                </div>
             })}
+            {filtered.length === 0 && <div className="list-group-item text-sm text-center">{t('atividades.nenhuma-atividade')}</div>}
         </div>
         {/* <Card.Body>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam quo dolore necessitatibus esse asperiores magni aspernatur officia eveniet ab atque. Dolore veritatis placeat ipsa quidem dicta nostrum nulla numquam accusantium.

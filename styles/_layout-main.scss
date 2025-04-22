@@ -104,6 +104,13 @@
   .layout-main {
 
     .mainHeader {
+      .dropdown.admin {
+        .nav-link{
+          color: #fff;
+          background-color: $gray-500;
+          border-radius: 5px;
+        }
+      }
       .navbar-nav .nav-link {
           padding-left: $spacer;
           padding-right: $spacer;
