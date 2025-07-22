@@ -23,8 +23,9 @@ import { blockUi } from "../../src/store/ui.actions";
 import { useDispatch } from "react-redux";
 import SetStatusByCriteriaModal from "../abstract/set-status-by-criteria-modal";
 import SetEvaluationVisibilityModal from "../abstract/set-evaluation-visibility-modal";
-import { formatCPF } from "../../src/helpers";
+import { formatCPF, getGenres } from "../../src/helpers";
 import useSettings from "../hooks/useSettings";
+import { countries as  COUNTRIES } from "../../src/countries";
 
 type GroupActions<T extends object> = {
   instance: TableInstance<T>;
@@ -483,6 +484,9 @@ export function SubscriptionsGroupActions<T extends object>({
             USO_EMAIL: usermeta(item, "allow_newsletter") === "1" ? "Sim" : "Não",
             ACAO_AFIRMATIVA: usermeta(item, "affirmative_action") ? "Sim" : "Não",
             TIPO_ACAO: usermeta(item, "affirmative_action"),
+            RACA: usermeta(item, 'race') || 'Parda',
+            GENERO: genderName(item, 'gender'),
+            PAIS: countryName(item, 'country'),  
             //
           };
         })
@@ -495,6 +499,18 @@ export function SubscriptionsGroupActions<T extends object>({
     if (!item?.customer?.metaData) return "";
     let meta = item.customer.metaData.find((m) => m.key === key);
     return meta ? meta.value : "";
+  }
+
+  function genderName(item: any, key: string) {
+    const v = usermeta(item, key);
+    const s = getGenres().find((g) => g.value === v);
+    return s ? s.name : "";
+  }
+
+  function countryName(item: any, key: string) {
+    const v = usermeta(item, key);
+    const s = COUNTRIES.find((g) => g.code === v);
+    return s ? s.name : "";
   }
 
   return (
