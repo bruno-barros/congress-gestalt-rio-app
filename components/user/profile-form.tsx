@@ -206,6 +206,7 @@ export default function ProfileForm(props: ProfileFormProps) {
             {getGenres().map(g => (<option key={g.value} value={g.value}>{t(g.name)}</option>))}
           </Select>
           <Select name="race" label={t('cadastro.raca')} required containerClass="col-12 col-md">
+            <option value="" disabled>Selecione</option>
             {getRaces().map(g => (<option key={g.value} value={g.value}>{t(`raca.${g.name}`)}</option>))}
           </Select>
         </div>
