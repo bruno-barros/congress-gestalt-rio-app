@@ -3,6 +3,9 @@ import { StringBoolean } from "../types/general";
 
 // import {weekdayTrans} from "./date-time-week";
 
+/**
+ * Retorno via GraphQl
+ */
 export interface UserInterface {
   id?: string | number;
   databaseId: number;

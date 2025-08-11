@@ -12,6 +12,8 @@ export default class Event {
   global: {
     languages: string[];
     name: string;
+    url: { pt: string; en: string };
+    app: { pt: string; en: string };
     description_pt: string;
     description_en: string;
     description_es: string;

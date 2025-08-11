@@ -155,7 +155,7 @@ export default class Edition {
   }
 
   get logoSecondary() {
-    return this.logo?.secondary || this.defaults?.logo?.secondary;
+    return this.edition?.logo_sm || this.defaults?.logo?.secondary;
   }
 
   isSubscriptionAllowed() {
