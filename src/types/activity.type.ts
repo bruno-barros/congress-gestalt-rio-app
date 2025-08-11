@@ -3,6 +3,7 @@ import { TaxonomySchema } from "./taxonomy.type";
 
 export interface ActivitySchema {
   id: number;
+  uuid: string;
   edition: string;
   group_id: null | number;
   title: string;
