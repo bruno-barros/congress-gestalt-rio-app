@@ -31,7 +31,11 @@ export function siteTitle(name: string = "", queryClient?: QueryClient) {
 
 export const redirectToLogin = (server?: ServerResponse) => {
   // add the redirected query param for debugging
-  const login = "/?session=expired";
+  const currentUrl = typeof window !== "undefined" ? window.location.href : "";
+  const login = `/login/?session=expired&redirect_to=${encodeURIComponent(
+    currentUrl
+  )}`;
+
   if (server) {
     // @see https://github.com/zeit/next.js/wiki/Redirecting-in-%60getInitialProps%60
     // server rendered pages need to do a server redirect
@@ -351,7 +355,7 @@ export function dispatchOnENTER(event, callback) {
 }
 
 export function average(numbers: any[], round: number = 1) {
-  const divby = numbers.filter(v => Number(v) >= 0).length;
+  const divby = numbers.filter((v) => Number(v) >= 0).length;
   const sum = numbers.reduce((prev, curr) => {
     const val = curr > 0 ? parseInt(String(curr)) : 0;
     return prev + val;
