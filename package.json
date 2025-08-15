@@ -34,6 +34,7 @@
     "lodash": "^4.17.20",
     "moment": "^2.29.1",
     "next": "^12.3.4",
+    "qrcode.react": "^4.2.0",
     "react": "^17.0.2",
     "react-avatar": "^3.9.7",
     "react-calendar": "^4.6.0",
