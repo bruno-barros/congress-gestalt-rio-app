@@ -28,7 +28,7 @@ export default function Header(props: HeaderProps) {
   const {user, event} = props
   const { currentEdition: edition} = useSettings(router.query.edition as string)
   const ActivityCnf = edition?.Activity()
-  const isActivityAllowed = ActivityCnf?.isOpenToApply(user)
+  const isActivityAllowed = ActivityCnf?.activities_allowed === '1';
 
 
   useEffect(()=>{
@@ -104,6 +104,8 @@ export default function Header(props: HeaderProps) {
                 <NavDropdown.Item active={router.pathname === '/adm/evaluations'}>Avaliações</NavDropdown.Item></Link>
               <Link href={`/adm/activities?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/activities'}>Atividades</NavDropdown.Item></Link>
+              <Link href={`/adm/checkin?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/checkin'}>Check-in</NavDropdown.Item></Link>
               <Link href={`/adm/users`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
             </NavDropdown>
