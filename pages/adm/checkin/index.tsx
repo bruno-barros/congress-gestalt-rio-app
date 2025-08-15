@@ -7,8 +7,8 @@ import { useRouter } from "next/router";
 import useActivities from "../../../components/hooks/activities/useActivities";
 import ActivitiesTable from "../../../components/tables/ActivitiesTable";
 import ProgressBar from "../../../components/ui/progressbar";
-import ButtonGroup from "react-bootstrap/cjs/ButtonGroup";
-import Button from "react-bootstrap/esm/Button";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Button from "react-bootstrap/Button";
 import Icon from "../../../components/ui/ionicon";
 
 const AdmCheckin = () => {
