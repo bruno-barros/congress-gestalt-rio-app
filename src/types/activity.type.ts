@@ -35,6 +35,7 @@ export interface ActivitySchema {
   type?: ItemLanguageWithId; // modalidade
   subscriptions?: ActivityUserSchema[];
   valid_subscriptions?: ActivityUserSchema[];
+  checkedin?: number;
 }
 
 export interface ActivityUserSchema {
@@ -59,6 +60,6 @@ export interface ActivityUserSchema {
       user_id: number;
       meta_key: string;
       meta_value: string;
-    }[]
+    }[];
   };
 }

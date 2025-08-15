@@ -514,6 +514,9 @@ export class Edition_Activity {
   end_at: string;
   limit_per_participant: number;
   cancel_limit_at: string;
+  checkin_allowed: StringBoolean;
+  ckeckin_minutes_before: number;
+  ckeckin_minutes_after: number;
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -538,14 +541,17 @@ export class Edition_Activity {
     if (this.activities_allowed != '1') {
       return false;
     }
-    const today = moment();
+    const today = moment().startOf('day');
     const start = this?.start_at
-      ? moment(this.start_at)
+      ? moment(this.start_at).startOf('day')
       : null;
     const end = this?.end_at
-      ? moment(this.end_at)
+      ? moment(this.end_at).startOf('day')
       : null;
-    // console.log({ after: today.isSameOrAfter(start), before: today.isSameOrBefore(end) });
+    // console.log({ 
+    //   after: today.isSameOrAfter(start), 
+    //   before: today.isSameOrBefore(end), 
+    //   end: this.end_at, today: today.format('DD/MM/YYYY'),});
     if (!start || !end) return false;
     if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
     return false;
@@ -557,5 +563,9 @@ export class Edition_Activity {
     const limit = moment(this.cancel_limit_at).hours(0).minutes(0).seconds(0).milliseconds(0);
     
     return today.valueOf() <= limit.valueOf();
+  }
+
+  isCheckinAllowed() {
+    return this.checkin_allowed === "1";
   }
 }
