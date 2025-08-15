@@ -1,11 +1,11 @@
 // @import '~@brunobarros/react-components/src/scss/block-ui.module.scss';
 // @import '~@brunobarros/react-components/src/scss/password-strong.module';
-@import '~react-quill/dist/quill.snow.css';
-@import '~@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css';
-@import '~react-date-picker/dist/DatePicker.css';
-@import '~react-calendar/dist/Calendar.css';
+@import "~react-quill/dist/quill.snow.css";
+@import "~@wojtekmaj/react-daterange-picker/dist/DateRangePicker.css";
+@import "~react-date-picker/dist/DatePicker.css";
+@import "~react-calendar/dist/Calendar.css";
 
-@import './bootstrap/bootstrap.scss';
+@import "./bootstrap/bootstrap.scss";
 @import "styles/mixins";
 @import "./toastify/main";
 @import "./layout-clear";
@@ -24,22 +24,22 @@
 @import "./notification-panel";
 @import "./modal";
 
-body, html {
+body,
+html {
   //background-color: $gray-100;
 }
 
-
 .form-error {
-  font-size: .8em;
+  font-size: 0.8em;
 }
 
 .text-xs {
-  font-size: .8em;
+  font-size: 0.8em;
   line-height: 1.2em;
 }
 
 .text-sm {
-  font-size: .9em;
+  font-size: 0.9em;
   line-height: 1.3em;
 }
 
@@ -61,7 +61,7 @@ body, html {
 
   .label {
     position: relative;
-    font-size: .8em;
+    font-size: 0.8em;
     line-height: 1;
     z-index: 3;
     display: inline-block;
@@ -71,7 +71,6 @@ body, html {
     transform: translateY(-1px);
   }
 }
-
 
 .page-header {
   padding: 1rem;
@@ -89,7 +88,6 @@ body, html {
   margin-bottom: 1rem;
 }
 
-
 .card-footer {
   .btn-group.end > .btn:last-child {
     border-top-right-radius: 0;
@@ -105,13 +103,11 @@ body, html {
   }
 }
 
-
 .dropdown-on-hover:hover {
   .dropdown-menu {
     display: block;
   }
 }
-
 
 .quill.disabled {
   .ql-toolbar {
@@ -125,7 +121,9 @@ body, html {
 }
 
 .ql-editor {
-  p, ul, ol {
+  p,
+  ul,
+  ol {
     margin-bottom: $spacer;
   }
 }
@@ -146,7 +144,7 @@ body, html {
 .ql-snow .ql-editor h2,
 .ql-snow .ql-editor h3 {
   font-weight: 700;
-  margin: 1em 0 .5em;
+  margin: 1em 0 0.5em;
 }
 
 .radio-lg {
@@ -163,7 +161,7 @@ body, html {
 
     .price {
       margin-left: 10px;
-      font-size: .8em;
+      font-size: 0.8em;
       color: $gray-600;
     }
 
@@ -196,7 +194,6 @@ body, html {
 
   .form-group {
     max-width: 400px;
-
   }
 }
 
@@ -206,7 +203,7 @@ body, html {
   }
 }
 .label {
-  font-size: .9em;
+  font-size: 0.9em;
   line-height: 1em;
   font-weight: 600;
 }
@@ -215,7 +212,7 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: .8em;
+  font-size: 0.8em;
   line-height: 1.2em;
   background-color: $gray-200;
   padding: 3px $spacer/2;
@@ -242,10 +239,10 @@ body, html {
 }
 
 .gap-1 {
-  gap: .25rem;
+  gap: 0.25rem;
 }
 .gap-2 {
-  gap: .5rem;
+  gap: 0.5rem;
 }
 .gap-3 {
   gap: 1rem;
@@ -275,4 +272,8 @@ body, html {
     object-fit: contain;
     object-position: center;
   }
+}
+
+.bg-light-success {
+  background-color: rgba($success, 0.3) !important;
 }
