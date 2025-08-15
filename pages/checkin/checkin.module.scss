@@ -57,7 +57,7 @@
   font-size: 1.2em;
   font-weight: 700;
 }
-
+.error_alert,
 .success_banner,
 .error_banner {
   padding: var(--content-pad);
@@ -67,9 +67,17 @@
   margin-bottom: 2rem;
   border-radius: 20px 20px 0 0;
 }
+.error_alert,
 .error_banner {
   color: rgb(163, 2, 2);
   background-color: rgba(255, 0, 0, 0.1);
+}
+.error_alert {
+  text-align: center;
+  border-radius: 0;
+  margin-top: -2rem;
+  padding: 1rem var(--content-pad);
+  border-top: solid 1px rgba(163, 2, 2, 0.2);
 }
 .success_banner {
   color: rgb(2, 88, 55);

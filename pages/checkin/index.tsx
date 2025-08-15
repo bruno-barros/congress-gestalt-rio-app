@@ -13,7 +13,6 @@ import Button from "react-bootstrap/Button";
 import LoadingButton from "../../components/ui/loading-button";
 import { AxiosResponse } from "axios";
 import { CheckUpActivitySchema, WpRestResponse } from "../../src/types/restapi";
-import { set } from "lodash";
 import moment from "moment";
 
 function CheckinPage() {
@@ -33,6 +32,8 @@ function CheckinPage() {
   } = useSettings(data?.activity?.edition as string);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const ActivityCnf = edition?.Activity();
+  const isCheckinAllowed = ActivityCnf?.isCheckinAllowed() || user.isAdmin();
   const logo = event?.logoSecondary || event?.logoPrimary || null;
   const sd = data?.activity?.start_at ? moment(data?.activity?.start_at) : null;
   const ed = data?.activity?.end_at ? moment(data?.activity?.end_at) : null;
@@ -99,9 +100,10 @@ function CheckinPage() {
           />) 
             : (<div className={s.error_banner}
             dangerouslySetInnerHTML={{ __html: data.allowed_error }}
-          />)}
-          
+          />)}          
         </>}
+        {!isCheckinAllowed && <div className={s.error_alert}>O Checkin não está disponível.</div>}
+        
         {success && <AnimatedCheckIn />}
         
 
@@ -125,7 +127,7 @@ function CheckinPage() {
             {sd?.format("HH:mm")} — {ed?.format("HH:mm")}
           </div>
         </div>
-        {data?.allowed_error_code !== 'already_checked_in' && 
+        {(data?.allowed_error_code !== 'already_checked_in' && isCheckinAllowed) && 
         <div className="my-3">
           <div className="my-2">
             <strong>Deseja fazer o checkin?</strong>
@@ -142,10 +144,6 @@ function CheckinPage() {
         </div>}
         
       </div>
-      {dump({
-        // logo: event.logoSecondary,
-        // edition: edition,
-      })}
     </div>
   );
 }
