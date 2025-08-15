@@ -20,18 +20,20 @@ import { useQueryClient } from "react-query";
 import Icon from "../ui/ionicon";
 import useSettings from "../hooks/useSettings";
 import ActivityAddCalendar from "./line/activity-add-calendar";
+import checkin from "../../pages/checkin";
 
 
 interface AvailableActivitiesLineProps {
   activity: ActivitySchema;
   context: 'subscribe' | 'my-activities';
   userActivities?: ActivitySchema[];
+  checkinAllowed?: boolean;
 }
 
 export default function AvailableActivitiesLine(
   props: AvailableActivitiesLineProps
 ) {
-  const { activity, context, userActivities } = props;
+  const { activity, context, userActivities, checkinAllowed = false } = props;
   const queryClient = useQueryClient();
   const { user } = useCurrentUser()
   const { loading, setLoading, edition } = useMyActivitiesContext();
@@ -56,6 +58,8 @@ export default function AvailableActivitiesLine(
   const seats = Number(activity.vacancies) - Number(activity.occupation);
   const subscribed = userActivities?.some((a) => a.id === activity.id);
   const clickDisabled = seats === 0 && context === 'subscribe';
+  const subscribed2 = activity?.subscriptions?.some((s) => s.user_id === user?.getId());
+  const alreadyCheckIn = !!activity?.subscriptions?.find((s) => s.user_id === user?.getId())?.checkin_at;
 
 
   function handleClick(e) {
@@ -85,6 +89,10 @@ export default function AvailableActivitiesLine(
 
   }
 
+  function handleCheckIn(){
+    window.open(`/checkin?id=${activity.uuid}`, '_blank');
+  }
+
   async function handleCancelation(){
     setLoading(true);
     const axios = await WpActivity.unsubscribe({
@@ -104,7 +112,10 @@ export default function AvailableActivitiesLine(
   }
 
   return (
-    <>
+    <div className="d-flex">
+      {/* {dump({alreadyCheckIn, subscribed2})} */}
+      {(checkinAllowed && !alreadyCheckIn) &&
+      <button className="btn btn-success text-nowrap border" onClick={handleCheckIn}>Check-In</button>}    
       <button
       className={`${s.line} ${subscribed ? s.line_subscribed : ''} list-group-item list-group-item-action d-flex align-items-center gap-3 justify-content-between ${clickDisabled ? 'disabled bg-light' : ''}`}
         onClick={handleClick}
@@ -198,6 +209,6 @@ export default function AvailableActivitiesLine(
             
         </Modal.Footer>
       </Modal>
-    </>
+    </div>
   );
 }

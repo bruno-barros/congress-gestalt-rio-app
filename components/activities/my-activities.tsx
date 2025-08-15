@@ -8,7 +8,11 @@ import AvailableActivitiesLine from "./available-activity-line";
 import useSettings from "../hooks/useSettings";
 import useTrans from "../hooks/useTrans";
 
-export default function MyActivities() {
+interface MyActivitiesProps {
+  checkinAllowed?: boolean;
+}
+export default function MyActivities(props: MyActivitiesProps) {
+  const { checkinAllowed = false } = props;
   const { loading, setLoading, edition } = useMyActivitiesContext();
   const { user } = useCurrentUser();
   const t = useTrans();
@@ -37,7 +41,7 @@ export default function MyActivities() {
       {(isLoading || isFetching) && <ProgressBar />}
       <div className="list-group list-group-flush">
       {(activities?.length > 0) && activities.map(a => {
-        return <AvailableActivitiesLine context="my-activities" key={a.id} activity={a} />;
+        return <AvailableActivitiesLine context="my-activities" key={a.id} activity={a} checkinAllowed={checkinAllowed} />;
       })}
 
     </div>
