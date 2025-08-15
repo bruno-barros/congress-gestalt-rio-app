@@ -5,6 +5,7 @@ import { QueryClient } from "react-query";
 import Event from "./resources/event";
 import { DocumentSchema } from "./types/document";
 import Edition from "./resources/edition";
+import { useState } from "react";
 
 /**
  * Used to load files from '/public' folder
@@ -22,11 +23,7 @@ export function siteTitle(name: string = "", queryClient?: QueryClient) {
     ? queryClient.getQueryData(["settings", null])
     : {};
   // console.log(event)
-  return name
-    ? name + ` - ${event?.global?.name}`
-    : event
-    ? event?.global?.name
-    : "";
+  return (name || '') + (event?.global?.name ? ` - ${event?.global?.name}` : '')
 }
 
 export const redirectToLogin = (server?: ServerResponse) => {

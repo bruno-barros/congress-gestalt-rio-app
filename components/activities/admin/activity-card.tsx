@@ -4,17 +4,24 @@ import Date from "./card/date";
 import Vacancies from "./card/vacancies";
 import { useAdmActivitiesContext } from "./adm-activities-context";
 import Place from "./card/place";
+import { useRouter } from "next/router";
 
 interface ActivityCardProps {
     activity: ActivitySchema;
 }
 export default function ActivityCard(props: ActivityCardProps) {
     const { activity: a } = props;
+    const router = useRouter();
     const { openSubscriptionPanel } = useAdmActivitiesContext()
 
 
     function handleSubscriptionPanel(){
         openSubscriptionPanel(a.id)
+    }
+
+    function handleQrcode(){
+        // router.push(`/adm/qrcode?id=${a.id}&uuid=${a.uuid}`);
+        window.open(`/adm/qrcode?id=${a.id}&uuid=${a.uuid}`, "_blank");
     }
 
     return (
@@ -25,9 +32,10 @@ export default function ActivityCard(props: ActivityCardProps) {
             <Vacancies activity={a} />   
             <Place activity={a} />         
         </div>
-        {a.occupation > 0 && <div className="card-footer bg-white">
-            {a.occupation > 0 && <Button size="sm" type="button" onClick={handleSubscriptionPanel}>Inscrições</Button>}            
-        </div>}
+        <div className="card-footer bg-white d-flex flex-wrap gap-3">
+            {a.occupation > 0 && <Button size="sm" type="button" onClick={handleSubscriptionPanel}>Inscrições</Button>}  
+            <Button size="sm" type="button" onClick={handleQrcode}>qrCode CheckIn</Button>
+        </div>
         
         </div>
     );

@@ -1,0 +1,32 @@
+.container {
+  outline: solid 1px rgb(235, 235, 235);
+  //   max-width: 600px;
+  width: 19cm; /* ou 720px */
+  margin: 0 auto;
+}
+
+.label {
+  font-size: 0.9em;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.title {
+}
+.canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+@media print {
+  .container {
+    outline: none;
+  }
+
+  .noprint {
+    display: none;
+  }
+
+  .print_only {
+    display: block;
+  }
+}

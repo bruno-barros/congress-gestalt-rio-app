@@ -78,6 +78,9 @@ function ActivitiesPage() {
     end_at: evt?.activity?.end_at,
     limit_per_participant: evt?.activity?.limit_per_participant,
     cancel_limit_at: evt?.activity?.cancel_limit_at,
+    checkin_allowed: evt?.activity?.checkin_allowed === "1",
+    ckeckin_minutes_before: evt?.activity?.ckeckin_minutes_before || 10,
+    ckeckin_minutes_after: evt?.activity?.ckeckin_minutes_after || 10,
   };
   //region Validation Schema
   const validationSchema = Yup.object({
@@ -162,6 +165,22 @@ function ActivitiesPage() {
                     name="limit_per_participant"
                     label="Limite de atividades por participante"
                     placeholder="deixe vazio para ilimitado"
+                />
+            </Field>
+            <Switch
+                name="checkin_allowed"
+                label="Permitir fazer Check-In"
+            />
+            <Field infos="">
+                <Text
+                    name="ckeckin_minutes_before"
+                    label="Minutos antes do início da atividade para check-in"
+                />
+            </Field>
+            <Field infos="">
+                <Text
+                    name="ckeckin_minutes_after"
+                    label="Minutos após o início da atividade para check-in"
                 />
             </Field>
 

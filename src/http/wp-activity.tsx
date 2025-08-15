@@ -30,6 +30,25 @@ export default class WpActivity {
       `${RESTVersion.default().namespace}/activities/${id_uuid}/checkin`
     );
   }
+  
+  static adminUndoCheckin(id: number ): Promise<
+    AxiosResponse<
+      WpRestResponse<string>
+    >
+  > {
+    return restApi.delete(
+      `${RESTVersion.default().namespace}/activities/subscription/${id}/checkin`
+    );
+  }
+    static adminDoCheckin(id: number ): Promise<
+    AxiosResponse<
+      WpRestResponse<string>
+    >
+  > {
+    return restApi.post(
+      `${RESTVersion.default().namespace}/activities/subscription/${id}/checkin`
+    );
+  }
 
   static list(args: {
     edition?: string;
