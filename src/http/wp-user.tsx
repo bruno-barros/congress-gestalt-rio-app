@@ -6,6 +6,7 @@ import {Providers} from '../../components/social-login/social-buttons.d'
 import {NotificationTypes} from "../resources/notification";
 import { WpRestResponse } from "../types/restapi";
 import { UserInterface } from "../resources/user";
+import { UserSearchResult } from "../types/users";
 export default class WpUser {
   static FILLABLE = [
     'clientMutationId',
@@ -269,7 +270,13 @@ export default class WpUser {
     });
   }
 
-  static searchUser(args: {by_name?: string, role?: 'subscriber'|'contributor'| 'editor'| 'administrator', limit?:number, filters?: any}): Promise<AxiosResponse<any>> {
+  static searchUser(args: {by_name?: string, role?: 'subscriber'|'contributor'| 'editor'| 'administrator', limit?:number, filters?: any}): Promise<AxiosResponse<{
+    data: {
+      evUserSearch: {
+        nodes: UserSearchResult[];
+      }
+    }
+  }>> {
 
     let byName = args?.by_name ? `, by_name: "${args.by_name}"` : ''
     let limit = args?.limit || 12

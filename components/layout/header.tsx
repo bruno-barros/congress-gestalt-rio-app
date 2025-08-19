@@ -96,8 +96,10 @@ export default function Header(props: HeaderProps) {
           
           <Ac requires={[REQUIREMENTS.abstract.manage]}>
             <NavDropdown title="Gestão" id="basic-nav-dropdown" className="admin">
-              <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref>
-                <NavDropdown.Item active={router.pathname === '/adm/subscriptions'}>Inscrições</NavDropdown.Item></Link>              
+              <Ac requires={[REQUIREMENTS.subscription.read]}>
+                <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/subscriptions'}>Inscrições</NavDropdown.Item></Link>
+              </Ac>
               <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</NavDropdown.Item></Link>
               <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref>

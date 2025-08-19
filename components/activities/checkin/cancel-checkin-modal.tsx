@@ -1,20 +1,20 @@
 import React, { cloneElement, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import axios from 'axios';
+import axios from "axios";
 import WpActivity from "../../../src/http/wp-activity";
 import { toast } from "react-toastify";
-import { set } from 'lodash';
-import Loading from '../../ui/loading';
+import { set } from "lodash";
+import Loading from "../../ui/loading";
 import LoadingButton from "../../ui/loading-button";
 
 interface CancelCheckinModalProps {
-  activityId: number;
+  subscriptionId: number;
   callable: JSX.Element;
-  onUpdate?: () => void; 
+  onUpdate?: () => void;
 }
 
 export default function CancelCheckinModal({
-  activityId,
+  subscriptionId,
   callable,
   onUpdate = () => {},
 }: CancelCheckinModalProps) {
@@ -22,9 +22,9 @@ export default function CancelCheckinModal({
   const [loading, setLoading] = useState(false);
 
   const handleCancel = async () => {
-    // console.log(`Canceling check-in for activity ID: ${activityId}`);
+    // console.log(`Canceling check-in for activity ID: ${subscriptionId}`);
     setLoading(true);
-    const axios = await WpActivity.adminUndoCheckin(activityId);
+    const axios = await WpActivity.adminUndoCheckin(subscriptionId);
     const resp = axios.data;
     setLoading(false);
     if (resp.success) {
@@ -49,13 +49,18 @@ export default function CancelCheckinModal({
           <Modal.Title>Cancelar Check-in</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Tem certeza que deseja cancelar o check-in para a atividade {activityId}?
+          Tem certeza que deseja cancelar o check-in para a atividade{" "}
+          {subscriptionId}?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Fechar
           </Button>
-          <LoadingButton loading={loading} variant="danger" onClick={handleCancel}>
+          <LoadingButton
+            loading={loading}
+            variant="danger"
+            onClick={handleCancel}
+          >
             Confirmar Cancelamento
           </LoadingButton>
         </Modal.Footer>
