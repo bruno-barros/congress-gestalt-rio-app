@@ -30,7 +30,7 @@ export default function UserMenu({user}: { user: User }) {
       <Link href={`/profile?tab=personal`} passHref><Dropdown.Item>{t('dados-pessoais')}</Dropdown.Item></Link>
       <Link href={`/profile?tab=subscriptions`} passHref><Dropdown.Item>{t('minhas-inscricoes')}</Dropdown.Item></Link>
 
-      <Ac requires={[REQUIREMENTS.abstract.manage]}>
+      <Ac requires={[REQUIREMENTS.configuration.manage]}>
         <Dropdown.Divider />
         <Link href={`/adm/reports`} passHref><Dropdown.Item>Estatísticas</Dropdown.Item></Link>
         <Link href={`/adm/manage?tab=anais`} passHref><Dropdown.Item>Anais</Dropdown.Item></Link>
