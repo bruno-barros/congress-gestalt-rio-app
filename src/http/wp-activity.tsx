@@ -53,10 +53,12 @@ export default class WpActivity {
   static list(args: {
     edition?: string;
     active?: 0 | 1;
+    user_id?: number | string;// subscription for user
   }): Promise<AxiosResponse<WpRestResponse<ActivitySchema[]>>> {
     const qs = [];
     if (args?.edition) qs.push(`edition=${args.edition}`);
     if (args?.active) qs.push(`active=${args.active}`);
+    if (args?.user_id) qs.push(`user_id=${args.user_id}`);
     return restApi.get(
       `${RESTVersion.default().namespace}/activities/?${qs.join("&")}`
     );
@@ -138,6 +140,21 @@ export default class WpActivity {
       `${RESTVersion.default().namespace}/activities/${
         args.activity_id
       }/subscribe`,
+      args
+    );
+  }
+   /**
+   * Inscreve TODOS usuários na atividade
+   * @param args
+   * @returns
+   */
+  static subscribeAll(args: {
+    activity_id: number;
+  }): Promise<AxiosResponse<WpRestResponse<ActivityUserSchema[]>>> {
+    return restApi.post(
+      `${RESTVersion.default().namespace}/activities/${
+        args.activity_id
+      }/subscribe_all`,
       args
     );
   }
