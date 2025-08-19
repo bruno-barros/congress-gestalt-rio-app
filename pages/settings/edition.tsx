@@ -70,7 +70,11 @@ function Settings() {
     })
       .then((axios) => {
         const resp = axios.data;
-        toast.success("Configurações salvas com sucesso");
+        if(resp.success){
+          toast.success("Configurações salvas com sucesso");
+        } else {
+          toast.error("Erro ao salvar configurações:"+ resp.message);
+        }
       })
       .catch(() => {})
       .finally(() => {
