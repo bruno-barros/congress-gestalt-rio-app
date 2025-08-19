@@ -8,7 +8,6 @@ export default class Subscription {
   read(user: User) {
     return (
       user.isAdmin() ||
-      user.isSupervisor() ||
       user.isShopManager()
     );
   }
