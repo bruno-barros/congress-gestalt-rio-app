@@ -14,7 +14,7 @@ import { ActivitySchema } from "../../../src/types/activity.type";
 
 interface ActivitiesContext {
   edition: string;
-  activities: ActivitySchema[];
+  // activities: ActivitySchema[];
   loading: boolean;
   setLoading: Dispatch<React.SetStateAction<boolean>>;
   filtered: ActivitySchema[];
@@ -23,12 +23,12 @@ interface ActivitiesContext {
   setActivityId: Dispatch<React.SetStateAction<number | null>>;
   openSubscriptionPanel: (id: number) => void;
   showSubscriptionPanel: boolean;
-dispatchSubscriptionPanel: DispatchWithoutAction;
+  dispatchSubscriptionPanel: DispatchWithoutAction;
 }
 
 const init = {
   edition: "",
-  activities: [],
+  // activities: [],
   filtered: [],
   setFiltered: () => {},
   loading: false,
@@ -36,8 +36,8 @@ const init = {
   activityId: null,
   setActivityId: () => {},
   openSubscriptionPanel: () => {},
-    showSubscriptionPanel: false,
-    dispatchSubscriptionPanel: () => {},
+  showSubscriptionPanel: false,
+  dispatchSubscriptionPanel: () => {},
 };
 
 const Context = createContext<ActivitiesContext>(init);
@@ -49,33 +49,39 @@ export function useAdmActivitiesContext() {
 export default function AdmActivitiesContextProvider({ children }) {
   const router = useRouter();
   const editionId = String(router.query.edition);
+
   const { data: event } = useSettings(editionId);
-  const {
-    data: activities,
-    error,
-    isLoading,
-    isFetching,
-  } = useActivities(editionId);
+  // const {
+  //   data: activities,
+  //   error,
+  //   isLoading,
+  //   isFetching,
+  // } = useActivities(editionId, {
+  //   user_id: filters?.user_id || null,
+  // });
   const [loading, setLoading] = useState(false);
   const [edition, setEdition] = useState(editionId);
   const [filtered, setFiltered] = useState<ActivitySchema[]>([]);
   const [activityId, setActivityId] = useState<number | null>(null);
-  const [showSubscriptionPanel, dispatchSubscriptionPanel] = useReducer((p) => !p,false);
+  const [showSubscriptionPanel, dispatchSubscriptionPanel] = useReducer(
+    (p) => !p,
+    false
+  );
   function openSubscriptionPanel(id: number) {
     setActivityId(id);
     dispatchSubscriptionPanel();
   }
 
-  useEffect(()=>{
-    activities && setFiltered(activities.filter((act) => act.active))
-  }, [activities])
+  // useEffect(() => {
+  //   activities && setFiltered(activities.filter((act) => act.active));
+  // }, [activities]);
 
   const values = {
     edition,
-    activities: Array.isArray(activities)
-      ? activities.filter((act) => act.active)
-      : [],
-    loading: loading || isLoading || isFetching,
+    // activities: Array.isArray(activities)
+    //   ? activities.filter((act) => act.active)
+    //   : [],
+    loading: loading,
     setLoading,
     filtered,
     setFiltered,

@@ -33,8 +33,8 @@ export default function ActivityCard(props: ActivityCardProps) {
             <Place activity={a} />         
         </div>
         <div className="card-footer bg-white d-flex flex-wrap gap-3">
-            {a.occupation > 0 && <Button size="sm" type="button" onClick={handleSubscriptionPanel}>Inscrições</Button>}  
-            <Button size="sm" type="button" onClick={handleQrcode}>qrCode CheckIn</Button>
+            <Button size="sm" type="button" onClick={handleSubscriptionPanel}>Inscrições</Button>
+            <Button size="sm" type="button" variant="outline-primary" onClick={handleQrcode}>qrCode CheckIn</Button>
         </div>
         
         </div>
