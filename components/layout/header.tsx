@@ -94,20 +94,30 @@ export default function Header(props: HeaderProps) {
             </Nav.Link></Link>
           </>}
           
-          <Ac requires={[REQUIREMENTS.abstract.manage]}>
+          <Ac requires={[
+            REQUIREMENTS.abstract.manage, 
+            REQUIREMENTS.evaluation.read,
+            REQUIREMENTS.user.edit,
+            REQUIREMENTS.subscription.read]} relation="OR">
             <NavDropdown title="Gestão" id="basic-nav-dropdown" className="admin">
               <Ac requires={[REQUIREMENTS.subscription.read]}>
                 <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/subscriptions'}>Inscrições</NavDropdown.Item></Link>
               </Ac>
-              <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref>
-                <NavDropdown.Item active={router.pathname === '/adm/abstracts'}>{t('trabalhos')}</NavDropdown.Item></Link>
-              <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref>
+              <Ac requires={[REQUIREMENTS.abstract.manage]}>
+                <Link href={`/adm/abstracts?edition=${edition?.getId()}`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/abstracts'}>Trabalhos</NavDropdown.Item></Link>
+              </Ac>
+              <Ac requires={[REQUIREMENTS.evaluation.read, REQUIREMENTS.evaluation.manage]}>
+                <Link href={`/adm/evaluations?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/evaluations'}>Avaliações</NavDropdown.Item></Link>
-              <Link href={`/adm/activities?edition=${edition?.getId()}`} passHref>
+              </Ac>
+              <Ac requires={[REQUIREMENTS.activity.manage]}>
+                <Link href={`/adm/activities?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/activities'}>Atividades</NavDropdown.Item></Link>
-              <Link href={`/adm/checkin?edition=${edition?.getId()}`} passHref>
-                <NavDropdown.Item active={router.pathname === '/adm/checkin'}>Check-in</NavDropdown.Item></Link>
+                <Link href={`/adm/checkin?edition=${edition?.getId()}`} passHref>
+                  <NavDropdown.Item active={router.pathname === '/adm/checkin'}>Check-in</NavDropdown.Item></Link>
+              </Ac>
               <Link href={`/adm/users`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
             </NavDropdown>
