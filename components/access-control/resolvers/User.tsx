@@ -16,12 +16,13 @@ export default class UserProfile {
       user.isEvaluator() ||
       user.isAdmin() ||
       user.isSupervisor() ||
-      user.isShopManager()
+      user.isShopManager() ||
+      user.isSupport()
     );
   }
 
   edit(user: User) {
-    return user.isAdmin();
+    return user.isAdmin() || user.isSupport();
   }
 
   readSensitive(user: User) {
@@ -35,7 +36,7 @@ export default class UserProfile {
   deleteDocuments(user: User) {
     return user.isAdmin();
   }
-  
+
   switch(user: User) {
     return user.isSuperAdmin();
   }
