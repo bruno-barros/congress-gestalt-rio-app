@@ -170,4 +170,17 @@ export default class WpActivity {
       args
     );
   }
+  
+  static exportSubscriptions(args: {
+    edition: string;
+    user_ids?: number|string[]|number[];
+  }): Promise<AxiosResponse<WpRestResponse<{
+    header: string[],
+    body: string[][]
+  }>>> {
+    return restApi.get(
+      `${RESTVersion.default().namespace}/activities/subscription/labels`,
+      { params: args }
+    );
+  }
 }

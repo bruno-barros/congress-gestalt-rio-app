@@ -307,7 +307,7 @@ export default class WpUser {
     return httpApi.post('/index.php?graphql&all', {
       query: `query all {
   __typename
-  users(where: {roleIn: [AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR], orderby: {field: REGISTERED, order: DESC}}, first: ${lmt}) {
+  users(where: {roleIn: [AUTHOR, CONTRIBUTOR, SUBSCRIBER, EDITOR, SUPORTE], orderby: {field: REGISTERED, order: DESC}}, first: ${lmt}) {
     nodes {
       avatar {
         url
