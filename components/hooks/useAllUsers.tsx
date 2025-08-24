@@ -3,6 +3,8 @@ import WpUser from "../../src/http/wp-user";
 import {errorNotification} from "../../src/resources/responses";
 import useCurrentUser from "./useCurrentUser";
 import { UserGraphQl } from "../../src/types/users";
+import { REQUIREMENTS } from '../access-control/requirements';
+import { ac } from "../access-control";
 
 
 
@@ -27,7 +29,7 @@ export default function useAllUsers() {
   }
 
   const query = useQuery<UserGraphQl[], any>(['users', 'admin'], queryUsers, {
-    enabled: user.canManageAbstracts(),
+    enabled: ac(user, [REQUIREMENTS.user.edit]),
     staleTime: Infinity
   })
 

@@ -56,7 +56,7 @@ export interface UserInterface {
   child_care_needs?: string;
   is_affirmative_action?: StringBoolean;
   affirmative_action?: string;
-  apply_affirmative_action?: StringBoolean;// deprecated
+  apply_affirmative_action?: StringBoolean; // deprecated
   is_artist?: StringBoolean;
   is_artist_volunteer?: StringBoolean;
   artistic_skill?: string;
@@ -91,16 +91,16 @@ export class User {
     return this.user?.firstName || this.user?.name?.split(" ")[0] || null;
   }
 
-  getFullName(){
-    return this.user?.name || (this.user?.firstName + ' ' + this.user?.lastName);
+  getFullName() {
+    return this.user?.name || this.user?.firstName + " " + this.user?.lastName;
   }
 
   getAvatarUrl() {
     return this.user.avatar?.url || null;
   }
 
-  getCountry(){
-    return this.user.country || 'BR';
+  getCountry() {
+    return this.user.country || "BR";
   }
 
   get registeredDate() {
@@ -113,7 +113,7 @@ export class User {
 
   /**
    * @deprecated Usar component/access-control/resolvers/Abstract.tsx
-   * @returns 
+   * @returns
    */
   canManageAbstracts() {
     return (
@@ -136,7 +136,9 @@ export class User {
     if (process.env.NODE_ENV === "development" && this.isAdmin()) {
       return true;
     }
-    const superIds = process.env.super_users_ids.split(",").map((id) => parseInt(id));
+    const superIds = process.env.super_users_ids
+      .split(",")
+      .map((id) => parseInt(id));
     return this.isAdmin() && superIds.indexOf(this.user.databaseId) !== -1;
   }
 
@@ -148,6 +150,10 @@ export class User {
 
   isSupervisor() {
     return !!this.user?.roles?.nodes.find((role) => role.name === "editor");
+  }
+
+  isSupport() {
+    return !!this.user?.roles?.nodes.find((role) => role.name === "suporte");
   }
 
   isEvaluator() {
@@ -206,8 +212,8 @@ export class User {
     );
   }
 
-  applyToAffirmativeAction(){
-    return this.user?.is_affirmative_action === '1';
+  applyToAffirmativeAction() {
+    return this.user?.is_affirmative_action === "1";
   }
 }
 
@@ -279,6 +285,11 @@ export const MapRoles = [
   // {name: 'customer', label: 'Cliente', color: '#ada900'},
   { name: "subscriber", label: "Participante", color: "#ada900" },
   { name: "contributor", label: "Parecerista", color: "#bc6402" },
-  { name: "editor", label: "Membro Com. Científica.", color: "#868686" },
+  {
+    name: "editor",
+    label: "Comissão Organizadora/Monitoria",
+    color: "#868686",
+  },
   { name: "administrator", label: "Admin", color: "#000000" },
+  { name: "suporte", label: "Suporte", color: "#4aa192" },
 ];
