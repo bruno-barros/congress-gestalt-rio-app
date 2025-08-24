@@ -25,7 +25,7 @@ module.exports = {
     defaultLocale: 'pt'
   },
   images: {
-    domains: ['localhost', 'congressogestaltrj.com.br', 'app.congressogestaltrj.com.br', 'cbl2025loja.gestalt.com.br'],
+    domains: ['localhost', 'congressogestaltrj.com.br', 'app.congressogestaltrj.com.br', 'cbl2025loja.gestalt.com.br', 'congressosgestalt.com.br'],
   },
   trailingSlash: false,
   swcMinify: true
