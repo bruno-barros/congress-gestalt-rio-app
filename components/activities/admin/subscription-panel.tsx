@@ -161,7 +161,7 @@ export default function SubscriptionsPanel() {
         </div>
       </div>
       <div>
-        <table className="table table-striped table-sm table-hover">
+        <table className="table table-striped table-sm table-hover" style={{fontSize: '0.8em'}}>
           <thead>
             <tr>
               <th scope="col">#</th>
