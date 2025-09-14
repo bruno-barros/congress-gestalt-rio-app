@@ -4,6 +4,7 @@ import { AbstractStatusModelEnum, StatusType } from "../types/abstracts";
 import { ItemLanguageWithId } from "../types/settings";
 import { CRITERIAS, CriteriaSchema } from "../types/review.d";
 import { User, UserInterface } from "./user";
+import { CertificateType } from "../types/certificates.d";
 
 //region Edition
 export default class Edition {
@@ -136,6 +137,10 @@ export default class Edition {
 
   Activity(): Edition_Activity {
     return new Edition_Activity(this.activity);
+  }
+
+  Certificate(): Edition_Certificate {
+    return new Edition_Certificate(this.certificate);
   }
 
   getId() {
@@ -425,7 +430,7 @@ export class Edition_Abstract {
       : Edition_Abstract_Field.make({ allowed: false, min: 0, max: 0 });
   }
 
-  getRulesUrl(lang: string){
+  getRulesUrl(lang: string) {
     return this[`rules_${lang}`] || "";
   }
 }
@@ -461,7 +466,6 @@ interface AField {
   [key: string]: any;
 }
 
-
 //region Edition_Review
 export class Edition_Review {
   evaluators_final_approvement: StringBoolean;
@@ -473,10 +477,7 @@ export class Edition_Review {
   evaluators_text_en: string;
   evaluators_text_es: string;
 
-  criteria: {
-    
-  }
-
+  criteria: {};
 
   constructor(data: any) {
     Object.assign(this, data);
@@ -486,23 +487,23 @@ export class Edition_Review {
     return Number(this.days_to_evaluate || 0);
   }
 
-  getCriterias(){
-    return CRITERIAS
+  getCriterias() {
+    return CRITERIAS;
   }
 
-  getCriteriasArray(): CriteriaSchema[]{
-    return Object.keys(this.getCriterias()).map(key => {
-      return { id: key, ...this.getCriterias()[key] }
-    })
+  getCriteriasArray(): CriteriaSchema[] {
+    return Object.keys(this.getCriterias()).map((key) => {
+      return { id: key, ...this.getCriterias()[key] };
+    });
   }
 
-  hasCriteria(id: string){
-    const keys = Object.keys(this.getCriterias())
-    return keys.includes(id)
+  hasCriteria(id: string) {
+    const keys = Object.keys(this.getCriterias());
+    return keys.includes(id);
   }
 
-  getQuestions(){
-    return this.questions || []
+  getQuestions() {
+    return this.questions || [];
   }
 }
 
@@ -522,35 +523,33 @@ export class Edition_Activity {
     Object.assign(this, data);
   }
 
-  isTestMode(){
-    return this.test_mode === '1'
+  isTestMode() {
+    return this.test_mode === "1";
   }
-  
- /**
-  * 
+
+  /**
+   *
    * Está aberto para inscrição em atividades.
    * Se passar o usuário, valida mode de teste
-   * @param user 
+   * @param user
    * @returns boolean
    */
   isOpenToApply(user?: User) {
-    if(user && this.isTestMode()){
+    if (user && this.isTestMode()) {
       // console.log({testmode: this.isTestMode(), evaluator: user.isEvaluator(), superv: user.isSupervisor()})
-      return (user.isAdmin() || user.isSupervisor() || user.isEvaluator()) ? true : false;
+      return user.isAdmin() || user.isSupervisor() || user.isEvaluator()
+        ? true
+        : false;
     }
-    if (this.activities_allowed != '1') {
+    if (this.activities_allowed != "1") {
       return false;
     }
-    const today = moment().startOf('day');
-    const start = this?.start_at
-      ? moment(this.start_at).startOf('day')
-      : null;
-    const end = this?.end_at
-      ? moment(this.end_at).startOf('day')
-      : null;
-    // console.log({ 
-    //   after: today.isSameOrAfter(start), 
-    //   before: today.isSameOrBefore(end), 
+    const today = moment().startOf("day");
+    const start = this?.start_at ? moment(this.start_at).startOf("day") : null;
+    const end = this?.end_at ? moment(this.end_at).startOf("day") : null;
+    // console.log({
+    //   after: today.isSameOrAfter(start),
+    //   before: today.isSameOrBefore(end),
     //   end: this.end_at, today: today.format('DD/MM/YYYY'),});
     if (!start || !end) return false;
     if (today.isSameOrAfter(start) && today.isSameOrBefore(end)) return true;
@@ -560,12 +559,50 @@ export class Edition_Activity {
   isCancelationAllowed() {
     if (!this.cancel_limit_at) return true;
     const today = moment().hours(0).minutes(0).seconds(0).milliseconds(0);
-    const limit = moment(this.cancel_limit_at).hours(0).minutes(0).seconds(0).milliseconds(0);
-    
+    const limit = moment(this.cancel_limit_at)
+      .hours(0)
+      .minutes(0)
+      .seconds(0)
+      .milliseconds(0);
+
     return today.valueOf() <= limit.valueOf();
   }
 
   isCheckinAllowed() {
     return this.checkin_allowed === "1";
   }
+}
+
+//region Edition_Certificate
+export class Edition_Certificate {
+  default_image: string;
+  default_orientation: "h" | "v";
+  participation_allowed: StringBoolean;
+  participation_text_pt: string;
+  participation_text_en: string;
+  participation_text_es: string;
+  abstract_allowed: StringBoolean;
+  abstract_text_pt: string;
+  abstract_text_en: string;
+  abstract_text_es: string;
+  activity_allowed: StringBoolean;
+  activity_text_pt: string;
+  activity_text_en: string;
+  activity_text_es: string;
+
+  constructor(data: any) {
+    Object.assign(this, data);
+  }
+
+  isAllowed(type: CertificateType = CertificateType.PARTICIPANT) {
+    if(type === CertificateType.PARTICIPANT) {
+        return this.participation_allowed == '1';
+    } else if(type === CertificateType.ABSTRACT) {
+        return this.abstract_allowed == '1';
+    } else if(type === CertificateType.ACTIVITY) {
+        return this.activity_allowed == '1';
+    }
+    return false;
+  }
+
 }

@@ -36,7 +36,7 @@ export default function Image(props: ImageProps) {
   const uppy = useUppy(
     uppyUploadV1({
       locale: "pt",
-      max_size: 2,
+      max_size: 4,
     })
   );
   uppy.setMeta({
