@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import WpCertificate from "../../src/http/wp-certificate";
-import { CertificatesModelSchema } from "../../src/types/certificates";
+import { CertificatesModelSchema } from "../../src/types/certificates.d";
 
 export default function useCertificates(edition: string) {
   async function fetch(): Promise<CertificatesModelSchema[]> {
