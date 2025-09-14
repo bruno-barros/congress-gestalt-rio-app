@@ -9,6 +9,7 @@ import { dump } from "../../src/helpers";
 import Ac, { ac } from "../access-control";
 import { REQUIREMENTS } from "../access-control/requirements";
 import useSettings from "../hooks/useSettings";
+import useUserCertificates from "../hooks/useUserCertificates";
 
 interface EditionCardProps {
   edition: Edition;
@@ -18,8 +19,11 @@ export default function EditionCard(props: EditionCardProps) {
   const { edition, orders } = props;
   const { user } = useCurrentUser();
 
+  const { data: certs } = useUserCertificates(user?.getId(), edition?.getId());
+
 //   const isSubscribed = false
-const AbstractCnf = edition?.Abstract()
+  const certCnf = edition?.Certificate()
+  const AbstractCnf = edition?.Abstract()
   const isCurrent = false
   const isUserAllowedToAbstracts = ac(user, [REQUIREMENTS.abstract.read], { edition })
   const isSubscribed = orders?.hasValidSubscription(edition)
@@ -53,6 +57,14 @@ const AbstractCnf = edition?.Abstract()
         <Card.Title>{edition?.getName()}</Card.Title>
         <Card.Text>{edition?.year}</Card.Text>
       </Card.Body>
+      
+      {(certs && certs.length > 0 && certCnf?.isAllowed()) && 
+      <Card.Footer className="p-1 border-0 bg-white">
+        <Link href={`/profile?tab=certificates`} passHref>
+          <a className="btn btn-primary btn-block">{t('certificado.meus-certificados')}</a>
+        </Link>
+      </Card.Footer>}
+      
       <Card.Footer className="p-0 border-0 bg-white">
         <div className="btn-group w-100 end start">
           {linkAbstracts && (

@@ -194,6 +194,7 @@ export default function FindUser(props: FindUserProps) {
                     <div>{user.getUserData().email}</div>
                   </div>
                   <button
+                  type="button"
                     className="btn btn-sm btn-outline-primary"
                     onClick={() => handleSelectUser(user)}
                   >

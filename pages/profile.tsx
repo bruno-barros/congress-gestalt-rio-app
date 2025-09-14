@@ -13,6 +13,8 @@ import {siteTitle} from "../src/helpers";
 import Head from "next/head";
 import {useQueryClient} from "react-query";
 import UserDocuments from "../components/user/user-documents";
+import useSettings from "../components/hooks/useSettings";
+import MyCertificates from "../components/user/my-certificates";
 
 
 const Profile = () => {
@@ -22,6 +24,8 @@ const Profile = () => {
   const router = useRouter()
   const {authLoading, user} = useCurrentUser()
   const [tab, setTab] = useState<string>('personal')
+  const { data: event, currentEdition } = useSettings()
+  const certCnf = currentEdition?.Certificate()
 
   useEffect(() => {
     setTab(router.query?.tab ? String(router.query?.tab) : 'personal')
@@ -44,6 +48,13 @@ const Profile = () => {
               <a className={`nav-link ${tab === 'subscriptions' && 'active'}`}>{t('inscricoes')}</a>
             </Link>
           </li>
+         {certCnf?.isAllowed() && 
+         <li className="nav-item">
+            <Link href={`/profile?tab=certificates`} passHref>
+              <a className={`nav-link ${tab === 'certificates' && 'active'}`}>{t('certificado.certificados')}</a>
+            </Link>
+          </li>}
+          
           <li className="nav-item">
             <Link href={`/profile?tab=documents`} passHref>
               <a className={`nav-link ${tab === 'documents' && 'active'}`}>{t('documentos')}</a>
@@ -63,6 +74,7 @@ const Profile = () => {
         {tab === 'documents' && <UserDocuments user={user}/>}
         {tab === 'password' && <div className=" py-3 px-md-3"><PasswordUpdateForm user={user}/></div>}
         {tab === 'debug' && <div className=" py-3 px-md-3"><DebugPanel/></div>}
+        {tab === 'certificates' && <div className=" py-3 px-md-3"><MyCertificates user={user}/></div>}
       </div>
     </div>
   </MainLayout>)

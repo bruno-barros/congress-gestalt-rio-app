@@ -6,6 +6,7 @@ import Event from "./resources/event";
 import { DocumentSchema } from "./types/document";
 import Edition from "./resources/edition";
 import { useState } from "react";
+import AuthToken from "./http/auth-token";
 
 /**
  * Used to load files from '/public' folder
@@ -430,4 +431,35 @@ export function moneyFormat(value: number | string, locale: string = "pt-BR") {
 export function isEmailValid(str: string) {
   const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,3}$/;
   return re.test(str);
+}
+
+/**
+ * Abre nova aba autenticada
+ * @param url 
+ * @param token 
+ */
+export async function openNewAuthenticatedTab(url: string) {
+  const newWindow = window.open(); // Abre uma nova aba
+  const token = AuthToken.getToken();
+
+  if (newWindow) {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Adiciona o cabeçalho de autenticação
+      },
+    });
+
+    if (response.ok) {
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      newWindow.location.href = blobUrl; // Define o conteúdo da nova aba
+    } else {
+      newWindow.close(); // Fecha a aba se houver erro
+      console.error("Erro ao abrir o certificado:", response.statusText);
+    }
+  } else {
+    console.error("Não foi possível abrir uma nova aba.");
+  }
 }

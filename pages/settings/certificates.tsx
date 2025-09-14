@@ -29,6 +29,10 @@ import LangIndicator from "../../components/settings/lang-indicator";
 import { AbstractStatusModelEnum } from "../../src/types/abstracts.d";
 import Wysiwyg from "../../components/ui/form/formik/wysiwyg";
 import ButtonVariables from "../../components/settings/button-variables";
+import CertificatePreviewModal from "../../components/certificates/certificate-preview-modal";
+import Tabs from "react-bootstrap/Tabs";
+import Tab from "react-bootstrap/Tab";
+import { availableLanguages } from '../../src/i18n';
 
 export default function Context() {
   return (
@@ -43,23 +47,24 @@ function CertificatePage() {
   const { data: evt, isLoading, isFetching } = useSettings(currentEdition);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
+  const avLangs = availableLanguages();
 
   //region Initial Values
   const initialValues = {
-    default_image: "",
-    default_orientation: "h",
-    participation_allowed: "1" == "1",
-    participation_text_pt: "",
-    participation_text_en: "",
-    participation_text_es: "",
-    abstract_allowed: "1" == "1",
-    abstract_text_pt: "",
-    abstract_text_en: "",
-    abstract_text_es: "",
-    activity_allowed: "1" == "1",
-    activity_text_pt: "",
-    activity_text_en: "",
-    activity_text_es: "",
+    default_image: evt?.certificate?.default_image || "",
+    default_orientation: evt?.certificate?.default_orientation || "h",
+    participation_allowed: evt?.certificate?.participation_allowed == "1",
+    participation_text_pt: evt?.certificate?.participation_text_pt || "",
+    participation_text_en: evt?.certificate?.participation_text_en || "",
+    participation_text_es: evt?.certificate?.participation_text_es || "",
+    abstract_allowed: evt?.certificate?.abstract_allowed == "1",
+    abstract_text_pt: evt?.certificate?.abstract_text_pt || "",
+    abstract_text_en: evt?.certificate?.abstract_text_en || "",
+    abstract_text_es: evt?.certificate?.abstract_text_es || "",
+    activity_allowed: evt?.certificate?.activity_allowed == "1",
+    activity_text_pt: evt?.certificate?.activity_text_pt || "",
+    activity_text_en: evt?.certificate?.activity_text_en || "",
+    activity_text_es: evt?.certificate?.activity_text_es || "",
 
     // days_to_evaluate: evt?.review?.days_to_evaluate || 15,
     // days_for_corrections: evt?.review?.days_for_corrections || 15,
@@ -126,27 +131,38 @@ function CertificatePage() {
             <Field infos="Imagem padrão do certificado. Atenção: a imagem deve ter a proporção A4 (2138x1512 px), em pé ou deitada, em JPEG.">
                 <Image name="default_image" label="Arte do certicado padrão" imgStyle={{maxHeight: 300}} />
             </Field>
-            <p>Orientação: {values.default_orientation}</p>
+            <div className="d-flex gap-3 mb-4 align-items-center">
+              <CertificatePreviewModal edition={currentEdition} />
+              {evt?.global?.certificate?.preview_image && 
+              <div><a href={evt?.global?.certificate?.preview_image} target="_blank">Modelo para layout</a></div>}
+              
+            </div>
 
             <Field infos="Se habilitado, libera certificado para os inscritos que confirmaram a presença no evento." 
                 style={{marginBottom: 0, border: 'none'}}>
                 <br />
-                <Switch name="participation_allowed" label="Habilita certificado por participação" />
+                <Switch name="participation_allowed" label="Habilita certificado pela participação" />
             </Field>
             <fieldset disabled={values.participation_allowed === false} className="border-primary pl-3 mb-4" style={{borderLeft: "solid 2px"}}>
-                <legend className="text-sm text-uppercase pt-2 text-primary">Por participação</legend>
+                <legend className="text-sm text-uppercase pt-2 text-primary">Pela participação</legend>
                 <Field infos={<div>Texto do certificado. Use os <ButtonVariables>dados variáveis</ButtonVariables>.</div>}>
-                    <Wysiwyg
-                        name={`participation_text_${lang}`}
-                        label={<LangIndicator lang={lang}>Texto do certificado</LangIndicator>}
+                <Tabs defaultActiveKey={lang} id="participation_text_">
+                  {avLangs.map(l => {
+                    return <Tab eventKey={l} title={<LangIndicator lang={l}>{l.toUpperCase()}</LangIndicator>} key={l}>
+                      <Wysiwyg
+                        name={`participation_text_${l}`}
+                        label="Texto do certificado"
                         charsMin={0}
                         charsMax={500}
                         disabled={values.participation_allowed === false}
                     />
+                    </Tab>
+                  })}
+                </Tabs>                    
                 </Field>
             </fieldset>
 
-            <Field infos="Se habilitado, libera certificado para os trabalhos aprovados." 
+            {/* <Field infos="Se habilitado, libera certificado para os trabalhos aprovados." 
                 style={{marginBottom: 0, border: 'none'}}>
                 <br />
                 <Switch name="abstract_allowed" label="Habilita certificado para os trabalhos" />
@@ -162,7 +178,7 @@ function CertificatePage() {
                         disabled={values.abstract_allowed === false}
                     />
                 </Field>
-            </fieldset>
+            </fieldset> */}
             
             <Field infos="Se habilitado, libera certificado para as atividades com presença confirmada." 
                 style={{marginBottom: 0, border: 'none'}}>
@@ -172,13 +188,19 @@ function CertificatePage() {
             <fieldset disabled={values.activity_allowed === false} className="border-primary pl-3 mb-4" style={{borderLeft: "solid 2px"}}>
                 <legend className="text-sm text-uppercase pt-2 text-primary">Por atividade</legend>
                 <Field infos={<div>Texto do certificado. Use os <ButtonVariables>dados variáveis</ButtonVariables>.</div>}>
-                    <Wysiwyg
-                        name={`activity_text_${lang}`}
-                        label={<LangIndicator lang={lang}>Texto do certificado</LangIndicator>}
+                <Tabs defaultActiveKey={lang} id="activity_text_">
+                  {avLangs.map(l => {
+                    return <Tab eventKey={l} title={<LangIndicator lang={l}>{l.toUpperCase()}</LangIndicator>} key={l}>
+                      <Wysiwyg
+                        name={`activity_text_${l}`}
+                        label="Texto do certificado"
                         charsMin={0}
                         charsMax={500}
-                        disabled={values.activity_allowed === false}
+                        disabled={values.participation_allowed === false}
                     />
+                    </Tab>
+                  })}
+                </Tabs>
                 </Field>
             </fieldset>
             
@@ -187,6 +209,7 @@ function CertificatePage() {
                 Salvar
               </LoadingButton>
             </div>
+            {/* {dump(evt)} */}
             {dump({ values, errors, isValid })}
           </Form>
         )}

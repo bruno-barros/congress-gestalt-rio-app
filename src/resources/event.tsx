@@ -38,6 +38,9 @@ export default class Event {
         en: string;
       };
     };
+    certificate: {
+      preview_image: string;
+    }
   };// global
   page: {
     checkout: {

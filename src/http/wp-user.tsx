@@ -7,6 +7,7 @@ import {NotificationTypes} from "../resources/notification";
 import { WpRestResponse } from "../types/restapi";
 import { UserInterface } from "../resources/user";
 import { UserSearchResult } from "../types/users";
+import { CertificatesSchema } from "../types/certificates";
 export default class WpUser {
   static FILLABLE = [
     'clientMutationId',
@@ -411,6 +412,15 @@ export default class WpUser {
       qs.push(`edition=${args.edition}`);
     }
     return restApi.get(`${RESTVersion.default().namespace}/users/${args.user_id}/activities?${qs.join("&")}`);
+  }
+  
+  
+  static certificates(args: {user_id: number, edition: string}): Promise<AxiosResponse<WpRestResponse<CertificatesSchema[]>>>{
+    const qs = [];
+    if (args.edition) {
+      qs.push(`edition=${args.edition}`);
+    }
+    return restApi.get(`${RESTVersion.default().namespace}/users/${args.user_id}/certificates?${qs.join("&")}`);
   }
 
 }

@@ -100,6 +100,8 @@ export default function Header(props: HeaderProps) {
             REQUIREMENTS.user.edit,
             REQUIREMENTS.subscription.read]} relation="OR">
             <NavDropdown title="Gestão" id="basic-nav-dropdown" className="admin">
+              <Link href={`/adm/users`} passHref>
+                <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
               <Ac requires={[REQUIREMENTS.subscription.read]}>
                 <Link href={`/adm/subscriptions?edition=${edition?.getId()}`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/subscriptions'}>Inscrições</NavDropdown.Item></Link>
@@ -118,8 +120,11 @@ export default function Header(props: HeaderProps) {
                 <Link href={`/adm/checkin?edition=${edition?.getId()}`} passHref>
                   <NavDropdown.Item active={router.pathname === '/adm/checkin'}>Check-in</NavDropdown.Item></Link>
               </Ac>
-              <Link href={`/adm/users`} passHref>
-                <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
+              <Ac requires={[REQUIREMENTS.activity.read]}>
+                <Link href={`/adm/certificates?edition=${edition?.getId()}`} passHref>
+                  <NavDropdown.Item active={router.pathname === '/adm/certificates'}>Certificados</NavDropdown.Item></Link>
+              </Ac>
+              
             </NavDropdown>
           </Ac>
           
