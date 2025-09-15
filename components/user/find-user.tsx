@@ -51,6 +51,9 @@ export default function FindUser(props: FindUserProps) {
   useEffect(()=>{
     if(!preSelected && !appendFilter){
         setState(StateEnum.INITIAL);
+    } else if(preSelected && !appendFilter){
+      setSelectedUser(preSelected)
+      setState(StateEnum.SELECTED);
     }
   }, [preSelected])
 
@@ -135,7 +138,7 @@ export default function FindUser(props: FindUserProps) {
           {state === StateEnum.SELECTED ? (
             <>
               <div className="form-control bg-secondary text-white">
-                {preSelected?.getFullName() || (appendFilter && filters?.nome) || ""}
+                {selectedUser?.getFullName() || (appendFilter && filters?.nome) || ""}
               </div>
               <InputGroup.Append>
                 <Button variant="warning" onClick={handleForgetUser}>
