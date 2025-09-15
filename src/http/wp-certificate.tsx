@@ -33,6 +33,7 @@ export default class WpCertificate {
     edition: string;
     type: CertificateType;
     user_id: number | string;
+    entity_id?: number | string;
   }): Promise<AxiosResponse<WpRestResponse<CertificatesModelSchema>>> {
     return restApi.post(`${RESTVersion.default().namespace}/certificates/generate`, args);
   }

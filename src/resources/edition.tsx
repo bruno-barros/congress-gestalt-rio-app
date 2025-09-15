@@ -581,10 +581,10 @@ export class Edition_Certificate {
   participation_text_pt: string;
   participation_text_en: string;
   participation_text_es: string;
-  abstract_allowed: StringBoolean;
-  abstract_text_pt: string;
-  abstract_text_en: string;
-  abstract_text_es: string;
+  speaker_allowed: StringBoolean;
+  speaker_text_pt: string;
+  speaker_text_en: string;
+  speaker_text_es: string;
   activity_allowed: StringBoolean;
   activity_text_pt: string;
   activity_text_en: string;
@@ -597,8 +597,8 @@ export class Edition_Certificate {
   isAllowed(type: CertificateType = CertificateType.PARTICIPANT) {
     if(type === CertificateType.PARTICIPANT) {
         return this.participation_allowed == '1';
-    } else if(type === CertificateType.ABSTRACT) {
-        return this.abstract_allowed == '1';
+    } else if(type === CertificateType.SPEAKER) {
+        return this.speaker_allowed == '1';
     } else if(type === CertificateType.ACTIVITY) {
         return this.activity_allowed == '1';
     }

@@ -27,6 +27,7 @@ export default function ButtonVariables(
         <Code code="DOC" description="CPF (ou outro) documento do participante." />
         <Code code="DT_PER" description="Período do evento por extenso." />
         <Code code="ATIV_NOME" description="Nome da atividade." />
+        <Code code="ATIV_NOMES" description="Nomes dos palestrantes." />
         <Code code="ATIV_DT" description="Data da atividade." />
       </Popover.Content>
     </Popover>

@@ -151,6 +151,7 @@ function GenerateCertificate(props: GenerateCertificateProps){
             type: cert.type,
             user_id: cert.user_id,
             edition: cert.edition,
+            entity_id: cert?.entity_id || null,
         })
         const resp = axios.data;
         queryClient.invalidateQueries(["adm-certificates"]);

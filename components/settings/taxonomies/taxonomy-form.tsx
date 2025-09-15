@@ -21,6 +21,9 @@ import useTaxonomy from "../../hooks/activities/useTaxonomy";
 import WpTaxonomy from "../../../src/http/wp-taxonomy";
 import useTaxonomyContext from "./taxonomies-context";
 import { getTaxonomyTypeLabel } from "../../../src/resources/taxonomy";
+import FindUser from "../../user/find-user";
+import { User } from "../../../src/resources/user";
+import { TaxonomyType } from "../../../src/types/taxonomy.type";
 
 
 interface TaxonomyFormProps {
@@ -40,6 +43,7 @@ export default function TaxonomyForm(props: TaxonomyFormProps) {
     start_at: null,
     end_at: null,
   });
+  const externalUser = data?.speaker ? User.make(data.speaker) : null
   const Schema = Yup.object().shape({
     label_pt: Yup.string().required("O título PT é obrigatório"),
     // start_at: Yup.string().required("Data de início é obrigatória"),
@@ -100,6 +104,14 @@ export default function TaxonomyForm(props: TaxonomyFormProps) {
         )}{" "}
         {data?.label}{" "}
       </h4>
+      {data?.type === TaxonomyType.SPEAKER && 
+      <div className="mb-3 form-group border bg-light p-3">
+        <label htmlFor="">Conectar com usuário cadastrado</label>
+        <FindUser appendFilter={false} preSelected={externalUser} onUpdate={(user: User)=>{
+          form.current.setFieldValue("external_id", user?.getId() || '');
+        }} />
+      </div>}
+     
       <Formik
         innerRef={form}
         enableReinitialize
@@ -110,6 +122,9 @@ export default function TaxonomyForm(props: TaxonomyFormProps) {
         {({ values, isValid, errors }) => (
           <Form>
             <Image name="img" label="Imagem" imgStyle={{maxHeight: 120}} />
+
+            
+
             <Text name="label_pt" label="Nome (português)" />
             {hasLang("es") && <Text name="label_es" label="Nome (espanhol)" />}
             {hasLang("en") && <Text name="label_en" label="Nome (inglês)" />}
@@ -132,6 +147,7 @@ export default function TaxonomyForm(props: TaxonomyFormProps) {
               Salvar
             </LoadingButton>
             {dump({ errors, values })}
+            
           </Form>
         )}
       </Formik>

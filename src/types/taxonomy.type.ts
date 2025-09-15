@@ -1,3 +1,5 @@
+import { UserInterface } from '../resources/user';
+
 export enum TaxonomyType {
   GROUP = "group",
   SPEAKER = "speaker",
@@ -19,6 +21,9 @@ export interface TaxonomySchema {
   description_en: string;
   img: string;
   active: boolean;
+
+  // if SPEAKER
+  speaker?: UserInterface
 }
 
 export interface TaxonomyTypeSchema {
