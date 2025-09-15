@@ -25,6 +25,7 @@ export default function CertificateLine(props: CertificateLineProps) {
       type: certificate.type,
       user_id: user?.getId(),
       edition: certificate.edition,
+      entity_id: certificate?.entity_id || null,
     });
     const resp = axios.data;
     setLoading(false);
