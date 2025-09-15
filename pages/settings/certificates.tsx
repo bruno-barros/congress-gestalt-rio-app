@@ -244,7 +244,7 @@ function CertificatePage() {
                           label="Texto do certificado"
                           charsMin={0}
                           charsMax={500}
-                          disabled={values.participation_allowed === false}
+                          disabled={values.speaker_allowed === false}
                         />
                       </Tab>
                     );
