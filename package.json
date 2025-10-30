@@ -13,6 +13,7 @@
     "coverage": "jest --coverage"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.12.2",
     "@sentry/react": "^6.1.0",
     "@sentry/tracing": "^6.1.0",
     "@uppy/core": "^1.15.0",

@@ -5,6 +5,7 @@ import PasswordRecover from "./password-recover";
 import useTrans from "../../hooks/useTrans";
 import Facebook from "../../social-login/facebook";
 import Google from "../../social-login/google";
+import { GoogleLogin } from "@react-oauth/google";
 import Hr from "../hr";
 import Error from "../../../src/resources/error";
 import { Providers } from "../../social-login/social-buttons.d";
@@ -26,6 +27,7 @@ import trimStart from "lodash/trimStart";
 import LoadingButton from "../loading-button";
 import BlockUi from "../block-ui";
 import Icon from "../ionicon";
+import jwtDecode from 'jwt-decode';
 
 const LoginForm = () => {
   const t = useTrans();
@@ -151,6 +153,10 @@ const LoginForm = () => {
     setLoginWithEmail(t(`vendor.${error.slug}`));
   }
 
+  // function jwtDecode(credential: string) {
+  //   throw new Error("Function not implemented.");
+  // }
+
   return (
     <div className="login-form">
       <BlockUi blocking={blockUi} />
@@ -173,7 +179,26 @@ const LoginForm = () => {
         </button>
       </PopOver>
       {/* <Facebook onFailed={handleFailure} onSuccess={handleSocialSuccess}/> */}
-      <Google onFailed={handleFailure} onSuccess={handleSocialSuccess} />
+      {/* <Google onFailed={handleFailure} onSuccess={handleSocialSuccess} /> */}
+      <GoogleLogin
+        onSuccess={(credentialResponse) => {
+          const user: any = jwtDecode(credentialResponse.credential);
+          console.log(user);
+
+          handleSocialSuccess(
+            {
+              id: user.sub,
+              email: user.email,
+              name: user.name,
+              profilePicURL: user.picture,
+            },
+            "google"
+          );
+        }}
+        onError={() => {
+          handleFailure(new Error("google-login-failed"), "google");
+        }}
+      />
 
       <Hr
         label={t("cadastro.ou-entre-com-email")}

@@ -95,7 +95,7 @@ const Dashboard = (props: DashboardProps) => {
       <div className="col-12 p-4">
         <div className="d-md-flex align-items-center justify-content-between mb-4">
           <h1 className="page-title">{t(user.canManageAbstracts() ? 'eventos' : 'meus-eventos')}</h1>
-          <AcessarProdutos />
+          {/* <AcessarProdutos /> */}
         </div>
 
         {/* {dump(prods)} */}
