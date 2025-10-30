@@ -21,7 +21,7 @@ module.exports = {
   // configuração de integração do i18n com Nextjs: router.locales
   // https://nextjs.org/docs/pages/building-your-application/routing/internationalization
   i18n: {
-    locales: ['pt'],// 'en',
+    locales: ['pt'], // 'en',
     defaultLocale: 'pt'
   },
   images: {
