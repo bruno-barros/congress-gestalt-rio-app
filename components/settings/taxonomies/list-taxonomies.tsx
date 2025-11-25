@@ -15,7 +15,7 @@ export default function ListTaxonomies({ onActive, ...props }) {
     const {taxonmy, selected, setSelected} = useTaxonomyContext()
      const { lang, setLang, currentEdition } = useSettingsContext();  
       const { data, isFetching, isLoading, refetch } = useTaxonomies(currentEdition, (d) => {
-        return d.filter((a) => a.type === taxonmy);
+        return (Array.isArray(d)) && d.filter((a) => a.type === taxonmy);
       });
       const singular = getTaxonomyTypeLabel(taxonmy, lang, false)
       const plural = getTaxonomyTypeLabel(taxonmy, lang, true)
