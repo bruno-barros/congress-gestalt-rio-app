@@ -11,6 +11,7 @@ import {useEffect} from "react";
 import * as gtag from '../src/gtag'
 import * as Sentry from "@sentry/react";
 import {Integrations} from "@sentry/tracing";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 Sentry.init({
   dsn: "https://bd05263f28054e61bd1d0292d9dda332@o517410.ingest.sentry.io/5625184",
@@ -46,10 +47,12 @@ export default function App({Component, pageProps}) {
   }, [router.events])
 
   return <Provider store={stored}>
-    <QueryClientProvider client={queryClient}>
-      <Component {...pageProps} />
-      <ReactQueryDevtools initialIsOpen/>
-      <ToastContainer/>
-    </QueryClientProvider>
+    <GoogleOAuthProvider clientId={process.env.GOOGLE_OAUTH_ID}>
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+        <ReactQueryDevtools initialIsOpen/>
+        <ToastContainer/>
+      </QueryClientProvider>
+    </GoogleOAuthProvider>
   </Provider>
 }

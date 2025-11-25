@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 
 export interface CEP {
   address: string;
@@ -8,48 +8,46 @@ export interface CEP {
   complement?: string;
 }
 
-export default function useBuscaCEP(cep: string | number): Promise<CEP | null> {
+export default async function useBuscaCEP(
+  cep: string | number
+): Promise<CEP | null> {
+  const nums = String(cep).replace(/\D+/g, "");
 
-  return new Promise((resolve, reject) => {
+  if (nums.length !== 8) {
+    return null;
+  }
 
-    let nums = String(cep).replace(/\D+/g, '')
-    if (nums?.length !== 8) {
-      reject(null)
-      return;
+  // Tenta ViaCEP primeiro
+  try {
+    const { data } = await axios.get(`https://viacep.com.br/ws/${nums}/json/`);
+    if (!data.erro) {
+      return {
+        address: data.logradouro,
+        city: data.localidade,
+        state: data.uf,
+        neighborhood: data.bairro,
+        complement: data.complemento,
+      };
     }
+  } catch (error) {
+    // Falha silenciosa para tentar o próximo serviço
+  }
 
-    let apis = [
-      {url: `https://ws.apicep.com/cep/${nums}.json`, name: 'apicep'},
-      {url: `https://viacep.com.br/ws/${nums}/json`, name: 'viacep'},
-      // {url: `http://cep.la/${nums}`, name: 'cepla'},
-    ]
-    let result: CEP = null;
-    for (let x = 0; x < apis.length; x++) {
-      let api = apis[x]
-      if(result) break;
-      axios.get(api.url).then((resp) => {
-        if (api.name === 'apicep') {
-          result = {
-            address: resp.data.address,
-            city: resp.data.city,
-            state: resp.data.state,
-            neighborhood: resp.data.district,
-            complement: '',
-          }
-        } else if (api.name === 'viacep') {
-          result = {
-            address: resp.data.logradouro,
-            city: resp.data.city,
-            state: resp.data.state,
-            neighborhood: resp.data.neighborhood,
-            complement: resp.data.complement,
-          }
-        }
-        resolve(result)
-      }, err => {
-      }).catch(err => {
-      })
+  // Tenta ApiCEP como fallback
+  try {
+    const { data } = await axios.get(`https://ws.apicep.com/cep/${nums}.json`);
+    if (data.status === 200) {
+      return {
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        neighborhood: data.district,
+        complement: "",
+      };
     }
+  } catch (error) {
+    // Falha silenciosa
+  }
 
-  })
+  return null;
 }
