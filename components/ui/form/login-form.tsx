@@ -65,7 +65,7 @@ const LoginForm = () => {
     setBlockUi(true);
     // exibe mensagem de aguarde...
     const axios = await WpUser.socialLogin(
-      user._profile,
+      user,
       provider,
       router.locale
     );
@@ -183,6 +183,23 @@ const LoginForm = () => {
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           const user: any = jwtDecode(credentialResponse.credential);
+          /**
+           * aud: "757066997653-l6a866sf9o12tp7ohrg8ld56bebe8ks9.apps.googleusercontent.com"
+            azp: "757066997653-l6a866sf9o12tp7ohrg8ld56bebe8ks9.apps.googleusercontent.com"
+            email: "web@conceito-online.com.br"
+            email_verified: true
+            exp: 1764594710
+            family_name: "Barros"
+            given_name: "Bruno"
+            hd: "conceito-online.com.br"
+            iat: 1764591110
+            iss: "https://accounts.google.com"
+            jti: "df40c6d5ea41c1fa03277efeab2ec6ae66d4ccca"
+            name: "Bruno Barros"
+            nbf: 1764590810
+            picture: "https://lh3.googleusercontent.com/a/ACg8ocKnf550Lfz-AGxtr_jYeFU3xkKd7bpuhE6YfcAwXZgRGIiYS6cu=s96-c"
+            sub: "112449786502040269941"
+           */
           console.log(user);
 
           handleSocialSuccess(
