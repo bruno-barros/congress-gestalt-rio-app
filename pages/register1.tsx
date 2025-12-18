@@ -323,7 +323,7 @@ const Register1 = () => {
                   </div>
                 </fieldset> */}
 
-                <fieldset className="border p-3 mb-3 bg-light">
+                {/* <fieldset className="border p-3 mb-3 bg-light">
                   <legend className="px-2 text-sm w-auto"><strong>Linguagem</strong></legend>
                   <div className="row_">
                     <Checkboxes name="languages" label="" options={[
@@ -332,7 +332,7 @@ const Register1 = () => {
                       {value: 'LIBRAS e posso traduzir', label: 'Tenho domínio da Língua Brasileira de Sinais (LIBRAS) e posso voluntariamente interpretar uma exposição.'}
                     ]} />       
                   </div>
-                </fieldset>
+                </fieldset> */}
 
                 {/* {dump(values)} */}
 
