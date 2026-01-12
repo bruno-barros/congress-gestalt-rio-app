@@ -96,9 +96,10 @@ export default function Header(props: HeaderProps) {
           
           <Ac requires={[
             REQUIREMENTS.abstract.manage, 
-            REQUIREMENTS.evaluation.read,
+            REQUIREMENTS.evaluation.evaluate,
             REQUIREMENTS.user.edit,
-            REQUIREMENTS.subscription.read]} relation="OR">
+            REQUIREMENTS.subscription.read
+            ]} relation="OR">
             <NavDropdown title="Gestão" id="basic-nav-dropdown" className="admin">
               <Link href={`/adm/users`} passHref>
                 <NavDropdown.Item active={router.pathname === '/adm/users'}>Usuários</NavDropdown.Item></Link>
