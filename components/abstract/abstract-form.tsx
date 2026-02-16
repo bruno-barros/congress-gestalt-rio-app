@@ -27,6 +27,7 @@ import LoadingButton from "../ui/loading-button";
 import { ac } from "../access-control";
 import { REQUIREMENTS } from "../access-control/requirements";
 import AuthorsPanel from "./authors/authors-panel";
+import { availableLanguages } from "../../src/i18n";
 
 
 
@@ -54,6 +55,7 @@ export default function AbstractForm(props: AbstractFormProps) {
   const form = useRef<FormikProps<any>>(null)
   const AbstractCnf = edition?.Abstract()
   const FieldTitle = AbstractCnf.getField('title')
+  const FieldSubtitle = AbstractCnf.getField('subtitle')
   const FieldTag = AbstractCnf.getField('tags')
   const FieldResume = AbstractCnf.getField('resume')
   const FieldContent = AbstractCnf.getField('content')
@@ -61,6 +63,9 @@ export default function AbstractForm(props: AbstractFormProps) {
   const FieldAttachments = AbstractCnf.getField('attachments')
   const FieldAuthors = AbstractCnf.getField('authors')
   const FieldAuthors2 = AbstractCnf.getField('authors2')
+  const langs = availableLanguages()
+  const hasES = langs.includes('es')
+  const multiLangs = langs.filter(l => l !== 'pt').length > 0
 
   const initialAuthor = isEditing ? {} : {
     id: null,
@@ -101,8 +106,10 @@ export default function AbstractForm(props: AbstractFormProps) {
     // subtitle: Yup.string().required('validacao.obrigatorio'),
     tags: Yup.array().min(FieldTag.min, 'validacao.obrigatorio')
       .max(FieldTag.max).required('validacao.obrigatorio'),
-    tags_es: Yup.array().min(FieldTag.min, 'validacao.obrigatorio')
-      .max(FieldTag.max).required('validacao.obrigatorio'),
+    tags_es: hasES 
+      ? Yup.array().min(FieldTag.min, 'validacao.obrigatorio')
+        .max(FieldTag.max).required('validacao.obrigatorio')
+      : Yup.array().notRequired(),
     resume:  Yup.string().when('type', {
       is: (val) => FieldResume.allowed && !user.byPassSynopsis(),
       then: Yup.string().required('validacao.obrigatorio'),
@@ -195,7 +202,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         canManage,
         '!!abstract': !!abstract,
         isAbleToEdit: abstract?.isAbleToEdit(),
-        edition_id: edition.getId(),
+        edition_id: edition.getId(),        
       })} */}
 
       <fieldset disabled={!isEditable}>
@@ -230,15 +237,14 @@ export default function AbstractForm(props: AbstractFormProps) {
             />
           </div>}
         
-        <Text name="title" label={`${t('trabalho.titulo')} (em português)`} description={`Entre ${FieldTitle.min} e ${FieldTitle.max} caracteres`}/>
-        <Text name="title_es" label={`${t('trabalho.titulo')} (en español)`} description={`Entre ${FieldTitle.min} y ${FieldTitle.max} caracteres`}/>
-
-        {edition.getFieldMax('subtitle') > 0 &&
+        <Text name="title" label={`${t('trabalho.titulo')} ${multiLangs ? '(em português)' : ''}`} description={`Entre ${FieldTitle.min} e ${FieldTitle.max} caracteres`}/>
+        {hasES && <Text name="title_es" label={`${t('trabalho.titulo')} (en español)`} description={`Entre ${FieldTitle.min} y ${FieldTitle.max} caracteres`}/>}
+        {FieldSubtitle.allowed &&
         <Text name="subtitle" label={t('trabalho.subtitulo')}/>}
   
         {FieldTag.allowed &&
-        <Tags name="tags" label={`${t('trabalho.tags')} (em português)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable}/>}
-        {FieldTag.allowed &&
+        <Tags name="tags" label={`${t('trabalho.tags')} ${multiLangs ? '(em português)' : ''}`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable}/>}
+        {FieldTag.allowed && hasES &&
         <Tags name="tags_es" label={`${t('trabalho.tags')} (en español)`} minTags={FieldTag.min} maxTags={FieldTag.max} disabled={!isEditable}/>}
 
         {(!user.byPassSynopsis() && FieldResume.allowed) &&

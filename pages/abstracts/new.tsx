@@ -1,17 +1,13 @@
 import MainLayout from "../../components/layout";
 import useTrans from "../../components/hooks/useTrans";
-import useEvent from "../../components/hooks/useEvent";
-import Edition from "../../src/resources/edition";
 import EditionSidebar from "../../components/event/edition-sidebar";
 import AbstractForm from "../../components/abstract/abstract-form";
-import AbstractsRules from "../../components/abstract/abstracts-rules";
 import privateRoute from "../../components/hoc/private-route";
 import {useRouter} from "next/router";
 import {Trans} from "react-i18next";
 import {useQueryClient} from "react-query";
 import {siteTitle} from "../../src/helpers";
 import Head from "next/head";
-import useCurrentUser from '../../components/hooks/useCurrentUser';
 import useSettings from "../../components/hooks/useSettings";
 import ProgressBar from "../../components/ui/progressbar";
 
@@ -27,6 +23,7 @@ const NewAbstract = (props: NewAbstractProps) => {
   const t = useTrans()
   const { data: event, currentEdition: edition, isLoading} = useSettings()  
   const lang = router.locale
+  const url = edition.Abstract().getRulesUrl(lang)
 
 
   if (isLoading) {
@@ -50,7 +47,7 @@ const NewAbstract = (props: NewAbstractProps) => {
                  i18nKey="trabalho.confira-as-regras"
                  defaults={`Confira as <1>regras de submissão de trabalhos</1>.`}
                  components={(['Confira as ',
-                   <a href={edition.abstract.rules[lang]} target="_blank">regras de submissão de trabalhos</a>,
+                   <a href={url} target="_blank">regras de submissão de trabalhos</a>,
                    '.']) as any}
           />
         </div>

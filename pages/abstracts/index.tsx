@@ -119,14 +119,15 @@ const Abstracts = () => {
       {/**
        //region Limite atingido
        */      
-      (edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
-      <div className="alert alert-warning">
-        {t('trabalho.limite-atingido')}
-      </div>}
+      // (edition.abstract.limit_per_user > 0 && edition.abstract.limit_per_user <= abstracts?.getNoRejected().length) &&
+      // <div className="alert alert-warning">
+      //   {t('trabalho.limite-atingido')}
+      // </div>
+      }
 
       {(
         abstracts?.count() > 0
-        && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)
+        // && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)
         && edition?.isOpenToAbstracts()
       ) &&
       <div className="d-md-flex align-items-center">
