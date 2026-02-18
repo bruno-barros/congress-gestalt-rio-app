@@ -321,14 +321,15 @@ export default function AbstractForm(props: AbstractFormProps) {
           //region Autores 2
         }
         {(FieldAuthors2.allowed && !FieldAuthors.allowed) && 
-          <></>}
+          <>
           <AuthorsPanel 
             abstractId={abstract?.databaseId} 
             tempId={values.tmp_id}
             data={values.authors}
             mainAuthorId={abstract?.authorDatabaseId}
             maxAuthors={FieldAuthors2.max}
-            disabled={!isEditable}/>
+            disabled={!isEditable}/>          
+          </>}
         
       </fieldset>
       <Field name="_intent" type="hidden"/>
