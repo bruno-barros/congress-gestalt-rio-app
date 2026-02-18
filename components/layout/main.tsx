@@ -8,7 +8,7 @@ import useCurrentUser from "../hooks/useCurrentUser";
 import Footer from "./footer";
 import { useQueryClient } from "react-query";
 import Sidebar from "./sidebar";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import Header from "./header";
 import useSessionCountdown from "../hooks/useSessionCountdown";
 import usePushNotification from "../hooks/usePushNotification";
@@ -43,6 +43,14 @@ function MainLayout({
   const blockUI = useSelector((state: RootReducers) => state?.ui?.blockui);
   const { InitPushNotification, isInitialized } = usePushNotification();
   useSessionCountdown();
+
+  useEffect(() => {
+    if (blockUI) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+  }, [blockUI]);
 
   if (isLoading || authLoading) {
     return <Loading vspace={100} />;

@@ -128,7 +128,7 @@ const Abstracts = () => {
       {(
         abstracts?.count() > 0
         // && (edition.abstract.limit_per_user === 0 || edition.abstract.limit_per_user > abstracts?.getNoRejected().length)
-        && edition?.isOpenToAbstracts()
+        && isOpenToSubmit
       ) &&
       <div className="d-md-flex align-items-center">
         <Link href={`/abstracts/new`}><a
