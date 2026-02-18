@@ -1,17 +1,19 @@
-'use client'
-import Document, {Html, Main, Head, NextScript} from "next/document";
+"use client";
+import Document, { Html, Main, Head, NextScript } from "next/document";
+import { useSelector } from "react-redux";
+import { RootReducers } from "../src/store/store.d";
 
-class MyDocument extends Document {
-  static async getInitialProps(ctx) {
-    const initialProps = await Document.getInitialProps(ctx)
-    return {...initialProps}
-  }
+function MyDocument() {
+ 
 
-  render() {
-    return (
-      <Html>
-        {process.env.GA_ID && <>
-          <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`}></script>
+  return (
+    <Html>
+      {process.env.GA_ID && (
+        <>
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_ID}`}
+          ></script>
           <script
             dangerouslySetInnerHTML={{
               __html: `
@@ -24,20 +26,24 @@ class MyDocument extends Document {
         `,
             }}
           />
-        </>}
-        <Head/>
-        {/* <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script> */}
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons.min.js"></script>
-        {/* (un)comment to allow OneSignal */}
-        {/* <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script> */}
-        <body>
-        <Main/>
-        <NextScript/>
-        </body>
-      </Html>
-    )
-  }
+        </>
+      )}
+      <Head />
+      {/* <script type="module" src="https://unpkg.com/ionicons@5.2.3/dist/ionicons/ionicons.esm.js"></script> */}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/ionicons/7.1.0/ionicons.min.js"></script>
+      {/* (un)comment to allow OneSignal */}
+      {/* <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script> */}
+      <body className={``}>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
 
-export default MyDocument
+MyDocument.getInitialProps = async (ctx) => {
+  const initialProps = await Document.getInitialProps(ctx);
+  return { ...initialProps };
+};
 
+export default MyDocument;
