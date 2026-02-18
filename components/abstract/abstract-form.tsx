@@ -126,11 +126,11 @@ export default function AbstractForm(props: AbstractFormProps) {
       then: Yup.array().required('validacao.obrigatorio'),
       otherwise: Yup.array().notRequired()
     }),
-    professional_proof: Yup.array().when('type', {
-      is: (val) => val === 'WS',
-      then: Yup.array().required('validacao.obrigatorio'),
-      otherwise: Yup.array().notRequired()
-    }),
+    // professional_proof: Yup.array().when('type', {
+    //   is: (val) => val === 'WS',
+    //   then: Yup.array().required('validacao.obrigatorio'),
+    //   otherwise: Yup.array().notRequired()
+    // }),
     authors:  Yup.array().when('topic', {
       is: (val) => !!edition.abstract.required_fields?.authors?.min,
       then: Yup.array().required('validacao.obrigatorio'),
@@ -225,7 +225,7 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>}
 
         {/* {dump({context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id, isEditable2: !isEditable2})} */}
-        {values.type === 'WS' && <div className="bg-light">
+        {(values.type === 'WS' && false) && <div className="bg-light">
           <div className="px-4 pt-3">
           <Text name="workshop_participants" label="Quantidade de participantes" type="number" placeholder="0"/>
           </div>
