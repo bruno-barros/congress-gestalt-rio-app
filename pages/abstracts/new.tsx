@@ -23,7 +23,7 @@ const NewAbstract = (props: NewAbstractProps) => {
   const t = useTrans()
   const { data: event, currentEdition: edition, isLoading} = useSettings()  
   const lang = router.locale
-  const url = edition.Abstract().getRulesUrl(lang)
+  const url = edition?.Abstract()?.getRulesUrl(lang)
 
 
   if (isLoading) {
