@@ -262,7 +262,8 @@ export default function AbstractForm(props: AbstractFormProps) {
                  charsMin={FieldContent.min} charsMax={FieldContent.max}
                  countMethod={`char`}/>}
         
-        {FieldBibliography.allowed && 
+        
+        {(FieldBibliography.allowed && values.type != 'LL') && 
         <Wysiwyg name="bibliography" label={t('trabalho.bibliografia')}
         maxHeight="md" disabled={!isEditable}
                  charsMin={FieldBibliography.min}
