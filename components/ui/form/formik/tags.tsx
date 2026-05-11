@@ -94,6 +94,13 @@ export default function Tags({label, containerClass, minTags: min, maxTags: ma, 
 
       </div>)
     }}</FieldArray>
+    {!disabled && <small className="d-block mt-1 text-muted">
+      <ol className="mb-0 pl-3" style={{fontSize: '0.8em'}}>
+        <li>Digite uma palavra-chave;</li>
+        <li>Clique em "Adicionar" ou pressione Enter;</li>
+        <li>Repita o processo para cada nova palavra-chave.</li>
+      </ol>
+    </small>}
     <FieldError message={err} fieldId={`fld_${field.name}`}/>
   </div>)
 }

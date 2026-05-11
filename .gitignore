@@ -32,3 +32,4 @@ yarn-error.log*
 /components/abstracts-table_ref/
 
 .codegpt
+.kilo

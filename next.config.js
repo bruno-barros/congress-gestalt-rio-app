@@ -7,7 +7,7 @@ const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = {
   env: {
-    version: '1.7.17',
+    version: '1.7.18',
     apiUrl: process.env.API_BASEURL,
     GOOGLE_OAUTH_ID: process.env.GOOGLE_OAUTH_ID,
     FACEBOOK_OAUTH_ID: process.env.FACEBOOK_OAUTH_ID,
