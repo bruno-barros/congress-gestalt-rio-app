@@ -1,48 +1,48 @@
 installation:
-  version: 6.6.0
+  version: 6.8.0
   installDate: 2026-05-11T12:35:01.382Z
-  lastUpdated: 2026-05-11T12:35:01.382Z
+  lastUpdated: 2026-05-29T23:30:07.219Z
 modules:
   - name: core
-    version: 6.6.0
+    version: 6.8.0
     installDate: 2026-05-11T12:34:51.268Z
-    lastUpdated: 2026-05-11T12:35:01.292Z
+    lastUpdated: 2026-05-29T23:30:07.208Z
     source: built-in
     npmPackage: null
     repoUrl: null
   - name: bmm
-    version: 6.6.0
+    version: 6.8.0
     installDate: 2026-05-11T12:34:51.142Z
-    lastUpdated: 2026-05-11T12:35:01.294Z
+    lastUpdated: 2026-05-29T23:30:07.210Z
     source: built-in
     npmPackage: null
     repoUrl: null
   - name: bmb
-    version: v1.8.0
+    version: v1.8.1
     installDate: 2026-05-11T12:34:52.123Z
-    lastUpdated: 2026-05-11T12:35:01.328Z
+    lastUpdated: 2026-05-29T23:30:07.213Z
     source: external
     npmPackage: bmad-builder
     repoUrl: https://github.com/bmad-code-org/bmad-builder
     channel: stable
-    sha: d64469f61fadc6cfbf2dea6a0a257fe6eb2790a2
+    sha: 3410d952eafe621f31fcdf4dd5efb2b06690a306
   - name: cis
-    version: v0.2.0
+    version: v0.2.1
     installDate: 2026-05-11T12:34:52.258Z
-    lastUpdated: 2026-05-11T12:35:01.353Z
+    lastUpdated: 2026-05-29T23:30:07.216Z
     source: external
     npmPackage: bmad-creative-intelligence-suite
     repoUrl: https://github.com/bmad-code-org/bmad-module-creative-intelligence-suite
     channel: stable
-    sha: 14a63b893c07173b7a6cfe0fb6a9a72ba51d3cf1
+    sha: 07a8dd03d196a762f21c241d985293fe5b0f90e7
   - name: tea
-    version: v1.17.0
+    version: v1.19.0
     installDate: 2026-05-11T12:35:01.129Z
-    lastUpdated: 2026-05-11T12:35:01.382Z
+    lastUpdated: 2026-05-29T23:30:07.219Z
     source: external
     npmPackage: bmad-method-test-architecture-enterprise
     repoUrl: https://github.com/bmad-code-org/bmad-method-test-architecture-enterprise
     channel: stable
-    sha: 4360295a45d8cb55ae89491c8a5fb4b7ac223bf0
+    sha: 8734d51f24071ddbcb3617390b5fcddb4128ef77
 ides:
   - kilo
