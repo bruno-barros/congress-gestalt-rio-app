@@ -50,9 +50,12 @@ const Abstracts = () => {
   );
 
   const testMode = edition?.abstract?.test_mode == '1'
+  const onlySubscribed = edition?.abstract?.only_subscribed === "1"
   const isSubscribed = testMode 
       ? ac(user, [REQUIREMENTS.abstract.submit], {edition, isSubscribed: true}) 
-      : orders?.hasValidSubscription(edition);
+      : onlySubscribed
+        ? orders?.hasValidSubscription(edition)
+        : true;
 
   const isOpenToSubmit = testMode 
     ? ac(user, [REQUIREMENTS.abstract.submit], {edition, isSubscribed}) 
