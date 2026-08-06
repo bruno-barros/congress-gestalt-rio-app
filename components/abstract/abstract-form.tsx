@@ -225,16 +225,16 @@ export default function AbstractForm(props: AbstractFormProps) {
         </Select>}
 
         {/* {dump({context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id, isEditable2: !isEditable2})} */}
-        {(values.type === 'WS' && false) && <div className="bg-light">
+        {(values.type === 'WS') && <div className="bg-light pb-3 mb-4" style={{marginTop: '-1rem'}}>
           <div className="px-4 pt-3">
           <Text name="workshop_participants" label="Quantidade de participantes" type="number" placeholder="0"/>
           </div>
-          <Attachments name="professional_proof" label={lang == 'pt' ? 'Comprovante Profissional' : 'Comprobante Profesional'}
+          {/* <Attachments name="professional_proof" label={lang == 'pt' ? 'Comprovante Profissional' : 'Comprobante Profesional'}
             maxFiles={1}
             metas={{context: 'professional_proof', abstract_id: abstract?.databaseId || null, tmp_id: values.tmp_id}}
             disabled={!isEditable}
             info={lang === 'pt' ? 'Envie um comprovante de que possui, no mínimo, 5 anos de formação como Gestalt-terapeuta.' : 'Enviar prueba de que tienes al menos 5 años de formación como terapeuta Gestalt.'}
-            />
+            /> */}
           </div>}
         
         <Text name="title" label={`${t('trabalho.titulo')} ${multiLangs ? '(em português)' : ''}`} description={`Entre ${FieldTitle.min} e ${FieldTitle.max} caracteres`}/>
