@@ -60,7 +60,11 @@ export function getAbstractFilterableFields() {
   ]
 }
 
-export function getOrderFilterableFields() {
+/**
+ * Filtro da tela de inscritos (pedidos)
+ *
+ */
+export function getOrderFilterableFields(data?: any[]) {
   // const router = useRouter()
   const t = useTrans()
 
@@ -73,12 +77,18 @@ export function getOrderFilterableFields() {
     {value: 'Não', label: 'Não'},
   ]
 
+  const productSet = new Set<string>()
+  ;(data || []).forEach(row => (row?.product_names || []).forEach((p: string) => productSet.add(p)))
+  const productOptions = Array.from(productSet).sort()
+    .map(p => ({value: p, label: p}))
+
   return [
     // {id: 'customer_name', label: 'Participante', options: null},
     // {id: 'customer_email', label: 'E-mail', options: null},
     {id: 'status_woo', label: 'Status', options: statuses},
     {id: 'is_pdc', label: 'PcD', options: pcdOptions},
     {id: 'is_affirmative_action', label: 'Ações Afirmativas', options: pcdOptions},
+    {id: 'product_names', label: 'Produto', options: productOptions},
   ]
 }
 
