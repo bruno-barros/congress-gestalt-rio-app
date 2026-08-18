@@ -155,17 +155,21 @@ export interface Table<T extends object = {}> extends TableOptions<T> {
 
 export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>> & any) {
 
-  const {name, hiddenColumns, columns, onAdd, onDelete, onEdit, onClick} = props
+  const {name, hiddenColumns, columns, data, onAdd, onDelete, onEdit, onClick} = props
   const [initialState, setInitialState] = useLocalStorage(`tableState:${name}`, {
     hiddenColumns: hiddenColumns
   })
+  const tableInitialState = {
+    ...initialState,
+    hiddenColumns: Array.from(new Set([...((initialState as any)?.hiddenColumns || []), ...(hiddenColumns || [])])),
+  }
   const instance = useTable<T>(
     {
       ...props,
       columns,
       filterTypes,
       defaultColumn,
-      initialState,
+      initialState: tableInitialState,
     },
     ...hooks
   )
@@ -189,12 +193,12 @@ export function DynamicTable<T extends object>(props: PropsWithChildren<Table<T>
 
   const filterableFields = useCallback(()=>{
     if(name === 'users') return getUSerFilterableFields()
-    if(name === 'subscriptions') return getOrderFilterableFields()
+    if(name === 'subscriptions') return getOrderFilterableFields(data)
     if(name === 'abstracts') return getAbstractFilterableFields()
     if(name === 'evaluations') return getAbstractFilterableFields()
     if(name === 'evaluations-adm') return getEvaluationsFilterableFields()
 
-  }, [])
+  }, [data])
 
 // console.log(debouncedState);
   return (<div className="">

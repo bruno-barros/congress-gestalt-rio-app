@@ -4,6 +4,7 @@ import useCurrentUser from "../../components/hooks/useCurrentUser";
 import {useCallback, useMemo} from "react";
 import MainLayout from "../../components/layout";
 import {DynamicTable} from "../../components/dynamic-table";
+import {arrayIncludesFilter} from "../../components/dynamic-table/filters";
 import useSubscriptions from "../../components/hooks/useSubscriptions";
 import useEvent from "../../components/hooks/useEvent";
 import {Order} from "../../src/resources/order";
@@ -48,8 +49,10 @@ const AdmSubscriptions = () => {
         accessor: 'customer_email'
       },
       {
-        Header: 'Pacote',
-        accessor: 'package'
+        Header: 'Produtos',
+        accessor: 'product_names',
+        filter: arrayIncludesFilter,
+        Cell: ({value}: any) => Array.isArray(value) ? value.join(', ') : value
       },
       {
         Header: 'Total',
@@ -78,6 +81,9 @@ const AdmSubscriptions = () => {
     return subscriptions.getOrders().map((order: Order) => {
       let row: any = {...order}
       row.package = order.getItems()[0]?.product?.name || 'desconhecido'
+      row.product_names = order.getItems()
+        .map(item => item?.product?.name)
+        .filter(Boolean)
       row.customer_name = order.getCustomerName()
       row.customer_email = order.customer.email
       row.order_status = t(`status.${order.status.toLowerCase()}`)
