@@ -65,8 +65,8 @@ export default function CertificatePreviewModal(
               <option value={CertificateType.PARTICIPANT}>
                 Participação no evento
               </option>
-              <option value={CertificateType.ABSTRACT}>
-                Envio de trabalho
+              <option value={CertificateType.SPEAKER}>
+                Palestrante
               </option>
               <option value={CertificateType.ACTIVITY}>
                 Participação em atividade
